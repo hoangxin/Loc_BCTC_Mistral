@@ -1,0 +1,35 @@
+{
+  "name": "loc-bctc-mistral",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "fetch": "tsx scripts/run-fetch.ts"
+  },
+  "dependencies": {
+    "@pdf-lib/fontkit": "^1.1.1",
+    "adm-zip": "^0.5.18",
+    "axios": "^1.7.7",
+    "exceljs": "^4.4.0",
+    "mammoth": "^1.12.0",
+    "next": "14.2.15",
+    "node-unrar-js": "^2.0.2",
+    "pdf-lib": "^1.17.1",
+    "pdf-parse": "^2.4.5",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "tesseract.js": "^7.0.0",
+    "word-extractor": "^1.0.4"
+  },
+  "devDependencies": {
+    "@types/adm-zip": "^0.5.8",
+    "@types/node": "^22.10.1",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "tsx": "^4.22.4",
+    "typescript": "^5.6.3"
+  }
+}

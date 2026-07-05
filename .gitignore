@@ -1,0 +1,13 @@
+node_modules
+.next
+out
+.env
+.env.local
+.env.*.local
+npm-debug.log*
+.DS_Store
+tsconfig.tsbuildinfo
+data/reports
+data/latest-fetch.json
+*.traineddata
+.claude/settings.local.json
