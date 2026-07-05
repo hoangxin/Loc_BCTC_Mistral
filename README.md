@@ -12,9 +12,16 @@ giao diện web hoặc bằng lệnh `npm run fetch`.
 ## Cấu trúc
 
 - `lib/vietstock-reports.ts` - gọi thẳng 3 API JSON nội bộ của Vietstock (`getrptterm`, `getrptfile`)
-  để lấy danh sách báo cáo của 1 kỳ (quý), không cần trình duyệt headless.
-- `lib/quarter.ts` - tính "quý vừa qua" theo giờ Việt Nam; `listRecentQuarters`/`isSameQuarter` cho
-  dropdown chọn quý trên UI (`app/FetchControls.tsx`).
+  để lấy danh sách kỳ báo cáo/báo cáo của 1 kỳ, không cần trình duyệt headless. Vietstock có **7 loại kỳ
+  mỗi năm** (đã xác nhận qua gọi API thật 2026-07-05): Quý 1-4, "6T" (6 tháng đầu năm - báo cáo soát xét
+  bán niên, hồ sơ RIÊNG với Quý 2 dù cùng hạn cuối kỳ 30/6), "9T" (9 tháng, cùng hạn Quý 3), "Năm" (báo
+  cáo kiểm toán cả năm, cùng hạn Quý 4) - `fetchReportTerms()` lấy danh sách kỳ THẬT này (dropdown UI tự
+  "tịnh tiến" theo ngày hiện tại vì là dữ liệu sống, không cần tự tính lịch); `fetchReportFilesForTerm()`
+  lấy danh mục báo cáo thật của 1 kỳ (dùng cho xem trước lẫn tải thật).
+- `lib/period-label.ts` - suy ra nhãn hiển thị ("Quý 2/2026", "6 tháng đầu năm 2026"...) và tên thư mục
+  từ 1 `ReportTerm`.
+- `lib/quarter.ts` - chỉ còn tính "quý vừa qua" theo giờ Việt Nam (`getPreviousQuarter`/`isSameQuarter`) -
+  dùng để xác định mặc định dropdown + bật ô "giờ gần nhất" đúng lúc.
 - `lib/filter.ts` - lọc sơ bộ theo **metadata** (mã CK, tên công ty, tiêu đề...) trước khi tải - hiện
   đang pass-through (giữ nguyên toàn bộ), chờ chốt tiêu chí thật.
 - `lib/download.ts` - tải file báo cáo về `data/reports/<năm>-Q<quý>/` (bất kể định dạng gì - việc nhận
@@ -97,12 +104,15 @@ giao diện web hoặc bằng lệnh `npm run fetch`.
 - `lib/pipeline.ts` - orchestrator dùng chung cho cả CLI và web; `runFetchPipeline(options)` nhận
   `{quarter, year, hoursWindow, reportLimit}` (xem `app/FetchControls.tsx`); `addCustomReport` để nguồn
   riêng (`lib/custom-source.ts`) ghi thêm vào cùng danh sách.
-- `app/FetchControls.tsx` - dropdown chọn quý + ô "giờ gần nhất" (quý vừa qua) hoặc "số BCTC gần nhất"
-  (quý khác), nút "Tải BCTC" (giữ logic poll cũ).
+- `app/FetchControls.tsx` - dropdown chọn kỳ (lấy trực tiếp từ `app/api/report-terms`, KHÔNG tự sinh) +
+  ô "giờ gần nhất" (đúng Quý vừa qua) hoặc "số BCTC gần nhất" (kỳ khác), nút "Tải BCTC" (giữ logic poll
+  cũ) - đổi kỳ chỉ đổi ô input hiển thị, KHÔNG gọi API xem trước (đã bỏ theo yêu cầu user 2026-07-06,
+  từng thử làm rồi revert).
 - `app/CustomSourceForm.tsx` - nút "Thêm nguồn riêng" -> input link + Enter, hiện "Chưa có" nếu không
   tìm thấy.
-- `app/ReportsSummaryTable.tsx` - bảng STT/Mã CK/Tên công ty/Loại BCTC/cột % động (rỗng cho tới khi
-  `lib/analysis.ts` có tiêu chí thật)/checkbox + 2 nút xuất Excel/PDF theo lựa chọn.
+- `app/ReportsSummaryTable.tsx` - bảng STT/Mã CK/Sàn giao dịch/Tên tài liệu/Ngày cập nhật/Tên công
+  ty/Loại BCTC/cột % động (rỗng cho tới khi `lib/analysis.ts` có tiêu chí thật) + 2 nút xuất Excel/PDF
+  RIÊNG cho từng dòng (không phải checkbox chọn nhiều dòng như bản đầu).
 
 ## Chạy
 

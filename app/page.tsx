@@ -1,7 +1,7 @@
 import statusJson from '@/data/latest-fetch.json';
 import type { FetchStatus } from '@/lib/status';
 import { formatTimestamp } from '@/lib/format';
-import { getPreviousQuarter, listRecentQuarters } from '@/lib/quarter';
+import { getPreviousQuarter } from '@/lib/quarter';
 import FetchControls from './FetchControls';
 import CustomSourceForm from './CustomSourceForm';
 import ReportsSummaryTable from './ReportsSummaryTable';
@@ -10,7 +10,6 @@ const status = statusJson as unknown as FetchStatus;
 
 export default function HomePage() {
   const previousQuarter = getPreviousQuarter();
-  const quarterOptions = listRecentQuarters(8);
 
   return (
     <main className="page">
@@ -22,16 +21,14 @@ export default function HomePage() {
       </header>
 
       <div className="controls-bar">
-        <FetchControls currentGeneratedAt={status.generatedAt} quarterOptions={quarterOptions} previousQuarter={previousQuarter} />
+        <FetchControls currentGeneratedAt={status.generatedAt} previousQuarter={previousQuarter} />
         <CustomSourceForm />
       </div>
 
-      {status.quarter && status.year && (
+      {status.periodLabel && (
         <div className="summary-bar">
           <div className="summary-item">
-            <strong>
-              Quý {status.quarter}/{status.year}
-            </strong>
+            <strong>{status.periodLabel}</strong>
             <span>Kỳ báo cáo</span>
           </div>
           <div className="summary-item">

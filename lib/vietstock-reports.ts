@@ -167,3 +167,38 @@ export async function fetchQuarterReports(quarter: number, year: number): Promis
   }
   return fetchAllReportFiles(session, term);
 }
+
+// Danh sach TAT CA ky bao cao Vietstock thuc su dang co (goi thang
+// /data/getrptterm, KHONG loc theo "Quy N") - dung cho dropdown chon ky tren
+// UI (app/FetchControls.tsx), vi Vietstock KHONG chi co Quy 1-4: con co "6T"
+// (6 thang dau nam, bao cao soat xet ban nien - ho so RIENG voi Quy 2, cung
+// han cuoi ky 30/6), "9T" (9 thang dau nam, cung han cuoi ky 30/9 nhu Quy 3),
+// va "Nam" (bao cao kiem toan ca nam, cung han cuoi ky 31/12 nhu Quy 4) - da
+// xac nhan qua goi thu that (2026-07-05, xem README). top mac dinh 24 la du
+// ~3-4 nam lich su (moi nam co toi da 7 ky: Quy1/Quy2/6T/Quy3/9T/Quy4/Nam).
+export async function fetchReportTerms(top = 24): Promise<ReportTerm[]> {
+  const session = await getSession();
+  const terms = await postForm<RawReportTerm[]>(session, '/data/getrptterm', {
+    documentTypeID: FINANCIAL_STATEMENT_DOC_TYPE_ID,
+    top,
+  });
+  return terms.map((term) => ({ yearPeriod: term.YearPeriod, reportTermID: term.ReportTermID, description: term.Description }));
+}
+
+// Tra ve dung 1 ReportTerm khop "Quy N nam YYYY" (session rieng, KHONG dung
+// chung voi fetchQuarterReports) - dung khi CLI (scripts/run-fetch.ts) truyen
+// FETCH_QUARTER/FETCH_YEAR, can quy doi ve ReportTerm truoc khi goi
+// runFetchPipeline({term}) (pipeline gio chi lam viec voi ReportTerm, khong
+// con nhan quarter/year rieng - xem lib/pipeline.ts).
+export async function resolveQuarterTerm(quarter: number, year: number): Promise<ReportTerm | null> {
+  const session = await getSession();
+  return findReportTerm(session, quarter, year);
+}
+
+// Danh sach bao cao THAT cua 1 ky (da co san ReportTerm, vd lay tu
+// fetchReportTerms hoac resolveQuarterTerm) - dung cho ca buoc "xem truoc
+// danh muc" (app/api/report-list) lan buoc tai that (lib/pipeline.ts).
+export async function fetchReportFilesForTerm(term: ReportTerm): Promise<ReportFile[]> {
+  const session = await getSession();
+  return fetchAllReportFiles(session, term);
+}

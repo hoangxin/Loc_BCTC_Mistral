@@ -1,7 +1,8 @@
 import { writeFileSync, mkdirSync, readFileSync, existsSync } from 'fs';
 import { join } from 'path';
-import { getPreviousQuarter, isSameQuarter, type QuarterPeriod } from './quarter';
-import { fetchQuarterReports } from './vietstock-reports';
+import { getPreviousQuarter } from './quarter';
+import { resolveQuarterTerm, fetchReportFilesForTerm, type ReportTerm } from './vietstock-reports';
+import { periodDisplayLabel, periodFolderSlug } from './period-label';
 import { filterReports } from './filter';
 import { downloadReports } from './download';
 import { resolveReportSourceFiles, type ResolvedReportFile } from './report-source';
@@ -20,7 +21,7 @@ export function readStatus(): FetchStatus {
     return {
       running: false,
       generatedAt: '',
-      quarter: null,
+      periodLabel: null,
       year: null,
       totalFound: 0,
       totalMatched: 0,
@@ -58,14 +59,25 @@ function buildStatementScopeInput(
 }
 
 export interface RunFetchPipelineOptions {
+  // Luong MOI (web UI, xem app/FetchControls.tsx): 1 ky da chon TU DANH SACH
+  // THAT cua Vietstock (app/api/report-terms, lib/vietstock-reports.ts
+  // fetchReportTerms) - co the la Quy 1-4, "6T", "9T", hoac "Nam", KHONG chi
+  // Quy nhu truoc (xem lib/period-label.ts).
+  term?: ReportTerm;
+  // Luong CU (CLI, scripts/run-fetch.ts qua FETCH_QUARTER/FETCH_YEAR) - chi
+  // ho tro Quy 1-4, se tu quy doi sang ReportTerm o duoi.
   quarter?: number;
   year?: number;
-  // CHI ap dung khi quy chon la "quy vua qua" (xem isSameQuarter duoi day) -
-  // lay bao cao co lastUpdate trong vong X gio gan nhat (bao cao quy vua ket
-  // thuc tiep tuc trickle-in trong nhieu tuan, xem lib/vietstock-reports.ts).
+  // Loc theo thoi gian - lay bao cao co lastUpdate trong vong X gio gan nhat
+  // (bao cao quy vua ket thuc tiep tuc trickle-in trong nhieu tuan, xem
+  // lib/vietstock-reports.ts). UI (app/FetchControls.tsx) chi cho chon lua
+  // chon nay khi ky la Quy "vua qua" (2 ky khac deu da nop du tu lau, "gio gan
+  // nhat" khong co y nghia) - nhung pipeline o day KHONG tu gate theo quy,
+  // chi ap dung dung tham so nao duoc truyen vao. Uu tien hon reportLimit neu
+  // ca 2 cung duoc truyen (khong nen xay ra tu UI, nhung an toan neu co).
   hoursWindow?: number;
-  // CHI ap dung voi cac quy KHAC quy vua qua (da nop du tu lau, khong can loc
-  // theo thoi gian) - gioi han lay N bao cao moi cap nhat gan nhat.
+  // Loc theo so luong - gioi han lay N bao cao moi cap nhat gan nhat. Luon co
+  // the chon (moi ky), rieng Quy "vua qua" UI cho chon giua day va hoursWindow.
   reportLimit?: number;
 }
 
@@ -74,32 +86,38 @@ export interface RunFetchPipelineOptions {
 // tranh viec logic tai/loc/download bi lap 2 noi.
 //
 // Flow (chot 2026-07-05, mo rong 2026-07-05 them da dinh dang + chon
-// quy/gioi han + phan loai Hop nhat/Rieng le): tai TAT CA bao cao trong quy ->
-// chuan hoa dinh dang (pdf/docx/doc, giai nen zip/rar neu can - lib/report-
-// source.ts) -> trich 3 bang (Mistral OCR cho pdf, doc truc tiep cho docx/doc -
-// lib/report-extract.ts) cho TAT CA -> ap tieu chi doc BCTC (lib/analysis.ts,
-// hien TODO) cho TAT CA (khong chi bao cao lot loc noi dung) -> loc theo noi
-// dung 3 bang (lib/content-filter.ts, hien pass-through, cho tieu chi that cua
-// user) -> CHI voi bao cao duoc chon: chep toan van (mien phi voi docx/doc, AI
-// voi pdf) roi xuat .clean.pdf/.xlsx.
+// quy/gioi han + phan loai Hop nhat/Rieng le; mo rong lan 2 cung ngay: chon ky
+// bat ky cua Vietstock - Quy/6T/9T/Nam - khong chi Quy 1-4): tai TAT CA bao
+// cao trong ky -> chuan hoa dinh dang (pdf/docx/doc, giai nen zip/rar neu can -
+// lib/report-source.ts) -> trich 3 bang (Mistral OCR cho pdf, doc truc tiep
+// cho docx/doc - lib/report-extract.ts) cho TAT CA -> ap tieu chi doc BCTC
+// (lib/analysis.ts, hien TODO) cho TAT CA (khong chi bao cao lot loc noi
+// dung) -> loc theo noi dung 3 bang (lib/content-filter.ts, hien pass-through,
+// cho tieu chi that cua user) -> CHI voi bao cao duoc chon: chep toan van
+// (mien phi voi docx/doc, AI voi pdf) roi xuat .clean.pdf/.xlsx.
 export async function runFetchPipeline(options: RunFetchPipelineOptions = {}): Promise<FetchStatus> {
-  const requestedPeriod: QuarterPeriod =
-    options.quarter && options.year ? { quarter: options.quarter, year: options.year } : getPreviousQuarter();
-  const { quarter, year } = requestedPeriod;
+  const term: ReportTerm =
+    options.term ??
+    (await (async () => {
+      const { quarter, year } = options.quarter && options.year ? { quarter: options.quarter, year: options.year } : getPreviousQuarter();
+      const resolved = await resolveQuarterTerm(quarter, year);
+      if (!resolved) throw new Error(`vietstock: khong tim thay ky bao cao "Quý ${quarter}" nam ${year}`);
+      return resolved;
+    })());
 
   writeStatus({ ...readStatus(), running: true, error: undefined });
 
   try {
-    const allReports = await fetchQuarterReports(quarter, year);
+    const allReports = await fetchReportFilesForTerm(term);
 
-    // Gioi han theo thoi gian (quy vua qua) hoac so luong (quy khac) - xem
-    // comment RunFetchPipelineOptions o tren.
-    const isCurrentQuarter = isSameQuarter(requestedPeriod, getPreviousQuarter());
+    // Loc theo dung tham so caller truyen (xem comment RunFetchPipelineOptions
+    // o tren) - KHONG tu gate theo loai ky o day, UI (app/FetchControls.tsx)
+    // da quyet dinh lua chon nao duoc phep hien cho tung loai ky.
     let scopedReports = allReports;
-    if (isCurrentQuarter && options.hoursWindow) {
+    if (options.hoursWindow) {
       const cutoff = Date.now() - options.hoursWindow * 60 * 60 * 1000;
       scopedReports = allReports.filter((r) => r.lastUpdate.getTime() >= cutoff);
-    } else if (!isCurrentQuarter && options.reportLimit) {
+    } else if (options.reportLimit) {
       scopedReports = [...allReports]
         .sort((a, b) => b.lastUpdate.getTime() - a.lastUpdate.getTime())
         .slice(0, options.reportLimit);
@@ -111,7 +129,7 @@ export async function runFetchPipeline(options: RunFetchPipelineOptions = {}): P
     // chua duoc chot.
     const matched = filterReports(scopedReports);
 
-    const destDir = join(DATA_DIR, 'reports', `${year}-Q${quarter}`);
+    const destDir = join(DATA_DIR, 'reports', `${term.yearPeriod}-${periodFolderSlug(term)}`);
     const downloadResults = await downloadReports(matched, destDir);
     const downloadSucceeded = downloadResults.filter((r) => r.filePath);
     const downloadFailed: FailedReport[] = downloadResults
@@ -197,6 +215,7 @@ export async function runFetchPipeline(options: RunFetchPipelineOptions = {}): P
           exchange: resolved.report.exchange,
           companyName: resolved.report.companyName,
           title: resolved.report.title,
+          lastUpdate: resolved.report.lastUpdate.toISOString(),
           statementScope: classifyStatementScope(buildStatementScopeInput(resolved, fullTextForScope)),
           analysis: computeAnalysisRows(content.statements),
           financeUrl: resolved.report.financeUrl,
@@ -214,8 +233,8 @@ export async function runFetchPipeline(options: RunFetchPipelineOptions = {}): P
     const status: FetchStatus = {
       running: false,
       generatedAt: new Date().toISOString(),
-      quarter,
-      year,
+      periodLabel: periodDisplayLabel(term),
+      year: term.yearPeriod,
       totalFound: allReports.length,
       totalMatched: matched.length,
       downloaded: downloadSucceeded.length,

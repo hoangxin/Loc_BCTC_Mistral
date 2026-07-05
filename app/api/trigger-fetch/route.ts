@@ -1,4 +1,5 @@
 import { runFetchPipeline, type RunFetchPipelineOptions } from '@/lib/pipeline';
+import type { ReportTerm } from '@/lib/vietstock-reports';
 
 // Chi phu hop chay tren 1 tien trinh Node dai han (next dev / next start) -
 // khong dung tren serverless (Vercel) vi ham chay nen sau khi response tra
@@ -7,8 +8,11 @@ import { runFetchPipeline, type RunFetchPipelineOptions } from '@/lib/pipeline';
 let isRunning = false;
 
 interface TriggerFetchBody {
-  quarter?: number;
-  year?: number;
+  // Ky da chon tu dropdown (app/FetchControls.tsx, lay tu app/api/report-terms) -
+  // co the la Quy 1-4, "6T", "9T", hoac "Nam" (xem lib/period-label.ts).
+  reportTermID?: number;
+  yearPeriod?: number;
+  description?: string;
   hoursWindow?: number;
   reportLimit?: number;
 }
@@ -26,9 +30,13 @@ export async function POST(request: Request) {
     // khong gioi han) nhu hanh vi truoc day.
   }
 
+  const term: ReportTerm | undefined =
+    body.reportTermID && body.yearPeriod && body.description
+      ? { reportTermID: body.reportTermID, yearPeriod: body.yearPeriod, description: body.description }
+      : undefined;
+
   const options: RunFetchPipelineOptions = {
-    quarter: body.quarter,
-    year: body.year,
+    term,
     hoursWindow: body.hoursWindow,
     reportLimit: body.reportLimit,
   };

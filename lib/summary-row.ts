@@ -5,6 +5,13 @@ export interface SummaryRow {
   stt: number;
   stockCode: string;
   companyName: string;
+  // "San giao dich" va "Ten tai lieu" giong giao dien Vietstock, xem
+  // lib/status.ts DownloadedReport - PHAI co o day thi file xuat (summary-
+  // excel.ts/summary-pdf.ts) moi co du cot giong bang tren UI (da gap thieu
+  // that qua feedback user 2026-07-06: xuat Excel bi thieu het cot nay vi
+  // SummaryRow chua bao gio duoc cap nhat theo).
+  exchange: string;
+  title: string;
   statementScope: StatementScope;
   analysis: AnalysisRow[];
 }

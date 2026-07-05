@@ -17,7 +17,7 @@ export async function buildSummaryPdfBuffer(rows: SummaryRow[]): Promise<Buffer>
 
   writer.drawText('Bảng tổng hợp % thay đổi BCTC', { size: HEADING_SIZE, bold: true, gapAfter: 10 });
 
-  const columns = ['STT', 'Mã CK', 'Tên công ty', 'Loại BCTC', ...labels.map((label) => `% ${label}`)];
+  const columns = ['STT', 'Mã CK', 'Tên công ty', 'Sàn giao dịch', 'Tên tài liệu', 'Loại BCTC', ...labels.map((label) => `% ${label}`)];
   const COMPANY_NAME_COLUMN_INDEX = 2;
   const layout = computeColumnLayout(columns, COMPANY_NAME_COLUMN_INDEX);
 
@@ -28,6 +28,8 @@ export async function buildSummaryPdfBuffer(rows: SummaryRow[]): Promise<Buffer>
       String(row.stt),
       row.stockCode,
       row.companyName,
+      row.exchange,
+      row.title,
       row.statementScope,
       ...labels.map((label) => formatPercent(byLabel.get(label))),
     ];

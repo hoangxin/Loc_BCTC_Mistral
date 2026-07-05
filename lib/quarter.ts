@@ -24,19 +24,9 @@ export function isSameQuarter(a: QuarterPeriod, b: QuarterPeriod): boolean {
   return a.quarter === b.quarter && a.year === b.year;
 }
 
-// Danh sach quy de chon tren dropdown UI - lui dan tu "quy vua qua", moi lan
-// lui 1 quy (khong phai lui theo nam) de ra dung thu tu thoi gian giam dan.
-export function listRecentQuarters(count = 8, now = new Date()): QuarterPeriod[] {
-  const result: QuarterPeriod[] = [];
-  let { quarter, year } = getPreviousQuarter(now);
-  for (let i = 0; i < count; i++) {
-    result.push({ quarter, year });
-    if (quarter === 1) {
-      quarter = 4;
-      year -= 1;
-    } else {
-      quarter -= 1;
-    }
-  }
-  return result;
-}
+// Truoc day co listRecentQuarters() sinh san 8 quy gan nhat bang tinh toan
+// lich thuan tuy - da BO (2026-07-05): Vietstock khong chi co Quy 1-4 (con co
+// "6T"/"9T"/"Nam", xem lib/period-label.ts) nen danh sach chon tren dropdown
+// gio lay TRUC TIEP tu Vietstock qua fetchReportTerms() (lib/vietstock-reports.ts,
+// goi qua app/api/report-terms) - tu "tinh tien" dung theo Vietstock thuc te
+// tai moi thoi diem, khong can tu sinh/doan lai logic ky han cua ho.

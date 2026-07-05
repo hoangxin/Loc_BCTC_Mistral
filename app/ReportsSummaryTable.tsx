@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import type { DownloadedReport } from '@/lib/status';
 
 function collectLabels(reports: DownloadedReport[]): string[] {
@@ -23,69 +23,33 @@ function formatPercent(value: number | null | undefined): string {
   return `${sign}${value.toFixed(1)}%`;
 }
 
-async function downloadExport(filePaths: string[], format: 'xlsx' | 'pdf') {
-  const response = await fetch('/api/export-summary', {
-    method: 'POST',
-    headers: { 'content-type': 'application/json' },
-    body: JSON.stringify({ filePaths, format }),
-  });
-  if (!response.ok) {
-    const data = await response.json().catch(() => null);
-    alert(data?.error || 'Xuất file thất bại.');
-    return;
-  }
-  const blob = await response.blob();
-  const url = URL.createObjectURL(blob);
-  const anchor = document.createElement('a');
-  anchor.href = url;
-  anchor.download = format === 'xlsx' ? 'bang-tong-hop.xlsx' : 'bang-tong-hop.pdf';
-  anchor.click();
-  URL.revokeObjectURL(url);
+function reportFileHref(filePath: string, kind: 'excel' | 'pdf'): string {
+  return `/api/report-file?filePath=${encodeURIComponent(filePath)}&kind=${kind}`;
 }
 
 export default function ReportsSummaryTable({ reports }: { reports: DownloadedReport[] }) {
-  const [selected, setSelected] = useState<Set<string>>(new Set());
   const labels = useMemo(() => collectLabels(reports), [reports]);
-
-  function toggle(filePath: string) {
-    setSelected((prev) => {
-      const next = new Set(prev);
-      if (next.has(filePath)) next.delete(filePath);
-      else next.add(filePath);
-      return next;
-    });
-  }
-
-  function toggleAll() {
-    setSelected((prev) => (prev.size === reports.length ? new Set() : new Set(reports.map((r) => r.filePath))));
-  }
-
-  const selectedPaths = [...selected];
 
   return (
     <div className="report-table-wrapper">
-      <div className="summary-actions">
-        <button className="secondary-button" disabled={selectedPaths.length === 0} onClick={() => downloadExport(selectedPaths, 'xlsx')}>
-          Xuất Excel
-        </button>
-        <button className="secondary-button" disabled={selectedPaths.length === 0} onClick={() => downloadExport(selectedPaths, 'pdf')}>
-          Xuất PDF
-        </button>
-        {labels.length === 0 && <span className="muted-note">(Chưa có tiêu chí đọc BCTC - cột % sẽ hiện khi có tiêu chí)</span>}
-      </div>
+      {labels.length === 0 && (
+        <div className="summary-actions">
+          <span className="muted-note">(Chưa có tiêu chí đọc BCTC - cột % sẽ hiện khi có tiêu chí)</span>
+        </div>
+      )}
       <table className="report-table">
         <thead>
           <tr>
             <th>STT</th>
             <th>Mã CK</th>
             <th>Tên công ty</th>
+            <th>Sàn giao dịch</th>
+            <th>Tên tài liệu</th>
             <th>Loại BCTC</th>
             {labels.map((label) => (
               <th key={label}>{label}</th>
             ))}
-            <th>
-              <input type="checkbox" checked={reports.length > 0 && selected.size === reports.length} onChange={toggleAll} />
-            </th>
+            <th>Xuất file</th>
           </tr>
         </thead>
         <tbody>
@@ -100,12 +64,41 @@ export default function ReportsSummaryTable({ reports }: { reports: DownloadedRe
                   </a>
                 </td>
                 <td>{report.companyName}</td>
+                <td>
+                  <span className="exchange-tag">{report.exchange}</span>
+                </td>
+                <td>{report.title}</td>
                 <td>{report.statementScope}</td>
                 {labels.map((label) => (
                   <td key={label}>{formatPercent(byLabel.get(label))}</td>
                 ))}
                 <td>
-                  <input type="checkbox" checked={selected.has(report.filePath)} onChange={() => toggle(report.filePath)} />
+                  {/* Tro thang vao file 3 bang BCTC (Can doi ke toan/KQKD/Luu
+                  chuyen tien te) da duoc Mistral OCR trich va ghi san luc chay
+                  pipeline (report.excelPath/cleanPdfPath, xem lib/export/index.ts)
+                  - KHONG phai bang tong hop % (xem lib/export/summary-excel.ts,
+                  hien chua co UI nao goi toi, cho tieu chi that + quyet dinh
+                  lai cach dung). */}
+                  <div className="row-export-actions">
+                    {report.excelPath ? (
+                      <a className="secondary-button" href={reportFileHref(report.filePath, 'excel')}>
+                        Excel
+                      </a>
+                    ) : (
+                      <button className="secondary-button" disabled title="Chưa có file Excel cho báo cáo này">
+                        Excel
+                      </button>
+                    )}
+                    {report.cleanPdfPath ? (
+                      <a className="secondary-button" href={reportFileHref(report.filePath, 'pdf')}>
+                        PDF
+                      </a>
+                    ) : (
+                      <button className="secondary-button" disabled title="Chưa có file PDF cho báo cáo này">
+                        PDF
+                      </button>
+                    )}
+                  </div>
                 </td>
               </tr>
             );

@@ -33,6 +33,8 @@ export async function POST(request: Request) {
       stt: index + 1,
       stockCode: report.stockCode ?? '',
       companyName: report.companyName ?? '',
+      exchange: report.exchange ?? '',
+      title: report.title ?? '',
       // Fallback 'Chung' cho du lieu cu tu ban truoc (chua co truong nay) -
       // du lieu moi tu lib/pipeline.ts/lib/custom-source.ts luon co san.
       statementScope: report.statementScope ?? 'Chung',

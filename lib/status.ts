@@ -13,9 +13,16 @@ export interface DownloadedReport {
   // lib/custom-source.ts).
   source: 'vietstock' | 'custom';
   stockCode: string;
+  // "San giao dich" giong giao dien Vietstock (VD "HoSE"/"HNX"/"UPCOM"/"OTC").
   exchange: string;
   companyName: string;
+  // "Ten tai lieu" giong giao dien Vietstock (VD "BCTC Hợp nhất quý 2 năm
+  // 2026") - KHAC "companyName".
   title: string;
+  // "Ngay cap nhat" giong giao dien Vietstock (ISO string) - lay tu
+  // ReportFile.lastUpdate (Vietstock) hoac thoi diem tai ve (nguon rieng, xem
+  // lib/custom-source.ts).
+  lastUpdate: string;
   // Hop nhat / Rieng le / Chung - xem lib/statement-scope.ts (khong doan bua
   // khi khong co dau hieu ro rang).
   statementScope: StatementScope;
@@ -51,7 +58,10 @@ export interface DownloadedReport {
 export interface FetchStatus {
   running: boolean;
   generatedAt: string;
-  quarter: number | null;
+  // Nhan hien thi ky bao cao (vd "Quý 2/2026", "6 tháng đầu năm 2026", "Cả
+  // năm 2025") - xem lib/period-label.ts. Thay the truong "quarter" cu (chi
+  // ho tro Quy 1-4) vi Vietstock con co ky "6T"/"9T"/"Nam".
+  periodLabel: string | null;
   year: number | null;
   totalFound: number;
   totalMatched: number;

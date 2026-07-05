@@ -19,7 +19,7 @@ const yearOverride = process.env.FETCH_YEAR ? Number(process.env.FETCH_YEAR) : u
 runFetchPipeline({ quarter: quarterOverride, year: yearOverride })
   .then((status) => {
     console.log(
-      `Quy ${status.quarter}/${status.year}: tim thay ${status.totalFound}, sau loc ${status.totalMatched}, tai thanh cong ${status.downloaded} (${status.failed.length} loi).`
+      `${status.periodLabel}: tim thay ${status.totalFound}, sau loc ${status.totalMatched}, tai thanh cong ${status.downloaded} (${status.failed.length} loi).`
     );
   })
   .catch((error) => {

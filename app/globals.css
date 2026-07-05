@@ -226,7 +226,40 @@ body {
   min-width: 140px;
 }
 
+.mode-toggle {
+  display: flex;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.mode-toggle-btn {
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 7px 12px;
+  border: none;
+  background: #fff;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.mode-toggle-btn + .mode-toggle-btn {
+  border-left: 1px solid var(--border);
+}
+
+.mode-toggle-btn.active {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.mode-toggle-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .secondary-button {
+  display: inline-block;
   font-family: inherit;
   font-size: 13px;
   font-weight: 700;
@@ -235,6 +268,7 @@ body {
   border-radius: 8px;
   background: #fff;
   color: var(--text);
+  text-decoration: none;
   cursor: pointer;
 }
 
@@ -280,4 +314,14 @@ body {
   width: 16px;
   height: 16px;
   cursor: pointer;
+}
+
+.row-export-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.row-export-actions .secondary-button {
+  padding: 5px 10px;
+  font-size: 12px;
 }
