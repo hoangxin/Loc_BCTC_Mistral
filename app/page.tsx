@@ -1,14 +1,21 @@
-import statusJson from '@/data/latest-fetch.json';
-import type { FetchStatus } from '@/lib/status';
+import { readStatus } from '@/lib/pipeline';
 import { formatTimestamp } from '@/lib/format';
 import { getPreviousQuarter } from '@/lib/quarter';
 import FetchControls from './FetchControls';
 import CustomSourceForm from './CustomSourceForm';
 import ReportsSummaryTable from './ReportsSummaryTable';
 
-const status = statusJson as unknown as FetchStatus;
+// Doc dong tu dia (khong import tinh JSON nua) - `data/latest-fetch.json`
+// KHONG nam trong repo (gitignore, la du lieu sinh ra luc chay, xem
+// README) nen import tinh se lam VO BUILD tren may khac/Vercel (da gap that
+// khi test build production 2026-07-06: "Module not found: Can't resolve
+// '@/data/latest-fetch.json'" tren 1 checkout moi khong co san file nay).
+// readStatus() da tu xu ly truong hop file chua ton tai (tra ve trang thai
+// rong), va force-dynamic de Next khong co gang prerender tinh trang nay.
+export const dynamic = 'force-dynamic';
 
 export default function HomePage() {
+  const status = readStatus();
   const previousQuarter = getPreviousQuarter();
 
   return (
