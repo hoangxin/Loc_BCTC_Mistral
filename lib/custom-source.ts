@@ -186,6 +186,7 @@ async function downloadAndProcessCustomReport(fileUrl: string, companyNameGuess:
     lastUpdate: fakeReportFile.lastUpdate.toISOString(),
     statementScope: classifyStatementScope({ metadataText: resolvedFile.entryName ?? '', contentText: content.fullText ?? undefined }),
     analysis: computeAnalysisRows(content.statements),
+    statements: content.statements,
     financeUrl: fileUrl,
     fileUrl,
     filePath: resolvedFile.filePath,

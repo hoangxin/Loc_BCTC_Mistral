@@ -183,6 +183,7 @@ export async function runFetchPipeline(options: RunFetchPipelineOptions = {}): P
           lastUpdate: resolved.report.lastUpdate.toISOString(),
           statementScope: classifyStatementScope(buildStatementScopeInput(resolved, content.fullText ?? undefined)),
           analysis: computeAnalysisRows(content.statements),
+          statements: content.statements,
           financeUrl: resolved.report.financeUrl,
           fileUrl: resolved.report.fileUrl,
           filePath: resolved.filePath,

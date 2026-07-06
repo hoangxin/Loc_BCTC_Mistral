@@ -1,6 +1,7 @@
 import type { AnalysisRow } from './analysis';
 import type { StatementScope } from './statement-scope';
 import type { ReportFileFormat } from './report-source';
+import type { FinancialStatements } from './export/statement-shared';
 
 export interface FailedReport {
   stockCode: string;
@@ -30,6 +31,13 @@ export interface DownloadedReport {
   // Ket qua ap tieu chi doc BCTC (lib/analysis.ts, hien TODO cho tieu chi that
   // - tra rong) - dung de dung cot % dong tren bang tong hop UI.
   analysis: AnalysisRow[] | null;
+  // 3 bang DA OCR luc "Tai BCTC" (lib/report-extract.ts, pham vi truoc "Thuyet
+  // minh") - luu lai de "Xuat Excel" (app/api/report-file) DUNG THANG, KHONG
+  // can tai lai file goc/OCR lai (Excel khong co toan van nen khong co rui ro
+  // "ghep 2 lan OCR" nhu PDF - quyet dinh user 2026-07-06: chi "Xuat PDF" moi
+  // can OCR lai toan van tu dau, vi PDF can CA bang lan toan van phai ra tu
+  // CUNG 1 lan OCR, "Xuat Excel" thi khong).
+  statements: FinancialStatements;
   financeUrl: string;
   fileUrl: string;
   filePath: string;

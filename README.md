@@ -133,12 +133,24 @@ diện web hoặc bằng lệnh `npm run fetch`.
 - `app/ReportsSummaryTable.tsx` - bảng STT/Mã CK/Sàn giao dịch/Tên tài liệu/Ngày cập nhật/Tên công
   ty/Loại BCTC/cột % động (rỗng cho tới khi `lib/analysis.ts` có tiêu chí thật) + 2 nút Excel/PDF mỗi
   dòng, LUÔN bật (không còn kiểm tra file có sẵn hay không - xem `app/api/report-file` dưới).
-- `app/api/report-file` - viết lại hoàn toàn: **tải LẠI file gốc** từ `report.fileUrl` (Vietstock/nguồn
-  riêng đều host lâu dài, không cần lưu sẵn) + OCR TOÀN VĂN TỪ ĐẦU (`lib/export/full-document.ts` cho
-  PDF, đọc lại qua mammoth/word-extractor cho DOCX/DOC) MỖI LẦN user bấm "Xuất" - xuất theo tên
-  `lib/export/output-filename.ts`, lưu 1 bản cục bộ vào `data/exports/` (mặc định, theo yêu cầu user
-  2026-07-06 - lưu ý: trên Vercel bước lưu cục bộ này sẽ lỗi vì đĩa ngoài `/tmp` là read-only, nhưng
-  KHÔNG làm hỏng việc tải file qua trình duyệt, chỉ là không có bản lưu trên server) rồi trả qua response.
+- `app/api/report-file` - viết lại hoàn toàn, xuất theo tên `lib/export/output-filename.ts`, 2 nhánh
+  KHÁC NHAU tuỳ `kind` (chốt lại 2026-07-06 sau khi user chỉnh):
+  - `kind=excel` - dùng THẲNG `report.statements` đã OCR sẵn lúc "Tải BCTC" (`lib/pipeline.ts`) - KHÔNG
+    tải lại file gốc, KHÔNG gọi AI gì thêm (Excel không có toàn văn nên không có rủi ro "ghép 2 lần OCR").
+  - `kind=pdf` - CẦN cả bảng lẫn toàn văn ra từ CÙNG 1 nguồn nên **tải LẠI file gốc** từ `report.fileUrl`
+    (Vietstock/nguồn riêng đều host lâu dài) rồi OCR TOÀN VĂN TỪ ĐẦU (`lib/export/full-document.ts` cho
+    PDF, đọc lại qua mammoth/word-extractor cho DOCX/DOC - vẫn không AI) - KHÔNG dùng `report.statements`
+    cũ, tránh ghép 2 kết quả OCR độc lập làm 1.
+  - Cả 2 đều lưu thêm 1 bản vào đĩa server (`EXPORT_SAVE_DIR`, mặc định `data/exports/`) TRƯỚC khi trả
+    response - **lưu ý quan trọng**: đây KHÔNG PHẢI cách đưa file "vào máy người dùng" trên Vercel - máy
+    chạy server (Vercel) và máy người dùng là 2 máy KHÁC NHAU, web app không có cách nào ghi file thẳng
+    vào 1 thư mục tuỳ ý trên máy người dùng (giới hạn bảo mật trình duyệt, không phải hạn chế của code).
+    Đường DUY NHẤT file "vào máy người dùng" là qua `Content-Disposition: attachment` + trình duyệt tự
+    tải (đã có sẵn, luôn hoạt động cả local lẫn Vercel) - mặc định lưu vào thư mục Downloads của trình
+    duyệt, đổi được trong cài đặt trình duyệt. Bước ghi đĩa server chỉ thực sự "vào máy người dùng" khi
+    server VÀ trình duyệt là CÙNG 1 máy (`npm run dev` local) - set `EXPORT_SAVE_DIR` trong `.env` để đổi
+    thư mục này sang đường dẫn tuỳ ý (VD `D:\Temporary FS`) khi chạy local. Trên Vercel, bước này ghi vào
+    `/tmp` rồi mất ngay (đĩa ngoài `/tmp` read-only) - KHÔNG ảnh hưởng gì tới việc tải qua trình duyệt.
 
 ## Chạy
 
@@ -161,6 +173,9 @@ Biến môi trường (`.env` cho local; xem mục dispatch dưới để biết
   `.github/workflows/fetch-bctc.yml`. KHÔNG cần cho `npm run dev`/`npm run fetch` local (chỉ dùng khi
   chạy qua web thật) - **chỉ set trên Vercel**, KHÔNG set trong `.env`/GitHub repo secrets (chiều gọi
   ngược lại: Vercel gọi GitHub, không phải GitHub gọi Vercel).
+- `EXPORT_SAVE_DIR` - tuỳ chọn, đổi thư mục lưu bản sao cục bộ của `app/api/report-file` (mặc định
+  `data/exports/` trong project) - CHỈ có ý nghĩa khi chạy `npm run dev` local (xem giải thích ở
+  `app/api/report-file` phía trên) - VD set `D:\Temporary FS` để file xuất ra nằm thẳng ở đó.
 - `OPENROUTER_API_KEY` - đang comment, dự phòng cho bước lọc theo tiêu chí sau này (xem trên).
 - `QWEN_MODEL` - dự phòng, đi cùng `OPENROUTER_API_KEY`.
 - `CLAUDE_API_KEY` / `CLAUDE_MODEL` - dự phòng, chưa dùng.

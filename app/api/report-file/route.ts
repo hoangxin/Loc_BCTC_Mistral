@@ -15,20 +15,13 @@ import type { ReportFile } from '@/lib/vietstock-reports';
 import type { FinancialStatements } from '@/lib/export/statement-shared';
 
 export const dynamic = 'force-dynamic';
-// Buoc nay goi Mistral OCR toan van (kind=pdf) - lau hon 1 request thuong,
-// tang gioi han thoi gian chay (chi co hieu luc neu goi Vercel cho phep tang -
-// Hobby mac dinh gioi han thap hon, xem README).
+// Buoc pdf goi Mistral OCR toan van - lau hon 1 request thuong, tang gioi han
+// thoi gian chay (chi co hieu luc neu goi Vercel cho phep tang - Hobby mac
+// dinh gioi han thap hon, xem README).
 export const maxDuration = 60;
 
 const REQUEST_TIMEOUT_MS = 30000;
 
-// Xuat Excel/PDF THEO YEU CAU cho 1 bao cao cu the (nut "Excel"/"PDF" o moi
-// hang, app/ReportsSummaryTable.tsx) - KHAC hoan toan cach cu (doc file da
-// xuat san tren dia): gio TAI LAI file goc tu `report.fileUrl` (Vietstock/
-// nguon rieng deu host lau dai) roi OCR TOAN VAN TU DAU (lib/export/full-
-// document.ts cho pdf; mammoth/word-extractor cho docx/doc - deu KHONG dung
-// lai `analysis`/3 bang da tinh luc "Tai BCTC", theo dung yeu cau user
-// 2026-07-06: khong ghep 2 lan OCR doc lap lam 1).
 async function downloadToScratch(fileUrl: string, destDir: string): Promise<string> {
   await mkdir(destDir, { recursive: true });
   const rawName = basename(new URL(fileUrl).pathname) || 'bctc';
@@ -44,6 +37,34 @@ async function downloadToScratch(fileUrl: string, destDir: string): Promise<stri
   return filePath;
 }
 
+// Luu 1 ban sao vao dia server (mac dinh, khong can bat/tat) - CHI thuc su
+// "vao may nguoi dung" khi server va trinh duyet la CUNG 1 may (npm run dev
+// local) - tren Vercel, server o xa, ghi dia server KHONG lam file xuat hien
+// tren may nguoi dung (gioi han bao mat trinh duyet, khong phai han che cua
+// code) - duong tai that ve may nguoi dung LUON la qua Content-Disposition +
+// trinh duyet tu tai (xem cuoi ham GET). EXPORT_SAVE_DIR (tuy chon, .env) cho
+// doi thu muc luu cuc bo nay khi chay local - vd tro thang vao 1 thu muc
+// ngoai project (D:\Temporary FS) thay vi data/exports/ mac dinh.
+async function saveLocalCopy(buffer: Buffer, filename: string): Promise<void> {
+  try {
+    const dir = process.env.EXPORT_SAVE_DIR || join(process.cwd(), 'data', 'exports');
+    await mkdir(dir, { recursive: true });
+    await writeFile(join(dir, filename), buffer);
+  } catch (error) {
+    console.warn('report-file: khong luu duoc ban sao cuc bo (binh thuong tren Vercel, dia ngoai /tmp la read-only)', error);
+  }
+}
+
+// Xuat Excel/PDF THEO YEU CAU cho 1 bao cao cu the (nut "Excel"/"PDF" o moi
+// hang, app/ReportsSummaryTable.tsx):
+// - kind=excel: dung THANG `report.statements` da OCR san luc "Tai BCTC"
+//   (lib/pipeline.ts, pham vi truoc "Thuyet minh") - KHONG tai lai file goc,
+//   KHONG goi AI gi them, vi Excel khong co toan van nen khong co rui ro
+//   "ghep 2 lan OCR" (quyet dinh user 2026-07-06).
+// - kind=pdf: PDF can CA bang lan toan van phai ra tu CUNG 1 nguon - tai LAI
+//   file goc tu `fileUrl` roi OCR TOAN VAN TU DAU (lib/export/full-document.ts
+//   cho pdf; mammoth/word-extractor cho docx/doc, van khong AI) - KHONG dung
+//   `report.statements` cu, tranh ghep 2 ket qua doc lap lam 1.
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const filePath = searchParams.get('filePath');
@@ -59,75 +80,68 @@ export async function GET(request: Request) {
     return Response.json({ error: 'Không tìm thấy báo cáo.' }, { status: 404 });
   }
 
+  const filenameBase = buildOutputFilename({
+    stockCode: report.stockCode,
+    periodYear: report.periodYear,
+    periodSlug: report.periodSlug,
+    statementScope: report.statementScope,
+  });
+
   try {
-    const scratchDir = join(tmpdir(), 'loc-bctc-export', String(Date.now()));
-
-    const rawPath = await downloadToScratch(report.fileUrl, scratchDir);
-    const fakeReportFile: ReportFile = {
-      fileInfoID: 0,
-      stockCode: report.stockCode,
-      exchange: report.exchange,
-      companyName: report.companyName,
-      financeUrl: report.financeUrl,
-      fileUrl: report.fileUrl,
-      title: report.title,
-      fullName: basename(rawPath),
-      fileExt: extname(rawPath),
-      lastUpdate: new Date(report.lastUpdate),
-    };
-
-    const { resolved, errors } = await resolveReportSourceFiles({ report: fakeReportFile, filePath: rawPath });
-    const match = report.entryName ? resolved.find((r) => r.entryName === report.entryName) : resolved[0];
-    if (!match) {
-      throw new Error(errors.join('; ') || 'Không tải lại được file gốc để xuất.');
-    }
-
-    let statements: FinancialStatements;
-    let fullText: string;
-    if (match.format === 'pdf') {
-      ({ statements, fullText } = await extractFullReportFromPdf(match.filePath));
-    } else if (match.format === 'docx') {
-      ({ statements, fullText } = await extractFinancialStatementsFromDocx(match.filePath));
-    } else {
-      ({ statements, fullText } = await extractFinancialStatementsFromDoc(match.filePath));
-    }
-
-    const filename = buildOutputFilename({
-      stockCode: report.stockCode,
-      periodYear: report.periodYear,
-      periodSlug: report.periodSlug,
-      statementScope: report.statementScope,
-    });
-    const ext = kind === 'excel' ? '.xlsx' : '.pdf';
-    const outputPath = join(scratchDir, `${filename}${ext}`);
+    let buffer: Buffer;
 
     if (kind === 'excel') {
-      await writeFinancialStatementsExcel(statements, outputPath);
+      const scratchDir = join(tmpdir(), 'loc-bctc-export', String(Date.now()));
+      await mkdir(scratchDir, { recursive: true });
+      const outputPath = join(scratchDir, `${filenameBase}.xlsx`);
+      await writeFinancialStatementsExcel(report.statements, outputPath);
+      buffer = await readFile(outputPath);
     } else {
+      const scratchDir = join(tmpdir(), 'loc-bctc-export', String(Date.now()));
+      const rawPath = await downloadToScratch(report.fileUrl, scratchDir);
+      const fakeReportFile: ReportFile = {
+        fileInfoID: 0,
+        stockCode: report.stockCode,
+        exchange: report.exchange,
+        companyName: report.companyName,
+        financeUrl: report.financeUrl,
+        fileUrl: report.fileUrl,
+        title: report.title,
+        fullName: basename(rawPath),
+        fileExt: extname(rawPath),
+        lastUpdate: new Date(report.lastUpdate),
+      };
+
+      const { resolved, errors } = await resolveReportSourceFiles({ report: fakeReportFile, filePath: rawPath });
+      const match = report.entryName ? resolved.find((r) => r.entryName === report.entryName) : resolved[0];
+      if (!match) {
+        throw new Error(errors.join('; ') || 'Không tải lại được file gốc để xuất.');
+      }
+
+      let statements: FinancialStatements;
+      let fullText: string;
+      if (match.format === 'pdf') {
+        ({ statements, fullText } = await extractFullReportFromPdf(match.filePath));
+      } else if (match.format === 'docx') {
+        ({ statements, fullText } = await extractFinancialStatementsFromDocx(match.filePath));
+      } else {
+        ({ statements, fullText } = await extractFinancialStatementsFromDoc(match.filePath));
+      }
+
+      const outputPath = join(scratchDir, `${filenameBase}.pdf`);
       await writeReportPdf({ stockCode: report.stockCode, companyName: report.companyName, title: report.title }, fullText, statements, outputPath);
+      buffer = await readFile(outputPath);
     }
 
-    const buffer = await readFile(outputPath);
-
-    // Luu ban sao cuc bo THEO YEU CAU user (mac dinh, khong can bat/tat) - vao
-    // data/exports/ trong project, dung khi chay `npm run dev` local (file
-    // nam lai, xem duoc tren may). Tren Vercel serverless, o dia ngoai /tmp la
-    // READ-ONLY nen buoc nay se loi - KHONG de loi nay lam hong ca response
-    // (nguoi dung van tai duoc file qua trinh duyet, chi la khong co ban sao
-    // luu tren server nua - dung ca 2 truong hop deu OK).
-    try {
-      const exportsDir = join(process.cwd(), 'data', 'exports');
-      await mkdir(exportsDir, { recursive: true });
-      await writeFile(join(exportsDir, `${filename}${ext}`), buffer);
-    } catch (error) {
-      console.warn('report-file: khong luu duoc ban sao cuc bo (binh thuong tren Vercel, dia ngoai /tmp la read-only)', error);
-    }
+    const ext = kind === 'excel' ? '.xlsx' : '.pdf';
+    const filename = `${filenameBase}${ext}`;
+    await saveLocalCopy(buffer, filename);
 
     const contentType = kind === 'excel' ? 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' : 'application/pdf';
     return new Response(new Blob([new Uint8Array(buffer)]), {
       headers: {
         'Content-Type': contentType,
-        'Content-Disposition': `attachment; filename="${filename}${ext}"`,
+        'Content-Disposition': `attachment; filename="${filename}"`,
       },
     });
   } catch (error) {
