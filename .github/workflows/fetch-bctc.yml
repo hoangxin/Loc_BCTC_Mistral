@@ -1,0 +1,81 @@
+name: Fetch BCTC
+
+# Kich hoat tu app/api/trigger-fetch (mode=term) va app/api/custom-source
+# (mode=custom) qua GitHub REST API dispatch (POST .../actions/workflows/
+# fetch-bctc.yml/dispatches) - dung PAT GITHUB_DISPATCH_TOKEN, KHONG dung
+# repository_dispatch/webhook. Theo dung khung .github/workflows/news-digest.yml
+# cua 3 project cu cung tac gia (D:\AI\loc_tin, Loc_Tin_Mistral, loc_tin_qwen) -
+# da xac nhan qua git log that la mo hinh nay hoat dong dung.
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'term (tai hang loat theo ky) hoac custom (nguon rieng)'
+        default: 'term'
+        type: string
+      reportTermID:
+        type: string
+        default: ''
+      yearPeriod:
+        type: string
+        default: ''
+      description:
+        type: string
+        default: ''
+      hoursWindow:
+        type: string
+        default: ''
+      reportLimit:
+        type: string
+        default: ''
+      customUrl:
+        type: string
+        default: ''
+      requestId:
+        type: string
+        default: ''
+
+permissions:
+  contents: write
+
+# Xep hang thay vi chay chong (VD user bam "Tai BCTC" 2 lan lien tiep) - GitHub
+# tu lo, khong can bien "isRunning" in-memory nhu ban serverless cu.
+concurrency:
+  group: fetch-bctc
+  cancel-in-progress: false
+
+jobs:
+  run-fetch:
+    runs-on: ubuntu-latest
+    # Lau hon 15 phut cua news-digest.yml (chi scrape tin) vi pipeline nay OCR
+    # Mistral cho hang chuc bao cao/lan chay.
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm ci
+      - name: Run fetch pipeline
+        env:
+          MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
+          MISTRAL_OCR_MODEL: ${{ secrets.MISTRAL_OCR_MODEL }}
+          MISTRAL_CHAT_MODEL: ${{ secrets.MISTRAL_CHAT_MODEL }}
+          FETCH_MODE: ${{ github.event.inputs.mode }}
+          FETCH_REPORT_TERM_ID: ${{ github.event.inputs.reportTermID }}
+          FETCH_YEAR_PERIOD: ${{ github.event.inputs.yearPeriod }}
+          FETCH_DESCRIPTION: ${{ github.event.inputs.description }}
+          FETCH_HOURS_WINDOW: ${{ github.event.inputs.hoursWindow }}
+          FETCH_REPORT_LIMIT: ${{ github.event.inputs.reportLimit }}
+          FETCH_CUSTOM_URL: ${{ github.event.inputs.customUrl }}
+          FETCH_REQUEST_ID: ${{ github.event.inputs.requestId }}
+        run: npx tsx scripts/run-fetch.ts
+      # Commit data/latest-fetch.json neu co thay doi - cu push nay tu khien
+      # Vercel deploy lai (Git integration mac dinh), day la cach client
+      # (app/FetchControls.tsx, app/CustomSourceForm.tsx) biet "da xong" (poll
+      # generatedAt/lastCustomSourceCheck doi).
+      - name: Commit updated status
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: 'chore: cap nhat ket qua BCTC'
+          file_pattern: data/latest-fetch.json

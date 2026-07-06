@@ -1,5 +1,6 @@
 import type { AnalysisRow } from './analysis';
 import type { StatementScope } from './statement-scope';
+import type { ReportFileFormat } from './report-source';
 
 export interface FailedReport {
   stockCode: string;
@@ -32,27 +33,25 @@ export interface DownloadedReport {
   financeUrl: string;
   fileUrl: string;
   filePath: string;
-  // Text chep nguyen van CA tai lieu (ke ca Thuyet minh, vision model doc
-  // anh, khong qua Tesseract - xem lib/pdf-text.ts) - CHI co voi bao cao
-  // "shortlisted" (xem duoi), vi day la buoc chep toan van, ton kem hon nen
-  // chi lam khi bao cao lot qua bo loc. null = bao cao khong duoc chon, hoac
-  // xuat that bai (xem console log).
-  textPath: string | null;
-  // true = bao cao nay qua duoc bo loc noi dung (lib/content-filter.ts, hien
-  // pass-through vi tieu chi that chua duoc chot) va da xuat day du .clean.pdf/.xlsx.
-  // false = khong qua loc, khong xuat file (cleanPdfPath/excelPath deu null).
-  shortlisted: boolean;
-  // PDF text sach (khong phai anh scan goc, xem lib/export/pdf.ts) - gom 3
-  // bang + toan van (ke ca Thuyet minh). null = xuat that bai (xem console
-  // log) hoac bao cao khong duoc chon.
-  cleanPdfPath: string | null;
-  // null = xuat that bai, hoac trich 3 bang (vision model) that bai, hoac bao
-  // cao khong duoc chon.
-  excelPath: string | null;
-  // Khac null nghia la sau khi cau truc hoa xong, so lieu Excel van khong
-  // khop nguyen tac ke toan bat buoc (vd Tong tai san != Tong nguon von) -
-  // nen mo file nay kiem tra tay lai truoc khi dung.
-  excelWarnings: string[] | null;
+  // Dinh dang file GOC (khong phai file da giai nen/xuat) - dung khi "Xuat
+  // Excel/PDF" (app/api/report-file) tai lai fileUrl, biet cach xu ly tiep
+  // (OCR PDF hay doc truc tiep docx/doc) - xem lib/report-source.ts.
+  format: ReportFileFormat;
+  // Neu file goc la 1 entry ben trong zip/rar - ten entry GOC (xem
+  // lib/report-source.ts ResolvedReportFile.entryName) - can de giai nen lai
+  // DUNG file nay khi tai lai fileUrl (zip/rar co the chua nhieu file).
+  entryName: string | null;
+  // Nam + hau to ky (Q1-4/6T/9T/Nam, xem lib/period-label.ts) cua LAN TAI NAY -
+  // dung de dat ten file xuat (lib/export/output-filename.ts), luu rieng o
+  // TUNG bao cao (khong chi o FetchStatus) vi bao cao "nguon rieng" (custom)
+  // khong gan voi 1 lan chay hang loat theo ky nao ca.
+  periodYear: number;
+  periodSlug: string;
+  // Canh bao tu validateFinancialStatements cho lan OCR 3 bang luc "Tai BCTC"
+  // (KHONG lien quan gi toi file xuat luc "Xuat Excel/PDF" - luc do OCR lai
+  // toan bo tu dau, xem lib/export/full-document.ts) - chi de hien thi canh
+  // bao tren UI, khong tu "sua".
+  warnings: string[];
 }
 
 export interface FetchStatus {
@@ -68,5 +67,12 @@ export interface FetchStatus {
   downloaded: number;
   failed: FailedReport[];
   reports: DownloadedReport[];
+  // Ket qua lan "Them nguon rieng" GAN NHAT (dispatch GitHub Actions, xem
+  // app/api/custom-source, lib/custom-source.ts) - LUON duoc ghi (ke ca
+  // found:false) vi day la cach DUY NHAT de app/CustomSourceForm.tsx (polling)
+  // phan biet "chua chay xong" voi "chay xong nhung khong thay". `requestId`
+  // do client tu sinh luc gui, dung de doi chieu dung lan yeu cau (tranh nham
+  // voi ket qua cua lan thu truoc).
+  lastCustomSourceCheck: { requestId: string; url: string; found: boolean; message: string } | null;
   error?: string;
 }

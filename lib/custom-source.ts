@@ -5,13 +5,13 @@ import axios from 'axios';
 import { getPreviousQuarter } from './quarter';
 import { callMistralChat } from './ai/mistral-chat';
 import { resolveReportSourceFiles } from './report-source';
-import { extractReportContent, ensureFullText } from './report-extract';
-import { writeReportExports } from './export';
+import { extractReportContent } from './report-extract';
 import { computeAnalysisRows } from './analysis';
 import { classifyStatementScope } from './statement-scope';
 import { normalizeLabelText } from './export/statement-shared';
+import { addCustomReport, writeCustomSourceCheck } from './pipeline';
 import type { ReportFile } from './vietstock-reports';
-import type { DownloadedReport } from './status';
+import type { DownloadedReport, FetchStatus } from './status';
 
 // Nut "Them nguon rieng" (paste link web cong ty) - dung AI (Mistral chat,
 // xem lib/ai/mistral-chat.ts) duyet trang de tu tim file BCTC quy vua ket
@@ -144,9 +144,10 @@ async function downloadFile(fileUrl: string, destDir: string): Promise<string> {
   return filePath;
 }
 
-// Tai + xu ly 1 file BCTC tim duoc qua link nguon rieng - coi nhu LUON "duoc
-// chon" (khac batch Vietstock phai qua content-filter truoc) vi nguoi dung da
-// tu tay chi dinh cong ty nay, khong can loc lai.
+// Tai + trich 3 bang 1 file BCTC tim duoc qua link nguon rieng - CHI trich 3
+// bang (KHONG OCR toan van/ghi file xuat o day nua, xem lib/pipeline.ts va
+// lib/export/full-document.ts - OCR toan van gio la buoc RIENG, chi lam luc
+// user bam "Xuat" cho 1 bao cao cu the qua app/api/report-file).
 async function downloadAndProcessCustomReport(fileUrl: string, companyNameGuess: string | undefined): Promise<DownloadedReport> {
   const destDir = join(process.cwd(), 'data', 'reports', 'custom');
   const filePath = await downloadFile(fileUrl, destDir);
@@ -174,19 +175,7 @@ async function downloadAndProcessCustomReport(fileUrl: string, companyNameGuess:
   // vi o day khong co "danh sach nhieu cong ty" de tach dong rieng).
   const resolvedFile = resolved[0];
   const content = await extractReportContent(resolvedFile);
-  const fullText = await ensureFullText(resolvedFile, content);
-
-  const exportResults = await writeReportExports([
-    {
-      filePath: resolvedFile.filePath,
-      statements: content.statements,
-      fullText,
-      stockCode: fakeReportFile.stockCode,
-      companyName: fakeReportFile.companyName,
-      title: fakeReportFile.title,
-    },
-  ]);
-  const exportResult = exportResults.get(resolvedFile.filePath);
+  const { quarter, year } = getPreviousQuarter();
 
   return {
     source: 'custom',
@@ -195,20 +184,20 @@ async function downloadAndProcessCustomReport(fileUrl: string, companyNameGuess:
     companyName: fakeReportFile.companyName,
     title: fakeReportFile.title,
     lastUpdate: fakeReportFile.lastUpdate.toISOString(),
-    statementScope: classifyStatementScope({ metadataText: resolvedFile.entryName ?? '', contentText: fullText }),
+    statementScope: classifyStatementScope({ metadataText: resolvedFile.entryName ?? '', contentText: content.fullText ?? undefined }),
     analysis: computeAnalysisRows(content.statements),
     financeUrl: fileUrl,
     fileUrl,
     filePath: resolvedFile.filePath,
-    textPath: exportResult?.textPath ?? null,
-    shortlisted: true,
-    cleanPdfPath: exportResult?.cleanPdfPath ?? null,
-    excelPath: exportResult?.excelPath ?? null,
-    excelWarnings: content.warnings.length > 0 ? content.warnings : null,
+    format: resolvedFile.format,
+    entryName: resolvedFile.entryName ?? null,
+    periodYear: year,
+    periodSlug: `Q${quarter}`,
+    warnings: content.warnings,
   };
 }
 
-export async function fetchCustomSourceReport(startUrl: string): Promise<CustomSourceResult> {
+async function browseForReport(startUrl: string): Promise<CustomSourceResult> {
   const { quarter, year } = getPreviousQuarter();
   const visited = new Set<string>();
   let currentUrl = startUrl;
@@ -260,4 +249,20 @@ export async function fetchCustomSourceReport(startUrl: string): Promise<CustomS
   }
 
   return { found: false, message: 'Chưa có' };
+}
+
+// Diem vao goi tu scripts/run-fetch.ts (mode=custom, chay tren GitHub Actions
+// runner - xem .github/workflows/fetch-bctc.yml) - LUON ghi lai
+// lastCustomSourceCheck (ke ca found:false) qua writeCustomSourceCheck, day la
+// cach DUY NHAT app/CustomSourceForm.tsx (polling app/api/fetch-status) biet
+// duoc "da chay xong" thay vi cho toi khi het thoi gian poll.
+export async function runCustomSourceCheck(url: string, requestId: string): Promise<FetchStatus> {
+  const result = await browseForReport(url);
+
+  if (result.found) {
+    addCustomReport(result.report);
+    return writeCustomSourceCheck({ requestId, url, found: true, message: '' });
+  }
+
+  return writeCustomSourceCheck({ requestId, url, found: false, message: result.message });
 }

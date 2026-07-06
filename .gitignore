@@ -8,6 +8,6 @@ npm-debug.log*
 .DS_Store
 tsconfig.tsbuildinfo
 data/reports
-data/latest-fetch.json
+data/exports
 *.traineddata
 .claude/settings.local.json

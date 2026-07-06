@@ -6,9 +6,8 @@ export interface AnalysisRow {
 }
 
 // TODO: thay bang tieu chi doc BCTC that cua user (se duoc bo sung sau) -
-// dung y dinh nhu lib/filter.ts (loc metadata) va lib/content-filter.ts (loc
-// theo 3 bang) - hien pass-through (tra rong) de UI hien "(chua co tieu chi)"
-// thay vi bang trong. KHONG tu doan tieu chi.
+// dung y dinh nhu lib/filter.ts (loc metadata) - hien pass-through (tra rong)
+// de UI hien "(chua co tieu chi)" thay vi bang trong. KHONG tu doan tieu chi.
 //
 // Dau vao la statements DA CO SAN (tu Buoc 2 cua pipeline) - vi bang can doi
 // ke toan luon co cot "so cuoi ky"/"so dau nam" VA bang ket qua kinh doanh

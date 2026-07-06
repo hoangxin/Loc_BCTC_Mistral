@@ -1,6 +1,5 @@
 import { determineStatementPageScope } from './pdf-text';
 import { extractFinancialStatements } from './export/financial-statements';
-import { transcribeFullDocument } from './export/transcribe';
 import { extractFinancialStatementsFromDocx } from './export/docx-statements';
 import { extractFinancialStatementsFromDoc } from './export/doc-statements';
 import type { FinancialStatements } from './export/statement-shared';
@@ -9,47 +8,33 @@ import type { ResolvedReportFile } from './report-source';
 // Diem noi DUY NHAT re nhanh theo dinh dang file (pdf/docx/doc, xem
 // lib/report-source.ts) de trich 3 bang - dung chung cho ca luong Vietstock
 // hang loat (lib/pipeline.ts) lan nguon rieng (lib/custom-source.ts), tranh
-// lap logic re nhanh o 2 noi.
-//
-// docx/doc doc TRUC TIEP (khong qua AI - xem lib/export/docx-statements.ts,
-// doc-statements.ts) nen co CA fullText luon, khong ton kem gi them. pdf phai
-// OCR (Mistral) rieng cho "3 bang" (chi pham vi truoc Thuyet minh, re) va
-// rieng cho "toan van ca tai lieu" (ton kem hon, chi lam khi bao cao duoc
-// chon - xem ensureFullText) - giu dung nguyen tac cu "AI chi doc toan van khi
-// duoc yeu cau" (lib/pipeline.ts).
+// lap logic re nhanh o 2 noi. CHI trich 3 bang (pham vi truoc Thuyet minh cho
+// pdf) - KHONG con OCR toan van o day nua (buoc do rieng, chi lam luc user
+// bam "Xuat" cho 1 bao cao cu the - xem lib/export/full-document.ts,
+// app/api/report-file/route.ts).
 export interface ReportContentResult {
   statements: FinancialStatements;
   warnings: string[];
-  fullText: string | null; // co san (khong ton them) cho docx/doc; null cho pdf tru khi da goi ensureFullText
-  totalPages: number | null; // chi co y nghia voi pdf, dung khi can chep toan van sau (ensureFullText)
+  fullText: string | null; // co san (khong ton them) cho docx/doc; null cho pdf (khong con OCR toan van o day)
 }
 
 export async function extractReportContent(resolved: ResolvedReportFile): Promise<ReportContentResult> {
   if (resolved.format === 'docx') {
     const { statements, fullText, warnings } = await extractFinancialStatementsFromDocx(resolved.filePath);
-    return { statements, warnings, fullText, totalPages: null };
+    return { statements, warnings, fullText };
   }
   if (resolved.format === 'doc') {
     const { statements, fullText, warnings } = await extractFinancialStatementsFromDoc(resolved.filePath);
-    return { statements, warnings, fullText, totalPages: null };
+    return { statements, warnings, fullText };
   }
 
   const scopeMap = await determineStatementPageScope([resolved.filePath]);
   const scope = scopeMap.get(resolved.filePath);
-  if (!scope?.pageNumbers || !scope.totalPages) {
+  if (!scope?.pageNumbers) {
     throw new Error(scope?.error || 'Khong xac dinh duoc pham vi trang PDF');
   }
   const { statements, warnings } = await extractFinancialStatements({ filePath: resolved.filePath, pageNumbers: scope.pageNumbers });
-  return { statements, warnings, fullText: null, totalPages: scope.totalPages };
-}
-
-// Chi PDF can goi rieng (AI, ton kem) - docx/doc da co fullText san trong
-// ReportContentResult tu buoc tren, tra thang lai khong lam gi them.
-export async function ensureFullText(resolved: ResolvedReportFile, content: ReportContentResult): Promise<string> {
-  if (content.fullText !== null) return content.fullText;
-  if (!content.totalPages) throw new Error('Thieu totalPages de chep toan van PDF');
-  const allPageNumbers = Array.from({ length: content.totalPages }, (_, i) => i + 1);
-  return transcribeFullDocument(resolved.filePath, allPageNumbers);
+  return { statements, warnings, fullText: null };
 }
 
 export interface ReportContentBatchEntry {

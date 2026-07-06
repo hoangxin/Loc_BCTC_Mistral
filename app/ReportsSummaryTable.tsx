@@ -73,31 +73,17 @@ export default function ReportsSummaryTable({ reports }: { reports: DownloadedRe
                   <td key={label}>{formatPercent(byLabel.get(label))}</td>
                 ))}
                 <td>
-                  {/* Tro thang vao file 3 bang BCTC (Can doi ke toan/KQKD/Luu
-                  chuyen tien te) da duoc Mistral OCR trich va ghi san luc chay
-                  pipeline (report.excelPath/cleanPdfPath, xem lib/export/index.ts)
-                  - KHONG phai bang tong hop % (xem lib/export/summary-excel.ts,
-                  hien chua co UI nao goi toi, cho tieu chi that + quyet dinh
-                  lai cach dung). */}
+                  {/* Xuat THEO YEU CAU (app/api/report-file) - tai lai file goc
+                  tu fileUrl + OCR toan van tu dau moi lan bam, KHONG doc file
+                  co san (khong con file nao duoc tao san luc "Tai BCTC" nua -
+                  xem lib/pipeline.ts). Luon bat, khong can kiem tra dieu kien. */}
                   <div className="row-export-actions">
-                    {report.excelPath ? (
-                      <a className="secondary-button" href={reportFileHref(report.filePath, 'excel')}>
-                        Excel
-                      </a>
-                    ) : (
-                      <button className="secondary-button" disabled title="Chưa có file Excel cho báo cáo này">
-                        Excel
-                      </button>
-                    )}
-                    {report.cleanPdfPath ? (
-                      <a className="secondary-button" href={reportFileHref(report.filePath, 'pdf')}>
-                        PDF
-                      </a>
-                    ) : (
-                      <button className="secondary-button" disabled title="Chưa có file PDF cho báo cáo này">
-                        PDF
-                      </button>
-                    )}
+                    <a className="secondary-button" href={reportFileHref(report.filePath, 'excel')}>
+                      Excel
+                    </a>
+                    <a className="secondary-button" href={reportFileHref(report.filePath, 'pdf')}>
+                      PDF
+                    </a>
                   </div>
                 </td>
               </tr>

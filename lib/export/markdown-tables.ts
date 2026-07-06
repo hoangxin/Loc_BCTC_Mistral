@@ -16,11 +16,45 @@ import { findLabelColumnIndex, normalizeLabelText, type FinancialStatements, typ
 // 2 bang, moi thu don het vao cashFlow). Day la loi da duoc ghi nhan nhieu
 // lan truoc do trong project goc (Loc_BCTC) o cac cho khac - lap lai y het o
 // day vi markdown-tables.ts la file moi, chua ap dung bai hoc do.
+// incomeStatement can 2 bien the tieu de (da gap that 2026-07-06, OCR toan
+// van BCTC SJ1: tieu de that su la "BÁO CÁO KẾT QUẢ KINH DOANH", KHONG co
+// "HOAT DONG" - truoc day chi co 1 bien the nen bo sot, phai them bien the
+// ngan hon nay, giong cach lib/pdf-text.ts isStatementSectionMarker da lam).
 const SECTION_MARKERS: { key: keyof FinancialStatements; markers: string[] }[] = [
   { key: 'balanceSheet', markers: ['BANG CAN DOI KE TOAN'] },
-  { key: 'incomeStatement', markers: ['KET QUA HOAT DONG KINH DOANH'] },
+  { key: 'incomeStatement', markers: ['KET QUA HOAT DONG KINH DOANH', 'KET QUA KINH DOANH'] },
   { key: 'cashFlow', markers: ['LUU CHUYEN TIEN TE'] },
 ];
+
+// Dung de CHAN pham vi muc cuoi cung (Luu chuyen tien te) khi dau vao la TOAN
+// VAN CA TAI LIEU (ke ca Thuyet minh - xem lib/export/full-document.ts, goi
+// ham nay tren markdown KHONG gioi han trang, khac voi lib/pipeline.ts Buoc 2
+// van chi truyen pham vi truoc Thuyet minh nhu cu). Neu khong chan, muc cuoi
+// se "nuot" het hang chuc bang phu trong Thuyet minh (khong co muc nao sau no
+// trong SECTION_MARKERS de lam moc dung). Dung DUNG cu phap ("|" y het cach
+// SECTION_MARKERS o tren) khong can fuzzy-match kieu Tesseract (lib/pdf-text.ts)
+// vi day la OCR Mistral, do chinh xac cao hon nhieu - test that: dong chan
+// trang lap "Cac thuyet minh la MOT BO PHAN KHONG TACH ROI cua Bao cao tai
+// chinh nay" KHONG khop chuoi lien tiep "THUYET MINH BAO CAO TAI CHINH" (co
+// chen them tu o giua) nen khong bi nham voi tieu de chuong that.
+const NOTES_SECTION_MARKERS = ['THUYET MINH BAO CAO TAI CHINH', 'THUYET MINH BCTC'];
+
+// Tieu de muc that su LUON la 1 dong NGAN (chi ten muc, vd "# **BẢNG CÂN ĐỐI
+// KẾ TOÁN**", ~30 ky tu) - da gap that (2026-07-06, xuat toan van BCTC SJ1):
+// cum "KET QUA HOAT DONG KINH DOANH" xuat hien giua 1 CAU VAN XUOI dai trong
+// Thuyet minh ("...Ket qua hoat dong kinh doanh thuc te co the khac voi cac
+// uoc tinh...") bi nham thanh tieu de muc "Ket qua kinh doanh" that, lam lech
+// het pham vi 2 muc (incomeStatement bi day xuong cuoi van ban, "nuot" ca
+// Thuyet minh; cashFlow bi cat ngan sai). Chi khi OCR TOAN VAN (nhieu chu hon
+// han pham vi ngan truoc Thuyet minh cua buoc "Tai BCTC") moi lo ra rui ro
+// nay - gioi han do dai dong de loai cau van xuoi dai, chi nhan dong ngan
+// (tieu de that).
+const MAX_HEADING_LINE_LENGTH = 80;
+
+function looksLikeHeadingLine(rawLine: string): boolean {
+  const trimmed = rawLine.trim();
+  return trimmed.length > 0 && trimmed.length <= MAX_HEADING_LINE_LENGTH && !trimmed.startsWith('|');
+}
 
 function splitMarkdownRow(line: string): string[] | null {
   const trimmed = line.trim();
@@ -170,7 +204,7 @@ export function parseStatementsFromMarkdown(markdown: string): FinancialStatemen
   // that su la dong van ban thuong (vd "# **BẢNG CÂN ĐỐI KẾ TOÁN**").
   const sectionStarts: { key: keyof FinancialStatements; startLine: number }[] = [];
   for (const { key, markers } of SECTION_MARKERS) {
-    const idx = normalizedLines.findIndex((line, i) => !lines[i].trim().startsWith('|') && markers.some((m) => line.includes(m)));
+    const idx = normalizedLines.findIndex((line, i) => looksLikeHeadingLine(lines[i]) && markers.some((m) => line.includes(m)));
     if (idx !== -1) sectionStarts.push({ key, startLine: idx });
   }
   sectionStarts.sort((a, b) => a.startLine - b.startLine);
@@ -183,7 +217,16 @@ export function parseStatementsFromMarkdown(markdown: string): FinancialStatemen
 
   for (let s = 0; s < sectionStarts.length; s++) {
     const { key, startLine } = sectionStarts[s];
-    const endLine = s + 1 < sectionStarts.length ? sectionStarts[s + 1].startLine : lines.length;
+    let endLine = s + 1 < sectionStarts.length ? sectionStarts[s + 1].startLine : lines.length;
+    if (s === sectionStarts.length - 1) {
+      // Muc cuoi cung - neu dau vao la toan van ca tai lieu (xem comment
+      // NOTES_SECTION_MARKERS) thi phai tu chan truoc "Thuyet minh", khong de
+      // mac dinh chay toi het van ban.
+      const notesLine = normalizedLines.findIndex(
+        (line, i) => i > startLine && looksLikeHeadingLine(lines[i]) && NOTES_SECTION_MARKERS.some((m) => line.includes(m))
+      );
+      if (notesLine !== -1) endLine = notesLine;
+    }
     const tables = parseAllTablesInRange(lines.slice(startLine, endLine));
 
     const relevantTables = tables.filter((t) => t.rows.length >= 3);
