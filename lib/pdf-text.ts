@@ -1,4 +1,9 @@
 import { readFile } from 'fs/promises';
+// Phai import truoc 'pdf-parse' - pdfjs-dist can CanvasFactory nay de polyfill
+// DOMMatrix/ImageData luc render trang (getScreenshot), neu khong se crash
+// "ReferenceError: DOMMatrix is not defined" tren moi trang goi module nay
+// (gap that tren Vercel/serverless, @napi-rs/canvas khong tu polyfill kip).
+import { CanvasFactory } from 'pdf-parse/worker';
 import { PDFParse } from 'pdf-parse';
 import { ocrPageImages } from './ocr';
 
@@ -163,7 +168,7 @@ export interface PageScopeResult {
 
 async function determineOne(filePath: string): Promise<{ pageNumbers: number[]; totalPages: number }> {
   const buffer = await readFile(filePath);
-  const parser = new PDFParse({ data: buffer });
+  const parser = new PDFParse({ data: buffer, CanvasFactory });
 
   try {
     const { pages: rawPages } = await parser.getText();

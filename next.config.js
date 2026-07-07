@@ -8,7 +8,7 @@ const nextConfig = {
   // toi doc file (mammoth/word-extractor dung JSZip/OLE nen ngoai, node-unrar-js
   // can tu doc file .wasm tren dia) vi cung dinh de gap loi tuong tu.
   experimental: {
-    serverComponentsExternalPackages: ['pdf-parse', 'pdfjs-dist', 'mammoth', 'word-extractor', 'adm-zip', 'node-unrar-js', 'tesseract.js'],
+    serverComponentsExternalPackages: ['pdf-parse', 'pdfjs-dist', '@napi-rs/canvas', 'mammoth', 'word-extractor', 'adm-zip', 'node-unrar-js', 'tesseract.js'],
   },
 };
 
