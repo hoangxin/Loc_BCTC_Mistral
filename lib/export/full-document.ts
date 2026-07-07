@@ -3,6 +3,12 @@ import { parseStatementsFromMarkdown, cleanMarkdownForPdfText } from './markdown
 import { validateFinancialStatements } from './validate-statements';
 import type { FinancialStatements } from './statement-shared';
 
+// DU PHONG - KHONG con noi nao goi (2026-07-07, xem app/api/report-file/route.ts):
+// nut "Xuat PDF" gio mo THANG file goc tren Vietstock o tab moi (xem
+// lib/original-file-url.ts) thay vi OCR toan van roi dung PDF moi qua ham nay
+// - nhanh hon, khong ton token Mistral. GIU LAI file nay (theo yeu cau user)
+// phong khi can dung lai huong "xuat PDF rieng cua app" (vd can dinh dang
+// thong nhat, khong phu thuoc dinh dang file goc tren Vietstock).
 export interface FullReportResult {
   statements: FinancialStatements;
   fullText: string;

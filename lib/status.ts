@@ -2,6 +2,7 @@ import type { AnalysisRow } from './analysis';
 import type { StatementScope } from './statement-scope';
 import type { ReportFileFormat } from './report-source';
 import type { FinancialStatements } from './export/statement-shared';
+import type { BusinessType } from './business-type';
 
 export interface FailedReport {
   stockCode: string;
@@ -28,6 +29,10 @@ export interface DownloadedReport {
   // Hop nhat / Rieng le / Chung - xem lib/statement-scope.ts (khong doan bua
   // khi khong co dau hieu ro rang).
   statementScope: StatementScope;
+  // Ngan hang / Chung khoan / Bao hiem / Khac - xem lib/business-type.ts, dung
+  // de tach tab UI (app/ReportsSummaryTable.tsx) vi moi nhom BCTC theo mau
+  // bieu phap ly khac nhau.
+  businessType: BusinessType;
   // Ket qua ap tieu chi doc BCTC (lib/analysis.ts, hien TODO cho tieu chi that
   // - tra rong) - dung de dung cot % dong tren bang tong hop UI.
   analysis: AnalysisRow[] | null;

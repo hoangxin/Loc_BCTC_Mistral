@@ -2,6 +2,7 @@
 
 import { useMemo } from 'react';
 import type { DownloadedReport } from '@/lib/status';
+import { buildOriginalFileUrl } from '@/lib/original-file-url';
 
 function collectLabels(reports: DownloadedReport[]): string[] {
   const labels: string[] = [];
@@ -23,8 +24,8 @@ function formatPercent(value: number | null | undefined): string {
   return `${sign}${value.toFixed(1)}%`;
 }
 
-function reportFileHref(filePath: string, kind: 'excel' | 'pdf'): string {
-  return `/api/report-file?filePath=${encodeURIComponent(filePath)}&kind=${kind}`;
+function excelFileHref(filePath: string): string {
+  return `/api/report-file?filePath=${encodeURIComponent(filePath)}&kind=excel`;
 }
 
 export default function ReportsSummaryTable({ reports }: { reports: DownloadedReport[] }) {
@@ -42,7 +43,6 @@ export default function ReportsSummaryTable({ reports }: { reports: DownloadedRe
           <tr>
             <th>STT</th>
             <th>Mã CK</th>
-            <th>Tên công ty</th>
             <th>Sàn giao dịch</th>
             <th>Tên tài liệu</th>
             <th>Loại BCTC</th>
@@ -59,11 +59,14 @@ export default function ReportsSummaryTable({ reports }: { reports: DownloadedRe
               <tr key={report.filePath}>
                 <td>{index + 1}</td>
                 <td>
-                  <a href={report.financeUrl} target="_blank" rel="noreferrer">
+                  {/* Ten cong ty hien qua tooltip hover (title) thay vi cot rieng
+                  (yeu cau user 2026-07-07) - do dai ten cong ty thuong lam bang
+                  qua rong, trong khi Ma CK + San giao dich la du de nhan dien
+                  nhanh, chi can xem ten day du khi thuc su can. */}
+                  <a href={report.financeUrl} target="_blank" rel="noreferrer" title={report.companyName}>
                     {report.stockCode || '—'}
                   </a>
                 </td>
-                <td>{report.companyName}</td>
                 <td>
                   <span className="exchange-tag">{report.exchange}</span>
                 </td>
@@ -73,15 +76,18 @@ export default function ReportsSummaryTable({ reports }: { reports: DownloadedRe
                   <td key={label}>{formatPercent(byLabel.get(label))}</td>
                 ))}
                 <td>
-                  {/* Xuat THEO YEU CAU (app/api/report-file) - tai lai file goc
-                  tu fileUrl + OCR toan van tu dau moi lan bam, KHONG doc file
-                  co san (khong con file nao duoc tao san luc "Tai BCTC" nua -
-                  xem lib/pipeline.ts). Luon bat, khong can kiem tra dieu kien. */}
                   <div className="row-export-actions">
-                    <a className="secondary-button" href={reportFileHref(report.filePath, 'excel')}>
+                    {/* Excel: khong doi - server dung THANG report.statements da
+                    OCR san luc "Tai BCTC" (app/api/report-file), khong tai
+                    lai/OCR lai gi ca. */}
+                    <a className="secondary-button" href={excelFileHref(report.filePath)}>
                       Excel
                     </a>
-                    <a className="secondary-button" href={reportFileHref(report.filePath, 'pdf')}>
+                    {/* PDF: KHONG con OCR toan van (lib/export/full-document.ts,
+                    da comment lai - xem app/api/report-file/route.ts) - mo
+                    THANG file goc tren Vietstock o tab moi (yeu cau user
+                    2026-07-07), trinh duyet tu tai/hien thi. */}
+                    <a className="secondary-button" href={buildOriginalFileUrl(report)} target="_blank" rel="noreferrer">
                       PDF
                     </a>
                   </div>

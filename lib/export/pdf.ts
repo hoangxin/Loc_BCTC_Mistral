@@ -1,6 +1,11 @@
 import { writeFile } from 'fs/promises';
 import { findLabelColumnIndex, type FinancialStatements, type StatementTable } from './financial-statements';
 import { autoColumnarize, REAL_AMOUNT_PATTERN } from '../text-columnarize';
+
+// DU PHONG - KHONG con noi nao goi (2026-07-07, xem app/api/report-file/route.ts
+// va lib/export/full-document.ts) - nut "Xuat PDF" gio mo THANG file goc tren
+// Vietstock thay vi dung PDF moi qua writeReportPdf duoi. GIU LAI file nay
+// (theo yeu cau user) phong khi can dung lai.
 import {
   BODY_SIZE,
   HEADING_SIZE,

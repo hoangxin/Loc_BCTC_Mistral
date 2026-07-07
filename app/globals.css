@@ -363,3 +363,14 @@ body {
   color: var(--accent);
   border-bottom-color: var(--accent);
 }
+
+/* Sub-tab theo nhom doanh nghiep (Ngan hang/Chung khoan/Bao hiem/Khac, trong
+tab "Ket qua") - nho hon tab chinh de phan biet cap do. */
+.sub-tabs {
+  margin-bottom: 16px;
+}
+
+.sub-tabs .tab-button {
+  font-size: 13px;
+  padding: 8px 14px;
+}

@@ -1,6 +1,7 @@
 import { callMistralOcr, type MistralOcrPage } from '../ai/mistral-ocr';
 import { validateFinancialStatements } from './validate-statements';
 import { containsNotesSectionMarker, parseStatementsFromMarkdown } from './markdown-tables';
+import { classifyBusinessType, type BusinessType } from '../business-type';
 import type { FinancialStatements } from './statement-shared';
 
 // Re-export de cac file khac (excel.ts, pdf.ts, validate-statements.ts, lib/export/index.ts...)
@@ -23,6 +24,10 @@ export interface ExtractFinancialStatementsResult {
   // Khac rong nghia la sau khi parse xong, so lieu van khong khop nguyen tac
   // ke toan bat buoc - can kiem tra tay lai (xem validate-statements.ts).
   warnings: string[];
+  // Ngan hang/Chung khoan/Bao hiem/Khac - suy tu MA MAU BIEU in tren chinh
+  // markdown OCR duoc (xem lib/business-type.ts) - tinh LUON o day (khong ton
+  // OCR/doc them lan nao) vi markdown da co san trong tay.
+  businessType: BusinessType;
 }
 
 // Thay the hoan toan Qwen vision (2026-07-05, xem memory/README): goi thang
@@ -52,7 +57,7 @@ export async function extractFinancialStatements(
   const statements = parseStatementsFromMarkdown(markdown);
   const issues = validateFinancialStatements(statements);
 
-  return { statements, warnings: issues.map((issue) => issue.message) };
+  return { statements, warnings: issues.map((issue) => issue.message), businessType: classifyBusinessType(markdown) };
 }
 
 // Lo DAU TIEN khi do diem cat bang chinh Mistral (bao cao scan dai, khong co
@@ -102,5 +107,5 @@ export async function extractFinancialStatementsWithOcrProbe(filePath: string, t
   const statements = parseStatementsFromMarkdown(markdown);
   const issues = validateFinancialStatements(statements);
 
-  return { statements, warnings: issues.map((issue) => issue.message) };
+  return { statements, warnings: issues.map((issue) => issue.message), businessType: classifyBusinessType(markdown) };
 }

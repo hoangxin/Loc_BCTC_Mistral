@@ -3,7 +3,7 @@ import { formatTimestamp } from '@/lib/format';
 import { getPreviousQuarter } from '@/lib/quarter';
 import FetchControls from './FetchControls';
 import CustomSourceForm from './CustomSourceForm';
-import ReportsSummaryTable from './ReportsSummaryTable';
+import BusinessTypeTabs from './BusinessTypeTabs';
 import Tabs from './Tabs';
 
 // Doc dong tu dia (khong import tinh JSON nua) - `data/latest-fetch.json`
@@ -67,7 +67,7 @@ export default function HomePage() {
             {status.reports.length === 0 ? (
               <div className="empty-state">Chưa có báo cáo nào - chọn quý và bấm "Tải BCTC" ở tab "Tải báo cáo", hoặc thêm nguồn riêng.</div>
             ) : (
-              <ReportsSummaryTable reports={status.reports} />
+              <BusinessTypeTabs reports={status.reports} />
             )}
           </>
         }

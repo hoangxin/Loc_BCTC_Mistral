@@ -2,6 +2,7 @@ import { determineStatementPageScope } from './pdf-text';
 import { extractFinancialStatements, extractFinancialStatementsWithOcrProbe } from './export/financial-statements';
 import { extractFinancialStatementsFromDocx } from './export/docx-statements';
 import { extractFinancialStatementsFromDoc } from './export/doc-statements';
+import { classifyBusinessType, type BusinessType } from './business-type';
 import type { FinancialStatements } from './export/statement-shared';
 import type { ResolvedReportFile } from './report-source';
 
@@ -16,16 +17,18 @@ export interface ReportContentResult {
   statements: FinancialStatements;
   warnings: string[];
   fullText: string | null; // co san (khong ton them) cho docx/doc; null cho pdf (khong con OCR toan van o day)
+  // Ngan hang/Chung khoan/Bao hiem/Khac - xem lib/business-type.ts.
+  businessType: BusinessType;
 }
 
 export async function extractReportContent(resolved: ResolvedReportFile): Promise<ReportContentResult> {
   if (resolved.format === 'docx') {
     const { statements, fullText, warnings } = await extractFinancialStatementsFromDocx(resolved.filePath);
-    return { statements, warnings, fullText };
+    return { statements, warnings, fullText, businessType: classifyBusinessType(fullText) };
   }
   if (resolved.format === 'doc') {
     const { statements, fullText, warnings } = await extractFinancialStatementsFromDoc(resolved.filePath);
-    return { statements, warnings, fullText };
+    return { statements, warnings, fullText, businessType: classifyBusinessType(fullText) };
   }
 
   const scopeLabel = `[perf] determineStatementPageScope ${resolved.filePath}`;
@@ -50,9 +53,9 @@ export async function extractReportContent(resolved: ResolvedReportFile): Promis
   if (!scope?.pageNumbers) {
     throw new Error(scope?.error || 'Khong xac dinh duoc pham vi trang PDF');
   }
-  const { statements, warnings } = await extractFinancialStatements({ filePath: resolved.filePath, pageNumbers: scope.pageNumbers });
+  const result = await extractFinancialStatements({ filePath: resolved.filePath, pageNumbers: scope.pageNumbers });
   console.timeEnd(ocrLabel);
-  return { statements, warnings, fullText: null };
+  return { ...result, fullText: null };
 }
 
 export interface ReportContentBatchEntry {
