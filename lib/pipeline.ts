@@ -5,7 +5,7 @@ import { resolveQuarterTerm, fetchReportFilesForTerm, type ReportTerm } from './
 import { periodDisplayLabel, periodFolderSlug } from './period-label';
 import { filterReports } from './filter';
 import { downloadReports } from './download';
-import { resolveReportSourceFiles, type ResolvedReportFile } from './report-source';
+import { resolveReportSourceFiles, cleanupDownloadedFile, type ResolvedReportFile } from './report-source';
 import { extractReportContentForResolvedFiles } from './report-extract';
 import { computeAnalysisRows } from './analysis';
 import { classifyStatementScope } from './statement-scope';
@@ -159,6 +159,11 @@ export async function runFetchPipeline(options: RunFetchPipelineOptions = {}): P
     // phan tich % (lib/analysis.ts). KHONG con buoc "chep toan van"/"ghi
     // .xlsx/.clean.pdf" o day nua (xem comment ham o tren).
     const contentResults = await extractReportContentForResolvedFiles(resolvedFiles);
+
+    // Da OCR xong (thanh cong hay that bai deu vay) - file goc khong con can
+    // nua, xoa ngay de data/reports/ khong phinh dan qua moi lan chay local
+    // (xem lib/report-source.ts cleanupDownloadedFile).
+    await Promise.all(downloadSucceeded.map((r) => (r.filePath ? cleanupDownloadedFile(r.filePath) : Promise.resolve())));
 
     const contentErrors: FailedReport[] = resolvedFiles
       .map((resolved): FailedReport | null => {

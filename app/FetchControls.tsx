@@ -1,12 +1,14 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
-import type { ReportTerm } from '@/lib/vietstock-reports';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import type { ReportFile, ReportTerm } from '@/lib/vietstock-reports';
 import type { QuarterPeriod } from '@/lib/quarter';
 import { isRegularQuarterTerm, periodDisplayLabel } from '@/lib/period-label';
+import { formatTimestamp } from '@/lib/format';
 
 type Status = 'idle' | 'loading' | 'waiting' | 'error';
 type FilterMode = 'hours' | 'count';
+type PreviewStatus = 'idle' | 'loading' | 'ready' | 'error';
 
 const POLL_INTERVAL_MS = 5000;
 // Tai + loc + download hang tram file co the mat vai phut - dung poll qua
@@ -40,6 +42,15 @@ export default function FetchControls({
   const [status, setStatus] = useState<Status>('idle');
   const [message, setMessage] = useState('');
   const pollHandle = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  // Xem truoc danh muc bao cao THAT cua ky dang chon (app/api/report-list,
+  // dung lai fetchReportFilesForTerm - cung ham pipeline that su dung) - o
+  // MOI/So BCTC gan nhat + nut "Tai BCTC" bi khoa (xem inputsDisabled duoi)
+  // cho toi khi danh muc nay tai xong, tranh nguoi dung bam "Tai BCTC" truoc
+  // khi thay dung danh muc that cua ky vua chon.
+  const [previewReports, setPreviewReports] = useState<ReportFile[] | null>(null);
+  const [previewStatus, setPreviewStatus] = useState<PreviewStatus>('idle');
+  const [previewError, setPreviewError] = useState('');
 
   useEffect(() => {
     return () => {
@@ -88,6 +99,45 @@ export default function FetchControls({
   const busy = status === 'loading' || status === 'waiting';
   // Quy "vua qua" cho chon 1 trong 2 (hours/count) - cac ky khac luon dung count.
   const effectiveMode: FilterMode = isCurrentQuarter ? filterMode : 'count';
+
+  const loadPreview = useCallback(async (term: ReportTerm) => {
+    setPreviewStatus('loading');
+    setPreviewReports(null);
+    setPreviewError('');
+    try {
+      const params = new URLSearchParams({
+        reportTermID: String(term.reportTermID),
+        yearPeriod: String(term.yearPeriod),
+        description: term.description,
+      });
+      const response = await fetch(`/api/report-list?${params.toString()}`);
+      const data = await response.json();
+      if (!response.ok) {
+        setPreviewError(data?.error || 'Không tải được danh mục báo cáo.');
+        setPreviewStatus('error');
+        return;
+      }
+      setPreviewReports(data.reports);
+      setPreviewStatus('ready');
+    } catch {
+      setPreviewError('Không kết nối được tới server.');
+      setPreviewStatus('error');
+    }
+  }, []);
+
+  // Doi ky (dropdown) -> tai lai danh muc that cua ky do ngay, o MOI/So BCTC
+  // gan nhat + nut "Tai BCTC" cho toi khi xong (xem inputsDisabled duoi).
+  useEffect(() => {
+    if (!selectedTerm) return;
+    let cancelled = false;
+    (async () => {
+      if (!cancelled) await loadPreview(selectedTerm);
+    })();
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedKey]);
 
   function stopPolling() {
     if (pollHandle.current) {
@@ -149,7 +199,10 @@ export default function FetchControls({
     }
   }
 
-  const inputsDisabled = busy || !selectedTerm;
+  // O so h/so bao cao + nut "Tai BCTC" chi mo khi danh muc that cua ky dang
+  // chon da tai xong (previewStatus === 'ready') - tranh nguoi dung bam "Tai
+  // BCTC" truoc khi thay dung danh muc that (yeu cau user).
+  const inputsDisabled = busy || !selectedTerm || previewStatus !== 'ready';
 
   return (
     <div className="fetch-controls">
@@ -214,6 +267,55 @@ export default function FetchControls({
           {busy ? 'Đang chạy...' : 'Tải BCTC'}
         </button>
       </div>
+
+      {selectedTerm && (
+        <div className="preview-panel">
+          {previewStatus === 'loading' && <span className="trigger-message">Đang tải danh mục báo cáo thật của {periodDisplayLabel(selectedTerm)}...</span>}
+          {previewStatus === 'error' && (
+            <div className="trigger-row">
+              <span className="trigger-message trigger-message-error">{previewError}</span>
+              <button className="secondary-button" onClick={() => loadPreview(selectedTerm)}>
+                Thử lại
+              </button>
+            </div>
+          )}
+          {previewStatus === 'ready' && previewReports && (
+            <div className="report-table-wrapper preview-table-wrapper">
+              <div className="summary-actions">
+                <span className="muted-note">
+                  {previewReports.length} báo cáo trong danh mục {periodDisplayLabel(selectedTerm)} (theo Vietstock)
+                </span>
+              </div>
+              <table className="report-table">
+                <thead>
+                  <tr>
+                    <th>STT</th>
+                    <th>Mã CK</th>
+                    <th>Tên công ty</th>
+                    <th>Sàn giao dịch</th>
+                    <th>Tên tài liệu</th>
+                    <th>Ngày cập nhật</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {previewReports.map((report, index) => (
+                    <tr key={report.fileInfoID}>
+                      <td>{index + 1}</td>
+                      <td>{report.stockCode || '—'}</td>
+                      <td>{report.companyName}</td>
+                      <td>
+                        <span className="exchange-tag">{report.exchange}</span>
+                      </td>
+                      <td>{report.title}</td>
+                      <td>{formatTimestamp(String(report.lastUpdate))}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+      )}
 
       {termsError && <span className="trigger-message trigger-message-error">{termsError}</span>}
 

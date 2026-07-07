@@ -1,4 +1,4 @@
-import { mkdir, readFile } from 'fs/promises';
+import { mkdir, readFile, rm } from 'fs/promises';
 import { extname, join, basename } from 'path';
 import AdmZip from 'adm-zip';
 import type { DownloadResult } from './download';
@@ -119,6 +119,24 @@ async function extractRar(rarPath: string, report: ReportFile): Promise<ResolveS
 // Chuan hoa 1 ket qua tai ve thanh 0-nhieu ResolvedReportFile (0 neu la dinh
 // dang khong ho tro, hoac zip/rar rong/loi - xem `errors`). >1 xay ra khi
 // zip/rar chua nhieu file bao cao (vd vua co ban Hop nhat vua co ban Rieng le).
+// Xoa file goc da tai ve (VD data/reports/<ky>/...) + thu muc giai nen zip/rar
+// (neu co, xem extractZip/extractRar o tren) SAU KHI da trich xong 3 bang -
+// file goc chi can thiet cho buoc OCR, "Xuat Excel" dung lai `report.statements`
+// da luu, "Xuat PDF" tu tai lai tu `fileUrl` (xem app/api/report-file) nen
+// khong can giu file goc lau dai. Best-effort (force:true nuot loi ENOENT/khoa
+// file) - khong critical, chi de don dep dia, that bai thi log canh bao roi bo qua.
+export async function cleanupDownloadedFile(filePath: string): Promise<void> {
+  const ext = extname(filePath).toLowerCase();
+  if (ext === '.zip' || ext === '.rar') {
+    await rm(`${filePath}__extracted`, { recursive: true, force: true }).catch((error) => {
+      console.warn('cleanupDownloadedFile: khong xoa duoc thu muc giai nen', filePath, error);
+    });
+  }
+  await rm(filePath, { force: true }).catch((error) => {
+    console.warn('cleanupDownloadedFile: khong xoa duoc file goc', filePath, error);
+  });
+}
+
 export async function resolveReportSourceFiles(result: DownloadResult): Promise<ResolveSourceResult> {
   const filePath = result.filePath;
   if (!filePath) return { resolved: [], errors: [] };

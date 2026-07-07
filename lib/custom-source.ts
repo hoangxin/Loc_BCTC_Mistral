@@ -4,7 +4,7 @@ import { basename, extname, join } from 'path';
 import axios from 'axios';
 import { getPreviousQuarter } from './quarter';
 import { callMistralChat } from './ai/mistral-chat';
-import { resolveReportSourceFiles } from './report-source';
+import { resolveReportSourceFiles, cleanupDownloadedFile } from './report-source';
 import { extractReportContent } from './report-extract';
 import { computeAnalysisRows } from './analysis';
 import { classifyStatementScope } from './statement-scope';
@@ -152,50 +152,56 @@ async function downloadAndProcessCustomReport(fileUrl: string, companyNameGuess:
   const destDir = join(process.cwd(), 'data', 'reports', 'custom');
   const filePath = await downloadFile(fileUrl, destDir);
 
-  const fakeReportFile: ReportFile = {
-    fileInfoID: 0,
-    stockCode: '',
-    exchange: '',
-    companyName: companyNameGuess?.trim() || new URL(fileUrl).hostname,
-    financeUrl: fileUrl,
-    fileUrl,
-    title: 'Nguồn riêng',
-    fullName: basename(filePath),
-    fileExt: extname(filePath),
-    lastUpdate: new Date(),
-  };
+  // try/finally: da OCR xong (hoac loi giua chung) deu xoa file goc - khong
+  // con dung toi nua (xem lib/report-source.ts cleanupDownloadedFile).
+  try {
+    const fakeReportFile: ReportFile = {
+      fileInfoID: 0,
+      stockCode: '',
+      exchange: '',
+      companyName: companyNameGuess?.trim() || new URL(fileUrl).hostname,
+      financeUrl: fileUrl,
+      fileUrl,
+      title: 'Nguồn riêng',
+      fullName: basename(filePath),
+      fileExt: extname(filePath),
+      lastUpdate: new Date(),
+    };
 
-  const { resolved, errors } = await resolveReportSourceFiles({ report: fakeReportFile, filePath });
-  if (resolved.length === 0) {
-    throw new Error(errors.join('; ') || 'Không nhận diện được định dạng file (chỉ hỗ trợ PDF/DOCX/DOC/ZIP/RAR)');
+    const { resolved, errors } = await resolveReportSourceFiles({ report: fakeReportFile, filePath });
+    if (resolved.length === 0) {
+      throw new Error(errors.join('; ') || 'Không nhận diện được định dạng file (chỉ hỗ trợ PDF/DOCX/DOC/ZIP/RAR)');
+    }
+
+    // Nguon rieng chi ung voi 1 cong ty/1 lan paste link - neu zip/rar chua
+    // nhieu file, chi lay file DAU TIEN (khac batch Vietstock, xem lib/pipeline.ts,
+    // vi o day khong co "danh sach nhieu cong ty" de tach dong rieng).
+    const resolvedFile = resolved[0];
+    const content = await extractReportContent(resolvedFile);
+    const { quarter, year } = getPreviousQuarter();
+
+    return {
+      source: 'custom',
+      stockCode: fakeReportFile.stockCode,
+      exchange: fakeReportFile.exchange,
+      companyName: fakeReportFile.companyName,
+      title: fakeReportFile.title,
+      lastUpdate: fakeReportFile.lastUpdate.toISOString(),
+      statementScope: classifyStatementScope({ metadataText: resolvedFile.entryName ?? '', contentText: content.fullText ?? undefined }),
+      analysis: computeAnalysisRows(content.statements),
+      statements: content.statements,
+      financeUrl: fileUrl,
+      fileUrl,
+      filePath: resolvedFile.filePath,
+      format: resolvedFile.format,
+      entryName: resolvedFile.entryName ?? null,
+      periodYear: year,
+      periodSlug: `Q${quarter}`,
+      warnings: content.warnings,
+    };
+  } finally {
+    await cleanupDownloadedFile(filePath);
   }
-
-  // Nguon rieng chi ung voi 1 cong ty/1 lan paste link - neu zip/rar chua
-  // nhieu file, chi lay file DAU TIEN (khac batch Vietstock, xem lib/pipeline.ts,
-  // vi o day khong co "danh sach nhieu cong ty" de tach dong rieng).
-  const resolvedFile = resolved[0];
-  const content = await extractReportContent(resolvedFile);
-  const { quarter, year } = getPreviousQuarter();
-
-  return {
-    source: 'custom',
-    stockCode: fakeReportFile.stockCode,
-    exchange: fakeReportFile.exchange,
-    companyName: fakeReportFile.companyName,
-    title: fakeReportFile.title,
-    lastUpdate: fakeReportFile.lastUpdate.toISOString(),
-    statementScope: classifyStatementScope({ metadataText: resolvedFile.entryName ?? '', contentText: content.fullText ?? undefined }),
-    analysis: computeAnalysisRows(content.statements),
-    statements: content.statements,
-    financeUrl: fileUrl,
-    fileUrl,
-    filePath: resolvedFile.filePath,
-    format: resolvedFile.format,
-    entryName: resolvedFile.entryName ?? null,
-    periodYear: year,
-    periodSlug: `Q${quarter}`,
-    warnings: content.warnings,
-  };
 }
 
 async function browseForReport(startUrl: string): Promise<CustomSourceResult> {
