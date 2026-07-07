@@ -20,9 +20,17 @@ import { findLabelColumnIndex, normalizeLabelText, type FinancialStatements, typ
 // van BCTC SJ1: tieu de that su la "BÁO CÁO KẾT QUẢ KINH DOANH", KHONG co
 // "HOAT DONG" - truoc day chi co 1 bien the nen bo sot, phai them bien the
 // ngan hon nay, giong cach lib/pdf-text.ts isStatementSectionMarker da lam).
+//
+// Cong ty CHUNG KHOAN (CTCK) dung MAU RIENG (Thong tu 210, Mau B01a/B02a-CTCK)
+// - ten 2 bang dau KHAC HAN cong ty thuong: "BAO CAO TINH HINH TAI CHINH"
+// (thay vi "Bang can doi ke toan") va "BAO CAO KET QUA HOAT DONG" (khong co
+// "KINH DOANH" o cuoi) - da gap that 2026-07-07 (MBS, cty chung khoan): thieu
+// 2 bien the nay khien CA balanceSheet lan incomeStatement rong (0 dong), moi
+// so lieu bi don het vao cashFlow (dung loai loi da ghi o tren, nguyen nhan
+// khac - thieu tu khoa, khong phai loi encoding Unicode).
 const SECTION_MARKERS: { key: keyof FinancialStatements; markers: string[] }[] = [
-  { key: 'balanceSheet', markers: ['BANG CAN DOI KE TOAN'] },
-  { key: 'incomeStatement', markers: ['KET QUA HOAT DONG KINH DOANH', 'KET QUA KINH DOANH'] },
+  { key: 'balanceSheet', markers: ['BANG CAN DOI KE TOAN', 'BAO CAO TINH HINH TAI CHINH'] },
+  { key: 'incomeStatement', markers: ['KET QUA HOAT DONG KINH DOANH', 'KET QUA KINH DOANH', 'BAO CAO KET QUA HOAT DONG'] },
   { key: 'cashFlow', markers: ['LUU CHUYEN TIEN TE'] },
 ];
 
@@ -37,7 +45,13 @@ const SECTION_MARKERS: { key: keyof FinancialStatements; markers: string[] }[] =
 // trang lap "Cac thuyet minh la MOT BO PHAN KHONG TACH ROI cua Bao cao tai
 // chinh nay" KHONG khop chuoi lien tiep "THUYET MINH BAO CAO TAI CHINH" (co
 // chen them tu o giua) nen khong bi nham voi tieu de chuong that.
-const NOTES_SECTION_MARKERS = ['THUYET MINH BAO CAO TAI CHINH', 'THUYET MINH BCTC'];
+//
+// Cong ty CHUNG KHOAN (CTCK, Mau B04a-CTCK) co THEM 1 bao cao "Bao cao tinh
+// hinh bien dong von chu so huu" nam GIUA cashFlow va Thuyet minh - bang nay
+// KHONG thuoc 3 bang app dang xuat (balanceSheet/incomeStatement/cashFlow) nen
+// phai chan cashFlow dung TRUOC no, khong thi no bi "nuot" chung vao cashFlow
+// (gap that 2026-07-07, MBS).
+const NOTES_SECTION_MARKERS = ['THUYET MINH BAO CAO TAI CHINH', 'THUYET MINH BCTC', 'BIEN DONG VON CHU SO HUU'];
 
 // Tieu de muc that su LUON la 1 dong NGAN (chi ten muc, vd "# **BẢNG CÂN ĐỐI
 // KẾ TOÁN**", ~30 ky tu) - da gap that (2026-07-06, xuat toan van BCTC SJ1):
@@ -188,6 +202,18 @@ function parseAllTablesInRange(lines: string[]): StatementTable[] {
 // 270, 300, 400, 440). Gop TAT CA bang tim duoc trong pham vi muc lai, bo qua
 // cac bang qua ngan (<3 dong, thuong la bang phu nhu "Co cau von dieu le" o
 // trang bia, khong phai bang chinh).
+// Dung boi lib/export/financial-statements.ts (OCR THEO LO qua Mistral cho
+// bao cao scan dai, xem lib/pdf-text.ts needsOcrProbe) de biet KHI NAO dung
+// gui them lo trang tiep theo - da thay tieu de "Thuyet minh" tuc la 3 bang
+// chinh da nam TRON trong markdown gom duoc, khong can OCR them trang nao
+// nua. Dung chung 1 logic voi diem chan cashFlow trong parseStatementsFromMarkdown
+// duoi (khong dinh nghia lai fuzzy-match rieng - Mistral OCR do chinh xac cao,
+// khop chuoi thang la du).
+export function containsNotesSectionMarker(markdown: string): boolean {
+  const lines = markdown.split(/\r?\n/);
+  return lines.some((line) => looksLikeHeadingLine(line) && NOTES_SECTION_MARKERS.some((m) => normalizeLabelText(line).includes(m)));
+}
+
 export function parseStatementsFromMarkdown(markdown: string): FinancialStatements {
   const lines = markdown.split(/\r?\n/);
   const normalizedLines = lines.map((l) => normalizeLabelText(l));

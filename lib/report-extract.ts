@@ -1,5 +1,5 @@
 import { determineStatementPageScope } from './pdf-text';
-import { extractFinancialStatements } from './export/financial-statements';
+import { extractFinancialStatements, extractFinancialStatementsWithOcrProbe } from './export/financial-statements';
 import { extractFinancialStatementsFromDocx } from './export/docx-statements';
 import { extractFinancialStatementsFromDoc } from './export/doc-statements';
 import type { FinancialStatements } from './export/statement-shared';
@@ -28,12 +28,30 @@ export async function extractReportContent(resolved: ResolvedReportFile): Promis
     return { statements, warnings, fullText };
   }
 
+  const scopeLabel = `[perf] determineStatementPageScope ${resolved.filePath}`;
+  console.time(scopeLabel);
   const scopeMap = await determineStatementPageScope([resolved.filePath]);
+  console.timeEnd(scopeLabel);
   const scope = scopeMap.get(resolved.filePath);
+  if (scope?.error) throw new Error(scope.error);
+
+  const ocrLabel = `[perf] extractFinancialStatements (Mistral) ${resolved.filePath}`;
+  console.time(ocrLabel);
+  // Bao cao scan dai (khong co text layer that de tu do diem cat, xem
+  // lib/pdf-text.ts) - OCR THEO LO tang dan qua Mistral, vua tim diem cat vua
+  // lay noi dung trong CUNG 1 vong (xem lib/export/financial-statements.ts).
+  if (scope?.needsOcrProbe) {
+    if (!scope.totalPages) throw new Error('Khong xac dinh duoc tong so trang PDF');
+    const result = await extractFinancialStatementsWithOcrProbe(resolved.filePath, scope.totalPages);
+    console.timeEnd(ocrLabel);
+    return { ...result, fullText: null };
+  }
+
   if (!scope?.pageNumbers) {
     throw new Error(scope?.error || 'Khong xac dinh duoc pham vi trang PDF');
   }
   const { statements, warnings } = await extractFinancialStatements({ filePath: resolved.filePath, pageNumbers: scope.pageNumbers });
+  console.timeEnd(ocrLabel);
   return { statements, warnings, fullText: null };
 }
 

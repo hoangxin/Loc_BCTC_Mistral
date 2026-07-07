@@ -1,4 +1,5 @@
 import { readFile } from 'fs/promises';
+import { join } from 'path';
 import { PDFDocument, PDFFont, PDFPage, rgb } from 'pdf-lib';
 import fontkit from '@pdf-lib/fontkit';
 import { normalizeLabelText } from './statement-shared';
@@ -17,11 +18,15 @@ export const HEADING_SIZE = 15;
 export const SUBHEADING_SIZE = 11;
 export const BORDER_COLOR = rgb(0.6, 0.6, 0.6);
 
-// Dung font he thong (Arial ho tro day du tieng Viet co dau) thay vi font
-// chuan cua pdf-lib (Helvetica/Times chuan PDF khong co dau tieng Viet) - du
-// an nay chi chay tren may Windows cua user nen duong dan co dinh la an toan.
-const FONT_REGULAR_PATH = 'C:/Windows/Fonts/arial.ttf';
-const FONT_BOLD_PATH = 'C:/Windows/Fonts/arialbd.ttf';
+// Dung font Noto Sans dong goi san trong repo (ho tro day du tieng Viet co
+// dau) thay vi font chuan cua pdf-lib (Helvetica/Times khong co dau tieng
+// Viet) - TRUOC DAY tro thang toi C:/Windows/Fonts/arial.ttf, chi dung duoc
+// khi chay tren may Windows cua user; gay loi ENOENT ngay khi len Vercel
+// (Linux, khong co duong dan do) - gap that 2026-07-07. Noto Sans (OFL,
+// google/fonts) da kiem tra du glyph tieng Viet can dung (nguyen am co dau,
+// d/D moc, u/U moc rieng...).
+const FONT_REGULAR_PATH = join(process.cwd(), 'lib', 'export', 'fonts', 'NotoSans-Regular.ttf');
+const FONT_BOLD_PATH = join(process.cwd(), 'lib', 'export', 'fonts', 'NotoSans-Bold.ttf');
 
 // Loc bo ky tu ma font Arial khong co glyph (vd rac OCR, ky tu hiem) - giu lai
 // ASCII in duoc ( -~) + Latin-1 Supplement/Extended-A/B

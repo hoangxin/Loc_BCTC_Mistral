@@ -1,11 +1,13 @@
 import { readFile } from 'fs/promises';
-// Phai import truoc 'pdf-parse' - pdfjs-dist can CanvasFactory nay de polyfill
-// DOMMatrix/ImageData luc render trang (getScreenshot), neu khong se crash
-// "ReferenceError: DOMMatrix is not defined" tren moi trang goi module nay
-// (gap that tren Vercel/serverless, @napi-rs/canvas khong tu polyfill kip).
+// QUAN TRONG: van phai import truoc 'pdf-parse' du file nay KHONG con goi
+// getScreenshot() nua (da bo Tesseract) - crash "DOMMatrix is not defined"
+// gap phai tren Vercel (2026-07-07) xay ra NGAY LUC IMPORT 'pdf-parse' (module
+// pdfjs-dist ben trong co code o muc module chay ngay khi require, "new
+// DOMMatrix()" - KHONG doi toi luc goi ham render nao ca), nen chi can
+// `import { PDFParse } from 'pdf-parse'` o day (dung cho getText(), doc thu
+// khong OCR) la DU DE KICH HOAT LAI crash do neu thieu import nay truoc.
 import { CanvasFactory } from 'pdf-parse/worker';
 import { PDFParse } from 'pdf-parse';
-import { ocrPageImages } from './ocr';
 
 // Nguong toi thieu (tren TUNG TRANG) de coi la "trang co text layer that su".
 // Quan trong: kiem tra theo tung trang chu KHONG phai cong don ca tai lieu -
@@ -14,18 +16,11 @@ import { ocrPageImages } from './ocr';
 // text cua rieng trang bia cung du vuot nguong va bo sot OCR cho toan bo
 // phan con lai (da gap that voi file FIR_...).
 const MIN_PAGE_TEXT_LENGTH = 30;
-// OCR ton CPU nang (render anh + nhan dien tung trang) nen chay it luong song
-// song hon buoc tai file (DOWNLOAD_CONCURRENCY trong lib/download.ts).
 const DETECT_CONCURRENCY = 2;
-// Do phan giai render trang PDF -> anh de Tesseract do diem cat "Thuyet minh"
-// - CHI can du de nhan ra tu khoa (co fuzzy-match chiu loi), KHONG can chinh
-// xac tuyet doi vi khong con dung lam noi dung cuoi cung (xem comment o cuoi
-// file - Tesseract 2026-07-05 CHI con dung de xac dinh pham vi trang, moi
-// noi dung hien thi that su deu do vision model doc lai, xem lib/export/).
-const OCR_SCALE = 3.5;
 
-// Dung chung o day (tim diem cat) va lib/export/transcribe.ts (chia lo trang
-// de goi vision model) - tranh 2 noi tu dinh nghia logic fuzzy-match rieng.
+// Dung chung o day (tim diem cat tren text layer THAT) va lib/export/transcribe.ts
+// (chia lo trang de goi vision model) - tranh 2 noi tu dinh nghia logic
+// fuzzy-match rieng.
 const COMBINING_DIACRITICS = new RegExp('[̀-ͯ]', 'g');
 
 function normalizeForMatch(text: string): string {
@@ -35,9 +30,11 @@ function normalizeForMatch(text: string): string {
     .toUpperCase();
 }
 
-// Levenshtein + fuzzy match - dung rieng de nhan dien diem bat dau "Thuyet
-// minh bao cao tai chinh" (xem NOTES_EARLY_STOP_BATCH_SIZE ben duoi), vi nhan
-// nay cung de bi OCR doc nham vai ky tu nhu cac nhan khac trong file.
+// Levenshtein + fuzzy match - dung rieng cho truong hop text layer THAT (PDF
+// born-digital) vi text nay van co the co loi go/OCR-nguon-goc nhe. Truong
+// hop scan (xem needsOcrProbe duoi) khong con qua day nua - Mistral OCR do
+// chinh xac cao hon Tesseract nhieu, khop chuoi thang o lib/export/markdown-tables.ts
+// la du, khong can fuzzy.
 function levenshteinDistance(a: string, b: string): number {
   const rows = a.length + 1;
   const cols = b.length + 1;
@@ -96,8 +93,10 @@ function isNotesMarkerFuzzy(normalizedText: string): boolean {
 function isStatementSectionMarker(normalizedText: string): boolean {
   return (
     fuzzyMatch(normalizedText, 'CAN DOI KE TOAN') ||
+    fuzzyMatch(normalizedText, 'TINH HINH TAI CHINH') || // mau B01a-CTCK (cong ty chung khoan)
     fuzzyMatch(normalizedText, 'KET QUA HOAT DONG KINH DOANH') ||
     fuzzyMatch(normalizedText, 'KET QUA KINH DOANH') ||
+    fuzzyMatch(normalizedText, 'KET QUA HOAT DONG') || // mau B02a-CTCK (cong ty chung khoan)
     fuzzyMatch(normalizedText, 'LUU CHUYEN TIEN TE')
   );
 }
@@ -140,33 +139,41 @@ function findNotesCutoffEntry(entries: CutoffProbeEntry[], pageNumbersInOrder: n
   return undefined;
 }
 
-// OCR (Tesseract) CHI dung de DO VI TRI diem cat "Thuyet minh" - ket qua nay
-// KHONG duoc giu lai lam noi dung hien thi o dau ca (xem comment cuoi file).
-async function ocrProbePages(parser: PDFParse, pageNumbers: number[]): Promise<CutoffProbeEntry[]> {
-  const screenshots = await parser.getScreenshot({ scale: OCR_SCALE, imageBuffer: true, partial: pageNumbers });
-  const ocrResults = await ocrPageImages(screenshots.pages.map((page) => page.data));
-  return screenshots.pages.map((page, i) => ({ num: page.pageNumber, text: (ocrResults[i]?.text ?? '').trim() }));
-}
-
-// So trang OCR toi da trong lo "tham do" dau tien, truoc khi quyet dinh co
-// cat bot phan "Thuyet minh" hay khong. Theo du lieu thuc te (BCTC HSG), phan
-// thuyet minh bat dau khoang trang 8-10/32 - de du du phong cho bao cao dai
-// hon 1 chut.
+// So trang (khong co text layer) toi da truoc khi coi la "bao cao scan dai" -
+// tu day tro len KHONG con tu quyet dinh pham vi o day nua (xem needsOcrProbe
+// duoi), de lib/export/financial-statements.ts tu OCR THEO LO bang chinh
+// Mistral (vua tim diem cat vua lay luon noi dung, khong ton them lan goi
+// nao). Theo du lieu thuc te (BCTC HSG), phan thuyet minh bat dau khoang
+// trang 8-10/32 - de du du phong cho bao cao dai hon 1 chut.
 const NOTES_EARLY_STOP_BATCH_SIZE = 12;
 
 export interface PageScopeResult {
   // So trang (theo dung so trang trong tai lieu goc) thuoc pham vi 3 bang
-  // chinh, TRUOC diem cat "Thuyet minh" - dung de biet trang nao can render
-  // anh gui cho vision model (xem lib/export/financial-statements.ts). null
-  // neu xac dinh that bai.
+  // chinh, TRUOC diem cat "Thuyet minh" - dung de biet trang nao can gui cho
+  // Mistral OCR (xem lib/export/financial-statements.ts). null neu KHONG xac
+  // dinh duoc tu text layer (that bai, xem `error`) HOAC can OCR theo lo
+  // (xem `needsOcrProbe`).
   pageNumbers: number[] | null;
   // Tong so trang ca tai lieu - dung khi can chep toan van CA tai lieu (ke ca
   // Thuyet minh) cho bao cao da duoc chon, xem lib/export/transcribe.ts.
   totalPages: number | null;
+  // true neu bao cao la scan dai (> NOTES_EARLY_STOP_BATCH_SIZE trang khong
+  // co text layer) - KHONG the xac dinh diem cat tu text layer (khong co text
+  // that de doc), caller (lib/export/financial-statements.ts) phai tu OCR
+  // theo lo qua Mistral thay vi dung `pageNumbers` (luc nay la null).
+  needsOcrProbe?: boolean;
   error?: string;
 }
 
-async function determineOne(filePath: string): Promise<{ pageNumbers: number[]; totalPages: number }> {
+async function determineOne(
+  filePath: string
+): Promise<{ pageNumbers: number[] | null; totalPages: number; needsOcrProbe: boolean }> {
+  // CHI doc text layer (pdf-parse getText()) - KHONG render anh/canvas gi ca
+  // (khac han cach cu dung Tesseract phai render tung trang thanh anh truoc,
+  // tung gay crash "Create skia surface failed" tren bao cao scan dai, xem
+  // lich su trao doi luc quyet dinh bo Tesseract 2026-07-07) - CanvasFactory
+  // van truyen vao day chi de an toan/dung API dung cach, KHONG thuc su duoc
+  // dung toi (getScreenshot khong con goi o file nay).
   const buffer = await readFile(filePath);
   const parser = new PDFParse({ data: buffer, CanvasFactory });
 
@@ -180,57 +187,40 @@ async function determineOne(filePath: string): Promise<{ pageNumbers: number[]; 
       .map((page) => page.num);
 
     // Toan bo la text layer that (PDF born-digital, khong can OCR) - tim diem
-    // cat truc tiep tren text that co san, khong can Tesseract.
+    // cat truc tiep tren text that co san.
     if (allScannedPageNumbers.length === 0) {
       const entries: CutoffProbeEntry[] = rawPages.map((page) => ({ num: page.num, text: page.text.trim() }));
       const cutoffEntry = findNotesCutoffEntry(entries, allPageNumbers);
       const pageNumbers = cutoffEntry ? allPageNumbers.filter((num) => num <= cutoffEntry.num) : allPageNumbers;
-      return { pageNumbers, totalPages };
+      return { pageNumbers, totalPages, needsOcrProbe: false };
     }
 
     // It trang can OCR (bao cao ngan) - khong dang de tham do rieng, giu
-    // nguyen hanh vi cu: coi toan bo la trong pham vi, vision model o buoc
-    // sau se tu doc va bo qua phan khong lien quan neu co.
+    // nguyen hanh vi cu: coi toan bo la trong pham vi, Mistral OCR o buoc sau
+    // se tu doc va bo qua phan khong lien quan neu co.
     if (allScannedPageNumbers.length <= NOTES_EARLY_STOP_BATCH_SIZE) {
-      return { pageNumbers: allPageNumbers, totalPages };
+      return { pageNumbers: allPageNumbers, totalPages, needsOcrProbe: false };
     }
 
-    const probeBatch = allScannedPageNumbers.slice(0, NOTES_EARLY_STOP_BATCH_SIZE);
-    const probeEntries = await ocrProbePages(parser, probeBatch);
-    const cutoffEntry = findNotesCutoffEntry(probeEntries, probeBatch);
-
-    if (cutoffEntry) {
-      return { pageNumbers: allPageNumbers.filter((num) => num <= cutoffEntry.num), totalPages };
-    }
-
-    // Khong thay diem cat trong lo tham do (bao cao dai bat thuong, cac bang
-    // chinh keo dai qua NOTES_EARLY_STOP_BATCH_SIZE trang) - tham do tiep cac
-    // trang scan con lai de tiep tuc tim diem cat.
-    const probeBatchSet = new Set(probeBatch);
-    const remainingPageNumbers = allScannedPageNumbers.filter((num) => !probeBatchSet.has(num));
-    if (remainingPageNumbers.length === 0) return { pageNumbers: allPageNumbers, totalPages };
-
-    const remainingEntries = await ocrProbePages(parser, remainingPageNumbers);
-    const remainingCutoff = findNotesCutoffEntry(remainingEntries, remainingPageNumbers);
-    const pageNumbers = remainingCutoff ? allPageNumbers.filter((num) => num <= remainingCutoff.num) : allPageNumbers;
-    return { pageNumbers, totalPages };
+    // Bao cao scan dai - khong co text that de tu do diem cat, phai OCR. Bao
+    // hieu cho caller tu OCR THEO LO qua Mistral (xem needsOcrProbe tren).
+    return { pageNumbers: null, totalPages, needsOcrProbe: true };
   } finally {
     await parser.destroy();
   }
 }
 
 // Xac dinh pham vi trang thuoc 3 bao cao tai chinh chinh (truoc "Thuyet
-// minh") cho tung file PDF da tai ve - CHI dung Tesseract de DO VI TRI diem
-// cat (fuzzy-match tu khoa, chiu duoc loi OCR vi khong con dung lam noi dung
-// hien thi). Thay the extractTextForFiles cu (2026-07-04): truoc day ham nay
-// CUNG ghi ra noi dung .txt bang chinh text Tesseract doc duoc, dung lam
-// "Toan van bao cao" trong file xuat - user phan hoi dung (2026-07-05) rang
-// Tesseract doc sai qua nhieu (vd trang xoay ngang trong Thuyet minh ra chu
-// rac hoan toan) nen KHONG duoc dung lam noi dung cuoi cung o bat ky dau -
-// moi noi dung hien thi that su (ca toan van lan 3 bang) gio deu do vision
-// model doc lai truc tiep tu anh goc, xem lib/export/financial-statements.ts
-// (3 bang + text pham vi nay) va lib/export/transcribe.ts (toan van ca tai
-// lieu, chi cho bao cao da duoc chon).
+// minh") cho tung file PDF da tai ve, CHI dua tren text layer THAT (khong OCR
+// gi o day) - neu tai lieu la scan dai (khong co text layer), tra ve
+// needsOcrProbe=true de caller tu OCR theo lo qua Mistral (xem
+// lib/export/financial-statements.ts). TRUOC DAY (den 2026-07-06) dung
+// Tesseract.js render+doc tung trang de tu do diem cat ngay tai day - da bo
+// (2026-07-07) vi 2 ly do: (1) render anh scale cao hang loat trang de crash
+// native "Create skia surface failed" tren bao cao scan dai (@napi-rs/canvas
+// het tai nguyen), (2) ton them 1 vong OCR local rieng trong khi Mistral OCR
+// (buoc sau) co the vua tim diem cat vua lay luon noi dung trong CUNG 1 lan
+// goi, re hon ma khong can Tesseract/canvas gi ca.
 export async function determineStatementPageScope(filePaths: string[]): Promise<Map<string, PageScopeResult>> {
   const resultMap = new Map<string, PageScopeResult>();
   let nextIndex = 0;
@@ -240,8 +230,8 @@ export async function determineStatementPageScope(filePaths: string[]): Promise<
       const index = nextIndex++;
       const filePath = filePaths[index];
       try {
-        const { pageNumbers, totalPages } = await determineOne(filePath);
-        resultMap.set(filePath, { pageNumbers, totalPages });
+        const { pageNumbers, totalPages, needsOcrProbe } = await determineOne(filePath);
+        resultMap.set(filePath, { pageNumbers, totalPages, needsOcrProbe });
       } catch (error) {
         console.error('determine page scope error', filePath, error);
         resultMap.set(filePath, {

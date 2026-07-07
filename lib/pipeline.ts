@@ -118,7 +118,9 @@ export async function runFetchPipeline(options: RunFetchPipelineOptions = {}): P
   writeStatus({ ...readStatus(), running: true, error: undefined });
 
   try {
+    console.time('[perf] fetchReportFilesForTerm');
     const allReports = await fetchReportFilesForTerm(term);
+    console.timeEnd('[perf] fetchReportFilesForTerm');
 
     // Loc theo dung tham so caller truyen (xem comment RunFetchPipelineOptions
     // o tren) - KHONG tu gate theo loai ky o day, UI (app/FetchControls.tsx)
@@ -140,7 +142,9 @@ export async function runFetchPipeline(options: RunFetchPipelineOptions = {}): P
 
     const periodSlug = periodFolderSlug(term);
     const destDir = join(DATA_DIR, 'reports', `${term.yearPeriod}-${periodSlug}`);
+    console.time('[perf] downloadReports');
     const downloadResults = await downloadReports(matched, destDir);
+    console.timeEnd('[perf] downloadReports');
     const downloadSucceeded = downloadResults.filter((r) => r.filePath);
     const downloadFailed: FailedReport[] = downloadResults
       .filter((r) => !r.filePath)
@@ -149,7 +153,9 @@ export async function runFetchPipeline(options: RunFetchPipelineOptions = {}): P
     // Chuan hoa dinh dang (pdf/docx/doc giu nguyen 1-1; zip/rar giai nen ->
     // co the ra NHIEU file/1 lan tai, VD vua co ban Hop nhat vua Rieng le
     // trong cung 1 zip) - xem lib/report-source.ts.
+    console.time('[perf] resolveReportSourceFiles');
     const resolvedGroups = await Promise.all(downloadSucceeded.map((r) => resolveReportSourceFiles(r)));
+    console.timeEnd('[perf] resolveReportSourceFiles');
     const resolvedFiles: ResolvedReportFile[] = resolvedGroups.flatMap((g) => g.resolved);
     const resolveErrors: FailedReport[] = resolvedGroups.flatMap((g, i) =>
       g.errors.map((error) => ({ stockCode: downloadSucceeded[i].report.stockCode, title: downloadSucceeded[i].report.title, error }))
@@ -158,7 +164,9 @@ export async function runFetchPipeline(options: RunFetchPipelineOptions = {}): P
     // Trich 3 bang cho TAT CA file da chuan hoa - dung lam dau vao cho buoc
     // phan tich % (lib/analysis.ts). KHONG con buoc "chep toan van"/"ghi
     // .xlsx/.clean.pdf" o day nua (xem comment ham o tren).
+    console.time('[perf] extractReportContentForResolvedFiles');
     const contentResults = await extractReportContentForResolvedFiles(resolvedFiles);
+    console.timeEnd('[perf] extractReportContentForResolvedFiles');
 
     // Da OCR xong (thanh cong hay that bai deu vay) - file goc khong con can
     // nua, xoa ngay de data/reports/ khong phinh dan qua moi lan chay local

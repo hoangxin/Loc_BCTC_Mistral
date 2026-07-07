@@ -1,6 +1,6 @@
-import { callMistralOcr } from '../ai/mistral-ocr';
+import { callMistralOcr, type MistralOcrPage } from '../ai/mistral-ocr';
 import { validateFinancialStatements } from './validate-statements';
-import { parseStatementsFromMarkdown } from './markdown-tables';
+import { containsNotesSectionMarker, parseStatementsFromMarkdown } from './markdown-tables';
 import type { FinancialStatements } from './statement-shared';
 
 // Re-export de cac file khac (excel.ts, pdf.ts, validate-statements.ts, lib/export/index.ts...)
@@ -11,9 +11,10 @@ export { findLabelColumnIndex, normalizeLabelText } from './statement-shared';
 export interface ExtractFinancialStatementsInput {
   filePath: string;
   // Danh sach so trang (1-based, dung so trang trong tai lieu goc) trong pham
-  // vi 3 bang chinh (da duoc lib/pdf-text.ts determineStatementPageScope xac
-  // dinh san, van dung Tesseract - CHI de tim diem cat "Thuyet minh", khong
-  // lien quan gi den viec doc so lieu, xem lib/pdf-text.ts).
+  // vi 3 bang chinh - da duoc lib/pdf-text.ts determineStatementPageScope xac
+  // dinh san TU TEXT LAYER THAT (khong OCR), dung cho truong hop PDF born-digital
+  // hoac scan ngan (xem needsOcrProbe). Bao cao scan dai dung
+  // extractFinancialStatementsWithOcrProbe duoi thay vi ham nay.
   pageNumbers: number[];
 }
 
@@ -48,6 +49,56 @@ export async function extractFinancialStatements(
   const { pages } = await callMistralOcr(input.filePath, { pages: pagesZeroBased });
 
   const markdown = pages.map((p) => p.markdown).join('\n\n');
+  const statements = parseStatementsFromMarkdown(markdown);
+  const issues = validateFinancialStatements(statements);
+
+  return { statements, warnings: issues.map((issue) => issue.message) };
+}
+
+// Lo DAU TIEN khi do diem cat bang chinh Mistral (bao cao scan dai, khong co
+// text layer that de tu do - xem lib/pdf-text.ts needsOcrProbe). Ban dau thu
+// 6 trang + mo rong 1 trang/lan (2026-07-07) de toi thieu so trang OCR du,
+// nhung do that cho thay moi lan goi Mistral OCR co phi CO DINH ~4s (round-trip
+// mang, khong giam theo so trang) - mo rong tung trang cong don qua nhieu lan
+// goi rieng le lam CHAM HAN so voi gop chung 1 lo (vd 6 trang trong 1 lan goi
+// chi ~11s, ~1.8s/trang, so voi 1 trang/lan ~4s/trang) - doi lai quyet dinh
+// (2026-07-07, sau khi do so lieu that): quay ve lo 12 trang nhu Tesseract
+// truoc day (it lan goi hon, nhanh hon ro ret), mo rong 2 trang/lan (thay vi 1)
+// neu chua du - can bang giua toc do (it lan goi hon 1 trang/lan) va tranh OCR
+// du qua nhieu (khong quay lai lo lon 12 trang/lan luc mo rong).
+const INITIAL_PROBE_BATCH_SIZE = 12;
+// Sau lo dau, moi lan OCR THEM 2 trang moi (khong OCR lai cac trang cu - merge
+// vao ket qua da co) roi kiem tra lai ngay.
+const EXPAND_STEP = 2;
+
+// Bao cao scan dai: KHONG con Tesseract do diem cat truoc (xem lich su bo
+// Tesseract 2026-07-07 - crash native "Create skia surface failed" tren tai
+// lieu nhieu trang, cong them ton them 1 vong OCR local rieng). Thay bang OCR
+// THANG qua Mistral theo tung lo (lo dau INITIAL_PROBE_BATCH_SIZE trang, sau
+// do tung trang EXPAND_STEP), dung LUON markdown da OCR duoc de tim tieu de
+// "Thuyet minh" (containsNotesSectionMarker) - thay vi 2 buoc rieng (do diem
+// cat roi OCR lai lan nua), gio CHI 1 vong OCR tang dan, dung ngay khi thay
+// "Thuyet minh" (hoac het trang). Cac lan goi sau CHI OCR trang MOI (chua OCR
+// lan nao), roi merge vao ket qua da co - khong bao gio OCR lai tu dau. Markdown
+// OCR duoc dung LUON lam dau vao parseStatementsFromMarkdown (ham do da tu
+// chan dung truoc "Thuyet minh" - xem NOTES_SECTION_MARKERS) - khong OCR lai lan 2.
+export async function extractFinancialStatementsWithOcrProbe(filePath: string, totalPages: number): Promise<ExtractFinancialStatementsResult> {
+  const collected: MistralOcrPage[] = [];
+  let cursor = 0;
+
+  while (cursor < totalPages) {
+    const step = collected.length === 0 ? INITIAL_PROBE_BATCH_SIZE : EXPAND_STEP;
+    const batchEnd = Math.min(cursor + step, totalPages);
+    const pagesZeroBased = Array.from({ length: batchEnd - cursor }, (_, i) => cursor + i);
+    const { pages } = await callMistralOcr(filePath, { pages: pagesZeroBased });
+    collected.push(...pages);
+    cursor = batchEnd;
+
+    const markdownSoFar = collected.map((p) => p.markdown).join('\n\n');
+    if (containsNotesSectionMarker(markdownSoFar)) break;
+  }
+
+  const markdown = collected.map((p) => p.markdown).join('\n\n');
   const statements = parseStatementsFromMarkdown(markdown);
   const issues = validateFinancialStatements(statements);
 

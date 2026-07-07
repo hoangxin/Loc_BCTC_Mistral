@@ -1,6 +1,17 @@
 import os from 'os';
 import { createScheduler, createWorker } from 'tesseract.js';
 
+// DU PHONG - KHONG con noi nao goi (2026-07-07, xem lib/pdf-text.ts): tung
+// dung de local-OCR cac trang scan tim diem cat "Thuyet minh" truoc khi gui
+// Mistral OCR, nhung gap 2 van de that: (1) render anh scale cao hang loat
+// trang qua @napi-rs/canvas de crash native "Create skia surface failed" tren
+// bao cao scan dai, (2) ton them 1 vong OCR local rieng trong khi Mistral OCR
+// buoc sau co the vua tim diem cat vua lay noi dung trong CUNG 1 lan goi (xem
+// lib/export/financial-statements.ts extractFinancialStatementsWithOcrProbe).
+// GIU LAI file nay (theo yeu cau user) phong khi can dung lai huong tiep can
+// local-OCR nay (vd neu Mistral OCR doi gia/chinh sach, hoac can OCR khong
+// phu thuoc API ngoai) - can cai lai `tesseract.js` (`npm install
+// tesseract.js`) va cac file .traineddata (eng/vie) truoc khi dung lai.
 export interface OcrPageResult {
   text: string;
 }

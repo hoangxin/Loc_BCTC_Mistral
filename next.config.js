@@ -8,7 +8,19 @@ const nextConfig = {
   // toi doc file (mammoth/word-extractor dung JSZip/OLE nen ngoai, node-unrar-js
   // can tu doc file .wasm tren dia) vi cung dinh de gap loi tuong tu.
   experimental: {
-    serverComponentsExternalPackages: ['pdf-parse', 'pdfjs-dist', '@napi-rs/canvas', 'mammoth', 'word-extractor', 'adm-zip', 'node-unrar-js', 'tesseract.js'],
+    // 'tesseract.js' giu trong danh sach du lib/ocr.ts hien khong con noi nao
+    // goi (du phong, xem comment dau lib/ocr.ts) - khong anh huong gi neu
+    // khong dung toi, tranh phai nho sua lai file nay khi/neu dung lai.
+    serverComponentsExternalPackages: [
+      'pdf-parse',
+      'pdfjs-dist',
+      '@napi-rs/canvas',
+      'mammoth',
+      'word-extractor',
+      'adm-zip',
+      'node-unrar-js',
+      'tesseract.js',
+    ],
   },
 };
 

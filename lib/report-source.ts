@@ -30,6 +30,47 @@ export interface ResolveSourceResult {
 
 const SUPPORTED_EXTRACT_EXTENSIONS = new Set(['.pdf', '.docx', '.doc']);
 
+// Vietstock KHONG chi zip rieng file BCTC - da gap that (2026-07-07, kiem tra
+// lai zip that cua MBS/KTS/SLS/CAP): MOI zip deu kem theo ban dich tieng Anh
+// CUA CHINH BCTC do, va nhieu cong ty (VD SLS: 4/6 file, CAP: 2/4 file) con kem
+// them "cong van giai trinh bien dong loi nhuan"/"cong van cong bo thong tin"
+// (KHONG phai BCTC, chi la van ban giai trinh ngan 1-2 trang) - truoc day
+// KHONG loc gi, tao ra 3-6 dong "bao cao" ao cho MOI cong ty (vd MBS ra 6 dong
+// thay vi 1, dung nhu Vietstock hien thi that). Loc 2 buoc:
+// 1) Bo cac van ban PHU (khong phai BCTC) qua tu khoa ten file.
+// 2) Neu con ca ban tieng Viet lan tieng Anh cua CUNG 1 tai lieu, chi giu ban
+//    tieng Viet (toan bo logic doc hieu phia sau - SECTION_MARKERS, tu khoa
+//    fuzzy-match... - deu dua tren thuat ngu TIENG VIET).
+const ANCILLARY_DOCUMENT_PATTERNS: RegExp[] = [
+  /giai.{0,3}trinh/i, // "cong van giai trinh..." (bien dong loi nhuan...) - ca ban co loi chinh ta "giaittrinh" cua MBS
+  /explanation/i, // ban tieng Anh cua "giai trinh"
+  /disclosure/i, // "information disclosure" (tieng Anh cua cong bo thong tin)
+  /cbtt/i, // viet tat "cong bo thong tin" (vd MBS: "cvcbtt")
+  /nghi.?quyet/i, // nghi quyet HDQT/DHDCD dinh kem, khong phai BCTC
+  /bien.?ban/i, // bien ban hop dinh kem
+];
+
+function isAncillaryDocumentEntry(entryName: string): boolean {
+  return ANCILLARY_DOCUMENT_PATTERNS.some((pattern) => pattern.test(entryName));
+}
+
+function isEnglishVariantEntry(entryName: string): boolean {
+  return /(^|[_-])en([_-]|$)/i.test(entryName);
+}
+
+// Loc danh sach entry TRONG 1 zip/rar: bo van ban phu, roi neu con ca ban Viet
+// lan Anh thi chi giu ban Viet - LUON fallback ve danh sach truoc do neu loc
+// xong rong (vd zip chi toan van ban phu, hoac chi co ban tieng Anh) de tranh
+// mat trang hoan toan con hon giu du lieu sai ngon ngu/thua. Nhan them
+// `getName` vi AdmZip (entry.entryName) va node-unrar-js (header.name) dung 2
+// ten thuoc tinh khac nhau cho cung 1 khai niem.
+function pickPrimaryReportEntries<T>(entries: T[], getName: (entry: T) => string): T[] {
+  const nonAncillary = entries.filter((e) => !isAncillaryDocumentEntry(getName(e)));
+  const candidates = nonAncillary.length > 0 ? nonAncillary : entries;
+  const vietnameseOnly = candidates.filter((e) => !isEnglishVariantEntry(getName(e)));
+  return vietnameseOnly.length > 0 ? vietnameseOnly : candidates;
+}
+
 function extToFormat(ext: string): ReportFileFormat | null {
   const normalized = ext.toLowerCase();
   if (normalized === '.pdf') return 'pdf';
@@ -42,14 +83,15 @@ function extractZip(zipPath: string, report: ReportFile): ResolveSourceResult {
   const destDir = `${zipPath}__extracted`;
   try {
     const zip = new AdmZip(zipPath);
-    const entries = zip
+    const allEntries = zip
       .getEntries()
       .filter((entry) => !entry.isDirectory && SUPPORTED_EXTRACT_EXTENSIONS.has(extname(entry.entryName).toLowerCase()));
 
-    if (entries.length === 0) {
+    if (allEntries.length === 0) {
       return { resolved: [], errors: [`${report.stockCode}: file zip không chứa PDF/Word nào`] };
     }
 
+    const entries = pickPrimaryReportEntries(allEntries, (e) => e.entryName);
     const resolved: ResolvedReportFile[] = [];
     for (const entry of entries) {
       const format = extToFormat(extname(entry.entryName));
@@ -90,12 +132,13 @@ async function extractRar(rarPath: string, report: ReportFile): Promise<ResolveS
     const wasmBinary = await loadUnrarWasmBinary();
     const extractor = await createExtractorFromFile({ filepath: rarPath, targetPath: destDir, wasmBinary });
 
-    const fileHeaders = [...extractor.getFileList().fileHeaders].filter(
+    const allFileHeaders = [...extractor.getFileList().fileHeaders].filter(
       (header) => !header.flags.directory && SUPPORTED_EXTRACT_EXTENSIONS.has(extname(header.name).toLowerCase())
     );
-    if (fileHeaders.length === 0) {
+    if (allFileHeaders.length === 0) {
       return { resolved: [], errors: [`${report.stockCode}: file rar không chứa PDF/Word nào`] };
     }
+    const fileHeaders = pickPrimaryReportEntries(allFileHeaders, (h) => h.name);
 
     // Generator cua node-unrar-js chi THAT SU giai nen khi duyet qua - phai
     // spread/duyet het thi cac file moi duoc ghi ra dia (xem README).
