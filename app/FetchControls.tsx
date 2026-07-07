@@ -7,7 +7,7 @@ import { isRegularQuarterTerm, periodDisplayLabel } from '@/lib/period-label';
 import { formatTimestamp } from '@/lib/format';
 
 type Status = 'idle' | 'loading' | 'waiting' | 'error';
-type FilterMode = 'hours' | 'count';
+type FilterMode = 'hours' | 'count' | 'select';
 type PreviewStatus = 'idle' | 'loading' | 'ready' | 'error';
 
 const POLL_INTERVAL_MS = 5000;
@@ -33,12 +33,18 @@ export default function FetchControls({
   const [termsError, setTermsError] = useState('');
   const [selectedKey, setSelectedKey] = useState('');
 
-  // CHI co y nghia khi isCurrentQuarter (Quy "vua qua") - cac ky khac (quy cu
-  // hon, 6T/9T/Nam) da nop du tu lau, "gio gan nhat" khong con y nghia nen
-  // luon dung 'count' (khong hien toggle - xem JSX duoi).
+  // 'hours' CHI co y nghia khi isCurrentQuarter (Quy "vua qua") - cac ky khac
+  // (quy cu hon, 6T/9T/Nam) da nop du tu lau, "gio gan nhat" khong con y
+  // nghia nen luon dung 'count' hoac 'select' (xem effectiveMode/JSX duoi).
+  // 'select' (tick chon tay tung bao cao trong bang preview) co nghia o MOI
+  // ky, khong rieng gi ky hien tai.
   const [filterMode, setFilterMode] = useState<FilterMode>('hours');
   const [hoursWindow, setHoursWindow] = useState(24);
   const [reportLimit, setReportLimit] = useState(50);
+  // Chi dung khi filterMode === 'select' - key theo ReportFile.fileInfoID
+  // (duy nhat, xem lib/vietstock-reports.ts) - reset ve rong moi khi doi ky
+  // (xem effect loadPreview duoi).
+  const [selectedFileInfoIds, setSelectedFileInfoIds] = useState<Set<number>>(new Set());
   const [status, setStatus] = useState<Status>('idle');
   const [message, setMessage] = useState('');
   const pollHandle = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -97,8 +103,9 @@ export default function FetchControls({
     ? regularQuarter.quarter === previousQuarter.quarter && regularQuarter.year === previousQuarter.year
     : false;
   const busy = status === 'loading' || status === 'waiting';
-  // Quy "vua qua" cho chon 1 trong 2 (hours/count) - cac ky khac luon dung count.
-  const effectiveMode: FilterMode = isCurrentQuarter ? filterMode : 'count';
+  // Quy "vua qua" cho chon 1 trong 3 (hours/count/select) - cac ky khac chi
+  // cho count/select (khong co 'hours', xem comment filterMode o tren).
+  const effectiveMode: FilterMode = isCurrentQuarter ? filterMode : filterMode === 'select' ? 'select' : 'count';
 
   const loadPreview = useCallback(async (term: ReportTerm) => {
     setPreviewStatus('loading');
@@ -126,10 +133,12 @@ export default function FetchControls({
   }, []);
 
   // Doi ky (dropdown) -> tai lai danh muc that cua ky do ngay, o MOI/So BCTC
-  // gan nhat + nut "Tai BCTC" cho toi khi xong (xem inputsDisabled duoi).
+  // gan nhat + nut "Tai BCTC" cho toi khi xong (xem inputsDisabled duoi). Xoa
+  // luon lua chon tick cu (thuoc danh muc ky truoc, khong con y nghia o ky moi).
   useEffect(() => {
     if (!selectedTerm) return;
     let cancelled = false;
+    setSelectedFileInfoIds(new Set());
     (async () => {
       if (!cancelled) await loadPreview(selectedTerm);
     })();
@@ -138,6 +147,19 @@ export default function FetchControls({
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedKey]);
+
+  function toggleSelectedReport(fileInfoID: number) {
+    setSelectedFileInfoIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(fileInfoID)) next.delete(fileInfoID);
+      else next.add(fileInfoID);
+      return next;
+    });
+  }
+
+  function toggleSelectAll(reports: ReportFile[]) {
+    setSelectedFileInfoIds((prev) => (prev.size === reports.length ? new Set() : new Set(reports.map((r) => r.fileInfoID))));
+  }
 
   function stopPolling() {
     if (pollHandle.current) {
@@ -179,7 +201,11 @@ export default function FetchControls({
           reportTermID: selectedTerm.reportTermID,
           yearPeriod: selectedTerm.yearPeriod,
           description: selectedTerm.description,
-          ...(effectiveMode === 'hours' ? { hoursWindow } : { reportLimit }),
+          ...(effectiveMode === 'hours'
+            ? { hoursWindow }
+            : effectiveMode === 'select'
+              ? { selectedFileInfoIds: Array.from(selectedFileInfoIds) }
+              : { reportLimit }),
         }),
       });
       const data = await response.json();
@@ -203,6 +229,9 @@ export default function FetchControls({
   // chon da tai xong (previewStatus === 'ready') - tranh nguoi dung bam "Tai
   // BCTC" truoc khi thay dung danh muc that (yeu cau user).
   const inputsDisabled = busy || !selectedTerm || previewStatus !== 'ready';
+  // Mode 'select' can it nhat 1 bao cao duoc tick - khong cho bam "Tai BCTC"
+  // voi danh sach rong (se tai ve... khong gi ca).
+  const triggerDisabled = inputsDisabled || (effectiveMode === 'select' && selectedFileInfoIds.size === 0);
 
   return (
     <div className="fetch-controls">
@@ -218,8 +247,8 @@ export default function FetchControls({
           </select>
         </label>
 
-        {isCurrentQuarter && (
-          <div className="mode-toggle" role="group" aria-label="Cách lấy BCTC">
+        <div className="mode-toggle" role="group" aria-label="Cách lấy BCTC">
+          {isCurrentQuarter && (
             <button
               type="button"
               className={`mode-toggle-btn ${filterMode === 'hours' ? 'active' : ''}`}
@@ -228,18 +257,26 @@ export default function FetchControls({
             >
               Theo giờ
             </button>
-            <button
-              type="button"
-              className={`mode-toggle-btn ${filterMode === 'count' ? 'active' : ''}`}
-              onClick={() => setFilterMode('count')}
-              disabled={inputsDisabled}
-            >
-              Theo số báo cáo
-            </button>
-          </div>
-        )}
+          )}
+          <button
+            type="button"
+            className={`mode-toggle-btn ${filterMode === 'count' ? 'active' : ''}`}
+            onClick={() => setFilterMode('count')}
+            disabled={inputsDisabled}
+          >
+            Theo số báo cáo
+          </button>
+          <button
+            type="button"
+            className={`mode-toggle-btn ${filterMode === 'select' ? 'active' : ''}`}
+            onClick={() => setFilterMode('select')}
+            disabled={inputsDisabled}
+          >
+            Lựa chọn báo cáo
+          </button>
+        </div>
 
-        {effectiveMode === 'hours' ? (
+        {effectiveMode === 'hours' && (
           <label className="field">
             <span className="field-label">Lấy BCTC nộp trong (giờ gần nhất)</span>
             <input
@@ -250,7 +287,8 @@ export default function FetchControls({
               disabled={inputsDisabled}
             />
           </label>
-        ) : (
+        )}
+        {effectiveMode === 'count' && (
           <label className="field">
             <span className="field-label">Số BCTC gần nhất muốn lấy về</span>
             <input
@@ -262,8 +300,11 @@ export default function FetchControls({
             />
           </label>
         )}
+        {effectiveMode === 'select' && (
+          <span className="trigger-message">{selectedFileInfoIds.size} báo cáo đã chọn</span>
+        )}
 
-        <button className="trigger-button" onClick={runFetch} disabled={inputsDisabled}>
+        <button className="trigger-button" onClick={runFetch} disabled={triggerDisabled}>
           {busy ? 'Đang chạy...' : 'Tải BCTC'}
         </button>
       </div>
@@ -289,6 +330,16 @@ export default function FetchControls({
               <table className="report-table">
                 <thead>
                   <tr>
+                    {effectiveMode === 'select' && (
+                      <th>
+                        <input
+                          type="checkbox"
+                          checked={previewReports.length > 0 && selectedFileInfoIds.size === previewReports.length}
+                          onChange={() => toggleSelectAll(previewReports)}
+                          aria-label="Chọn tất cả"
+                        />
+                      </th>
+                    )}
                     <th>STT</th>
                     <th>Mã CK</th>
                     <th>Tên công ty</th>
@@ -300,6 +351,16 @@ export default function FetchControls({
                 <tbody>
                   {previewReports.map((report, index) => (
                     <tr key={report.fileInfoID}>
+                      {effectiveMode === 'select' && (
+                        <td>
+                          <input
+                            type="checkbox"
+                            checked={selectedFileInfoIds.has(report.fileInfoID)}
+                            onChange={() => toggleSelectedReport(report.fileInfoID)}
+                            aria-label={`Chọn báo cáo ${report.stockCode}`}
+                          />
+                        </td>
+                      )}
                       <td>{index + 1}</td>
                       <td>{report.stockCode || '—'}</td>
                       <td>{report.companyName}</td>

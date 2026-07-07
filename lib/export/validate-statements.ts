@@ -1,21 +1,16 @@
 import type { FinancialStatements, StatementTable } from './financial-statements';
+import {
+  normalizeLabelText as normalizeLabel,
+  findLabelColumnIndex as findLabelColumnIndexOnColumns,
+  valueColumnIndexes,
+  findMaSoColumnIndex,
+  parseCode,
+  findRowByCode,
+} from './statement-shared';
 
 export interface ValidationIssue {
   table: 'balanceSheet' | 'incomeStatement';
   message: string;
-}
-
-const COMBINING_DIACRITICS = new RegExp('[̀-ͯ]', 'g');
-
-// Bo dau + viet hoa + gop khoang trang - de so khop nhan bang tieng Viet du
-// AI/OCR co the tra ve dau khac nhau chut it giua cac lan chay.
-function normalizeLabel(label: string): string {
-  return label
-    .normalize('NFD')
-    .replace(COMBINING_DIACRITICS, '')
-    .toUpperCase()
-    .replace(/\s+/g, ' ')
-    .trim();
 }
 
 // Cot chua ten chi tieu KHONG LUON O VI TRI DAU (index 0) - vd bang "Ket qua
@@ -29,40 +24,7 @@ function normalizeLabel(label: string): string {
 // dat ten cot dau la "Tai san" thay vi "Chi tieu", xem statement-shared.ts),
 // fallback ve 0 neu khong co cot nao khop ten do.
 function findLabelColumnIndex(table: StatementTable): number {
-  const index = table.columns.findIndex((col) => {
-    const normalized = normalizeLabel(col);
-    return normalized.includes('CHI TIEU') || normalized.includes('TAI SAN') || normalized.includes('NGUON VON');
-  });
-  return index === -1 ? 0 : index;
-}
-
-// Cac cot chi chua ma/chu thich (STT, Ma so, Thuyet minh) - KHONG phai so
-// lieu that su, khong duoc cong/so sanh nhu cac cot "So cuoi ky"/"So dau
-// nam"/"Ky nay"/"Ky truoc". Truoc day cac vong lap chi bo qua DUNG 1 cot
-// (gia dinh la nhan, bat dau tu index 1) - neu bang co CA STT/Ma so/Thuyet
-// minh truoc cot gia tri that su, cac cot nay se bi tinh nham nhu la so lieu
-// (da gap that qua feedback user 2026-07-05, vd cot "TM" - Thuyet minh - bi
-// dem vao tong khien phep cong sai hoan toan).
-const METADATA_COLUMN_MARKERS = ['STT', 'MA SO', 'THUYET MINH', 'TM'];
-
-function isMetadataColumnName(columnName: string | undefined): boolean {
-  if (!columnName) return false;
-  const normalized = normalizeLabel(columnName);
-  return METADATA_COLUMN_MARKERS.some((marker) => normalized.includes(marker));
-}
-
-// Danh sach chi so cot THAT SU la so lieu (loai tru cot nhan va cac cot
-// metadata o tren) - dung chung cho MOI vong lap cong/so sanh trong file nay,
-// thay vi moi noi tu gia dinh rieng "bat dau tu index 1".
-function valueColumnIndexes(table: StatementTable): number[] {
-  const labelIndex = findLabelColumnIndex(table);
-  const indexes: number[] = [];
-  for (let i = 0; i < table.columns.length; i++) {
-    if (i === labelIndex) continue;
-    if (isMetadataColumnName(table.columns[i])) continue;
-    indexes.push(i);
-  }
-  return indexes;
+  return findLabelColumnIndexOnColumns(table.columns);
 }
 
 function findRow(
@@ -112,33 +74,6 @@ function numbersClose(a: number, b: number): boolean {
   const diff = Math.abs(a - b);
   const scale = Math.max(Math.abs(a), Math.abs(b), 1);
   return diff <= Math.max(1000, scale * 0.0005);
-}
-
-// Tim cot "Ma so" trong bang - dung ma so (100, 200, 270...) de xac dinh
-// dong thay vi ten chi tieu, vi ten de bi nham voi dong con chau co ten
-// tuong tu (vd "Tai san ngan han KHAC" cung chua "TAI SAN NGAN HAN"). Ma so
-// theo Thong tu 200 la co dinh, khong phu thuoc cach dat ten cua tung cong ty.
-function findMaSoColumnIndex(table: StatementTable): number | null {
-  const index = table.columns.findIndex((col) => normalizeLabel(col).includes('MA SO'));
-  return index === -1 ? null : index;
-}
-
-function parseCode(value: string | number | null): number | null {
-  if (value == null) return null;
-  const digitsOnly = String(value).replace(/\D/g, '');
-  if (!digitsOnly) return null;
-  return Number(digitsOnly);
-}
-
-function findRowByCode(
-  table: StatementTable,
-  maSoIndex: number,
-  code: number
-): (string | number | null)[] | null {
-  for (const row of table.rows) {
-    if (parseCode(row[maSoIndex]) === code) return row;
-  }
-  return null;
 }
 
 const ROMAN_NUMERAL_PATTERN = /^[IVXLCDM]+$/i;

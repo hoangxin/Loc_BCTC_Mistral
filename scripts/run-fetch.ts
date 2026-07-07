@@ -37,6 +37,9 @@ async function main() {
   const description = process.env.FETCH_DESCRIPTION || undefined;
   const hoursWindow = process.env.FETCH_HOURS_WINDOW ? Number(process.env.FETCH_HOURS_WINDOW) : undefined;
   const reportLimit = process.env.FETCH_REPORT_LIMIT ? Number(process.env.FETCH_REPORT_LIMIT) : undefined;
+  const selectedFileInfoIds = process.env.FETCH_SELECTED_IDS
+    ? process.env.FETCH_SELECTED_IDS.split(',').map(Number).filter((n) => Number.isFinite(n))
+    : undefined;
   const term = reportTermID && yearPeriod && description ? { reportTermID, yearPeriod, description } : undefined;
 
   // FETCH_QUARTER/FETCH_YEAR: cach cu, chay tay 1 quy cu the (vd de test) khi
@@ -44,7 +47,7 @@ async function main() {
   const quarterOverride = process.env.FETCH_QUARTER ? Number(process.env.FETCH_QUARTER) : undefined;
   const yearOverride = process.env.FETCH_YEAR ? Number(process.env.FETCH_YEAR) : undefined;
 
-  const status = await runFetchPipeline({ term, quarter: quarterOverride, year: yearOverride, hoursWindow, reportLimit });
+  const status = await runFetchPipeline({ term, quarter: quarterOverride, year: yearOverride, hoursWindow, reportLimit, selectedFileInfoIds });
   console.log(
     `${status.periodLabel}: tim thay ${status.totalFound}, sau loc ${status.totalMatched}, tai thanh cong ${status.downloaded} (${status.failed.length} loi).`
   );

@@ -49,3 +49,55 @@ export function findLabelColumnIndex(columns: string[]): number {
   });
   return index === -1 ? 0 : index;
 }
+
+// Cac cot chi chua ma/chu thich (STT, Ma so, Thuyet minh) - KHONG phai so
+// lieu that su, khong duoc cong/so sanh nhu cac cot "So cuoi ky"/"So dau
+// nam"/"Ky nay"/"Ky truoc" (xem valueColumnIndexes duoi).
+const METADATA_COLUMN_MARKERS = ['STT', 'MA SO', 'THUYET MINH', 'TM'];
+
+export function isMetadataColumnName(columnName: string | undefined): boolean {
+  if (!columnName) return false;
+  const normalized = normalizeLabelText(columnName);
+  return METADATA_COLUMN_MARKERS.some((marker) => normalized.includes(marker));
+}
+
+// Danh sach chi so cot THAT SU la so lieu (loai tru cot nhan va cac cot
+// metadata o tren) - dung chung cho moi vong lap cong/so sanh tren 1
+// StatementTable (lib/export/validate-statements.ts, lib/analysis.ts).
+export function valueColumnIndexes(table: StatementTable): number[] {
+  const labelIndex = findLabelColumnIndex(table.columns);
+  const indexes: number[] = [];
+  for (let i = 0; i < table.columns.length; i++) {
+    if (i === labelIndex) continue;
+    if (isMetadataColumnName(table.columns[i])) continue;
+    indexes.push(i);
+  }
+  return indexes;
+}
+
+// Tim cot "Ma so" trong bang - dung ma so (100, 200, 270...) de xac dinh dong
+// thay vi ten chi tieu, vi ten de bi nham voi dong con chau co ten tuong tu
+// (vd "Tai san ngan han KHAC" cung chua "TAI SAN NGAN HAN"). Ma so theo Thong
+// tu 200 la co dinh, khong phu thuoc cach dat ten cua tung cong ty.
+export function findMaSoColumnIndex(table: StatementTable): number | null {
+  const index = table.columns.findIndex((col) => normalizeLabelText(col).includes('MA SO'));
+  return index === -1 ? null : index;
+}
+
+export function parseCode(value: string | number | null): number | null {
+  if (value == null) return null;
+  const digitsOnly = String(value).replace(/\D/g, '');
+  if (!digitsOnly) return null;
+  return Number(digitsOnly);
+}
+
+export function findRowByCode(
+  table: StatementTable,
+  maSoIndex: number,
+  code: number
+): (string | number | null)[] | null {
+  for (const row of table.rows) {
+    if (parseCode(row[maSoIndex]) === code) return row;
+  }
+  return null;
+}

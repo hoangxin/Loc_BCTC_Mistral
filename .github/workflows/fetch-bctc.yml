@@ -28,6 +28,9 @@ on:
       reportLimit:
         type: string
         default: ''
+      selectedIds:
+        type: string
+        default: ''
       customUrl:
         type: string
         default: ''
@@ -67,6 +70,7 @@ jobs:
           FETCH_DESCRIPTION: ${{ github.event.inputs.description }}
           FETCH_HOURS_WINDOW: ${{ github.event.inputs.hoursWindow }}
           FETCH_REPORT_LIMIT: ${{ github.event.inputs.reportLimit }}
+          FETCH_SELECTED_IDS: ${{ github.event.inputs.selectedIds }}
           FETCH_CUSTOM_URL: ${{ github.event.inputs.customUrl }}
           FETCH_REQUEST_ID: ${{ github.event.inputs.requestId }}
         run: npx tsx scripts/run-fetch.ts

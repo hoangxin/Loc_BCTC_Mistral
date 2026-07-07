@@ -168,6 +168,32 @@ body {
   color: var(--accent);
 }
 
+/* Highlight 2 cap cho cot %-tang truong o app/ReportsSummaryTable.tsx (yeu
+   cau user 2026-07-08): cap 1 = vang sang nhat + so in dam; cap 2 = vang sang
+   dam hon + nhap nhay + so in dam. Nguong tinh o lib/analysis.ts. */
+.pct-level1 {
+  background: #fff3b0;
+  font-weight: 700;
+}
+
+.pct-level2 {
+  background: #ffd400;
+  font-weight: 700;
+  animation: pct-blink 1s step-start infinite;
+}
+
+@keyframes pct-blink {
+  50% {
+    opacity: 0.45;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pct-level2 {
+    animation: none;
+  }
+}
+
 .empty-state {
   background: var(--surface);
   border: 1px solid var(--border);

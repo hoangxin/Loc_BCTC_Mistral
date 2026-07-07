@@ -20,6 +20,31 @@ function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+// Mistral OCR free tier: toi da 1 request/GIAY theo API key (xac nhan tu
+// user 2026-07-08) - vi pham la bi 429 (xem isRetryableStatus duoi), roi lai
+// cham vao RETRY_DELAY_MS o tren, TON THOI GIAN hon la cu gian cach dung tu
+// dau. Hang doi FIFO nay dam bao MOI request (moi worker cua
+// EXTRACT_CONCURRENCY, lib/report-extract.ts, ke ca cac vong "OCR probe" goi
+// lien tiep cho 1 bao cao - lib/export/financial-statements.ts) deu di qua
+// DUNG 1 diem nghen nay truoc khi bam ra ngoai, khong phu thuoc so luong
+// worker/goi dong thoi tu ben ngoai.
+const MIN_DISPATCH_INTERVAL_MS = 1000;
+let lastDispatchAt = 0;
+let dispatchQueue: Promise<void> = Promise.resolve();
+
+function paced<T>(fn: () => Promise<T>): Promise<T> {
+  const turn = dispatchQueue.then(async () => {
+    const wait = Math.max(0, lastDispatchAt + MIN_DISPATCH_INTERVAL_MS - Date.now());
+    if (wait > 0) await sleep(wait);
+    lastDispatchAt = Date.now();
+  });
+  // Giu hang doi song ke ca khi luot truoc loi (turn tu no khong bao gio
+  // reject - chi cong doan sleep/gan lastDispatchAt) - "catch" o day chi de
+  // phong ngua, khong che loi that su cua fn (duoc tra qua turn.then(fn)).
+  dispatchQueue = turn.catch(() => {});
+  return turn.then(fn);
+}
+
 function isRetryableStatus(status: number): boolean {
   return status === 429 || status >= 500;
 }
@@ -66,11 +91,13 @@ export async function callMistralOcr(filePath: string, options?: CallMistralOcrO
   let lastError: unknown;
   for (let attempt = 0; attempt < MAX_NETWORK_RETRIES; attempt++) {
     try {
-      const response = await fetch('https://api.mistral.ai/v1/ocr', {
-        method: 'POST',
-        headers: { Authorization: `Bearer ${apiKey}`, 'content-type': 'application/json' },
-        body,
-      });
+      const response = await paced(() =>
+        fetch('https://api.mistral.ai/v1/ocr', {
+          method: 'POST',
+          headers: { Authorization: `Bearer ${apiKey}`, 'content-type': 'application/json' },
+          body,
+        })
+      );
 
       // response.json() co the tu nem loi neu ket noi bi cat giua chung (body
       // khong con la JSON hop le) - cung duoc coi la loi mang, thu lai.

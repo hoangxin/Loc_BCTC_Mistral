@@ -18,7 +18,7 @@ export default function Tabs({ fetchTab, resultsTab }: { fetchTab: ReactNode; re
           className={`tab-button ${active === 'fetch' ? 'active' : ''}`}
           onClick={() => setActive('fetch')}
         >
-          Tải báo cáo
+          Chọn báo cáo lọc
         </button>
         <button
           type="button"

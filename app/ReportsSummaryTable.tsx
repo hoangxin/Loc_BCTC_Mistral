@@ -54,7 +54,7 @@ export default function ReportsSummaryTable({ reports }: { reports: DownloadedRe
         </thead>
         <tbody>
           {reports.map((report, index) => {
-            const byLabel = new Map((report.analysis ?? []).map((item) => [item.label, item.percentChange]));
+            const byLabel = new Map((report.analysis ?? []).map((item) => [item.label, item]));
             return (
               <tr key={report.filePath}>
                 <td>{index + 1}</td>
@@ -72,9 +72,15 @@ export default function ReportsSummaryTable({ reports }: { reports: DownloadedRe
                 </td>
                 <td>{report.title}</td>
                 <td>{report.statementScope}</td>
-                {labels.map((label) => (
-                  <td key={label}>{formatPercent(byLabel.get(label))}</td>
-                ))}
+                {labels.map((label) => {
+                  const item = byLabel.get(label);
+                  const tierClass = item?.tier === 'level1' ? 'pct-level1' : item?.tier === 'level2' ? 'pct-level2' : '';
+                  return (
+                    <td key={label} className={tierClass}>
+                      {formatPercent(item?.percentChange)}
+                    </td>
+                  );
+                })}
                 <td>
                   <div className="row-export-actions">
                     {/* Excel: khong doi - server dung THANG report.statements da

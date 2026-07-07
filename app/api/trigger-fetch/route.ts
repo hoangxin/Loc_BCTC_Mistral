@@ -18,6 +18,10 @@ interface TriggerFetchBody {
   description?: string;
   hoursWindow?: number;
   reportLimit?: number;
+  // Tick chon tay tung bao cao trong bang preview (app/FetchControls.tsx,
+  // mode 'select') - danh sach ReportFile.fileInfoID. Khi co mat (khong
+  // rong), ghi de hoan toan hoursWindow/reportLimit (xem lib/pipeline.ts).
+  selectedFileInfoIds?: number[];
 }
 
 function githubHeaders(token: string): Record<string, string> {
@@ -75,6 +79,7 @@ export async function POST(request: Request) {
     description: body.description ?? '',
     hoursWindow: body.hoursWindow ? String(body.hoursWindow) : '',
     reportLimit: body.reportLimit ? String(body.reportLimit) : '',
+    selectedIds: body.selectedFileInfoIds?.length ? body.selectedFileInfoIds.join(',') : '',
   };
 
   const dispatchedAt = Date.now();
