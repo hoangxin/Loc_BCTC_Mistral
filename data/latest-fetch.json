@@ -1,6 +1,6 @@
 {
   "running": false,
-  "generatedAt": "2026-07-07T10:31:51.121Z",
+  "generatedAt": "2026-07-07T16:10:11.254Z",
   "periodLabel": "Quý 2/2026",
   "year": 2026,
   "totalFound": 19,
@@ -16,6 +16,7 @@
       "title": "BCTC quý 2 năm 2026",
       "lastUpdate": "2026-07-07T01:35:27.373Z",
       "statementScope": "Chung",
+      "businessType": "securities",
       "analysis": [],
       "statements": {
         "balanceSheet": {
@@ -908,139 +909,139 @@
               "Năm nay VND"
             ],
             [
-              "DOANH THU HOẠT ĐỘNG",
+              "I. DOANH THU HOẠT ĐỘNG",
               null,
-              "I.",
+              null,
               null,
               null,
               null,
               null
             ],
             [
-              "Lãi từ các tài sản tài chính được ghi nhận theo giá trị hợp lý thông qua lãi/(lỗ) (\"FVTPL\")",
+              "1.1. Lãi từ các tài sản tài chính được ghi nhận theo giá trị hợp lý thông qua lãi/(lỗ) (\"FVTPL\")",
               1,
-              11,
+              null,
               325572157834,
               172851568393,
               471497430162,
               299468777315
             ],
             [
-              "Lãi từ bán các tài sản tài chính FVTPL",
-              null,
-              "a.",
+              "a. Lãi từ bán các tài sản tài chính FVTPL",
               11,
+              29,
               330659756192,
               179568476809,
-              493644939720
+              493644939720,
+              286541799654
             ],
             [
-              "Chênh lệch tăng về đánh giá lại các tài sản tài chính FVTPL",
-              null,
-              "b.",
+              "b. Chênh lệch tăng về đánh giá lại các tài sản tài chính FVTPL",
               12,
+              31,
               752051900,
               -24136089909,
-              -4100997973
+              -4100997973,
+              -9125927304
             ],
             [
-              "Cổ tức, tiền lãi phát sinh từ tài sản tài chính FVTPL",
-              null,
-              "c.",
+              "c. Cổ tức, tiền lãi phát sinh từ tài sản tài chính FVTPL",
               13,
+              "32(a)",
               "-",
-              "32(a) 16.257.660.000",
-              "-"
+              16257660000,
+              "-",
+              16221948800
             ],
             [
-              "Chênh lệch giảm về đánh giá lại chứng quyền",
-              null,
-              "d.",
+              "d. Chênh lệch giảm về đánh giá lại chứng quyền",
               14,
+              null,
               -5839650258,
               1161521493,
-              -18046511585
+              -18046511585,
+              5830956165
             ],
             [
-              "Lãi từ các khoản đầu tư nắm giữ đến ngày đáo hạn",
+              "1.2. Lãi từ các khoản đầu tư nắm giữ đến ngày đáo hạn",
               2,
-              12,
+              "32(b)",
               125207695874,
-              "32(b) 76.109.728.499",
+              76109728499,
               243076465356,
               144748005201
             ],
             [
-              "Lãi từ các khoản cho vay và phải thu",
+              "1.3. Lãi từ các khoản cho vay và phải thu",
               3,
-              13,
-              "465.440.851.554 32(c) 65.231.470.151",
-              3.0884577330820935e+22,
-              9.047747193721023e+23,
-              5.859523188866138e+22
+              "32(c)",
+              465440851554,
+              308845773308,
+              904774719372,
+              585952318886
             ],
             [
-              "Lãi từ các tài sản tài chính sẵn sàng để bán",
+              "1.4. Lãi từ các tài sản tài chính sẵn sàng để bán",
               4,
-              14,
+              "32(d)",
+              65231470151,
+              20932707542,
+              102303847147,
+              61374231596
+            ],
+            [
+              "1.6. Doanh thu nghiệp vụ môi giới chứng khoán",
+              6,
+              33,
               163614067934,
-              "32(d) 191.912.161.375",
+              191912161375,
               404953212278,
               325368498290
             ],
             [
-              "Doanh thu nghiệp vụ môi giới chứng khoán",
-              6,
-              16,
+              "1.7. Doanh thu nghiệp vụ bảo lãnh, đại lý phát hành chứng khoán",
+              7,
+              null,
               "-",
               "-",
               817947,
               "-"
             ],
             [
-              "Doanh thu nghiệp vụ bảo lãnh, đại lý phát hành chứng khoán",
-              7,
-              17,
+              "1.9. Doanh thu nghiệp vụ lưu ký chứng khoán",
+              9,
+              null,
               11119529044,
               9766020877,
               21514369376,
               16632395528
             ],
             [
-              "Doanh thu nghiệp vụ lưu ký chứng khoán",
-              9,
-              19,
+              "1.10. Doanh thu hoạt động tư vấn tài chính",
+              10,
+              34,
               14235454545,
               1580000000,
               16237272727,
               5244281600
             ],
             [
-              "Doanh thu hoạt động tư vấn tài chính",
-              10,
-              110,
+              "1.11. Thu nhập hoạt động khác",
+              11,
+              35,
               25824417141,
               10339386188,
               50983450234,
               22427036481
             ],
             [
-              "Thu nhập hoạt động khác",
-              11,
-              111,
+              "Cộng doanh thu hoạt động",
+              20,
+              null,
               1196245644077,
               792337346182,
               2215341584599,
               1461215544897
-            ],
-            [
-              "Cộng doanh thu hoạt động",
-              20,
-              null,
-              null,
-              null,
-              null,
-              null
             ],
             [
               "Năm nay VND",
@@ -1991,6 +1992,7 @@
       "title": "BCTC Công ty mẹ quý 2 năm 2026",
       "lastUpdate": "2026-05-14T03:48:23.623Z",
       "statementScope": "Riêng lẻ",
+      "businessType": "other",
       "analysis": [],
       "statements": {
         "balanceSheet": {
