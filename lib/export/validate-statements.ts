@@ -6,6 +6,7 @@ import {
   findMaSoColumnIndex,
   parseCode,
   findRowByCode,
+  isLikelySubtotalRow,
 } from './statement-shared';
 
 export interface ValidationIssue {
@@ -74,37 +75,6 @@ function numbersClose(a: number, b: number): boolean {
   const diff = Math.abs(a - b);
   const scale = Math.max(Math.abs(a), Math.abs(b), 1);
   return diff <= Math.max(1000, scale * 0.0005);
-}
-
-const ROMAN_NUMERAL_PATTERN = /^[IVXLCDM]+$/i;
-// Muc con CAP 3 (chi tiet duoi 1 nhom La Ma, vd "1./ Tien", "7 Vay va no...")
-// luon bat dau bang SO A-RAP (co the kem "." hoac "/" roi khoang trang) - dau
-// hieu nay dang tin cay hon "ma so chia het cho 10" (xem comment duoi day).
-const ARABIC_ITEM_PREFIX = /^\d+[.\/)]?\s/;
-
-// Phan biet dong "cap 2" (I, II, III... - dong tong cua 1 nhom) voi dong "cap
-// 3" (chi tiet don le duoi 1 nhom) - truoc day CHI dua vao "ma so la boi so
-// cua 10", da gap that (2026-07-05, smoke test tren HSG qua Mistral): mot so
-// dong CHI TIET (khong phai dong tong) tinh co cung co ma so chia het cho 10
-// (vd ma 320 "Vay va no thue tai chinh ngan han", ma 420 "Quy khac thuoc von
-// chu so huu" - ca 2 deu la muc le, KHONG phai dong tong nhom, nhung 320%10=0
-// va 420%10=0 nen bi heuristic cu tinh nham la "cap 2", cong du vao tong gay
-// lech). Dung THEM tin hieu STT (neu bang co cot STT rieng, gia tri La Ma nhu
-// "I"/"II" moi la dong tong that su - "7" la so A-rap nghia la muc chi tiet)
-// hoac tien to trong TEN CHI TIEU (neu bang KHONG co cot STT rieng, vd TIX -
-// La Ma nam ngay trong ten nhu "III. Bat dong san dau tu" cho dong tong, con
-// "1./ Phai thu..." cho muc chi tiet) de loai cac dong chi tiet gia mao nay
-// ra khoi tong, thay vi chi dua vao ma so chia het cho 10 (van giu lam dieu
-// kien BAT BUOC, chi khong con la dieu kien DU nua).
-function isLikelySubtotalRow(table: StatementTable, row: (string | number | null)[], labelIndex: number): boolean {
-  const sttIndex = table.columns.findIndex((col) => normalizeLabel(col).includes('STT'));
-  if (sttIndex !== -1) {
-    const sttValue = String(row[sttIndex] ?? '').trim();
-    if (sttValue === '') return true; // mot so dong tong khong co STT rieng - khong du du lieu de bac bo, giu nguyen hanh vi cu (chap nhan)
-    return ROMAN_NUMERAL_PATTERN.test(sttValue);
-  }
-  const label = String(row[labelIndex] ?? '').trim();
-  return !ARABIC_ITEM_PREFIX.test(label);
 }
 
 // Cong cac dong "cap 2" (I, II, III... - ma so la boi so cua 10) trong
@@ -342,7 +312,7 @@ function validateBalanceSheetSubtotals(table: StatementTable): ValidationIssue[]
 // tim theo MA SO (10, co dinh theo Thong tu 200/mau B02-DN) neu khong khop
 // nhan bang chu - dang tin cay hon vi khong phu thuoc cach viet tat tung
 // cong ty.
-function findRevenueRow(table: StatementTable): (string | number | null)[] | null {
+export function findRevenueRow(table: StatementTable): (string | number | null)[] | null {
   const byLabel = findRow(table, (label) => label.includes('DOANH THU THUAN') || label.includes('DT THUAN'));
   if (byLabel) return byLabel;
   const maSoIndex = findMaSoColumnIndex(table);

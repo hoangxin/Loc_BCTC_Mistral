@@ -101,3 +101,62 @@ export function findRowByCode(
   }
   return null;
 }
+
+const ROMAN_NUMERAL_PATTERN = /^[IVXLCDM]+$/i;
+// Muc con CAP 3 (chi tiet duoi 1 nhom La Ma, vd "1./ Tien", "7 Vay va no...")
+// luon bat dau bang SO A-RAP (co the kem "." hoac "/" roi khoang trang) - dau
+// hieu nay dang tin cay hon "ma so chia het cho 10" (xem comment duoi day).
+const ARABIC_ITEM_PREFIX = /^\d+[.\/)]?\s/;
+
+// Phan biet dong "cap 2" (I, II, III... - dong tong cua 1 nhom) voi dong "cap
+// 3" (chi tiet don le duoi 1 nhom) - truoc day CHI dua vao "ma so la boi so
+// cua 10", da gap that (2026-07-05, smoke test tren HSG qua Mistral): mot so
+// dong CHI TIET (khong phai dong tong) tinh co cung co ma so chia het cho 10
+// (vd ma 320 "Vay va no thue tai chinh ngan han", ma 420 "Quy khac thuoc von
+// chu so huu" - ca 2 deu la muc le, KHONG phai dong tong nhom, nhung 320%10=0
+// va 420%10=0 nen bi heuristic cu tinh nham la "cap 2", cong du vao tong gay
+// lech). Dung THEM tin hieu STT (neu bang co cot STT rieng, gia tri La Ma nhu
+// "I"/"II" moi la dong tong that su - "7" la so A-rap nghia la muc chi tiet)
+// hoac tien to trong TEN CHI TIEU (neu bang KHONG co cot STT rieng, vd TIX -
+// La Ma nam ngay trong ten nhu "III. Bat dong san dau tu" cho dong tong, con
+// "1./ Phai thu..." cho muc chi tiet) de loai cac dong chi tiet gia mao nay
+// ra khoi tong, thay vi chi dua vao ma so chia het cho 10 (van giu lam dieu
+// kien BAT BUOC, chi khong con la dieu kien DU nua).
+export function isLikelySubtotalRow(table: StatementTable, row: (string | number | null)[], labelIndex: number): boolean {
+  const sttIndex = table.columns.findIndex((col) => normalizeLabelText(col).includes('STT'));
+  if (sttIndex !== -1) {
+    const sttValue = String(row[sttIndex] ?? '').trim();
+    if (sttValue === '') return true; // mot so dong tong khong co STT rieng - khong du du lieu de bac bo, giu nguyen hanh vi cu (chap nhan)
+    return ROMAN_NUMERAL_PATTERN.test(sttValue);
+  }
+  const label = String(row[labelIndex] ?? '').trim();
+  return !ARABIC_ITEM_PREFIX.test(label);
+}
+
+// Tim dong theo TEN CHI TIEU (khong phai ma so) - dung cho lib/analysis.ts,
+// noi ma so KHONG on dinh giua Thong tu 200/2014 (cu) va Thong tu 99/2025
+// (moi, hieu luc 27/10/2025 - doi ten "Bang can doi ke toan" thanh "Bao cao
+// tinh hinh tai chinh" VA chen them nhom "Tai san sinh hoc" lam dich chuyen
+// hang loat ma so phia sau, xac nhan qua doi chieu that 2 bao cao SJ1/TT200
+// vs IDV/TT99, 2026-07-08) trong khi TEN chi tieu khong doi giua 2 thong tu.
+// `preferSubtotal`: khi 1 ten chi tieu vua la dong TONG NHOM vua la ten dong
+// CON DUY NHAT cua no (vd "Hang ton kho" - ca dong tong "IV. Hang ton kho" lan
+// dong con "1. Hang ton kho" deu chua dung cum nay) - uu tien dong tong (xem
+// isLikelySubtotalRow) thay vi dong khop DAU TIEN theo thu tu bang.
+export function findRowByLabel(
+  table: StatementTable,
+  matcher: (normalizedLabel: string) => boolean,
+  options?: { preferSubtotal?: boolean }
+): (string | number | null)[] | null {
+  const labelIndex = findLabelColumnIndex(table.columns);
+  const matches = table.rows.filter((row) => {
+    const label = row[labelIndex];
+    return typeof label === 'string' && matcher(normalizeLabelText(label));
+  });
+  if (matches.length === 0) return null;
+  if (options?.preferSubtotal) {
+    const subtotal = matches.find((row) => isLikelySubtotalRow(table, row, labelIndex));
+    if (subtotal) return subtotal;
+  }
+  return matches[0];
+}

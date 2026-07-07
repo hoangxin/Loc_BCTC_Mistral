@@ -1,6 +1,6 @@
 import { existsSync } from 'fs';
 import { join } from 'path';
-import { runFetchPipeline } from '../lib/pipeline';
+import { runFetchPipeline, clearResults } from '../lib/pipeline';
 import { runCustomSourceCheck } from '../lib/custom-source';
 
 // Khac voi `npm run dev`/`next start` (Next.js tu nap .env), chay thang qua
@@ -14,12 +14,19 @@ if (existsSync(envPath)) {
   process.loadEnvFile(envPath);
 }
 
-// FETCH_MODE phan biet 2 luong dispatch tu app/api/trigger-fetch (mode=term,
-// mac dinh) va app/api/custom-source (mode=custom) - ca 2 deu goi tu CUNG 1
-// script nay tren GitHub Actions runner (.github/workflows/fetch-bctc.yml).
+// FETCH_MODE phan biet 3 luong dispatch: app/api/trigger-fetch (mode=term,
+// mac dinh), app/api/custom-source (mode=custom), app/api/clear-results
+// (mode=clear) - ca 3 deu goi tu CUNG 1 script nay tren GitHub Actions runner
+// (.github/workflows/fetch-bctc.yml).
 const mode = process.env.FETCH_MODE || 'term';
 
 async function main() {
+  if (mode === 'clear') {
+    clearResults();
+    console.log('Da xoa toan bo ket qua.');
+    return;
+  }
+
   if (mode === 'custom') {
     const url = process.env.FETCH_CUSTOM_URL;
     const requestId = process.env.FETCH_REQUEST_ID || '';

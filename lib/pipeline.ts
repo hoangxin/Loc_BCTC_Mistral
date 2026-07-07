@@ -60,6 +60,36 @@ export function writeCustomSourceCheck(check: NonNullable<FetchStatus['lastCusto
   return status;
 }
 
+// Nut "Xoa" o tab Ket qua (app/ClearResultsButton.tsx, dispatch qua
+// app/api/clear-results, mode=clear) - xoa TOAN BO ket qua da tich luy tu
+// truoc den nay (nguoc lai voi runFetchPipeline moi lan chi BO SUNG, khong tu
+// xoa - xem comment o duoi), tra ve trang thai rong nhu chua tung chay lan
+// nao.
+export function clearResults(): FetchStatus {
+  const status: FetchStatus = {
+    running: false,
+    generatedAt: new Date().toISOString(),
+    periodLabel: null,
+    year: null,
+    totalFound: 0,
+    totalMatched: 0,
+    downloaded: 0,
+    failed: [],
+    reports: [],
+    lastCustomSourceCheck: null,
+  };
+  writeStatus(status);
+  return status;
+}
+
+// Khoa nhan dien "cung 1 bao cao" khi cong don ket qua qua nhieu lan "Tai
+// BCTC" (xem runFetchPipeline duoi) - ma CK + ky (nam+hau to) + tieu de (da
+// phan biet Hop nhat/Rieng le vi title Vietstock luon ghi ro, vd "BCTC Hợp
+// nhất quý 2 năm 2026" khac "BCTC Công ty mẹ quý 2 năm 2026").
+function reportIdentityKey(report: DownloadedReport): string {
+  return `${report.stockCode}::${report.periodYear}-${report.periodSlug}::${report.title}`;
+}
+
 function buildStatementScopeInput(
   resolved: ResolvedReportFile,
   contentText: string | undefined
@@ -253,8 +283,21 @@ export async function runFetchPipeline(options: RunFetchPipelineOptions = {}): P
     await Promise.all(Array.from({ length: Math.min(PIPELINE_CONCURRENCY, matched.length) }, worker));
     console.timeEnd('[perf] downloadResolveExtract');
 
-    const reports = reportEntries.sort((a, b) => a.idx - b.idx).map((e) => e.report);
-    const failed = failedEntries.sort((a, b) => a.idx - b.idx).map((e) => e.failed);
+    const newReports = reportEntries.sort((a, b) => a.idx - b.idx).map((e) => e.report);
+    const newFailed = failedEntries.sort((a, b) => a.idx - b.idx).map((e) => e.failed);
+
+    // BO SUNG vao ket qua da co (khong tu xoa) - yeu cau user 2026-07-08: moi
+    // lan bam "Tai BCTC" truoc day GHI DE toan bo status.reports, xoa mat ket
+    // qua cac lan chay truoc. Trung "ma CK + ky + tieu de" (vd tai lai DUNG
+    // bao cao cua 1 cong ty trong CUNG ky) -> CHI giu 1 ban (ban MOI thay the
+    // ban cu, du lieu moi hon), khong tao dong trung lap - theo dung yeu cau
+    // user. Xoa het qua nut "Xoa" rieng (xem clearResults o tren), khong tu
+    // dong xoa o day.
+    const previousStatus = readStatus();
+    const newKeys = new Set(newReports.map(reportIdentityKey));
+    const keptReports = previousStatus.reports.filter((r) => !newKeys.has(reportIdentityKey(r)));
+    const reports = [...keptReports, ...newReports];
+    const failed = [...previousStatus.failed, ...newFailed];
 
     const status: FetchStatus = {
       running: false,
@@ -266,7 +309,7 @@ export async function runFetchPipeline(options: RunFetchPipelineOptions = {}): P
       downloaded: downloadedCount,
       failed,
       reports,
-      lastCustomSourceCheck: readStatus().lastCustomSourceCheck,
+      lastCustomSourceCheck: previousStatus.lastCustomSourceCheck,
     };
 
     writeStatus(status);

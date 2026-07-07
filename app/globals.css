@@ -119,13 +119,19 @@ body {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 10px;
-  overflow: hidden;
+  /* Bang Ket qua co the co hang chuc cot (21 cot %-tang truong + cac cot co
+     dinh) - cuon ngang thay vi cat mat cot (truoc day "overflow: hidden" lam
+     mat cac cot cuoi khi bang rong hon khung, yeu cau user 2026-07-08). */
+  overflow-x: auto;
 }
 
 .report-table {
   width: 100%;
   border-collapse: collapse;
   font-size: 13px;
+  /* Ep ban toi thieu du de moi cot co du cho (khong bi bop nghet) - phoi hop
+     voi overflow-x: auto o wrapper de tao thanh cuon khi vuot khung. */
+  min-width: max-content;
 }
 
 .report-table th,
