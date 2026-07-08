@@ -10,8 +10,10 @@ export async function buildSummaryExcelBuffer(rows: SummaryRow[]): Promise<Buffe
   const workbook = new ExcelJS.Workbook();
   const sheet = workbook.addWorksheet('Tổng hợp');
 
-  const FIXED_COLUMN_COUNT = 6;
-  const header = ['STT', 'Mã CK', 'Tên công ty', 'Sàn giao dịch', 'Tên tài liệu', 'Loại BCTC', ...labels.map((label) => `% ${label}`)];
+  // Bo cot "Ten tai lieu" (yeu cau user 2026-07-08, dong bo voi bang UI -
+  // app/ReportsSummaryTable.tsx da bo cot nay truoc do).
+  const FIXED_COLUMN_COUNT = 5;
+  const header = ['STT', 'Mã CK', 'Tên công ty', 'Sàn giao dịch', 'Loại BCTC', ...labels.map((label) => `% ${label}`)];
   const headerRow = sheet.addRow(header);
   headerRow.font = { bold: true };
 
@@ -22,7 +24,6 @@ export async function buildSummaryExcelBuffer(rows: SummaryRow[]): Promise<Buffe
       row.stockCode,
       row.companyName,
       row.exchange,
-      row.title,
       row.statementScope,
       ...labels.map((label) => byLabel.get(label) ?? null),
     ]);

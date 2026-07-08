@@ -17,7 +17,9 @@ export async function buildSummaryPdfBuffer(rows: SummaryRow[]): Promise<Buffer>
 
   writer.drawText('Bảng tổng hợp % thay đổi BCTC', { size: HEADING_SIZE, bold: true, gapAfter: 10 });
 
-  const columns = ['STT', 'Mã CK', 'Tên công ty', 'Sàn giao dịch', 'Tên tài liệu', 'Loại BCTC', ...labels.map((label) => `% ${label}`)];
+  // Bo cot "Ten tai lieu" (yeu cau user 2026-07-08, dong bo voi bang UI -
+  // app/ReportsSummaryTable.tsx da bo cot nay truoc do).
+  const columns = ['STT', 'Mã CK', 'Tên công ty', 'Sàn giao dịch', 'Loại BCTC', ...labels.map((label) => `% ${label}`)];
   const COMPANY_NAME_COLUMN_INDEX = 2;
   const layout = computeColumnLayout(columns, COMPANY_NAME_COLUMN_INDEX);
 
@@ -29,7 +31,6 @@ export async function buildSummaryPdfBuffer(rows: SummaryRow[]): Promise<Buffer>
       row.stockCode,
       row.companyName,
       row.exchange,
-      row.title,
       row.statementScope,
       ...labels.map((label) => formatPercent(byLabel.get(label))),
     ];

@@ -5,6 +5,7 @@ import FetchControls from './FetchControls';
 import CustomSourceForm from './CustomSourceForm';
 import BusinessTypeTabs from './BusinessTypeTabs';
 import ClearResultsButton from './ClearResultsButton';
+import ExportSummaryButton from './ExportSummaryButton';
 import Tabs from './Tabs';
 
 // Doc dong tu dia (khong import tinh JSON nua) - `data/latest-fetch.json`
@@ -40,6 +41,7 @@ export default function HomePage() {
           <>
             {status.reports.length > 0 && (
               <div className="summary-actions">
+                <ExportSummaryButton filePaths={status.reports.map((report) => report.filePath)} />
                 <ClearResultsButton currentGeneratedAt={status.generatedAt} />
               </div>
             )}
