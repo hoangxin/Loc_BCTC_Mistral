@@ -1,5 +1,7 @@
 import ExcelJS from 'exceljs';
 import type { FinancialStatements, StatementTable } from './financial-statements';
+import { findLabelColumnIndex } from './statement-shared';
+import { classifyRowTier } from './row-style';
 
 // Ten sheet Excel gioi han 31 ky tu va khong duoc chua [ ] : * ? / \ - cac ten
 // duoi day deu an toan.
@@ -9,13 +11,24 @@ const SHEETS: { key: keyof FinancialStatements; name: string }[] = [
   { key: 'cashFlow', name: 'Lưu chuyển tiền tệ' },
 ];
 
-function writeTable(sheet: ExcelJS.Worksheet, table: StatementTable): void {
+// In dam cac dong "tong nhom" (sub-heading) va dam+HOA cac dong "tong lon"
+// (heading) giong van ban goc (yeu cau user 2026-07-08) - xem
+// lib/export/row-style.ts de biet quy tac phan loai tung bang.
+function writeTable(sheet: ExcelJS.Worksheet, statementKey: keyof FinancialStatements, table: StatementTable): void {
   if (table.columns.length > 0) {
     const headerRow = sheet.addRow(table.columns);
     headerRow.font = { bold: true };
   }
+
+  const labelIndex = findLabelColumnIndex(table.columns);
   for (const row of table.rows) {
-    sheet.addRow(row);
+    const tier = classifyRowTier(statementKey, table, row, labelIndex);
+    const values =
+      tier === 'heading'
+        ? row.map((cell, i) => (i === labelIndex && typeof cell === 'string' ? cell.toLocaleUpperCase('vi-VN') : cell))
+        : row;
+    const excelRow = sheet.addRow(values);
+    if (tier !== 'plain') excelRow.font = { bold: true };
   }
 
   // sheet.columns chi khac null neu duoc gan truoc do bang mot mang dinh
@@ -39,7 +52,7 @@ export async function writeFinancialStatementsExcel(statements: FinancialStateme
   const workbook = new ExcelJS.Workbook();
   for (const { key, name } of SHEETS) {
     const sheet = workbook.addWorksheet(name);
-    writeTable(sheet, statements[key]);
+    writeTable(sheet, key, statements[key]);
   }
   await workbook.xlsx.writeFile(destPath);
 }

@@ -213,13 +213,17 @@ const METRICS: MetricDef[] = [
   },
 ];
 
-// "-" la quy uoc BCTC VN cho "khong co/bang 0" (khac voi gia tri khong doc
-// duoc/OCR loi) - CHI "-" moi duoc coi la 0, moi gia tri khac khong phai so
-// deu la "khong tinh duoc" (null), theo dung nguyen tac cua
-// lib/export/validate-statements.ts (khong doan bua khi thieu du lieu).
+// "-" VA o trong (null) deu duoc coi la 0 (quy uoc BCTC VN: khong phat sinh)
+// (doi huong 2026-07-08 - truoc do chi "-" moi la 0, o trong bi coi la
+// "khong doc duoc"; nhung doi chieu markdown-tables.ts thi o trong markdown
+// LUON thanh null ngay tu buoc parse, con OCR "doc sai/nham" thi hau nhu
+// khong xay ra voi Mistral - nen null thuc te gan nhu luon la o trong that,
+// khong phai loi doc). Cell KHONG phai so va KHONG phai "-" (vd chu rac that
+// su hiem gap) van tra ve "khong tinh duoc" - chi undefined (hang bi lech
+// cot cau truc) moi giu nguyen an toan tuyet doi.
 function numericValue(cell: string | number | null | undefined): number | null {
   if (typeof cell === 'number') return cell;
-  if (cell === '-') return 0;
+  if (cell === '-' || cell === null) return 0;
   return null;
 }
 

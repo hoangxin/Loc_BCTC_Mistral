@@ -30,7 +30,7 @@
         },
         {
           "label": "Trả trước người bán",
-          "percentChange": null,
+          "percentChange": -79.09319296529873,
           "tier": null
         },
         {
@@ -65,8 +65,8 @@
         },
         {
           "label": "Phải trả người bán",
-          "percentChange": null,
-          "tier": null
+          "percentChange": 1155.2027303889756,
+          "tier": "level2"
         },
         {
           "label": "Người mua trả trước",
@@ -75,7 +75,7 @@
         },
         {
           "label": "Chi phí phải trả",
-          "percentChange": null,
+          "percentChange": -27.230422623134192,
           "tier": null
         },
         {
