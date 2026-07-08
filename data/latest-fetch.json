@@ -120,7 +120,7 @@
         },
         {
           "label": "LNST",
-          "percentChange": null,
+          "percentChange": -1.2681162029761197,
           "tier": null
         }
       ],
@@ -452,6 +452,13 @@
             [
               "- Nguyên giá",
               225,
+              null,
+              null,
+              null
+            ],
+            [
+              "- Giá trị hao mòn lũy kế (*)",
+              226,
               null,
               null,
               null
@@ -830,6 +837,13 @@
             [
               "5. Phải trả nội bộ về vốn kinh doanh",
               335,
+              null,
+              null,
+              null
+            ],
+            [
+              "6. Phải trả nội bộ dài hạn",
+              336,
               null,
               null,
               null
@@ -1334,6 +1348,42 @@
               -3504005,
               -701433495,
               -6106334
+            ],
+            [
+              "19. Lợi nhuận sau thuế thu nhập doanh nghiệp (60 = 50 - 51 - 52)",
+              60,
+              null,
+              12781978256,
+              12946150488,
+              35143343659,
+              36618082052
+            ],
+            [
+              "20. Lợi nhuận sau thuế của Công ty mẹ",
+              61,
+              null,
+              12740036825,
+              12926421237,
+              35099183423,
+              36595086558
+            ],
+            [
+              "21. Lợi nhuận sau thuế của cổ đông không kiểm soát",
+              62,
+              null,
+              41941431,
+              19729252,
+              44160236,
+              22995494
+            ],
+            [
+              "22. Lãi cơ bản trên cổ phiếu (*)",
+              70,
+              null,
+              309,
+              314,
+              851,
+              949
             ]
           ]
         },
@@ -1578,6 +1628,24 @@
               50,
               -2480376509,
               -32056534554
+            ],
+            [
+              "Tiền và tương đương tiền đầu kỳ",
+              60,
+              22254795059,
+              57387452252
+            ],
+            [
+              "Ảnh hưởng của thay đổi tỷ giá hối đoái quy đổi ngoại tệ",
+              61,
+              0,
+              0
+            ],
+            [
+              "Tiền và tương đương tiền cuối kỳ (70=50+60+61)",
+              70,
+              19774418550,
+              25330917698
             ]
           ]
         }

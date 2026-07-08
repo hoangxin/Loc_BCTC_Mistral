@@ -130,15 +130,26 @@ function realignRowByContent(row: (string | null)[], columns: string[], labelCol
   if (labelCellIdx !== -1) result[labelColumnIndex] = row[labelCellIdx];
 
   const remaining = row.filter((_, i) => i !== labelCellIdx);
-  const codeCells = remaining.filter((c) => typeof c === 'string' && MA_SO_PATTERN.test(c.trim()));
-  const valueCells = remaining.filter((c) => !(typeof c === 'string' && MA_SO_PATTERN.test(c.trim())));
+  // CHI lay o KHOP DAU TIEN lam "ma so" - vai dong (vd "Lãi cơ bản trên cổ
+  // phiếu") co GIA TRI THAT SU (309, 314...) nho, ngau nhien cung khop
+  // MA_SO_PATTERN (2-4 chu so) nhu chinh o ma so that - loc ca dam theo
+  // .filter() se nhan NHAM tat ca la "ma so", bo trong valueCells (0 phan tu),
+  // roi ".slice(-0)" (bug JS: tra ve CA MANG thay vi mang rong) ghi de moi cot
+  // gia tri thanh undefined - da gap that (2026-07-08, IDV mã 70 "Lãi cơ bản
+  // trên cổ phiếu (*)": 309/314/851/949 deu bi coi la ma so, xoa sach 4 cot
+  // gia tri that). Mot dong CHI co toi da 1 o la ma so that (nam ngay sau
+  // nhan) - moi o con lai, du co khop MA_SO_PATTERN hay khong, deu la gia tri.
+  const codeIdx = remaining.findIndex((c) => typeof c === 'string' && MA_SO_PATTERN.test(c.trim()));
+  const valueCells = remaining.filter((_, i) => i !== codeIdx);
 
-  if (maSoIdx !== -1 && codeCells.length > 0) result[maSoIdx] = codeCells[0];
+  if (maSoIdx !== -1 && codeIdx !== -1) result[maSoIdx] = remaining[codeIdx];
 
   const valueSlots = columns.map((_, i) => i).filter((i) => i !== labelColumnIndex && i !== maSoIdx);
-  valueSlots.slice(-valueCells.length).forEach((slot, k) => {
-    result[slot] = valueCells[k];
-  });
+  if (valueCells.length > 0) {
+    valueSlots.slice(-valueCells.length).forEach((slot, k) => {
+      result[slot] = valueCells[k];
+    });
+  }
 
   return result;
 }
@@ -231,23 +242,41 @@ function parseAllTablesInRange(lines: string[]): StatementTable[] {
     const labelIdx = findLabelColumnIndex(headerCells);
     const rows: (string | number | null)[][] = [];
     let j = i + 2;
-    let blankRun = 0;
+    let skipRun = 0;
     while (j < lines.length) {
       // Mistral noi cac trang bang "\n\n" - 1 dong trong ngan giua 2 trang
       // KHONG co nghia la bang da het (da gap that voi TIX: 1 dong trong duy
       // nhat o ranh gioi trang khien bang bi cat som, roi dong ngay sau do -
       // vo tinh co dau "---" theo sau - bi hieu nham thanh header cua 1 bang
       // MOI, lam mat han dong do khoi du lieu that). Cho phep "di xuyen" qua
-      // toi da 2 dong trong lien tiep truoc khi ket luan bang da het.
+      // toi da 2 dong trong/rac lien tiep truoc khi ket luan bang da het.
+      //
+      // Rac o day KHONG CHI la dong trong - da gap that voi IDV (2026-07-08,
+      // OCR probe that qua Mistral): dong footer so trang don doc (vd "Trang
+      // 4") chen GIUA 2 trang, KHONG di kem dong trong nao ca, tung lam gian
+      // doan ngay lap tuc (truoc day chi "!rowCells" la break thang, khong co
+      // khoan dung nao) - roi dong DU LIEU that ngay sau do (vd "19. Loi
+      // nhuan sau thue...") vo tinh duoc theo sau boi 1 dong phan cach "---"
+      // (Mistral tu chen phan cach nay o MOI trang moi, coi dong dau tien cua
+      // trang la "tieu de"), bi hieu nham thanh HEADER cua 1 bang hoan toan
+      // moi - lam mat trang ca dong do lan cac dong theo sau (khong con tu
+      // khoa dac trung nao de classifyTableByContent nhan dung bang). Gop
+      // chung dong trong VA dong rac (khong parse duoc thanh hang bang) vao 1
+      // bo dem, cho phep toi da 2 dong loai nay truoc khi ket luan bang het that.
       if (lines[j].trim() === '') {
-        blankRun++;
-        if (blankRun > 2) break;
+        skipRun++;
+        if (skipRun > 3) break;
         j++;
         continue;
       }
       const rowCells = splitMarkdownRow(lines[j]);
-      if (!rowCells) break;
-      blankRun = 0;
+      if (!rowCells) {
+        skipRun++;
+        if (skipRun > 3) break;
+        j++;
+        continue;
+      }
+      skipRun = 0;
       if (isSeparatorRow(rowCells)) {
         j++; // dong phan cach GIA chen giua bang (ngat trang) - bo qua, khong phai du lieu that
         continue;
