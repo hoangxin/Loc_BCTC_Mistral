@@ -42,8 +42,8 @@ export default function ReportsSummaryTable({ reports }: { reports: DownloadedRe
         <thead>
           <tr>
             <th>STT</th>
-            <th>Mã CK</th>
-            <th>Sàn giao dịch</th>
+            <th className="stockcode-col">Mã CK</th>
+            <th className="exchange-col">Sàn GD</th>
             <th>Loại BCTC</th>
             {labels.map((label) => (
               <th key={label} className="pct-col-header">{label}</th>
@@ -57,7 +57,7 @@ export default function ReportsSummaryTable({ reports }: { reports: DownloadedRe
             return (
               <tr key={report.filePath}>
                 <td>{index + 1}</td>
-                <td>
+                <td className="stockcode-col">
                   {/* Ten cong ty hien qua tooltip hover (title) thay vi cot rieng
                   (yeu cau user 2026-07-07) - do dai ten cong ty thuong lam bang
                   qua rong, trong khi Ma CK + San giao dich la du de nhan dien
@@ -66,7 +66,7 @@ export default function ReportsSummaryTable({ reports }: { reports: DownloadedRe
                     {report.stockCode || '—'}
                   </a>
                 </td>
-                <td>
+                <td className="exchange-col">
                   <span className="exchange-tag">{report.exchange}</span>
                 </td>
                 <td>{report.statementScope}</td>

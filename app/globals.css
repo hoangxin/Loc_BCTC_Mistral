@@ -164,15 +164,27 @@ body {
   text-decoration: underline;
 }
 
-/* Thu hep cot %-tang truong ve do rong tuong duong cot ngan nhat ("Tồn kho")
-   (yeu cau user 2026-07-08) - tieu de dai se tu xuong dong vi word-break cho
-   phep ngat tai tung tu, khong lam cot phinh to. */
+/* Thu hep cot %-tang truong (yeu cau user 2026-07-08). Chi goi y do rong toi
+   thieu qua width - KHONG dung word-break: break-word vi no cat ngang giua tu
+   (vd "NGUYÊN" -> "NGUYÊ"/"N", yeu cau user 2026-07-08 sua loi nay). Voi
+   word-break: normal, tieu de xuong dong tai khoang trang, va cot se tu no
+   rong hon width neu can de chua tron 1 tu dai. */
 .pct-col-header,
 .pct-col {
-  width: 72px;
-  max-width: 72px;
+  width: 76px;
   white-space: normal;
-  word-break: break-word;
+  word-break: normal;
+  overflow-wrap: normal;
+}
+
+/* Mã CK / Sàn GD: thu hep vua du chua noi dung, cho xuong dong neu can nhung
+   khong cat ngang tu (yeu cau user 2026-07-08). */
+.stockcode-col,
+.exchange-col {
+  width: 56px;
+  white-space: normal;
+  word-break: normal;
+  overflow-wrap: normal;
 }
 
 .exchange-tag {
