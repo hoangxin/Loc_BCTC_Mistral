@@ -53,6 +53,47 @@ function findRows(
   });
 }
 
+// Nhu findRow, nhung tra ve VI TRI (index trong table.rows) thay vi chinh
+// dong - can cho childrenBetween duoi (khoanh vung "cac dong con nam GIUA 2
+// dong nhom" theo VI TRI, khong theo ma so - xem validateBalanceSheetSubtotals).
+// `preferSubtotal`: uu tien dong la TONG NHOM (vd "A. Tai san ngan han") khi
+// cung 1 cum tu cung xuat hien lai o 1 dong con cap duoi (vd truong hop TT200
+// cu "I. Von chu so huu" trung ten voi dong cha "D - Von chu so huu") - dong
+// TONG luon dung TRUOC dong con trong bang nen "khop dau tien la dong tong"
+// se luon dung.
+function findRowIndex(
+  table: StatementTable,
+  labelIndex: number,
+  matcher: (normalizedLabel: string) => boolean,
+  options?: { preferSubtotal?: boolean }
+): number {
+  const matches: number[] = [];
+  table.rows.forEach((row, i) => {
+    const label = row[labelIndex];
+    if (typeof label === 'string' && matcher(normalizeLabel(label))) matches.push(i);
+  });
+  if (matches.length === 0) return -1;
+  if (options?.preferSubtotal) {
+    const subtotal = matches.find((i) => isLikelySubtotalRow(table, table.rows[i], labelIndex));
+    if (subtotal !== undefined) return subtotal;
+  }
+  return matches[0];
+}
+
+// Cac dong "cap 2" (I, II, III...) cua 1 nhom - khoanh vung theo VI TRI (nam
+// GIUA dong nhom (vd "A. Tai san ngan han") va dong nhom KE TIEP (vd "B. Tai
+// san dai han") trong bang), KHONG theo khoang ma so co dinh nhu truoc (xem
+// comment o validateBalanceSheetSubtotals ve ly do doi).
+function childrenBetween(
+  table: StatementTable,
+  labelIndex: number,
+  startIdx: number,
+  endIdx: number
+): (string | number | null)[][] {
+  if (startIdx === -1 || endIdx === -1 || endIdx <= startIdx) return [];
+  return table.rows.slice(startIdx + 1, endIdx).filter((row) => isLikelySubtotalRow(table, row, labelIndex));
+}
+
 // Cong don theo vi tri cot giua nhieu dong khop (vd "Chi phi thue TNDN" bi
 // tach thanh 2 dong rieng: hien hanh + hoan lai) truoc khi so sanh - CHI cong
 // cac cot gia tri that su (xem valueColumnIndexes), khong dong theo index tho.
@@ -75,23 +116,6 @@ function numbersClose(a: number, b: number): boolean {
   const diff = Math.abs(a - b);
   const scale = Math.max(Math.abs(a), Math.abs(b), 1);
   return diff <= Math.max(1000, scale * 0.0005);
-}
-
-// Cong cac dong "cap 2" (I, II, III... - ma so la boi so cua 10) trong
-// khoang (min, max) - KHONG cong dong "cap 3" (vd I.1, I.2...) vi da nam
-// trong gia tri cua dong cap 2 chua chung roi, cong them se bi tinh 2 lan.
-function sumChildrenByCodeRange(
-  table: StatementTable,
-  maSoIndex: number,
-  min: number,
-  max: number
-): (string | number | null)[][] {
-  const labelIndex = findLabelColumnIndex(table);
-  return table.rows.filter((row) => {
-    const code = parseCode(row[maSoIndex]);
-    if (code === null || code <= min || code >= max || code % 10 !== 0) return false;
-    return isLikelySubtotalRow(table, row, labelIndex);
-  });
 }
 
 // NGUYEN TAC QUAN TRONG (chot 2026-07-05, theo phan hoi user): neu 1 kiem tra
@@ -220,7 +244,7 @@ function validateChildrenSum(
     return [
       {
         table: 'balanceSheet',
-        message: `Khong tim thay muc con nao cua "${groupLabel}" (theo ma so cap 2) - khong kiem tra duoc tong cac muc con.`,
+        message: `Khong tim thay muc con nao cua "${groupLabel}" (dong "cap 2" I/II/III...) - khong kiem tra duoc tong cac muc con.`,
       },
     ];
   }
@@ -242,64 +266,83 @@ function validateChildrenSum(
   return issues;
 }
 
-// Nguyen tac ke toan bat buoc theo Thong tu 200, dua vao MA SO thay vi ten
-// chi tieu (chinh xac hon - xem findMaSoColumnIndex):
-//   100 (Tai san ngan han) + 200 (Tai san dai han) = 270 (Tong cong tai san)
-//   300 (No phai tra) + 400 (Von chu so huu) = 440 (Tong cong nguon von)
+// Nguyen tac ke toan bat buoc, KHONG con dua vao MA SO co dinh nhu truoc (bo
+// 2026-07-08, phan hoi user): TT99/2025 chen them nhom "Tai san sinh hoc"
+// lam DICH CHUYEN ma so tong tai san tu 270 (TT200) sang 280 (TT99) - te hon
+// nua, ma so 270 CU lai trung voi ma so THAT SU cua 1 dong con khac trong
+// TT99 ("VII. Tai san dai han khac") - da xac nhan qua OCR that tren BCTC
+// IDV (mau TT99): findRowByCode(..., 270) tim NHAM sang dong con nay thay vi
+// dong tong that (280), lam sai lech ca dang thuc "TS ngan han + TS dai han
+// = Tong cong tai san" LAN "tong cac muc con cua TS dai han" (khoang ma so
+// 200-270 cu vo tinh loai mat dong con thu 7 cua nhom, vi no NAM DUNG o bien
+// tren 270). Doi sang tim theo TEN CHI TIEU (on dinh qua ca 2 thong tu, dung
+// y het triet ly lib/analysis.ts da chon) + khoanh vung "cac dong con" theo
+// VI TRI trong bang (xem childrenBetween) thay vi khoang ma so co dinh.
+//   TS ngan han + TS dai han = Tong cong tai san
+//   No phai tra + Von chu so huu = Tong cong nguon von
 // Kiem tra sau hon (theo tung nhom): tong cac muc con cap 2 (I, II, III...)
-// cua tung nhom (100, 200, 300, 400) co khop voi chinh dong tong cua nhom do
-// khong - giup khoanh vung chinh xac nhom nao la nguon goc gay lech, thay vi
-// chi biet "co lech dau do". Ca 2 dang thuc deu chay (khong chi khi cai kia
-// that bai) vi day la 2 kiem tra doc lap, gio deu phai bao ro neu khong the
-// thuc hien duoc (xem compareOrFlag/validateIdentity/validateChildrenSum).
+// cua tung nhom co khop voi chinh dong tong cua nhom do khong - giup khoanh
+// vung chinh xac nhom nao la nguon goc gay lech, thay vi chi biet "co lech
+// dau do". Ca 2 dang thuc deu chay (khong chi khi cai kia that bai) vi day
+// la 2 kiem tra doc lap, gio deu phai bao ro neu khong the thuc hien duoc
+// (xem compareOrFlag/validateIdentity/validateChildrenSum).
 function validateBalanceSheetSubtotals(table: StatementTable): ValidationIssue[] {
-  const maSoIndex = findMaSoColumnIndex(table);
-  if (maSoIndex === null) {
-    return [
-      {
-        table: 'balanceSheet',
-        message: 'Khong tim thay cot "Ma so" - khong kiem tra duoc cac dang thuc can doi ke toan theo ma so.',
-      },
-    ];
-  }
-
+  const labelIndex = findLabelColumnIndex(table);
   const issues: ValidationIssue[] = [];
 
-  const shortTermAssets = findRowByCode(table, maSoIndex, 100);
-  const longTermAssets = findRowByCode(table, maSoIndex, 200);
-  const totalAssets = findRowByCode(table, maSoIndex, 270);
+  const shortTermAssetsIdx = findRowIndex(table, labelIndex, (l) => l.includes('TAI SAN NGAN HAN') && !l.includes('KHAC'), {
+    preferSubtotal: true,
+  });
+  const longTermAssetsIdx = findRowIndex(table, labelIndex, (l) => l.includes('TAI SAN DAI HAN') && !l.includes('KHAC'), {
+    preferSubtotal: true,
+  });
+  const totalAssetsIdx = findRowIndex(table, labelIndex, (l) => l.includes('TONG CONG TAI SAN'));
+
+  const shortTermAssets = shortTermAssetsIdx === -1 ? null : table.rows[shortTermAssetsIdx];
+  const longTermAssets = longTermAssetsIdx === -1 ? null : table.rows[longTermAssetsIdx];
+  const totalAssets = totalAssetsIdx === -1 ? null : table.rows[totalAssetsIdx];
+
   issues.push(
     ...validateIdentity(
       table,
-      'TS ngan han (ma so 100)',
+      'TS ngan han',
       shortTermAssets,
-      'TS dai han (ma so 200)',
+      'TS dai han',
       longTermAssets,
-      'Tong cong tai san (ma so 270)',
+      'Tong cong tai san',
       totalAssets,
       (col, a, b, total) => `"${col}": TS ngan han (${a}) + TS dai han (${b}) khong khop Tong cong tai san (${total})`
     )
   );
-  issues.push(...validateChildrenSum(table, 'TS ngan han', shortTermAssets, sumChildrenByCodeRange(table, maSoIndex, 100, 200)));
-  issues.push(...validateChildrenSum(table, 'TS dai han', longTermAssets, sumChildrenByCodeRange(table, maSoIndex, 200, 270)));
+  issues.push(
+    ...validateChildrenSum(table, 'TS ngan han', shortTermAssets, childrenBetween(table, labelIndex, shortTermAssetsIdx, longTermAssetsIdx))
+  );
+  issues.push(
+    ...validateChildrenSum(table, 'TS dai han', longTermAssets, childrenBetween(table, labelIndex, longTermAssetsIdx, totalAssetsIdx))
+  );
 
-  const liabilities = findRowByCode(table, maSoIndex, 300);
-  const equity = findRowByCode(table, maSoIndex, 400);
-  const totalCapital = findRowByCode(table, maSoIndex, 440);
+  const liabilitiesIdx = findRowIndex(table, labelIndex, (l) => l.includes('NO PHAI TRA'), { preferSubtotal: true });
+  const equityIdx = findRowIndex(table, labelIndex, (l) => l.includes('VON CHU SO HUU'), { preferSubtotal: true });
+  const totalCapitalIdx = findRowIndex(table, labelIndex, (l) => l.includes('TONG CONG NGUON VON'));
+
+  const liabilities = liabilitiesIdx === -1 ? null : table.rows[liabilitiesIdx];
+  const equity = equityIdx === -1 ? null : table.rows[equityIdx];
+  const totalCapital = totalCapitalIdx === -1 ? null : table.rows[totalCapitalIdx];
+
   issues.push(
     ...validateIdentity(
       table,
-      'No phai tra (ma so 300)',
+      'No phai tra',
       liabilities,
-      'Von chu so huu (ma so 400)',
+      'Von chu so huu',
       equity,
-      'Tong cong nguon von (ma so 440)',
+      'Tong cong nguon von',
       totalCapital,
       (col, a, b, total) => `"${col}": No phai tra (${a}) + Von chu so huu (${b}) khong khop Tong cong nguon von (${total})`
     )
   );
-  issues.push(...validateChildrenSum(table, 'No phai tra', liabilities, sumChildrenByCodeRange(table, maSoIndex, 300, 400)));
-  issues.push(...validateChildrenSum(table, 'Von chu so huu', equity, sumChildrenByCodeRange(table, maSoIndex, 400, 440)));
+  issues.push(...validateChildrenSum(table, 'No phai tra', liabilities, childrenBetween(table, labelIndex, liabilitiesIdx, equityIdx)));
+  issues.push(...validateChildrenSum(table, 'Von chu so huu', equity, childrenBetween(table, labelIndex, equityIdx, totalCapitalIdx)));
 
   return issues;
 }

@@ -108,6 +108,17 @@ const ROMAN_NUMERAL_PATTERN = /^[IVXLCDM]+$/i;
 // hieu nay dang tin cay hon "ma so chia het cho 10" (xem comment duoi day).
 const ARABIC_ITEM_PREFIX = /^\d+[.\/)]?\s/;
 
+// Muc con CAP 4 (chi tiet duoi CA dong cap 3, vd "- Nguyen gia"/"- Gia tri
+// hao mon luy ke (*)" duoi TSCD, "a)"/"b)" duoi 1 muc sinh hoc) - KHONG bao
+// gio la dong tong nhom, du KHONG bat dau bang so A-rap (da gap that
+// 2026-07-08, doi chieu that voi BCTC IDV: cac dong nay bi tinh nham la "dong
+// tong" - giong het loi voi ARABIC_ITEM_PREFIX o tren - lam bang Excel in dam
+// nham HANG LOAT dong con (lib/export/row-style.ts) VA lam sai lech phep
+// cong "tong cac muc con" trong validate-statements.ts, vi 1 dong da duoc
+// tinh trong gia tri cua dong cha "1./2./3." lai bi cong THEM 1 lan nua nhu
+// the no la 1 nhom rieng).
+const NON_SUBTOTAL_DETAIL_PREFIX = /^(-|[a-z]\))\s/;
+
 // Phan biet dong "cap 2" (I, II, III... - dong tong cua 1 nhom) voi dong "cap
 // 3" (chi tiet don le duoi 1 nhom) - truoc day CHI dua vao "ma so la boi so
 // cua 10", da gap that (2026-07-05, smoke test tren HSG qua Mistral): mot so
@@ -123,13 +134,15 @@ const ARABIC_ITEM_PREFIX = /^\d+[.\/)]?\s/;
 // ra khoi tong, thay vi chi dua vao ma so chia het cho 10 (van giu lam dieu
 // kien BAT BUOC, chi khong con la dieu kien DU nua).
 export function isLikelySubtotalRow(table: StatementTable, row: (string | number | null)[], labelIndex: number): boolean {
+  const label = String(row[labelIndex] ?? '').trim();
+  if (NON_SUBTOTAL_DETAIL_PREFIX.test(label)) return false;
+
   const sttIndex = table.columns.findIndex((col) => normalizeLabelText(col).includes('STT'));
   if (sttIndex !== -1) {
     const sttValue = String(row[sttIndex] ?? '').trim();
     if (sttValue === '') return true; // mot so dong tong khong co STT rieng - khong du du lieu de bac bo, giu nguyen hanh vi cu (chap nhan)
     return ROMAN_NUMERAL_PATTERN.test(sttValue);
   }
-  const label = String(row[labelIndex] ?? '').trim();
   return !ARABIC_ITEM_PREFIX.test(label);
 }
 

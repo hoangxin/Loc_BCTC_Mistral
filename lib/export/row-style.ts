@@ -11,14 +11,6 @@ export type RowStyleTier = 'heading' | 'subheading' | 'plain';
 // phai liet ke dich danh 4 nhan nay.
 const BALANCE_SHEET_HEADING_MARKERS = ['TONG CONG TAI SAN', 'NO PHAI TRA', 'VON CHU SO HUU', 'TONG CONG NGUON VON'];
 
-// Dong chi tiet CON (vd "- Nguyen gia"/"- Gia tri hao mon luy ke (*)" duoi
-// TSCD, "a)"/"b)" duoi 1 muc sinh hoc...) KHONG bao gio la dong tong nhom -
-// isLikelySubtotalRow (thiet ke cho tien to CHU/SO La Ma/so A-rap) khong biet
-// 2 mau tien to nay nen se nham la "tong" (dau "-"/"a)" khong phai so A-rap)
-// - loai rieng truoc khi xet tiep, tranh in dam nham hang loat dong con nay
-// (yeu cau user 2026-07-08, doi chieu mau IDV that).
-const NON_HEADING_DETAIL_PREFIX = /^(-|[a-z]\))\s/;
-
 export function classifyRowTier(
   statementKey: 'balanceSheet' | 'incomeStatement' | 'cashFlow',
   table: StatementTable,
@@ -30,10 +22,11 @@ export function classifyRowTier(
   const normalized = normalizeLabelText(label);
 
   if (statementKey === 'balanceSheet') {
-    if (NON_HEADING_DETAIL_PREFIX.test(label)) return 'plain';
-    // Chi xet la "heading" (tong lon) trong so CAC DONG DA LA tong nhom -
-    // tranh khop nham chuoi con (vd "9. Quy khac thuoc VON CHU SO HUU" - chi
-    // la 1 dong chi tiet co chua cum tu nay, khong phai dong tong D).
+    // Chi xet la "heading" (tong lon) trong so CAC DONG DA LA tong nhom
+    // (isLikelySubtotalRow, statement-shared.ts - da loai san dong chi tiet
+    // dau "-"/"a)" va dong so A-rap) - tranh khop nham chuoi con (vd "9. Quy
+    // khac thuoc VON CHU SO HUU" - chi la 1 dong chi tiet co chua cum tu nay,
+    // khong phai dong tong D).
     if (!isLikelySubtotalRow(table, row, labelIndex)) return 'plain';
     if (BALANCE_SHEET_HEADING_MARKERS.some((marker) => normalized.includes(marker))) return 'heading';
     return 'subheading';
