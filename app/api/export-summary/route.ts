@@ -38,6 +38,7 @@ export async function POST(request: Request) {
       // Fallback 'Chung' cho du lieu cu tu ban truoc (chua co truong nay) -
       // du lieu moi tu lib/pipeline.ts/lib/custom-source.ts luon co san.
       statementScope: report.statementScope ?? 'Chung',
+      businessType: report.businessType ?? 'other',
       analysis: report.analysis ?? [],
     }));
 

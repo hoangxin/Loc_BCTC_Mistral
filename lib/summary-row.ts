@@ -1,4 +1,5 @@
 import type { AnalysisRow } from './analysis';
+import type { BusinessType } from './business-type';
 import type { StatementScope } from './statement-scope';
 
 export interface SummaryRow {
@@ -13,6 +14,9 @@ export interface SummaryRow {
   exchange: string;
   title: string;
   statementScope: StatementScope;
+  // Dung de chia file Excel tong hop thanh 4 sheet giong 4 tab loai hinh DN
+  // tren UI (yeu cau user 2026-07-08 - xem lib/export/summary-excel.ts).
+  businessType: BusinessType;
   analysis: AnalysisRow[];
 }
 
