@@ -44,10 +44,9 @@ export default function ReportsSummaryTable({ reports }: { reports: DownloadedRe
             <th>STT</th>
             <th>Mã CK</th>
             <th>Sàn giao dịch</th>
-            <th>Tên tài liệu</th>
             <th>Loại BCTC</th>
             {labels.map((label) => (
-              <th key={label}>{label}</th>
+              <th key={label} className="pct-col-header">{label}</th>
             ))}
             <th>Xuất file</th>
           </tr>
@@ -70,13 +69,12 @@ export default function ReportsSummaryTable({ reports }: { reports: DownloadedRe
                 <td>
                   <span className="exchange-tag">{report.exchange}</span>
                 </td>
-                <td>{report.title}</td>
                 <td>{report.statementScope}</td>
                 {labels.map((label) => {
                   const item = byLabel.get(label);
                   const tierClass = item?.tier === 'level1' ? 'pct-level1' : item?.tier === 'level2' ? 'pct-level2' : '';
                   return (
-                    <td key={label} className={tierClass}>
+                    <td key={label} className={`pct-col ${tierClass}`}>
                       {formatPercent(item?.percentChange)}
                     </td>
                   );

@@ -164,6 +164,17 @@ body {
   text-decoration: underline;
 }
 
+/* Thu hep cot %-tang truong ve do rong tuong duong cot ngan nhat ("Tồn kho")
+   (yeu cau user 2026-07-08) - tieu de dai se tu xuong dong vi word-break cho
+   phep ngat tai tung tu, khong lam cot phinh to. */
+.pct-col-header,
+.pct-col {
+  width: 72px;
+  max-width: 72px;
+  white-space: normal;
+  word-break: break-word;
+}
+
 .exchange-tag {
   display: inline-block;
   font-size: 11px;

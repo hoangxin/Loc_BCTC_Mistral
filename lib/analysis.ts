@@ -83,7 +83,7 @@ const findDoanhThuThuan: RowFinder = (table) => findRevenueRow(table);
 // sumFindersAtColumn duoi).
 const METRICS: MetricDef[] = [
   {
-    label: 'Tiền + ĐTTC Ngắn hạn',
+    label: 'Tiền',
     statement: 'balanceSheet',
     finders: [byLabel(['TIEN VA CAC KHOAN TUONG DUONG TIEN']), byLabel(['DAU TU TAI CHINH NGAN HAN'])],
     thresholds: BCDKT_THRESHOLDS,
