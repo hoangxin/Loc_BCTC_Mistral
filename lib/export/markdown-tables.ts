@@ -238,14 +238,38 @@ function classifyTableByContent(table: StatementTable): keyof FinancialStatement
   return best.key;
 }
 
+// KQKD bao hiem (Mau B02/B02a-DNPNT, Thong tu 232/2012/TT-BTC) tach lam 2
+// "Phan" RIENG, moi Phan co 1 tieu de ngan dat NGAY TRUOC bang cua no - "Phan
+// I ... tong hop" (bang gon) va "Phan II ... chi tiet theo hoat dong" (bang
+// day du hon, CHUA het so lieu cua Phan I nhung tach nho hon nua - vd "Doanh
+// thu phi bao hiem"/"Chi boi thuong" CHI co o Phan II, khong co dong rieng o
+// Phan I). Dung de uu tien lay Phan II khi xuat Excel 3 bang (yeu cau user
+// 2026-07-11) - xem cho dung tai parseStatementsFromMarkdown. "PHAN I" khop
+// NHAM ca vao "PHAN II" (la tien to cua no) nen phai loai truong hop do rieng.
+type IncomeStatementPart = 'summary' | 'detail';
+const INCOME_STATEMENT_PART_MARKERS: { part: IncomeStatementPart; test: (normalizedLine: string) => boolean }[] = [
+  { part: 'detail', test: (l) => l.includes('PHAN II') && (l.includes('CHI TIET') || l.includes('THEO HOAT DONG')) },
+  { part: 'summary', test: (l) => l.includes('PHAN I') && l.includes('TONG HOP') && !l.includes('PHAN II') },
+];
+
+interface ParsedTable extends StatementTable {
+  incomeStatementPart?: IncomeStatementPart;
+}
+
 // Tim TAT CA bang markdown ("header" + dong phan cach "---" + cac dong du
 // lieu) trong 1 pham vi dong cho truoc.
-function parseAllTablesInRange(lines: string[]): StatementTable[] {
-  const tables: StatementTable[] = [];
+function parseAllTablesInRange(lines: string[]): ParsedTable[] {
+  const tables: ParsedTable[] = [];
+  let currentIncomeStatementPart: IncomeStatementPart | undefined;
   let i = 0;
   while (i < lines.length) {
     const headerCells = splitMarkdownRow(lines[i]);
     if (!headerCells) {
+      if (looksLikeHeadingLine(lines[i])) {
+        const normalized = normalizeLabelText(lines[i]);
+        const marker = INCOME_STATEMENT_PART_MARKERS.find((m) => m.test(normalized));
+        if (marker) currentIncomeStatementPart = marker.part;
+      }
       i++;
       continue;
     }
@@ -301,7 +325,7 @@ function parseAllTablesInRange(lines: string[]): StatementTable[] {
       rows.push(realigned.map((cell, idx) => (idx === labelIdx || cell === null ? cell : parseNumericCell(cell))));
       j++;
     }
-    tables.push({ columns: headerCells, rows });
+    tables.push({ columns: headerCells, rows, incomeStatementPart: currentIncomeStatementPart });
     i = j;
   }
   return tables;
@@ -366,7 +390,7 @@ export function parseStatementsFromMarkdown(markdown: string): FinancialStatemen
   // thuong la bang phu nhu "Co cau von dieu le" o trang bia).
   const tables = parseAllTablesInRange(relevantLines).filter((t) => t.rows.length >= 3);
 
-  const grouped: Record<keyof FinancialStatements, StatementTable[]> = {
+  const grouped: Record<keyof FinancialStatements, ParsedTable[]> = {
     balanceSheet: [],
     incomeStatement: [],
     cashFlow: [],
@@ -382,7 +406,13 @@ export function parseStatementsFromMarkdown(markdown: string): FinancialStatemen
     cashFlow: { columns: [], rows: [] },
   };
   for (const key of ['balanceSheet', 'incomeStatement', 'cashFlow'] as const) {
-    const matchedTables = grouped[key];
+    // KQKD bao hiem: uu tien Phan II (chi tiet theo hoat dong) - loai het bang
+    // Phan I (tong hop) khoi ket qua khi Phan II thuc su co mat (yeu cau user
+    // 2026-07-11, xem comment INCOME_STATEMENT_PART_MARKERS o tren). Bao cao
+    // KHONG co Phan II (khong phai mau bao hiem, hoac OCR khong bat duoc Phan
+    // II) thi giu nguyen hanh vi cu - khong loai gi ca.
+    const hasDetailPart = key === 'incomeStatement' && grouped[key].some((t) => t.incomeStatementPart === 'detail');
+    const matchedTables = hasDetailPart ? grouped[key].filter((t) => t.incomeStatementPart !== 'summary') : grouped[key];
     if (matchedTables.length > 0) {
       const columns = matchedTables.reduce((a, b) => (b.columns.length > a.length ? b.columns : a), matchedTables[0].columns);
       result[key] = {
