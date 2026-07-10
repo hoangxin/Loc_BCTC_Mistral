@@ -72,12 +72,11 @@ export default function FetchControls({
   const [termsError, setTermsError] = useState('');
   const [selectedKey, setSelectedKey] = useState('');
 
-  // 'sinceLast' CHI co y nghia khi isCurrentQuarter (Quy "vua qua") - cac ky
-  // khac (quy cu hon, 6T/9T/Nam) da nop du tu lau, "ke tu lan tai cuoi" khong
-  // con y nghia nen luon dung 'count' hoac 'select' (xem effectiveMode/JSX
-  // duoi). 'select' (tick chon tay tung bao cao trong bang preview) co nghia
-  // o MOI ky, khong rieng gi ky hien tai.
-  const [filterMode, setFilterMode] = useState<FilterMode>('sinceLast');
+  // Mac dinh LUON la 'select' (tick chon tay tung bao cao) o MOI ky (yeu cau
+  // user 2026-07-10) - 'sinceLast' CHI co y nghia khi isCurrentQuarter (Quy
+  // "vua qua", xem effectiveMode/JSX duoi) va 'count' cho cac ky khac, nhung
+  // ca 2 deu phai do NGUOI DUNG tu bam chuyen sang, khong con la mac dinh.
+  const [filterMode, setFilterMode] = useState<FilterMode>('select');
   const [reportLimit, setReportLimit] = useState(50);
   // Chi dung khi filterMode === 'select' - key theo ReportFile.fileInfoID
   // (duy nhat, xem lib/vietstock-reports.ts) - reset ve rong moi khi doi ky
@@ -193,6 +192,7 @@ export default function FetchControls({
     let cancelled = false;
     setSelectedFileInfoIds(new Set());
     setStockCodeQuery('');
+    setFilterMode('select');
     (async () => {
       if (!cancelled) await loadPreview(selectedTerm);
     })();
