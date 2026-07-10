@@ -3,17 +3,51 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { ReportFile, ReportTerm } from '@/lib/vietstock-reports';
 import type { QuarterPeriod } from '@/lib/quarter';
-import { isRegularQuarterTerm, periodDisplayLabel } from '@/lib/period-label';
+import { isRegularQuarterTerm, periodDisplayLabel, periodFolderSlug } from '@/lib/period-label';
 import { formatTimestamp } from '@/lib/format';
 
 type Status = 'idle' | 'loading' | 'waiting' | 'error';
-type FilterMode = 'hours' | 'count' | 'select';
+type FilterMode = 'sinceLast' | 'count' | 'select';
 type PreviewStatus = 'idle' | 'loading' | 'ready' | 'error';
 
 const POLL_INTERVAL_MS = 5000;
 // Tai + loc + download hang tram file co the mat vai phut - dung poll qua
 // lau de tranh tab quen mat dang fetch mai.
 const MAX_POLL_MS = 15 * 60 * 1000;
+
+// Hien thi hoursValue (co the le, vd 4.0833h ~ 4h5p) kieu "4h5p" thay vi so
+// thap phan xau - dung cung cach hien Loc_Tin_Deepseek (TriggerDigestButton.tsx).
+function formatHoursLabel(hoursValue: number): string {
+  const totalMinutes = Math.round(hoursValue * 60);
+  const wholeHours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+  if (wholeHours === 0) return `${minutes}p`;
+  if (minutes === 0) return `${wholeHours}h`;
+  return `${wholeHours}h${minutes}p`;
+}
+
+// Gio ke tu lan tai GAN NHAT cua DUNG ky dang chon (khong phai lan tai gan
+// nhat noi chung - moi ky co moc rieng, xem buildTermLastFetchMap o
+// app/page.tsx). Lam tron LEN theo PHUT (khong phai gio) roi quy doi ra phan
+// so cua gio - lam tron len theo gio se doi khi cong du them toi 59 phut vo
+// ly (yeu cau user 2026-07-10: "do chinh xac tinh den phut"). Tra ve 0 khi ky
+// nay CHUA TUNG duoc tai (khong co moc so sanh) - runFetch se hieu 0 la
+// "khong loc theo thoi gian", tuc lay TOAN BO danh muc.
+function sinceLastHoursForTerm(term: ReportTerm, termLastFetch: Record<string, string>): number {
+  const key = `${term.yearPeriod}-${periodFolderSlug(term)}`;
+  const lastFetchIso = termLastFetch[key];
+  if (!lastFetchIso) return 0;
+  const lastFetchMs = new Date(lastFetchIso).getTime();
+  if (!Number.isFinite(lastFetchMs)) return 0;
+  const elapsedMinutes = Math.max(1, Math.ceil((Date.now() - lastFetchMs) / (60 * 1000)));
+  return elapsedMinutes / 60;
+}
+
+function sinceLastLabel(term: ReportTerm, termLastFetch: Record<string, string>): string {
+  const hoursValue = sinceLastHoursForTerm(term, termLastFetch);
+  if (hoursValue === 0) return 'Từ lần tải cuối (chưa tải kỳ này lần nào - lấy toàn bộ danh mục)';
+  return `Từ lần tải cuối (${formatHoursLabel(hoursValue)} trước)`;
+}
 
 // reportTermID KHONG duy nhat qua cac nam (vd "Quý 3" moi nam deu dung lai
 // reportTermID=4 - da gap that qua debug that: dropdown bi trung value giua
@@ -25,21 +59,25 @@ function termKey(term: ReportTerm): string {
 export default function FetchControls({
   currentGeneratedAt,
   previousQuarter,
+  termLastFetch,
 }: {
   currentGeneratedAt: string;
   previousQuarter: QuarterPeriod;
+  // Moc "lan tai gan nhat" cua TUNG ky (key `${yearPeriod}-${periodSlug}`,
+  // xem buildTermLastFetchMap o app/page.tsx) - dung cho mode 'sinceLast'
+  // duoi day.
+  termLastFetch: Record<string, string>;
 }) {
   const [terms, setTerms] = useState<ReportTerm[] | null>(null);
   const [termsError, setTermsError] = useState('');
   const [selectedKey, setSelectedKey] = useState('');
 
-  // 'hours' CHI co y nghia khi isCurrentQuarter (Quy "vua qua") - cac ky khac
-  // (quy cu hon, 6T/9T/Nam) da nop du tu lau, "gio gan nhat" khong con y
-  // nghia nen luon dung 'count' hoac 'select' (xem effectiveMode/JSX duoi).
-  // 'select' (tick chon tay tung bao cao trong bang preview) co nghia o MOI
-  // ky, khong rieng gi ky hien tai.
-  const [filterMode, setFilterMode] = useState<FilterMode>('hours');
-  const [hoursWindow, setHoursWindow] = useState(24);
+  // 'sinceLast' CHI co y nghia khi isCurrentQuarter (Quy "vua qua") - cac ky
+  // khac (quy cu hon, 6T/9T/Nam) da nop du tu lau, "ke tu lan tai cuoi" khong
+  // con y nghia nen luon dung 'count' hoac 'select' (xem effectiveMode/JSX
+  // duoi). 'select' (tick chon tay tung bao cao trong bang preview) co nghia
+  // o MOI ky, khong rieng gi ky hien tai.
+  const [filterMode, setFilterMode] = useState<FilterMode>('sinceLast');
   const [reportLimit, setReportLimit] = useState(50);
   // Chi dung khi filterMode === 'select' - key theo ReportFile.fileInfoID
   // (duy nhat, xem lib/vietstock-reports.ts) - reset ve rong moi khi doi ky
@@ -103,9 +141,11 @@ export default function FetchControls({
     ? regularQuarter.quarter === previousQuarter.quarter && regularQuarter.year === previousQuarter.year
     : false;
   const busy = status === 'loading' || status === 'waiting';
-  // Quy "vua qua" cho chon 1 trong 3 (hours/count/select) - cac ky khac chi
-  // cho count/select (khong co 'hours', xem comment filterMode o tren).
-  const effectiveMode: FilterMode = isCurrentQuarter ? filterMode : filterMode === 'select' ? 'select' : 'count';
+  // Quy "vua qua" cho chon 1 trong 3 (sinceLast/count/select) - cac ky khac
+  // chi cho count/select (khong co 'sinceLast', xem comment filterMode o
+  // tren).
+  const effectiveMode: FilterMode =
+    filterMode === 'select' ? 'select' : isCurrentQuarter ? 'sinceLast' : 'count';
 
   const loadPreview = useCallback(async (term: ReportTerm) => {
     setPreviewStatus('loading');
@@ -201,8 +241,8 @@ export default function FetchControls({
           reportTermID: selectedTerm.reportTermID,
           yearPeriod: selectedTerm.yearPeriod,
           description: selectedTerm.description,
-          ...(effectiveMode === 'hours'
-            ? { hoursWindow }
+          ...(effectiveMode === 'sinceLast'
+            ? { hoursWindow: sinceLastHoursForTerm(selectedTerm, termLastFetch) || undefined }
             : effectiveMode === 'select'
               ? { selectedFileInfoIds: Array.from(selectedFileInfoIds) }
               : { reportLimit }),
@@ -248,24 +288,25 @@ export default function FetchControls({
         </label>
 
         <div className="mode-toggle" role="group" aria-label="Cách lấy BCTC">
-          {isCurrentQuarter && (
+          {isCurrentQuarter ? (
             <button
               type="button"
-              className={`mode-toggle-btn ${filterMode === 'hours' ? 'active' : ''}`}
-              onClick={() => setFilterMode('hours')}
+              className={`mode-toggle-btn ${filterMode === 'sinceLast' ? 'active' : ''}`}
+              onClick={() => setFilterMode('sinceLast')}
               disabled={inputsDisabled}
             >
-              Theo giờ
+              Từ lần tải cuối
+            </button>
+          ) : (
+            <button
+              type="button"
+              className={`mode-toggle-btn ${filterMode === 'count' ? 'active' : ''}`}
+              onClick={() => setFilterMode('count')}
+              disabled={inputsDisabled}
+            >
+              Theo số báo cáo
             </button>
           )}
-          <button
-            type="button"
-            className={`mode-toggle-btn ${filterMode === 'count' ? 'active' : ''}`}
-            onClick={() => setFilterMode('count')}
-            disabled={inputsDisabled}
-          >
-            Theo số báo cáo
-          </button>
           <button
             type="button"
             className={`mode-toggle-btn ${filterMode === 'select' ? 'active' : ''}`}
@@ -276,17 +317,8 @@ export default function FetchControls({
           </button>
         </div>
 
-        {effectiveMode === 'hours' && (
-          <label className="field">
-            <span className="field-label">Lấy BCTC nộp trong (giờ gần nhất)</span>
-            <input
-              type="number"
-              min={1}
-              value={hoursWindow}
-              onChange={(e) => setHoursWindow(Number(e.target.value))}
-              disabled={inputsDisabled}
-            />
-          </label>
+        {effectiveMode === 'sinceLast' && selectedTerm && (
+          <span className="trigger-message">{sinceLastLabel(selectedTerm, termLastFetch)}</span>
         )}
         {effectiveMode === 'count' && (
           <label className="field">

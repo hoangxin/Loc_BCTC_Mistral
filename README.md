@@ -22,7 +22,7 @@ diện web hoặc bằng lệnh `npm run fetch`.
 - `lib/period-label.ts` - suy ra nhãn hiển thị ("Quý 2/2026", "6 tháng đầu năm 2026"...) và tên thư mục
   từ 1 `ReportTerm`.
 - `lib/quarter.ts` - chỉ còn tính "quý vừa qua" theo giờ Việt Nam (`getPreviousQuarter`/`isSameQuarter`) -
-  dùng để xác định mặc định dropdown + bật ô "giờ gần nhất" đúng lúc.
+  dùng để xác định mặc định dropdown + bật lựa chọn "Từ lần tải cuối" đúng lúc.
 - `lib/filter.ts` - lọc sơ bộ theo **metadata** (mã CK, tên công ty, tiêu đề...) trước khi tải - hiện
   đang pass-through (giữ nguyên toàn bộ), chờ chốt tiêu chí thật.
 - `lib/download.ts` - tải file báo cáo về `data/reports/<năm>-Q<quý>/` (bất kể định dạng gì - việc nhận
@@ -124,9 +124,10 @@ diện web hoặc bằng lệnh `npm run fetch`.
   `POST .../actions/workflows/fetch-bctc.yml/dispatches` (dùng PAT `GITHUB_DISPATCH_TOKEN`, raw `fetch`,
   không Octokit) để kích hoạt workflow trên, theo đúng `trigger-digest`/route tương tự của loc_tin.
 - `app/FetchControls.tsx` - dropdown chọn kỳ (lấy trực tiếp từ `app/api/report-terms`, KHÔNG tự sinh) +
-  ô "giờ gần nhất" (đúng Quý vừa qua) hoặc "số BCTC gần nhất" (kỳ khác), nút "Tải BCTC" - polling
-  `app/api/fetch-status` (đổi `generatedAt` = xong, tự reload) - đổi kỳ chỉ đổi ô input hiển thị, KHÔNG
-  gọi API xem trước (đã bỏ theo yêu cầu user 2026-07-06, từng thử làm rồi revert).
+  lựa chọn "Từ lần tải cuối" (đúng Quý vừa qua - tự tính số giờ trôi qua kể từ lần tải GẦN NHẤT của
+  chính kỳ đó, chính xác tới phút, xem `sinceLastHoursForTerm`/`termLastFetch` từ `app/page.tsx`
+  `buildTermLastFetchMap`) hoặc "số BCTC gần nhất" (kỳ khác), nút "Tải BCTC" - polling
+  `app/api/fetch-status` (đổi `generatedAt` = xong, tự reload).
 - `app/CustomSourceForm.tsx` - nút "Thêm nguồn riêng" -> input link + Enter -> dispatch (không trả kết
   quả ngay nữa) -> polling `app/api/fetch-status`, đối chiếu `lastCustomSourceCheck.requestId` (tự sinh
   lúc gửi) để phân biệt "chưa xong" với "xong nhưng không thấy" (hiện "Chưa có").
