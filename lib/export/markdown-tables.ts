@@ -184,6 +184,22 @@ const INCOME_STATEMENT_CONTENT_MARKERS = [
   'CHI PHI QUAN LY DOANH NGHIEP',
   'LOI NHUAN THUAN TU HOAT DONG KINH DOANH',
   'LOI NHUAN SAU THUE THU NHAP DOANH NGHIEP',
+  // KQKD mau bao hiem (Mau B02a-DNPNT, Thong tu 232/2012/TT-BTC) dung tu ngu
+  // RIENG, khong trung markers VAS thuong nao o tren - "Phan II - chi tiet
+  // theo hoat dong" hay bi Mistral tach thanh 2 bang markdown (ngat giua trang)
+  // va NUA DAU (ma 01-11.1: Doanh thu phi bao hiem, Phi nhuong tai BH, Doanh
+  // thu thuan HDKDBH, Chi boi thuong) truoc khi them cac marker duoi day KHONG
+  // khop bat ky VAS marker nao ca -> classifyTableByContent tra ve null, ca
+  // bang bi am tham BO QUA (khong loi, khong canh bao - phat hien qua doi
+  // chieu that bao cao Bao hiem NN&PTNT Q1/2026, 2026-07-10). Chi them tu ngu
+  // DAC TRUNG rieng cua bao hiem (khong trung voi doanh nghiep/ngan hang/chung
+  // khoan thuong) nen an toan, khong lam sai lech phan loai cac bang khac.
+  'DOANH THU PHI BAO HIEM',
+  'PHI NHUONG TAI BAO HIEM',
+  'DOANH THU THUAN HOAT DONG KINH DOANH BAO HIEM',
+  'CHI BOI THUONG',
+  'LOI NHUAN GOP HOAT DONG KINH DOANH BAO HIEM',
+  'TONG CHI PHI HOAT DONG KINH DOANH BAO HIEM',
 ];
 
 const CASH_FLOW_CONTENT_MARKERS = [
@@ -369,11 +385,39 @@ export function parseStatementsFromMarkdown(markdown: string): FinancialStatemen
     const matchedTables = grouped[key];
     if (matchedTables.length > 0) {
       const columns = matchedTables.reduce((a, b) => (b.columns.length > a.length ? b.columns : a), matchedTables[0].columns);
-      result[key] = { columns, rows: matchedTables.flatMap((t) => t.rows) };
+      result[key] = {
+        columns,
+        rows: matchedTables.flatMap((t) => t.rows.map((row) => alignRowToColumns(row, t.columns, columns))),
+      };
     }
   }
 
   return result;
+}
+
+// KQKD mau bao hiem (B02a-DNPNT) tach thanh "Phan I - tong hop" (KHONG co cot
+// "Thuyet minh") va "Phan II - chi tiet theo hoat dong" (CO cot "Thuyet
+// minh") - 2 bang con nay bi Mistral tach rieng nhung gop chung 1 bang
+// incomeStatement o tren, lay bo cot RONG NHAT (Phan II, 7 cot) lam chuan. Neu
+// khong can chinh, cac dong tu Phan I (chi co 6 cot) se bi LECH 1 COT sang
+// trai khi doc theo VI TRI cot cua bo cot chuan 7-cot (vd lib/analysis.ts doc
+// nham cot "Thuyet minh" thanh 1 cot gia tri, day toan bo 4 cot gia tri that
+// lui 1 vi tri) - phat hien qua doi chieu that bao cao Bao hiem NN&PTNT
+// (Agribank Insurance) Q1/2026 2026-07-10. Khop lai tung cot theo TEN (qua
+// normalizeLabelText, khong theo vi tri) roi dien null cho cot cua bang con
+// khong co - CHI xay ra voi mau bao hiem (3 loai hinh con lai khong co dang
+// "Phan I/Phan II" nhieu bang con khac so cot), nhung sua o day (dung chung
+// cho ca 3 bang) de an toan chung neu sau nay gap truong hop tuong tu.
+function alignRowToColumns(
+  row: (string | number | null)[],
+  sourceColumns: string[],
+  targetColumns: string[]
+): (string | number | null)[] {
+  if (sourceColumns.length === targetColumns.length) return row;
+  return targetColumns.map((col) => {
+    const sourceIndex = sourceColumns.findIndex((c) => normalizeLabelText(c) === normalizeLabelText(col));
+    return sourceIndex === -1 ? null : row[sourceIndex] ?? null;
+  });
 }
 
 // Chuan hoa markdown Mistral tra ve thanh dang van ban ma lib/export/pdf.ts da
