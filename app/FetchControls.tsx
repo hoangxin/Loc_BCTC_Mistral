@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { ReportFile, ReportTerm } from '@/lib/vietstock-reports';
 import type { QuarterPeriod } from '@/lib/quarter';
 import { isRegularQuarterTerm, periodDisplayLabel, periodFolderSlug } from '@/lib/period-label';
@@ -95,6 +95,10 @@ export default function FetchControls({
   const [previewReports, setPreviewReports] = useState<ReportFile[] | null>(null);
   const [previewStatus, setPreviewStatus] = useState<PreviewStatus>('idle');
   const [previewError, setPreviewError] = useState('');
+  // Tim theo Ma CK trong danh muc preview (yeu cau user 2026-07-08) - reset
+  // ve rong moi khi doi ky (giong selectedFileInfoIds, xem effect loadPreview
+  // duoi).
+  const [stockCodeQuery, setStockCodeQuery] = useState('');
 
   useEffect(() => {
     return () => {
@@ -140,6 +144,15 @@ export default function FetchControls({
   const isCurrentQuarter = regularQuarter
     ? regularQuarter.quarter === previousQuarter.quarter && regularQuarter.year === previousQuarter.year
     : false;
+  // Tim theo Ma CK (yeu cau user 2026-07-08) - so sanh khong phan biet hoa
+  // thuong, cho phep go tat/mot phan ma (vd "id" khop "IDV").
+  const filteredPreviewReports = useMemo(() => {
+    const query = stockCodeQuery.trim().toUpperCase();
+    if (!previewReports) return previewReports;
+    if (!query) return previewReports;
+    return previewReports.filter((report) => (report.stockCode ?? '').toUpperCase().includes(query));
+  }, [previewReports, stockCodeQuery]);
+
   const busy = status === 'loading' || status === 'waiting';
   // Quy "vua qua" cho chon 1 trong 3 (sinceLast/count/select) - cac ky khac
   // chi cho count/select (khong co 'sinceLast', xem comment filterMode o
@@ -179,6 +192,7 @@ export default function FetchControls({
     if (!selectedTerm) return;
     let cancelled = false;
     setSelectedFileInfoIds(new Set());
+    setStockCodeQuery('');
     (async () => {
       if (!cancelled) await loadPreview(selectedTerm);
     })();
@@ -197,8 +211,21 @@ export default function FetchControls({
     });
   }
 
-  function toggleSelectAll(reports: ReportFile[]) {
-    setSelectedFileInfoIds((prev) => (prev.size === reports.length ? new Set() : new Set(reports.map((r) => r.fileInfoID))));
+  // Chi bat/tat CAC BAO CAO DANG HIEN (sau khi loc theo Ma CK) - KHONG thay
+  // the ca tap chon (yeu cau user 2026-07-08: them o tim Ma CK) - truoc do
+  // luon goi voi toan bo previewReports nen thay the ca tap la an toan, gio
+  // neu goi voi danh sach da loc se lam mat lua chon cua cac dong dang bi an
+  // (ngoai bo loc) neu van thay the nguyen tap.
+  function toggleSelectAll(visibleReports: ReportFile[]) {
+    setSelectedFileInfoIds((prev) => {
+      const allVisibleSelected = visibleReports.length > 0 && visibleReports.every((r) => prev.has(r.fileInfoID));
+      const next = new Set(prev);
+      for (const r of visibleReports) {
+        if (allVisibleSelected) next.delete(r.fileInfoID);
+        else next.add(r.fileInfoID);
+      }
+      return next;
+    });
   }
 
   function stopPolling() {
@@ -352,12 +379,21 @@ export default function FetchControls({
               </button>
             </div>
           )}
-          {previewStatus === 'ready' && previewReports && (
+          {previewStatus === 'ready' && previewReports && filteredPreviewReports && (
             <div className="report-table-wrapper preview-table-wrapper">
               <div className="summary-actions">
                 <span className="muted-note">
                   {previewReports.length} báo cáo trong danh mục {periodDisplayLabel(selectedTerm)} (theo Vietstock)
                 </span>
+                <label className="field">
+                  <span className="field-label">Tìm theo Mã CK</span>
+                  <input
+                    type="text"
+                    value={stockCodeQuery}
+                    onChange={(e) => setStockCodeQuery(e.target.value)}
+                    placeholder="VD: IDV"
+                  />
+                </label>
               </div>
               <table className="report-table">
                 <thead>
@@ -366,8 +402,8 @@ export default function FetchControls({
                       <th>
                         <input
                           type="checkbox"
-                          checked={previewReports.length > 0 && selectedFileInfoIds.size === previewReports.length}
-                          onChange={() => toggleSelectAll(previewReports)}
+                          checked={filteredPreviewReports.length > 0 && filteredPreviewReports.every((r) => selectedFileInfoIds.has(r.fileInfoID))}
+                          onChange={() => toggleSelectAll(filteredPreviewReports)}
                           aria-label="Chọn tất cả"
                         />
                       </th>
@@ -381,7 +417,14 @@ export default function FetchControls({
                   </tr>
                 </thead>
                 <tbody>
-                  {previewReports.map((report, index) => (
+                  {filteredPreviewReports.length === 0 && (
+                    <tr>
+                      <td colSpan={effectiveMode === 'select' ? 7 : 6} className="empty-state">
+                        Không tìm thấy mã CK nào khớp "{stockCodeQuery}".
+                      </td>
+                    </tr>
+                  )}
+                  {filteredPreviewReports.map((report, index) => (
                     <tr key={report.fileInfoID}>
                       {effectiveMode === 'select' && (
                         <td>

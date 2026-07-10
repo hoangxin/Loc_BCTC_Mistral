@@ -270,7 +270,8 @@ body {
 }
 
 .field select,
-.field input[type='number'] {
+.field input[type='number'],
+.field input[type='text'] {
   font-family: inherit;
   font-size: 13px;
   padding: 7px 10px;
