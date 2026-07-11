@@ -522,9 +522,17 @@ function parseAllTablesInRange(lines: string[]): ParsedTable[] {
     // nhan (quy uoc quan sat duoc o MOI bang da doi chieu: ma so luon nam sat
     // canh nhan, khong bao gio cach xa).
     const maSoIdx = namedMaSoIdx === labelIdx ? labelIdx + 1 : namedMaSoIdx;
+    // Cot "Ma so" cung KHONG duoc parseNumericCell (giu nguyen la chuoi, giong
+    // cot nhan) - da gap that (2026-07-11): ma so con (vd "212.1"/"01.1", co
+    // dau cham) bi parseNumericCell noi lien thanh 1 SO SAI (vd "2121"/"11" -
+    // xoa mat dau cham), vua hien SAI trong Excel xuat ra vua lam mat tin hieu
+    // "co dau cham = muc con, da gop vao dong cha" can cho
+    // findUnreliableIncomeStatementCells (statement-shared.ts) phan biet dong
+    // CHI TIET CAP 1 (can cong) voi muc con long ben trong 1 chi tieu khac
+    // (khong duoc cong lai, tranh dem 2 lan).
     const rows = rawRows.map((rowCells) => {
       const realigned = realignRowByContent(rowCells, effectiveHeaderCells, labelIdx, maSoIdx);
-      return realigned.map((cell, idx) => (idx === labelIdx || cell === null ? cell : parseNumericCell(cell)));
+      return realigned.map((cell, idx) => (idx === labelIdx || idx === maSoIdx || cell === null ? cell : parseNumericCell(cell)));
     });
     tables.push({
       columns: effectiveHeaderCells,
@@ -665,6 +673,22 @@ function alignRowToColumns(
   const result: (string | number | null)[] = new Array(targetLength).fill(null);
   result[targetLabelIndex] = row[sourceLabelIndex] ?? null;
   if (targetMaSoIndex !== -1) result[targetMaSoIndex] = sourceMaSoIndex === -1 ? null : row[sourceMaSoIndex] ?? null;
+
+  // Cac cot DUNG TRUOC nhan/ma so (thuong la STT) cung can duoc canh lai -
+  // truoc day bi BO SOT hoan toan (chi xu ly nhan/ma so + phan trailing),
+  // khien STT LUON bi xoa thanh null moi khi 1 trang can canh lai cot. Hau
+  // qua: isLikelySubtotalRow (dua vao STT rong = dong tong) hieu NHAM moi
+  // dong chi tiet la dong tong, lam rong memberRowIndexes va bo sot kiem tra
+  // cheo (vd nhom "Cong doanh thu hoat dong" cua MBS Q2/2026). Canh theo DAU
+  // doan leading (STT luon sat truoc nhan/ma so) tuong tu cach canh trailing.
+  const sourceLeadingEnd = sourceMaSoIndex === -1 ? sourceLabelIndex : Math.min(sourceLabelIndex, sourceMaSoIndex);
+  const targetLeadingEnd = targetMaSoIndex === -1 ? targetLabelIndex : Math.min(targetLabelIndex, targetMaSoIndex);
+  const sourceLeading = row.slice(0, sourceLeadingEnd);
+  const targetLeadingSlots = Array.from({ length: targetLeadingEnd }, (_, i) => i);
+  const nLead = Math.min(sourceLeading.length, targetLeadingSlots.length);
+  targetLeadingSlots.slice(-nLead).forEach((slot, k) => {
+    result[slot] = sourceLeading.slice(-nLead)[k];
+  });
 
   const sourceTrailingStart = Math.max(sourceLabelIndex, sourceMaSoIndex) + 1;
   const targetTrailingStart = Math.max(targetLabelIndex, targetMaSoIndex) + 1;

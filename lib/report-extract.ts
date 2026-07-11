@@ -19,16 +19,22 @@ export interface ReportContentResult {
   fullText: string | null; // co san (khong ton them) cho docx/doc; null cho pdf (khong con OCR toan van o day)
   // Ngan hang/Chung khoan/Bao hiem/Khac - xem lib/business-type.ts.
   businessType: BusinessType;
+  // Xem ExtractFinancialStatementsResult (lib/export/financial-statements.ts)
+  // - CHI co gia tri thuc su cho nhanh PDF/Mistral OCR (noi loi "gop/bia dong"
+  // duoc phat hien). docx/doc la parse van ban tat dinh (khong OCR, khong co
+  // rui ro hallucination tuong tu) nen luon rong - khong chay kiem tra tong
+  // nhom rieng cho 2 dinh dang nay (ngoai pham vi yeu cau nguoi dung 2026-07-11).
+  unreliableIncomeStatementCells: Set<string>;
 }
 
 export async function extractReportContent(resolved: ResolvedReportFile): Promise<ReportContentResult> {
   if (resolved.format === 'docx') {
     const { statements, fullText, warnings } = await extractFinancialStatementsFromDocx(resolved.filePath);
-    return { statements, warnings, fullText, businessType: classifyBusinessType(fullText) };
+    return { statements, warnings, fullText, businessType: classifyBusinessType(fullText), unreliableIncomeStatementCells: new Set() };
   }
   if (resolved.format === 'doc') {
     const { statements, fullText, warnings } = await extractFinancialStatementsFromDoc(resolved.filePath);
-    return { statements, warnings, fullText, businessType: classifyBusinessType(fullText) };
+    return { statements, warnings, fullText, businessType: classifyBusinessType(fullText), unreliableIncomeStatementCells: new Set() };
   }
 
   const scopeLabel = `[perf] determineStatementPageScope ${resolved.filePath}`;

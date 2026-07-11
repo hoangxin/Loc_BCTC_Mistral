@@ -13,6 +13,14 @@ export interface AnalysisRow {
   label: string;
   percentChange: number | null;
   tier: 'level1' | 'level2' | null;
+  // true khi 1 trong cac o nguon (ky nay/ky truoc) cua chi tieu nay van con
+  // sai kiem tra cheo tong nhom KQKD SAU KHI DA RETRY het so lan cho phep (xem
+  // extractWithGroupCheckRetry, lib/export/financial-statements.ts) - khac voi
+  // percentChange === null thong thuong (khong tim thay dong/o trong that su):
+  // o day CO doc duoc so nhung khong dang tin (co the do OCR gop/bia dong) -
+  // percentChange bi ep ve null de tranh hien so SAI TRONG NHU DUNG, UI/export
+  // can hien thi CANH BAO rieng cho truong hop nay thay vi "—" thong thuong.
+  unreliable: boolean;
 }
 
 interface Thresholds {
@@ -640,17 +648,30 @@ function numericValue(cell: string | number | null | undefined): number | null {
 // Cong gia tri cac finder cua 1 chi tieu tai 1 cot gia tri cu the - null neu
 // BAT KY finder nao khong tim thay dong hoac gia tri khong doc duoc (an toan
 // hon la cong nhung gi tim duoc - tranh % tinh tu 1 phan du lieu ma trong nhu
-// day du).
-function sumFindersAtColumn(table: StatementTable, finders: RowFinder[], columnIndex: number): number | null {
+// day du). unreliableCells: key "rowIndex:columnIndex" cua BANG KQKD van con
+// sai kiem tra cheo tong nhom sau khi da retry (xem AnalysisRow.unreliable) -
+// tra ve co unreliable=true rieng, KHONG tron vao "khong tim thay" (value=null
+// thong thuong), de phia goi bao canh bao dung loai.
+function sumFindersAtColumn(
+  table: StatementTable,
+  finders: RowFinder[],
+  columnIndex: number,
+  unreliableCells: Set<string>
+): { value: number | null; unreliable: boolean } {
   let sum = 0;
+  let unreliable = false;
   for (const find of finders) {
     const row = find(table);
-    if (!row) return null; // chi tieu khong ton tai trong bang nay (vd khac bieu mau) - khong tinh duoc
+    if (!row) return { value: null, unreliable }; // chi tieu khong ton tai trong bang nay (vd khac bieu mau) - khong tinh duoc
+    if (unreliableCells.size > 0) {
+      const rowIndex = table.rows.indexOf(row);
+      if (unreliableCells.has(`${rowIndex}:${columnIndex}`)) unreliable = true;
+    }
     const value = numericValue(row[columnIndex]);
-    if (value === null) return null;
+    if (value === null) return { value: null, unreliable };
     sum += value;
   }
-  return sum;
+  return { value: sum, unreliable };
 }
 
 // BCDKT: cot gia tri dau tien LUON la ky nay (cuoi ky), cot thu hai LUON la
@@ -698,10 +719,21 @@ function tierFor(percentChange: number | null, thresholds: Thresholds | null): '
   return null;
 }
 
+const NO_UNRELIABLE_CELLS: Set<string> = new Set();
+
 // offBalanceSheet (rieng CTCK) co CUNG hinh dang cot voi balanceSheet (Ma so/
 // Chi tieu/Thuyet minh/2 cot gia tri "cuoi ky"/"dau nam") nen dung lai chinh
 // ham balanceSheetPeriodColumns(), khong can viet rieng.
-function buildAnalysisRows(statements: FinancialStatements, metrics: MetricDef[]): AnalysisRow[] {
+//
+// unreliableIncomeStatementCells (tu ExtractFinancialStatementsResult) CHI ap
+// dung cho bang KQKD (xem findIncomeStatementGroupMismatches - khong chay cho
+// balanceSheet/offBalanceSheet) - truyen Set RONG cho 2 bang con lai de tranh
+// rowIndex trung ngau nhien giua cac bang khac nhau bi hieu nham.
+function buildAnalysisRows(
+  statements: FinancialStatements,
+  metrics: MetricDef[],
+  unreliableIncomeStatementCells: Set<string>
+): AnalysisRow[] {
   const balanceSheetPeriods = balanceSheetPeriodColumns(statements.balanceSheet);
   const incomeStatementPeriods = incomeStatementPeriodColumns(statements.incomeStatement);
   const offBalanceSheetPeriods = balanceSheetPeriodColumns(statements.offBalanceSheet);
@@ -721,13 +753,15 @@ function buildAnalysisRows(statements: FinancialStatements, metrics: MetricDef[]
           : incomeStatementPeriods;
 
     if (periods === null) {
-      return { label: metric.label, percentChange: null, tier: null };
+      return { label: metric.label, percentChange: null, tier: null, unreliable: false };
     }
 
-    const current = sumFindersAtColumn(table, metric.finders, periods.currentIndex);
-    const prior = sumFindersAtColumn(table, metric.finders, periods.priorIndex);
-    const percentChange = computePercentChange(current, prior);
-    return { label: metric.label, percentChange, tier: tierFor(percentChange, metric.thresholds) };
+    const unreliableCells = metric.statement === 'incomeStatement' ? unreliableIncomeStatementCells : NO_UNRELIABLE_CELLS;
+    const current = sumFindersAtColumn(table, metric.finders, periods.currentIndex, unreliableCells);
+    const prior = sumFindersAtColumn(table, metric.finders, periods.priorIndex, unreliableCells);
+    const unreliable = current.unreliable || prior.unreliable;
+    const percentChange = unreliable ? null : computePercentChange(current.value, prior.value);
+    return { label: metric.label, percentChange, tier: tierFor(percentChange, metric.thresholds), unreliable };
   });
 }
 
@@ -741,15 +775,19 @@ function buildAnalysisRows(statements: FinancialStatements, metrics: MetricDef[]
 // ra SO SAI NHUNG TRONG HOP LE, rat nguy hiem cho 1 cong cu tai chinh. Ngan
 // hang van tra du 21 nhan cua nhom 'other' (percentChange/tier deu null, chi
 // hien "—") cho toi khi co tieu chi that rieng, giu dong nhat voi hanh vi cu.
-export function computeAnalysisRows(statements: FinancialStatements, businessType: BusinessType): AnalysisRow[] {
+export function computeAnalysisRows(
+  statements: FinancialStatements,
+  businessType: BusinessType,
+  unreliableIncomeStatementCells: Set<string> = NO_UNRELIABLE_CELLS
+): AnalysisRow[] {
   if (businessType === 'insurance') {
-    return buildAnalysisRows(statements, INSURANCE_METRICS);
+    return buildAnalysisRows(statements, INSURANCE_METRICS, unreliableIncomeStatementCells);
   }
   if (businessType === 'securities') {
-    return buildAnalysisRows(statements, SECURITIES_METRICS);
+    return buildAnalysisRows(statements, SECURITIES_METRICS, unreliableIncomeStatementCells);
   }
   if (businessType !== 'other') {
-    return OTHER_METRICS.map((metric) => ({ label: metric.label, percentChange: null, tier: null }));
+    return OTHER_METRICS.map((metric) => ({ label: metric.label, percentChange: null, tier: null, unreliable: false }));
   }
-  return buildAnalysisRows(statements, OTHER_METRICS);
+  return buildAnalysisRows(statements, OTHER_METRICS, unreliableIncomeStatementCells);
 }

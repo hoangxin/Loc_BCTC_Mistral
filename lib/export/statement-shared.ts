@@ -234,3 +234,103 @@ export function findRowByLabel(
   }
   return matches[0];
 }
+
+const GROUP_SUBTOTAL_LABEL_PREFIX = /^CONG\s|^TONG\s/;
+const GROUP_SUM_TOLERANCE_RATIO = 0.005;
+const GROUP_SUM_TOLERANCE_ABSOLUTE = 1000;
+
+// Kiem tra tinh nhat quan "tong cac chi tieu CAP 1 trong 1 nhom = dong 'Cong
+// .../Tong ...' cua chinh nhom do" cho BAO CAO KET QUA KINH DOANH (KQKD) - ap
+// dung duoc cho MOI loai hinh DN co dang bang "01, 02, 03... roi Cong..."
+// (VAS/bao hiem/CTCK deu dung dang nay it nhat 1 cho, xem Mau B02-DN/
+// B02a-DNPNT/B02a-CTCK) - KHONG ap dung cho BCDKT (phan cap nhieu tang A->I->1
+// ->1.1, se bi dem 2 lan neu dung chung thuat toan don gian nay - BCDKT da co
+// kiem tra rieng, phuc tap hon, trong lib/export/validate-statements.ts).
+//
+// Phat hien duoc loi OCR gop/bia dong (da gap that MBS Q2/2026, 2026-07-11:
+// 2 dong DOC LAP trong PDF goc bi Mistral OCR GHEP LAM MOT [gia tri dinh lien
+// nhau trong CUNG 1 o gia tri] VA TU BIA THEM 1 dong "hop le" nhung SAI HOAN
+// TOAN cho dong con lai - da xac nhan qua doi chieu that PDF goc). Tra ve
+// THONG TIN CHI TIET (khong chi 1 Set key) de dung duoc cho CA 2 muc dich:
+// dung cho canh bao co the doc (lib/export/validate-statements.ts) VA khoanh
+// vung chinh xac (rowIndex, columnIndex) can null hoa (lib/analysis.ts, xem
+// unreliableCellKeysFromMismatches duoi).
+export interface IncomeStatementGroupMismatch {
+  groupLabel: string;
+  columnName: string;
+  columnIndex: number;
+  subtotalRowIndex: number;
+  memberRowIndexes: number[];
+  sum: number;
+  reported: number;
+}
+
+export function findIncomeStatementGroupMismatches(table: StatementTable): IncomeStatementGroupMismatch[] {
+  const labelIndex = findLabelColumnIndex(table.columns, table.rows);
+  const maSoIndex = findMaSoColumnIndex(table) ?? -1;
+  const valueColIndexes = valueColumnIndexes(table);
+  const mismatches: IncomeStatementGroupMismatch[] = [];
+  let groupStart = 0;
+
+  for (let i = 0; i < table.rows.length; i++) {
+    const row = table.rows[i];
+    const label = String(row[labelIndex] ?? '').trim();
+    if (!label || !GROUP_SUBTOTAL_LABEL_PREFIX.test(normalizeLabelText(label))) continue;
+
+    const memberRowIndexes: number[] = [];
+    for (let j = groupStart; j < i; j++) {
+      const maSo = maSoIndex === -1 ? null : table.rows[j][maSoIndex];
+      // Muc con long trong 1 chi tieu khac (ma so co dau cham, vd "01.1") - DA
+      // duoc gop vao gia tri dong cha ("01"), khong tinh lai o day (tranh dem
+      // 2 lan).
+      if (typeof maSo === 'string' && maSo.includes('.')) continue;
+      if (isLikelySubtotalRow(table, table.rows[j], labelIndex)) continue;
+      memberRowIndexes.push(j);
+    }
+
+    for (const col of valueColIndexes) {
+      let sum = 0;
+      let sawDetail = false;
+      for (const j of memberRowIndexes) {
+        const cell = table.rows[j][col];
+        const value = typeof cell === 'number' ? cell : cell === '-' || cell === null ? 0 : null;
+        if (value === null) continue; // khong doc duoc - bo qua khoi tong (khong du du lieu de ket luan sai)
+        sum += value;
+        sawDetail = true;
+      }
+      if (!sawDetail) continue;
+
+      const subtotalCell = row[col];
+      const subtotalValue = typeof subtotalCell === 'number' ? subtotalCell : subtotalCell === '-' || subtotalCell === null ? 0 : null;
+      if (subtotalValue === null) continue;
+
+      if (Math.abs(sum - subtotalValue) > Math.max(GROUP_SUM_TOLERANCE_ABSOLUTE, Math.abs(subtotalValue) * GROUP_SUM_TOLERANCE_RATIO)) {
+        mismatches.push({
+          groupLabel: label,
+          columnName: table.columns[col] ?? `cot ${col}`,
+          columnIndex: col,
+          subtotalRowIndex: i,
+          memberRowIndexes,
+          sum,
+          reported: subtotalValue,
+        });
+      }
+    }
+
+    groupStart = i + 1;
+  }
+
+  return mismatches;
+}
+
+// Khoanh vung (rowIndex, columnIndex) can null hoa trong lib/analysis.ts -
+// gom CA cac dong chi tiet LAN chinh dong "Cong ..." (khong biet chac ben nao
+// sai, xem comment o findIncomeStatementGroupMismatches).
+export function unreliableCellKeysFromMismatches(mismatches: IncomeStatementGroupMismatch[]): Set<string> {
+  const keys = new Set<string>();
+  for (const m of mismatches) {
+    for (const j of m.memberRowIndexes) keys.add(`${j}:${m.columnIndex}`);
+    keys.add(`${m.subtotalRowIndex}:${m.columnIndex}`);
+  }
+  return keys;
+}

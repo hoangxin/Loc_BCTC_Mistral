@@ -223,6 +223,17 @@ body {
   }
 }
 
+/* Chi tieu bi kiem tra cheo tong nhom KQKD phat hien sai SAU KHI DA RETRY het
+   so lan cho phep (yeu cau user 2026-07-11: "báo lỗi ra bảng kết quả ở dòng
+   tương ứng") - khac han pct-level1/2 (mau vang, van la % TIN CAY DUOC), o day
+   la CANH BAO "khong dung duoc so nay", nen dung mau do/cam de phan biet ro va
+   khong bi nham voi 2 muc tang truong cao ben tren. */
+.pct-unreliable {
+  background: #ffe0e0;
+  color: #b3261e;
+  font-weight: 700;
+}
+
 .empty-state {
   background: var(--surface);
   border: 1px solid var(--border);

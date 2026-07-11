@@ -95,6 +95,17 @@ export default function ReportsSummaryTable({ reports }: { reports: DownloadedRe
                 <td>{report.statementScope}</td>
                 {labels.map((label) => {
                   const item = byLabel.get(label);
+                  // Uu tien canh bao "khong dang tin cay" (OCR co the da
+                  // gop/bia dong, xem lib/analysis.ts) hon la mau tier binh
+                  // thuong - percentChange da bi ep null cho truong hop nay
+                  // nen tierClass tu nhien khong con ap dung (an toan).
+                  if (item?.unreliable) {
+                    return (
+                      <td key={label} className="pct-col pct-unreliable" title="OCR có thể đã gộp/bịa dòng dữ liệu, đã thử đọc lại nhưng vẫn sai - cần xem tay trên PDF gốc">
+                        ⚠ Cần xem tay
+                      </td>
+                    );
+                  }
                   const tierClass = item?.tier === 'level1' ? 'pct-level1' : item?.tier === 'level2' ? 'pct-level2' : '';
                   return (
                     <td key={label} className={`pct-col ${tierClass}`}>

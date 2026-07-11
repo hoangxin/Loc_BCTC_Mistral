@@ -7,6 +7,7 @@ import {
   parseCode,
   findRowByCode,
   isLikelySubtotalRow,
+  findIncomeStatementGroupMismatches,
 } from './statement-shared';
 
 export interface ValidationIssue {
@@ -448,6 +449,18 @@ function validateIncomeStatementTax(table: StatementTable): ValidationIssue[] {
   return issues;
 }
 
+// Kiem tra "tong cac chi tieu 01,02,03...= dong Cong .../Tong ..." cua CHINH
+// nhom do trong KQKD - dung chung cho MOI loai hinh DN (khong rieng CTCK, xem
+// findIncomeStatementGroupMismatches). Phat hien duoc loi OCR gop/bia dong
+// (MBS Q2/2026, 2026-07-11) ma cac kiem tra VAS co dinh o tren (Loi nhuan gop
+// = DT thuan - Gia von...) khong bat duoc vi khac cong thuc/khac chi tieu.
+function validateIncomeStatementGroupSums(table: StatementTable): ValidationIssue[] {
+  return findIncomeStatementGroupMismatches(table).map((m) => ({
+    table: 'incomeStatement',
+    message: `"${m.columnName}": Tong cac chi tieu trong nhom "${m.groupLabel}" (${m.sum}) khong khop chinh dong "${m.groupLabel}" (${m.reported}) - co the do OCR gop/bia dong, can xem tay.`,
+  }));
+}
+
 // Kiem tra tinh nhat quan noi tai cua so lieu da trich - hoan toan cuc bo,
 // khong goi AI, khong ton token. Dung de phat hien loi do OCR/AI doc nham so,
 // vd truong hop tung gap: 1 chu so du/thieu lam lech ca chuc lan. NGUYEN TAC
@@ -460,5 +473,6 @@ export function validateFinancialStatements(statements: FinancialStatements): Va
     ...validateBalanceSheetSubtotals(statements.balanceSheet),
     ...validateIncomeStatement(statements.incomeStatement),
     ...validateIncomeStatementTax(statements.incomeStatement),
+    ...validateIncomeStatementGroupSums(statements.incomeStatement),
   ];
 }

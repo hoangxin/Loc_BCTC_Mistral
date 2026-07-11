@@ -25,14 +25,21 @@ export async function buildSummaryPdfBuffer(rows: SummaryRow[]): Promise<Buffer>
 
   drawTableRow(writer, columns, layout, { bold: true });
   for (const row of rows) {
-    const byLabel = new Map(row.analysis.map((item) => [item.label, item.percentChange]));
+    const byLabel = new Map(row.analysis.map((item) => [item.label, item]));
     const cells = [
       String(row.stt),
       row.stockCode,
       row.companyName,
       row.exchange,
       row.statementScope,
-      ...labels.map((label) => formatPercent(byLabel.get(label))),
+      // Chi tieu bi kiem tra cheo tong nhom KQKD phat hien sai sau khi da
+      // retry (xem lib/analysis.ts AnalysisRow.unreliable) - ghi ro CANH BAO
+      // dang chu thay vi con so tinh tu du lieu co the da bi OCR gop/bia dong
+      // (yeu cau user 2026-07-11: "báo lỗi ra bảng kết quả ở dòng tương ứng").
+      ...labels.map((label) => {
+        const item = byLabel.get(label);
+        return item?.unreliable ? 'Cần xem tay' : formatPercent(item?.percentChange);
+      }),
     ];
     drawTableRow(writer, cells, layout, { bold: false });
   }

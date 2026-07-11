@@ -13,15 +13,31 @@ function writeSummarySheet(sheet: ExcelJS.Worksheet, rows: SummaryRow[]): void {
   headerRow.font = { bold: true };
 
   rows.forEach((row, index) => {
-    const byLabel = new Map(row.analysis.map((item) => [item.label, item.percentChange]));
-    sheet.addRow([
+    const byLabel = new Map(row.analysis.map((item) => [item.label, item]));
+    const excelRow = sheet.addRow([
       index + 1,
       row.stockCode,
       row.companyName,
       row.exchange,
       row.statementScope,
-      ...labels.map((label) => byLabel.get(label) ?? null),
+      // Chi tieu bi kiem tra cheo tong nhom KQKD phat hien sai sau khi da
+      // retry (xem lib/analysis.ts AnalysisRow.unreliable) - ghi ro CANH BAO
+      // dang chu thay vi con so tinh tu du lieu co the da bi OCR gop/bia dong
+      // (yeu cau user 2026-07-11: "báo lỗi ra bảng kết quả ở dòng tương ứng").
+      ...labels.map((label) => {
+        const item = byLabel.get(label);
+        return item?.unreliable ? 'Cần xem tay' : (item?.percentChange ?? null);
+      }),
     ]);
+
+    labels.forEach((label, labelIdx) => {
+      const item = byLabel.get(label);
+      if (!item?.unreliable) return;
+      const cell = excelRow.getCell(FIXED_COLUMN_COUNT + 1 + labelIdx);
+      cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFE0E0' } };
+      cell.font = { bold: true, color: { argb: 'FFB3261E' } };
+      cell.note = 'OCR có thể đã gộp/bịa dòng dữ liệu, đã thử đọc lại (retry) nhưng vẫn sai kiểm tra chéo - cần xem tay trên PDF gốc.';
+    });
   });
 
   for (let i = 1; i <= header.length; i++) {
