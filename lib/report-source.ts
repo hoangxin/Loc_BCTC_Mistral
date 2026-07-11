@@ -54,8 +54,16 @@ function isAncillaryDocumentEntry(entryName: string): boolean {
   return ANCILLARY_DOCUMENT_PATTERNS.some((pattern) => pattern.test(entryName));
 }
 
+// BAT BUOC "en" phai la 1 TOKEN rieng (bao quanh boi "_"/"-"/dau cham/dau
+// dau-cuoi chuoi), khong phai chi la 2 ky tu con trong 1 tu dai hon (vd
+// "center"/"encoding"). Da gap that (2026-07-12, doi chieu that KSQ Q1/2026):
+// pattern cu chi cho phep "_"/"-" NGAY SAU "en", khong tinh den dau cham
+// truoc phan mo rong file (ten thuc te la "..._en.pdf" - dau cham dung ngay
+// sau "en") - KHONG khop, khien ban tieng Anh LOT qua bo loc, van bi OCR va
+// dua vao phan tich % nhu 1 bao cao rieng (trung lap voi ban tieng Viet,
+// LUON that bai moi kiem tra vi tu khoa doi chieu deu la tieng Viet).
 function isEnglishVariantEntry(entryName: string): boolean {
-  return /(^|[_-])en([_-]|$)/i.test(entryName);
+  return /(^|[_-])en([_.\-]|$)/i.test(entryName);
 }
 
 // Loc danh sach entry TRONG 1 zip/rar: bo van ban phu, roi neu con ca ban Viet
