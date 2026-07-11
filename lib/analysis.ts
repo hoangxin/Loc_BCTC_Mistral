@@ -65,7 +65,7 @@ function byLabel(include: string[], exclude: string[] = [], preferSubtotal = fal
 // khop dau tien moi la dong dung, khop cuoi se an nham vao dong con.
 function byLabelLast(include: string[], exclude: string[] = []): RowFinder {
   return (table) => {
-    const labelIndex = findLabelColumnIndex(table.columns);
+    const labelIndex = findLabelColumnIndex(table.columns, table.rows);
     let result: Row | null = null;
     for (const row of table.rows) {
       const label = row[labelIndex];
@@ -103,7 +103,7 @@ function byLabelAnyOf(variants: string[][]): RowFinder {
 // duy nhat, khong lap) truoc, roi lay DUNG dong ngay sau no (thu tu "Nguyen
 // gia" luon nam sat duoi dong cha trong ca 2 thong tu - da verify SJ1 va IDV).
 function findNguyenGiaTscdHuuHinh(table: StatementTable): Row | null {
-  const labelIndex = findLabelColumnIndex(table.columns);
+  const labelIndex = findLabelColumnIndex(table.columns, table.rows);
   const parentIndex = table.rows.findIndex((row) => {
     const label = row[labelIndex];
     return typeof label === 'string' && normalizeLabelText(label).includes('TAI SAN CO DINH HUU HINH');
@@ -525,9 +525,14 @@ const SECURITIES_METRICS: MetricDef[] = [
     label: 'Lỗ FVTPL',
     statement: 'incomeStatement',
     // SSI ghi "FVTPL" ngay trong ten dong; MBS bo tu viet tat nay o dong cha
-    // (chi con trong dong con "a. Lo tu ban...FVTPL") - can 2 bien the.
+    // (chi con trong dong con "a. Lo tu ban...FVTPL") - can nhieu bien the,
+    // ke ca giua CHINH MBS qua 2 ky bao cao khac nhau (FY2025 "Lo cac TSTC
+    // DUOC ghi nhan theo gia tri hop ly..."; Q2/2026 "Lo cac TSTC ghi nhan
+    // thong qua lai/lo" - khong co "duoc"/"theo gia tri hop ly") - dung tu
+    // khoa NGAN va TACH RIENG ("GHI NHAN" khong doi hoi "DUOC" di truoc) de
+    // chiu duoc ca 2 bien the nay.
     finders: [
-      byLabelAnyOf([['LO TU CAC TAI SAN TAI CHINH', 'FVTPL'], ['LO CAC TAI SAN TAI CHINH DUOC GHI NHAN']]),
+      byLabelAnyOf([['LO TU CAC TAI SAN TAI CHINH', 'FVTPL'], ['LO CAC TAI SAN TAI CHINH', 'GHI NHAN']]),
     ],
     thresholds: null,
   },
@@ -558,7 +563,12 @@ const SECURITIES_METRICS: MetricDef[] = [
   {
     label: 'Lỗ AFS',
     statement: 'incomeStatement',
-    finders: [byLabel(['TAI SAN TAI CHINH AFS KHI PHAN LOAI LAI'])],
+    // "AFS" co the nam ngay sau "tai chinh" (SSI: "...tai san tai chinh AFS
+    // khi phan loai lai") hoac sau khi nhac lai ca cum "san sang de ban"
+    // (MBS Q2/2026: "...tai san tai chinh SAN SANG DE BAN (AFS) khi phan
+    // loai lai") - dung "KHI PHAN LOAI LAI" don le, du dac trung (khong thay
+    // o dong nao khac trong bang) de chiu duoc ca 2 bien the.
+    finders: [byLabel(['KHI PHAN LOAI LAI'])],
     thresholds: null,
   },
   {

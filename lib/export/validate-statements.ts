@@ -25,7 +25,7 @@ export interface ValidationIssue {
 // dat ten cot dau la "Tai san" thay vi "Chi tieu", xem statement-shared.ts),
 // fallback ve 0 neu khong co cot nao khop ten do.
 function findLabelColumnIndex(table: StatementTable): number {
-  return findLabelColumnIndexOnColumns(table.columns);
+  return findLabelColumnIndexOnColumns(table.columns, table.rows);
 }
 
 function findRow(

@@ -195,7 +195,7 @@ function drawStatementTable(writer: PdfWriter, heading: string, table: Statement
 
   const columnCount = Math.max(table.columns.length, ...table.rows.map((row) => row.length), 1);
   const paddedColumnNames = Array.from({ length: columnCount }, (_, i) => table.columns[i] ?? '');
-  const labelColumnIndex = findLabelColumnIndex(table.columns);
+  const labelColumnIndex = findLabelColumnIndex(table.columns, table.rows);
   const columns = computeColumnLayout(paddedColumnNames, labelColumnIndex);
 
   const headerCells = paddedColumnNames.map((name) => sanitizeForPdf(name));

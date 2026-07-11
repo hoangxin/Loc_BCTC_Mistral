@@ -49,12 +49,40 @@ export function normalizeLabelText(text: string): string {
 // toan bo phep cong/so sanh vi khong nhan ra day la cot nhan). Tim theo TEN
 // cot (fuzzy, khong phu thuoc vi tri), fallback ve 0 neu khong tim thay ten
 // nao khop ca 3 bien the.
-export function findLabelColumnIndex(columns: string[]): number {
+const LOOKS_LIKE_LABEL_PATTERN = /[a-zA-ZÀ-ỹ]{3,}/;
+
+// `sampleRows` (tuy chon, CHI dung o parseAllTablesInRange - moi caller khac
+// giu nguyen hanh vi cu, fallback ve 0) - can khi CA cot STT lan cot nhan deu
+// KHONG dat ten (2 cot trong lien tiep, khong cot nao khop CHI TIEU/TAI SAN/
+// NGUON VON) - mac dinh "fallback ve 0" SAI trong truong hop nay vi cot 0
+// thuong la STT (chuoi ngan "A."/"I."/"1.", <3 ky tu chu) chu khong phai
+// nhan that - da gap that MBS Q2/2026 (2026-07-11): BCDKT/"Cac chi tieu
+// ngoai BCTC" co header "|   |  | Ma so | ...|" (2 cot dau deu trong), nhan
+// bi ghi NHAM vao vi tri cot STT khi realignRowByContent() dung labelIndex
+// sai nay, dao lon thu tu cot Nhan/STT/Ma so trong ket qua xuat. Cham diem
+// tung cot theo so o "trong giong nhan that" (>=3 ky tu chu lien tiep) qua
+// cac dong mau, chon cot diem cao nhat - on dinh hon vi tri co dinh.
+export function findLabelColumnIndex(columns: string[], sampleRows?: (string | number | null)[][]): number {
   const index = columns.findIndex((col) => {
     const normalized = normalizeLabelText(col);
     return normalized.includes('CHI TIEU') || normalized.includes('TAI SAN') || normalized.includes('NGUON VON');
   });
-  return index === -1 ? 0 : index;
+  if (index !== -1) return index;
+  if (!sampleRows || sampleRows.length === 0) return 0;
+
+  let bestIndex = 0;
+  let bestScore = -1;
+  for (let i = 0; i < columns.length; i++) {
+    const score = sampleRows.reduce((count, row) => {
+      const cell = row[i];
+      return count + (typeof cell === 'string' && LOOKS_LIKE_LABEL_PATTERN.test(cell) ? 1 : 0);
+    }, 0);
+    if (score > bestScore) {
+      bestScore = score;
+      bestIndex = i;
+    }
+  }
+  return bestIndex;
 }
 
 // Cac cot chi chua ma/chu thich (STT, Ma so, Thuyet minh) - KHONG phai so
@@ -70,12 +98,20 @@ export function isMetadataColumnName(columnName: string | undefined): boolean {
 
 // Danh sach chi so cot THAT SU la so lieu (loai tru cot nhan va cac cot
 // metadata o tren) - dung chung cho moi vong lap cong/so sanh tren 1
-// StatementTable (lib/export/validate-statements.ts, lib/analysis.ts).
+// StatementTable (lib/export/validate-statements.ts, lib/analysis.ts). Loai
+// CA cac cot truoc labelIndex (khong chi dung labelIndex) - da gap that MBS
+// Q2/2026 (2026-07-11): 1 so bang co CA cot STT rieng (khong dat ten, vd "A."
+// "I." "1") DUNG TRUOC cot nhan rieng ("TÀI SẢN") - cot STT nay khong khop
+// isMetadataColumnName() (ten rong, khong chua "STT") nen truoc day bi tinh
+// NHAM la 1 cot gia tri, day BCDKT/analysis.ts % doc nham gia tri STT ("A.",
+// 100...) thay vi so lieu that. Trong MOI mau da doi chieu, cot gia tri LUON
+// nam SAU nhan (khong bao gio truoc) nen loai bo toan bo pham vi truoc
+// labelIndex la an toan.
 export function valueColumnIndexes(table: StatementTable): number[] {
-  const labelIndex = findLabelColumnIndex(table.columns);
+  const labelIndex = findLabelColumnIndex(table.columns, table.rows);
   const indexes: number[] = [];
   for (let i = 0; i < table.columns.length; i++) {
-    if (i === labelIndex) continue;
+    if (i <= labelIndex) continue;
     if (isMetadataColumnName(table.columns[i])) continue;
     indexes.push(i);
   }
@@ -109,7 +145,6 @@ export function findRowByCode(
   return null;
 }
 
-const ROMAN_NUMERAL_PATTERN = /^[IVXLCDM]+$/i;
 // Muc con CAP 3 (chi tiet duoi 1 nhom La Ma, vd "1./ Tien", "7 Vay va no...")
 // luon bat dau bang SO A-RAP (co the kem "." hoac "/" roi khoang trang) - dau
 // hieu nay dang tin cay hon "ma so chia het cho 10" (xem comment duoi day).
@@ -140,15 +175,34 @@ const NON_SUBTOTAL_DETAIL_PREFIX = /^(-|[a-z]\))\s/;
 // "1./ Phai thu..." cho muc chi tiet) de loai cac dong chi tiet gia mao nay
 // ra khoi tong, thay vi chi dua vao ma so chia het cho 10 (van giu lam dieu
 // kien BAT BUOC, chi khong con la dieu kien DU nua).
+// Nhan ca chu La Ma (I/II/III) LAN chu thuong don (A/B/C/D - nhom lon nhat
+// cua BCDKT, "C"/"D" trung ngau nhien voi ky tu La Ma hop le nhung "A"/"B"
+// thi khong) va cho phep dau cham theo sau ("A."/"I." - dung dang thuc te
+// cua o STT, xem comment o duoi) - rong hon ROMAN_NUMERAL_PATTERN cu nhung
+// van an toan (STT chi hinh bang nay khong bao gio dung chu ngau nhien nhu
+// "E"/"Z").
+const GROUP_STT_PATTERN = /^[A-Z]+\.?$/;
+
 export function isLikelySubtotalRow(table: StatementTable, row: (string | number | null)[], labelIndex: number): boolean {
   const label = String(row[labelIndex] ?? '').trim();
   if (NON_SUBTOTAL_DETAIL_PREFIX.test(label)) return false;
 
-  const sttIndex = table.columns.findIndex((col) => normalizeLabelText(col).includes('STT'));
+  let sttIndex = table.columns.findIndex((col) => normalizeLabelText(col).includes('STT'));
+  // Neu KHONG co cot dat ten "STT" ro rang, thu cot NGAY TRUOC cot nhan (neu
+  // co va khong phai 1 cot metadata dat ten khac) - da gap that MBS Q2/2026
+  // (2026-07-11): cot STT rieng nhung KHONG dat ten (chi la "" trong header),
+  // truoc day khong tim ra duoc, fallback ve ARABIC_ITEM_PREFIX tren NHAN -
+  // nhung nhan da duoc tach SACH (khong con tien to so nhu "1." nua, vi so
+  // do nam rieng trong cot STT) nen ARABIC_ITEM_PREFIX luon test la false,
+  // khien MOI dong (tru dong bat dau "-"/"a)") bi coi nham la dong tong, in
+  // dam BUA BAI ca bang.
+  if (sttIndex === -1 && labelIndex > 0 && !isMetadataColumnName(table.columns[labelIndex - 1])) {
+    sttIndex = labelIndex - 1;
+  }
   if (sttIndex !== -1) {
     const sttValue = String(row[sttIndex] ?? '').trim();
     if (sttValue === '') return true; // mot so dong tong khong co STT rieng - khong du du lieu de bac bo, giu nguyen hanh vi cu (chap nhan)
-    return ROMAN_NUMERAL_PATTERN.test(sttValue);
+    return GROUP_STT_PATTERN.test(sttValue);
   }
   return !ARABIC_ITEM_PREFIX.test(label);
 }
@@ -168,7 +222,7 @@ export function findRowByLabel(
   matcher: (normalizedLabel: string) => boolean,
   options?: { preferSubtotal?: boolean }
 ): (string | number | null)[] | null {
-  const labelIndex = findLabelColumnIndex(table.columns);
+  const labelIndex = findLabelColumnIndex(table.columns, table.rows);
   const matches = table.rows.filter((row) => {
     const label = row[labelIndex];
     return typeof label === 'string' && matcher(normalizeLabelText(label));

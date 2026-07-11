@@ -106,6 +106,19 @@ function isSeparatorRow(cells: string[]): boolean {
   return cells.every((c) => /^:?-+:?$/.test(c) || c === '');
 }
 
+// Dong 2 cua header 2-dong trong KQKD Quy - CHI chua "Nam nay"/"Nam truoc"
+// (khong so lieu, khong nhan chi tieu that) o cac o khong trong - xem
+// parseAllTablesInRange (goi ham nay) de biet ly do can gop dong nay vao
+// header thay vi coi la dong du lieu.
+function looksLikePeriodSubHeaderRow(cells: string[]): boolean {
+  const nonEmpty = cells.map((c) => c.trim()).filter((c) => c !== '');
+  if (nonEmpty.length === 0) return false;
+  return nonEmpty.every((c) => {
+    const normalized = normalizeLabelText(c);
+    return normalized.includes('NAM NAY') || normalized.includes('NAM TRUOC');
+  });
+}
+
 const NUMERIC_LIKE_PATTERN = /^\(?-?[\d.,\s]+\)?$/;
 
 function parseNumericCell(value: string): string | number | null {
@@ -136,7 +149,25 @@ function looksLikeLabel(cell: string | null): boolean {
   return typeof cell === 'string' && /[a-zA-ZÀ-ỹ]{3,}/.test(cell);
 }
 
-function realignRowByContent(row: (string | null)[], columns: string[], labelColumnIndex: number): (string | null)[] {
+// KHONG dung MA_SO_PATTERN o day (chi khop ma so DON gian nhu "212"/"117a") -
+// se TU CHOI NHAM ca ma so con hop le co dau cham nhu "212.1"/"117.2" (dong
+// chi tiet cap 4, rat pho bien), gay regression that (SSI 2026-07-11: dong
+// "1.1. Các khoản đầu tư..." mã "212.1" bi coi la "khong hop le" chi vi co
+// dau cham, kich hoat phan loai lai OAN, lam mat gia tri "Số cuối kỳ" that).
+// Dung dieu kien NGUOC LAI voi looksLikeLabel() - ma so/STT KHONG BAO GIO
+// chua 1 CHUOI CHU LIEN TIEP (>=3 ky tu) nhu nhan that, bat ke co dau cham/
+// gach ngang hay khong - day moi la tin hieu on dinh de phan biet.
+function looksLikeValidMaSoCell(cell: string | null): boolean {
+  if (cell === null) return true;
+  return !looksLikeLabel(cell);
+}
+
+function realignRowByContent(
+  row: (string | null)[],
+  columns: string[],
+  labelColumnIndex: number,
+  maSoIdx: number
+): (string | null)[] {
   // Chi phan loai lai theo NOI DUNG khi THAT SU can (so luong o lech, HOAC o
   // dung vi tri "cot nhan" lai KHONG giong nhan - vd dong "TONG CONG TAI SAN"
   // bo qua cot STT rieng nen nhan bi lech vao dung vi tri cot STT du tong so
@@ -145,10 +176,28 @@ function realignRowByContent(row: (string | null)[], columns: string[], labelCol
   // dong), GIU NGUYEN khong dong cham gi - tranh lam hong cac dong von da
   // dung (da gap that: thu phan loai lai VO DIEU KIEN cho MOI dong lam mot so
   // dong TS ngan han/dai han binh thuong bi xao tron sai, gay lech tong moi).
-  if (row.length === columns.length && looksLikeLabel(row[labelColumnIndex])) return row;
+  //
+  // THEM dieu kien: cot "Ma so" (neu co dat ten) phai chua gia tri HOP LY
+  // (so ngan hoac trong/"-") - da gap that MBS Q2/2026 (2026-07-11): 1 trang
+  // KQKD bi Mistral OCR THIEU dung 1 cot rong o header (7 cot thay vi 8 nhu
+  // cac trang con lai CUNG bang), lam MOI ten cot tu vi tri do tro di lech 1
+  // so voi du lieu that (header ghi "Ma so" nhung o do LAI la nhan chi tieu,
+  // "Thuyet minh" nhung o do LAI la ma so that) - row.length VAN khop
+  // columns.length (ca 2 deu 7, trung hop ngau nhien) VA o vi tri "nhan" gia
+  // dinh (KE BEN "Ma so") van "trong nhu nhan" (that ra la nhan dung vi
+  // tri, chi cac cot SAU no moi lech) nen dieu kien length+label o tren
+  // KHONG bat duoc loi nay. Kiem tra them: gia tri O vi tri "Ma so" (theo
+  // header) co dang hop le khong - neu KHONG (vd lai la 1 doan van ban dai)
+  // thi chac chan header/du lieu da bi lech, phai phan loai lai theo NOI DUNG.
+  if (
+    row.length === columns.length &&
+    looksLikeLabel(row[labelColumnIndex]) &&
+    (maSoIdx === -1 || looksLikeValidMaSoCell(row[maSoIdx]))
+  ) {
+    return row;
+  }
 
   const result: (string | null)[] = new Array(columns.length).fill(null);
-  const maSoIdx = columns.findIndex((c) => normalizeLabelText(c).includes('MA SO'));
 
   const labelCellIdx = row.findIndex((cell) => typeof cell === 'string' && /[a-zA-ZÀ-ỹ]{3,}/.test(cell));
   if (labelCellIdx !== -1) result[labelColumnIndex] = row[labelCellIdx];
@@ -277,8 +326,15 @@ const CONTENT_MARKERS_BY_KEY: { key: keyof FinancialStatements; markers: string[
 // do RO RANG vuot troi (khong hoa voi key khac) va > 0. Khong ep gan bua khi
 // khong ro rang (tra ve null - bang bi bo qua, an toan hon la gan sai vao 1
 // bang khong lien quan, vd bang phu "Co cau von dieu le" o trang bia).
-function classifyTableByContent(table: StatementTable): keyof FinancialStatements | null {
-  const labelIndex = findLabelColumnIndex(table.columns);
+function classifyTableByContent(table: ParsedTable): keyof FinancialStatements | null {
+  // Dung labelIndex DA TINH SAN cua bang (parseAllTablesInRange, co xet noi
+  // dong mau) - KHONG tinh lai chi qua ten cot o day: da gap that MBS Q2/2026
+  // (2026-07-11), bang "Nợ phải trả"/"Vốn chủ sở hữu" co CA 2 cot dau deu
+  // trong (khong ten) - tinh lai chi qua ten se fallback ve cot 0 (that ra la
+  // cot STT "C."/"I."/"1.", KHONG phai nhan that), cham diem toan chuoi ngan
+  // vo nghia, khong khop marker nao ca -> ca bang bi am tham loai bo hoan
+  // toan (khong loi, khong canh bao).
+  const labelIndex = table.labelIndex;
   const labelText = table.rows.map((row) => normalizeLabelText(String(row[labelIndex] ?? ''))).join(' | ');
 
   const scores = CONTENT_MARKERS_BY_KEY.map(({ key, markers }) => ({
@@ -307,6 +363,10 @@ const INCOME_STATEMENT_PART_MARKERS: { part: IncomeStatementPart; test: (normali
 
 interface ParsedTable extends StatementTable {
   incomeStatementPart?: IncomeStatementPart;
+  // Cot nhan/Ma so CUA RIENG bang con nay (co the khac vi tri/ten giua cac
+  // bang con cua CUNG 1 bang chinh - xem comment o alignRowToColumns).
+  labelIndex: number;
+  maSoIndex: number;
 }
 
 // Tim TAT CA bang markdown ("header" + dong phan cach "---" + cac dong du
@@ -332,9 +392,47 @@ function parseAllTablesInRange(lines: string[]): ParsedTable[] {
       continue;
     }
 
-    const labelIdx = findLabelColumnIndex(headerCells);
-    const rows: (string | number | null)[][] = [];
-    let j = i + 2;
+    // KQKD Quy thuong co header 2 DONG: dong 1 la nhom ky ("Quy nay"/"Luy ke
+    // tu dau nam...", header markdown THAT SU), dong 2 la "Nam nay VND"/"Nam
+    // truoc VND" duoi tung nhom - nhung Mistral xuat 2 dong nay THANH 2 dong
+    // markdown RIENG (dong 2 bi coi la DONG DU LIEU DAU TIEN, khong phai
+    // header) thay vi gop lai. Neu khong gop, headerCells CHI co "Quy
+    // nay"/"Luy ke..." ma KHONG BIET cot nao la nam nay/nam truoc trong tung
+    // nhom - trong khi THU TU 2 nhom Nam nay/Nam truoc trong MOI cot GIA TRI
+    // (Quy nay/Luy ke) co the KHAC NHAU giua cac cong ty (da xac nhan user
+    // 2026-07-11: co cty in Quy nay->Cung ky->Luy ke nay->Luy ke truoc, co
+    // cty lai in Quy nay->Luy ke nay->Cung ky->Luy ke truoc) - buoc PHAI biet
+    // ca 2 tin hieu (nhom ky TU header dong 1, nam nay/truoc TU header dong
+    // 2) gop lai moi xac dinh dung cot bat ke thu tu, xem
+    // incomeStatementPeriodColumns (lib/analysis.ts). Nhan dien dong 2:
+    // KHONG co nhan (o dau trong) VA MOI o con lai (neu co) deu CHI chua
+    // "Nam nay"/"Nam truoc" (khong phai so lieu/nhan chi tieu that).
+    let effectiveHeaderCells = headerCells;
+    const peekCells = i + 2 < lines.length ? splitMarkdownRow(lines[i + 2]) : null;
+    let headerRowCount = 2;
+    if (peekCells && looksLikePeriodSubHeaderRow(peekCells)) {
+      // "Quy nay"/"Luy ke..." o dong 1 THUONG chi ghi 1 lan o O DAU TIEN cua
+      // nhom (o thu 2 tro di cua CUNG nhom de trong - markdown the hien 1 o
+      // gop truc quan bang nhieu o rong lien tiep) - dien tiep (forward-fill)
+      // TU o co chu GAN NHAT sang cac o trong ngay sau, CHI trong pham vi
+      // dong nay (truoc khi gop voi dong 2), de "Quy nay"/"Luy ke..." lan
+      // toi CA 2 cot con (Nam nay/Nam truoc) cua nhom do thay vi chi 1 cot.
+      let lastGroupLabel = '';
+      const filledHeaderCells = headerCells.map((c) => {
+        if (c.trim() !== '') {
+          lastGroupLabel = c;
+          return c;
+        }
+        return lastGroupLabel;
+      });
+      effectiveHeaderCells = filledHeaderCells.map((c, idx) =>
+        [c, peekCells[idx] ?? ''].filter((s) => s.trim() !== '').join(' ').trim()
+      );
+      headerRowCount = 3;
+    }
+
+    const rawRows: string[][] = [];
+    let j = i + headerRowCount;
     let skipRun = 0;
     while (j < lines.length) {
       // Mistral noi cac trang bang "\n\n" - 1 dong trong ngan giua 2 trang
@@ -374,11 +472,36 @@ function parseAllTablesInRange(lines: string[]): ParsedTable[] {
         j++; // dong phan cach GIA chen giua bang (ngat trang) - bo qua, khong phai du lieu that
         continue;
       }
-      const realigned = realignRowByContent(rowCells, headerCells, labelIdx);
-      rows.push(realigned.map((cell, idx) => (idx === labelIdx || cell === null ? cell : parseNumericCell(cell))));
+      rawRows.push(rowCells);
       j++;
     }
-    tables.push({ columns: headerCells, rows, incomeStatementPart: currentIncomeStatementPart });
+    // Tinh labelIdx SAU KHI da doc het dong tho cua bang (khong con truoc do
+    // nua) - can du lieu mau de content-scoring hoat dong khi header khong dat
+    // ten cot nhan ro rang (xem findLabelColumnIndex, statement-shared.ts).
+    const labelIdx = findLabelColumnIndex(effectiveHeaderCells, rawRows);
+    const namedMaSoIdx = effectiveHeaderCells.findIndex((c) => normalizeLabelText(c).includes('MA SO'));
+    // "Ma so" trung vi tri voi nhan (labelIdx) nghia la header nay THIEU 1 cot
+    // (nhan chua tung duoc dat ten rieng, header gan nham ten "Ma so" vao dung
+    // vi tri du lieu that la nhan) - da gap that MBS Q2/2026 (2026-07-11): 1
+    // trang KQKD OCR ra header 7 cot thay vi 8 nhu cac trang con lai cung
+    // bang, thieu dung 1 cot "trong" giua STT va "Ma so". KHONG the tin ten
+    // cot "Ma so" luc nay (thuc te dang tro vao dung vi tri nhan, se de
+    // realignRowByContent() ghi de "Ma so" LEN TREN nhan, xoa mat nhan that -
+    // da xac nhan qua debug that). Suy ra vi tri "Ma so" THAT SU = ngay SAU
+    // nhan (quy uoc quan sat duoc o MOI bang da doi chieu: ma so luon nam sat
+    // canh nhan, khong bao gio cach xa).
+    const maSoIdx = namedMaSoIdx === labelIdx ? labelIdx + 1 : namedMaSoIdx;
+    const rows = rawRows.map((rowCells) => {
+      const realigned = realignRowByContent(rowCells, effectiveHeaderCells, labelIdx, maSoIdx);
+      return realigned.map((cell, idx) => (idx === labelIdx || cell === null ? cell : parseNumericCell(cell)));
+    });
+    tables.push({
+      columns: effectiveHeaderCells,
+      rows,
+      incomeStatementPart: currentIncomeStatementPart,
+      labelIndex: labelIdx,
+      maSoIndex: maSoIdx,
+    });
     i = j;
   }
   return tables;
@@ -466,10 +589,12 @@ export function parseStatementsFromMarkdown(markdown: string): FinancialStatemen
     const hasDetailPart = key === 'incomeStatement' && grouped[key].some((t) => t.incomeStatementPart === 'detail');
     const matchedTables = hasDetailPart ? grouped[key].filter((t) => t.incomeStatementPart !== 'summary') : grouped[key];
     if (matchedTables.length > 0) {
-      const columns = mostCommonColumns(matchedTables);
+      const { columns, labelIndex, maSoIndex } = mostCommonColumns(matchedTables);
       result[key] = {
         columns,
-        rows: matchedTables.flatMap((t) => t.rows.map((row) => alignRowToColumns(row, t.columns, columns))),
+        rows: matchedTables.flatMap((t) =>
+          t.rows.map((row) => alignRowToColumns(row, t.labelIndex, t.maSoIndex, columns.length, labelIndex, maSoIndex))
+        ),
       };
     }
   }
@@ -477,29 +602,53 @@ export function parseStatementsFromMarkdown(markdown: string): FinancialStatemen
   return result;
 }
 
-// KQKD mau bao hiem (B02a-DNPNT) tach thanh "Phan I - tong hop" (KHONG co cot
-// "Thuyet minh") va "Phan II - chi tiet theo hoat dong" (CO cot "Thuyet
-// minh") - 2 bang con nay bi Mistral tach rieng nhung gop chung 1 bang
-// incomeStatement o tren, lay bo cot RONG NHAT (Phan II, 7 cot) lam chuan. Neu
-// khong can chinh, cac dong tu Phan I (chi co 6 cot) se bi LECH 1 COT sang
-// trai khi doc theo VI TRI cot cua bo cot chuan 7-cot (vd lib/analysis.ts doc
-// nham cot "Thuyet minh" thanh 1 cot gia tri, day toan bo 4 cot gia tri that
-// lui 1 vi tri) - phat hien qua doi chieu that bao cao Bao hiem NN&PTNT
-// (Agribank Insurance) Q1/2026 2026-07-10. Khop lai tung cot theo TEN (qua
-// normalizeLabelText, khong theo vi tri) roi dien null cho cot cua bang con
-// khong co - CHI xay ra voi mau bao hiem (3 loai hinh con lai khong co dang
-// "Phan I/Phan II" nhieu bang con khac so cot), nhung sua o day (dung chung
-// cho ca 3 bang) de an toan chung neu sau nay gap truong hop tuong tu.
+// Gop cac bang con (nhieu trang cua CUNG 1 bang chinh) co the LECH so cot -
+// da gap that nhieu lan (insurance Phan I/Phan II thieu han 1 cot; CTCK MBS
+// 2026-07-11 ca hai chieu: mot trang thua 1 cot trong, mot trang khac lai
+// THIEU 1 cot rieng cho nhan). Khop THEO TEN khong dang tin cay cho cac cot
+// KHONG dat ten ("") vi 1 bang co the co NHIEU cot "" (STT, nhan, cac o
+// trong giua 2 cot gia tri...) - findIndex() luon khop vao cot "" DAU TIEN,
+// lam nhieu cot dich cung tro ve 1 cot nguon, nhan doi du lieu.
+//
+// Thay vao do, dung 2 "moc neo" DA TINH SAN cho tung bang con (labelIndex,
+// maSoIndex - xem findLabelColumnIndex/parseAllTablesInRange, co xet ca noi
+// dung chu khong chi ten cot) de xac dinh CHINH XAC 2 cot quan trong nhat
+// (nhan, ma so) bat ke ten cot that su la gi. PHAN CON LAI (Thuyet minh + cac
+// cot gia tri, luon nam SAU ma so va theo dung thu tu tu trai qua phai) duoc
+// canh theo DUOI (trailing-align, giong huong xu ly "valueSlots.slice(-N)"
+// da dung trong realignRowByContent) - vi cac cot gia tri LUON o cuoi header
+// va thu tu giua chung khong doi, chi so luong cot metadata (Thuyet minh) o
+// GIUA moi co the khac nhau giua cac trang.
 function alignRowToColumns(
   row: (string | number | null)[],
-  sourceColumns: string[],
-  targetColumns: string[]
+  sourceLabelIndex: number,
+  sourceMaSoIndex: number,
+  targetLength: number,
+  targetLabelIndex: number,
+  targetMaSoIndex: number
 ): (string | number | null)[] {
-  if (sourceColumns.length === targetColumns.length) return row;
-  return targetColumns.map((col) => {
-    const sourceIndex = sourceColumns.findIndex((c) => normalizeLabelText(c) === normalizeLabelText(col));
-    return sourceIndex === -1 ? null : row[sourceIndex] ?? null;
+  if (row.length === targetLength && sourceLabelIndex === targetLabelIndex && sourceMaSoIndex === targetMaSoIndex) {
+    return row;
+  }
+
+  const result: (string | number | null)[] = new Array(targetLength).fill(null);
+  result[targetLabelIndex] = row[sourceLabelIndex] ?? null;
+  if (targetMaSoIndex !== -1) result[targetMaSoIndex] = sourceMaSoIndex === -1 ? null : row[sourceMaSoIndex] ?? null;
+
+  const sourceTrailingStart = Math.max(sourceLabelIndex, sourceMaSoIndex) + 1;
+  const targetTrailingStart = Math.max(targetLabelIndex, targetMaSoIndex) + 1;
+  const sourceTrailing = row.slice(sourceTrailingStart);
+  const targetTrailingSlots = Array.from({ length: targetLength - targetTrailingStart }, (_, i) => targetTrailingStart + i);
+  const n = Math.min(sourceTrailing.length, targetTrailingSlots.length);
+  // Lay N cot CUOI CUNG cua ca 2 ben (cot gia tri luon o cuoi) - neu 1 ben co
+  // nhieu cot "giua" hon (vd Thuyet minh co o ben nay, khong co o ben kia),
+  // phan du o DAU doan trailing se tu dong bi bo qua (van giu null) thay vi
+  // lam lech cac cot gia tri that o cuoi.
+  targetTrailingSlots.slice(-n).forEach((slot, k) => {
+    result[slot] = sourceTrailing.slice(-n)[k];
   });
+
+  return result;
 }
 
 // Chon bo cot CHUAN de gop cac bang con: lay bo cot XUAT HIEN NHIEU LAN NHAT
@@ -507,29 +656,31 @@ function alignRowToColumns(
 // that CTCK (MBS 2026-07-11): 1 trang KQKD le OCR ra THEM 1 cot trong du thua
 // (2 cot "" lien tiep thay vi 1, co le loi render trang cua Mistral) rong hon
 // het cac trang con lai CUNG bang - neu lay "rong nhat" se chon NHAM bo cot
-// LE nay lam chuan, roi alignRowToColumns() khop TEN cot rong ("") se khop
-// NHAM ca 2 cot "" trong bo chuan vao CUNG 1 cot "" nguon (findIndex luon tra
-// vi tri DAU tien) - nhan doi nhan hang loat dong, sai toan bo % (moi metric
-// KQKD tra ve null). Da xac nhan qua doi chieu that: bo cot LAP LAI nhieu lan
+// LE nay lam chuan. Da xac nhan qua doi chieu that: bo cot LAP LAI nhieu lan
 // nhat (vd 5-6 trang deu dung 1 kieu 5-cot) moi la bo cot CHUAN THAT SU cua ca
 // bang, chi 1 trang le dung kieu khac la loi OCR cuc bo. Hoa nhau ve so lan
 // (vd insurance Phan I/Phan II - moi ben CHI xuat hien 1 lan) thi uu tien bo
 // RONG hon (giu dung hanh vi cu cho truong hop nay).
-function mostCommonColumns(tables: ParsedTable[]): string[] {
-  const counts = new Map<string, { count: number; columns: string[] }>();
+function mostCommonColumns(tables: ParsedTable[]): { columns: string[]; labelIndex: number; maSoIndex: number } {
+  const counts = new Map<string, { count: number; columns: string[]; labelIndex: number; maSoIndex: number }>();
   for (const table of tables) {
     const key = table.columns.map((c) => normalizeLabelText(c)).join('|');
     const existing = counts.get(key);
     if (existing) existing.count++;
-    else counts.set(key, { count: 1, columns: table.columns });
+    else counts.set(key, { count: 1, columns: table.columns, labelIndex: table.labelIndex, maSoIndex: table.maSoIndex });
   }
-  let best: { count: number; columns: string[] } = { count: 0, columns: tables[0].columns };
+  let best: { count: number; columns: string[]; labelIndex: number; maSoIndex: number } = {
+    count: 0,
+    columns: tables[0].columns,
+    labelIndex: tables[0].labelIndex,
+    maSoIndex: tables[0].maSoIndex,
+  };
   for (const entry of counts.values()) {
     if (entry.count > best.count || (entry.count === best.count && entry.columns.length > best.columns.length)) {
       best = entry;
     }
   }
-  return best.columns;
+  return { columns: best.columns, labelIndex: best.labelIndex, maSoIndex: best.maSoIndex };
 }
 
 // Chuan hoa markdown Mistral tra ve thanh dang van ban ma lib/export/pdf.ts da

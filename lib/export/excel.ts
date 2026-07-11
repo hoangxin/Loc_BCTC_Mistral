@@ -54,7 +54,7 @@ function writeTable(sheet: ExcelJS.Worksheet, statementKey: keyof FinancialState
     headerRow.font = { bold: true };
   }
 
-  const labelIndex = findLabelColumnIndex(table.columns);
+  const labelIndex = findLabelColumnIndex(table.columns, table.rows);
   for (const row of table.rows) {
     const tier = classifyRowTier(statementKey, table, row, labelIndex);
     const values =
