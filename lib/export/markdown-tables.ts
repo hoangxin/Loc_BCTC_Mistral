@@ -119,14 +119,45 @@ function looksLikePeriodSubHeaderRow(cells: string[]): boolean {
   });
 }
 
-const NUMERIC_LIKE_PATTERN = /^\(?-?[\d.,\s]+\)?$/;
+// KHONG cho phep khoang trang GIUA cac chu so nua (khac ban cu) - 1 con so
+// THAT SU khong bao gio co khoang trang o giua. Da gap that MBS Q2/2026
+// (2026-07-11): 1 vai o gia tri bi Mistral dinh 2 so lien tiep chi cach nhau
+// 1 khoang trang (vd "308.845.773.308 20.932.707.542", KHONG co chu thich
+// thuyet minh xen giua) - ban cu (cho phep \s trong nhom ky tu) am tham GHEP
+// LUON 2 chuoi so lai thanh 1 SO KHONG LO SAI (vd "30884577330820932707542"),
+// tra ve GIA TRI SAI TRONG NHU DUNG thay vi null - nguy hiem hon nhieu so
+// voi 1 chi tieu tra ve null.
+const SINGLE_NUMBER_PATTERN = /^\(?-?[\d.,]+\)?$/;
+
+// Tham chieu thuyet minh dang "32(a)"/"8(b)" - hay bi Mistral dinh LIEN vao o
+// gia tri ke ben (thay vi tach rieng cot Thuyet minh, thuong de trong) khi
+// dong do THAT SU co chu thich - phat hien qua doi chieu that MBS Q2/2026.
+const THUYET_MINH_REF_PATTERN = /^\d{1,3}\([a-z]\)$/i;
 
 function parseNumericCell(value: string): string | number | null {
   const trimmed = value.trim();
   if (!trimmed) return null;
-  if (!NUMERIC_LIKE_PATTERN.test(trimmed) || !/\d/.test(trimmed)) return trimmed;
-  const isNegative = trimmed.startsWith('(') || trimmed.startsWith('-');
-  const digitsOnly = trimmed.replace(/\D/g, '');
+
+  // Tach theo khoang trang, phan loai TUNG token: 1 con so that (SINGLE_NUMBER_PATTERN),
+  // 1 tham chieu thuyet minh (bo qua), hoac thu gi khac (khong chac chan). CHI
+  // chap nhan dung 1 token la so - neu co >= 2 token deu la so (2 gia tri bi
+  // dinh lam 1, khong biet chac cai nao dung) hoac co token la mientide
+  // (VD nhan chi tieu, dong tien te...), giu nguyen CA CHUOI (tra ve null khi
+  // doc o lib/analysis.ts) thay vi doan bua.
+  const tokens = trimmed.split(/\s+/);
+  let numericToken: string | null = null;
+  for (const token of tokens) {
+    if (SINGLE_NUMBER_PATTERN.test(token) && /\d/.test(token)) {
+      if (numericToken !== null) return trimmed;
+      numericToken = token;
+    } else if (!THUYET_MINH_REF_PATTERN.test(token)) {
+      return trimmed;
+    }
+  }
+  if (numericToken === null) return trimmed;
+
+  const isNegative = numericToken.startsWith('(') || numericToken.startsWith('-');
+  const digitsOnly = numericToken.replace(/\D/g, '');
   if (!digitsOnly) return trimmed;
   const num = Number(digitsOnly);
   return Number.isNaN(num) ? trimmed : isNegative ? -num : num;
