@@ -12,7 +12,7 @@ export type RowStyleTier = 'heading' | 'subheading' | 'plain';
 const BALANCE_SHEET_HEADING_MARKERS = ['TONG CONG TAI SAN', 'NO PHAI TRA', 'VON CHU SO HUU', 'TONG CONG NGUON VON'];
 
 export function classifyRowTier(
-  statementKey: 'balanceSheet' | 'incomeStatement' | 'cashFlow',
+  statementKey: 'balanceSheet' | 'incomeStatement' | 'cashFlow' | 'offBalanceSheet',
   table: StatementTable,
   row: (string | number | null)[],
   labelIndex: number
@@ -20,6 +20,20 @@ export function classifyRowTier(
   const label = String(row[labelIndex] ?? '').trim();
   if (!label) return 'plain';
   const normalized = normalizeLabelText(label);
+
+  // CTCK "Cac chi tieu ngoai bao cao tinh hinh tai chinh": chi co 2 dong nhom
+  // "A. TAI SAN CUA CTCK..."/"B. TAI SAN VA CAC KHOAN PHAI TRA VE...". KHONG
+  // dung chung isLikelySubtotalRow() voi balanceSheet o day - da gap that
+  // (SSI/MBS 2026-07-11): khac voi BCDKT, cac dong CHI TIET cua bang nay o 1
+  // so bao cao (SSI) KHONG co tien to so A-rap trong TEN (ma so nam o cot
+  // rieng, vd nhan chi ghi "Nợ khó đòi đã xử lý" khong phai "4. Nợ khó đòi đã
+  // xử lý") - isLikelySubtotalRow tuong nham la dong tong (bold nham HANG
+  // LOAT dong du lieu thuong). Vi day chi la style COSMETIC (khong anh huong
+  // % hay du lieu), dung tin hieu DON GIAN VA CHAC CHAN hon: CHI 2 dong nhom
+  // that su bat dau bang "A. "/"B. " (da xac nhan qua 2 bao cao that).
+  if (statementKey === 'offBalanceSheet') {
+    return label.startsWith('A.') || label.startsWith('B.') ? 'subheading' : 'plain';
+  }
 
   if (statementKey === 'balanceSheet') {
     // Chi xet la "heading" (tong lon) trong so CAC DONG DA LA tong nhom

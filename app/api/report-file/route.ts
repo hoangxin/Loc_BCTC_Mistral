@@ -109,7 +109,7 @@ export async function GET(request: Request) {
     const scratchDir = join(tmpdir(), 'loc-bctc-export', String(Date.now()));
     await mkdir(scratchDir, { recursive: true });
     const outputPath = join(scratchDir, `${filenameBase}.xlsx`);
-    await writeFinancialStatementsExcel(report.statements, outputPath);
+    await writeFinancialStatementsExcel(report.statements, outputPath, report.businessType);
     const buffer = await readFile(outputPath);
 
     const filename = `${filenameBase}.xlsx`;

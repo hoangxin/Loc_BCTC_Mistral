@@ -69,6 +69,30 @@ function looksLikeHeadingLine(rawLine: string): boolean {
   return trimmed.length > 0 && trimmed.length <= MAX_HEADING_LINE_LENGTH && !trimmed.startsWith('|');
 }
 
+// CHI dung cho diem cat "Thuyet minh"/"Bien dong von chu so huu"
+// (NOTES_SECTION_MARKERS) - KHAC voi looksLikeHeadingLine() o tren (van giu
+// nguyen cho cac cho khac). Tieu de that cua bang "Bao cao tinh hinh bien
+// dong von chu so huu" (CTCK, Mau B04a-CTCK) hay bi Mistral noi LIEN vao doan
+// ngay thang phia sau, DOI KHI khong co ca khoang trang (da gap that SSI/MBS
+// 2026-07-11: "...NAM 2026cho ky ke toan ket thuc ngay...", dai 85-115 ky tu)
+// - neu doi hoi CA DONG (ke ca doan ngay noi them) phai ngan nhu
+// looksLikeHeadingLine se BO SOT tieu de that, khong chan dung bang nay truoc
+// Thuyet minh, lam no ro ri vao BCDKT (nhieu dong chi tieu Von CSH trung ten
+// voi phan Von CSH cua BCDKT that, gay sai lech nghiem trong - vd tat ca chi
+// tieu BCDKT tra ve null vi bi gop nham cot voi bang 9-10 cot nay). Chi doi
+// hoi tu khoa xuat hien XONG (ket thuc) trong MAX_HEADING_LINE_LENGTH ky tu
+// DAU dong, khong doi hoi toan bo dong phai ngan - van du chat de loai cau
+// van xuoi dai trong Thuyet minh (tu khoa thuong nam GIUA cau, xa vi tri dau).
+function containsHeadingMarkerNearStart(rawLine: string, markers: string[]): boolean {
+  const trimmed = rawLine.trim();
+  if (trimmed.length === 0 || trimmed.startsWith('|')) return false;
+  const normalized = normalizeLabelText(trimmed);
+  return markers.some((m) => {
+    const index = normalized.indexOf(m);
+    return index !== -1 && index + m.length <= MAX_HEADING_LINE_LENGTH;
+  });
+}
+
 function splitMarkdownRow(line: string): string[] | null {
   const trimmed = line.trim();
   if (!trimmed.startsWith('|') || !trimmed.endsWith('|')) return null;
@@ -200,6 +224,16 @@ const INCOME_STATEMENT_CONTENT_MARKERS = [
   'CHI BOI THUONG',
   'LOI NHUAN GOP HOAT DONG KINH DOANH BAO HIEM',
   'TONG CHI PHI HOAT DONG KINH DOANH BAO HIEM',
+  // KQKD mau chung khoan (Mau B02-CTCK, Thong tu 210/2014 + 334/2016/TT-BTC)
+  // cung dung tu ngu rieng, khong "CHI PHI QUAN LY DOANH NGHIEP" (CTCK ghi
+  // "CHI PHI QUAN LY" hoac "...CONG TY CHUNG KHOAN", thieu hau to "DOANH
+  // NGHIEP") - da xac nhan qua 2 bao cao that SSI/MBS 2026-07-11.
+  'DOANH THU NGHIEP VU MOI GIOI CHUNG KHOAN',
+  'CHI PHI NGHIEP VU MOI GIOI CHUNG KHOAN',
+  'CONG DOANH THU HOAT DONG',
+  'CONG CHI PHI HOAT DONG',
+  'TONG LOI NHUAN KE TOAN TRUOC THUE',
+  'LOI NHUAN KE TOAN SAU THUE',
 ];
 
 const CASH_FLOW_CONTENT_MARKERS = [
@@ -213,10 +247,29 @@ const CASH_FLOW_CONTENT_MARKERS = [
   'TIEN CHI NOP THUE THU NHAP DOANH NGHIEP',
 ];
 
+// Rieng CTCK (Mau B01-CTCK): "Cac chi tieu ngoai bao cao tinh hinh tai chinh"
+// - tai san/tien/no CTCK QUAN LY HO nha dau tu (KHONG thuoc BCDKT chinh cua
+// CTCK). Nam NGAY SAU BCDKT trong tai lieu goc - da xac nhan qua 2 bao cao
+// that SSI (hop nhat, Q1/2026) va MBS (kiem toan, nam 2025) 2026-07-11, ca 2
+// deu dung dung cac tu khoa duoi day du cau chu khac nhau kha nhieu cho tung
+// dong rieng le (vd SSI "cua CTCK", MBS "cua cong ty chung khoan"; SSI "Trung
+// tam Luu ky Chung khoan", MBS "VSDC" - ten moi cua chinh to chuc do). KHONG
+// dung "CHUNG QUYEN" lam marker (co xuat hien lai trong KQKD - vd "danh gia
+// lai phai tra chung quyen" - se gay diem hoa voi incomeStatement, xem
+// classifyTableByContent).
+const OFF_BALANCE_SHEET_CONTENT_MARKERS = [
+  'TAI SAN QUAN LY THEO CAM KET',
+  'NO KHO DOI DA XU LY',
+  'CO PHIEU DANG LUU HANH',
+  'TIEN GUI CUA KHACH HANG',
+  'VE TIEN GUI GIAO DICH CHUNG KHOAN',
+];
+
 const CONTENT_MARKERS_BY_KEY: { key: keyof FinancialStatements; markers: string[] }[] = [
   { key: 'balanceSheet', markers: BALANCE_SHEET_CONTENT_MARKERS },
   { key: 'incomeStatement', markers: INCOME_STATEMENT_CONTENT_MARKERS },
   { key: 'cashFlow', markers: CASH_FLOW_CONTENT_MARKERS },
+  { key: 'offBalanceSheet', markers: OFF_BALANCE_SHEET_CONTENT_MARKERS },
 ];
 
 // Dem so tu khoa dac trung cua tung bang xuat hien trong NHAN cac dong cua 1
@@ -347,7 +400,7 @@ function parseAllTablesInRange(lines: string[]): ParsedTable[] {
 // khop chuoi thang la du).
 export function containsNotesSectionMarker(markdown: string): boolean {
   const lines = markdown.split(/\r?\n/);
-  return lines.some((line) => looksLikeHeadingLine(line) && NOTES_SECTION_MARKERS.some((m) => normalizeLabelText(line).includes(m)));
+  return lines.some((line) => containsHeadingMarkerNearStart(line, NOTES_SECTION_MARKERS));
 }
 
 export function parseStatementsFromMarkdown(markdown: string): FinancialStatements {
@@ -369,13 +422,10 @@ export function parseStatementsFromMarkdown(markdown: string): FinancialStatemen
   // chap nhan diem cat nam SAU dong dau tien co tu khoa noi dung THAT SU
   // (nam trong 1 bang, khong phai dang liet ke ten bang) - dam bao da qua
   // khoi trang bia/muc luc.
-  const allContentMarkers = [...BALANCE_SHEET_CONTENT_MARKERS, ...INCOME_STATEMENT_CONTENT_MARKERS, ...CASH_FLOW_CONTENT_MARKERS];
+  const allContentMarkers = CONTENT_MARKERS_BY_KEY.flatMap(({ markers }) => markers);
   const firstContentLine = normalizedLines.findIndex((line) => allContentMarkers.some((m) => line.includes(m)));
-  const notesLine = normalizedLines.findIndex(
-    (line, i) =>
-      (firstContentLine === -1 || i > firstContentLine) &&
-      looksLikeHeadingLine(lines[i]) &&
-      NOTES_SECTION_MARKERS.some((m) => line.includes(m))
+  const notesLine = lines.findIndex(
+    (line, i) => (firstContentLine === -1 || i > firstContentLine) && containsHeadingMarkerNearStart(line, NOTES_SECTION_MARKERS)
   );
   const relevantLines = notesLine !== -1 ? lines.slice(0, notesLine) : lines;
 
@@ -394,6 +444,7 @@ export function parseStatementsFromMarkdown(markdown: string): FinancialStatemen
     balanceSheet: [],
     incomeStatement: [],
     cashFlow: [],
+    offBalanceSheet: [],
   };
   for (const table of tables) {
     const key = classifyTableByContent(table);
@@ -404,8 +455,9 @@ export function parseStatementsFromMarkdown(markdown: string): FinancialStatemen
     balanceSheet: { columns: [], rows: [] },
     incomeStatement: { columns: [], rows: [] },
     cashFlow: { columns: [], rows: [] },
+    offBalanceSheet: { columns: [], rows: [] },
   };
-  for (const key of ['balanceSheet', 'incomeStatement', 'cashFlow'] as const) {
+  for (const key of ['balanceSheet', 'incomeStatement', 'cashFlow', 'offBalanceSheet'] as const) {
     // KQKD bao hiem: uu tien Phan II (chi tiet theo hoat dong) - loai het bang
     // Phan I (tong hop) khoi ket qua khi Phan II thuc su co mat (yeu cau user
     // 2026-07-11, xem comment INCOME_STATEMENT_PART_MARKERS o tren). Bao cao
@@ -414,7 +466,7 @@ export function parseStatementsFromMarkdown(markdown: string): FinancialStatemen
     const hasDetailPart = key === 'incomeStatement' && grouped[key].some((t) => t.incomeStatementPart === 'detail');
     const matchedTables = hasDetailPart ? grouped[key].filter((t) => t.incomeStatementPart !== 'summary') : grouped[key];
     if (matchedTables.length > 0) {
-      const columns = matchedTables.reduce((a, b) => (b.columns.length > a.length ? b.columns : a), matchedTables[0].columns);
+      const columns = mostCommonColumns(matchedTables);
       result[key] = {
         columns,
         rows: matchedTables.flatMap((t) => t.rows.map((row) => alignRowToColumns(row, t.columns, columns))),
@@ -448,6 +500,36 @@ function alignRowToColumns(
     const sourceIndex = sourceColumns.findIndex((c) => normalizeLabelText(c) === normalizeLabelText(col));
     return sourceIndex === -1 ? null : row[sourceIndex] ?? null;
   });
+}
+
+// Chon bo cot CHUAN de gop cac bang con: lay bo cot XUAT HIEN NHIEU LAN NHAT
+// (theo TEN da normalize), KHONG con lay bo "RONG NHAT" nhu truoc - da gap
+// that CTCK (MBS 2026-07-11): 1 trang KQKD le OCR ra THEM 1 cot trong du thua
+// (2 cot "" lien tiep thay vi 1, co le loi render trang cua Mistral) rong hon
+// het cac trang con lai CUNG bang - neu lay "rong nhat" se chon NHAM bo cot
+// LE nay lam chuan, roi alignRowToColumns() khop TEN cot rong ("") se khop
+// NHAM ca 2 cot "" trong bo chuan vao CUNG 1 cot "" nguon (findIndex luon tra
+// vi tri DAU tien) - nhan doi nhan hang loat dong, sai toan bo % (moi metric
+// KQKD tra ve null). Da xac nhan qua doi chieu that: bo cot LAP LAI nhieu lan
+// nhat (vd 5-6 trang deu dung 1 kieu 5-cot) moi la bo cot CHUAN THAT SU cua ca
+// bang, chi 1 trang le dung kieu khac la loi OCR cuc bo. Hoa nhau ve so lan
+// (vd insurance Phan I/Phan II - moi ben CHI xuat hien 1 lan) thi uu tien bo
+// RONG hon (giu dung hanh vi cu cho truong hop nay).
+function mostCommonColumns(tables: ParsedTable[]): string[] {
+  const counts = new Map<string, { count: number; columns: string[] }>();
+  for (const table of tables) {
+    const key = table.columns.map((c) => normalizeLabelText(c)).join('|');
+    const existing = counts.get(key);
+    if (existing) existing.count++;
+    else counts.set(key, { count: 1, columns: table.columns });
+  }
+  let best: { count: number; columns: string[] } = { count: 0, columns: tables[0].columns };
+  for (const entry of counts.values()) {
+    if (entry.count > best.count || (entry.count === best.count && entry.columns.length > best.columns.length)) {
+      best = entry;
+    }
+  }
+  return best.columns;
 }
 
 // Chuan hoa markdown Mistral tra ve thanh dang van ban ma lib/export/pdf.ts da

@@ -11,6 +11,13 @@ export interface FinancialStatements {
   balanceSheet: StatementTable;
   incomeStatement: StatementTable;
   cashFlow: StatementTable;
+  // Rieng cty chung khoan (CTCK, Mau B01-CTCK): bang "Cac chi tieu ngoai bao
+  // cao tinh hinh tai chinh" (tai san/no cua khach hang CTCK quan ly ho, KHONG
+  // tinh vao BCDKT chinh) - nam NGAY SAU BCDKT, TRUOC KQKD trong tai lieu goc,
+  // luon nam trong pham vi truoc "Thuyet minh" (da xac nhan qua 2 bao cao that
+  // SSI/MBS, 2026-07-11) nen khong can mo rong diem cat OCR. Rong ({columns:
+  // [], rows: []}) cho 3 loai hinh DN con lai (khong co bang nay).
+  offBalanceSheet: StatementTable;
 }
 
 const COMBINING_DIACRITICS = new RegExp('[̀-ͯ]', 'g');

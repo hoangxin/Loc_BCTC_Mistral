@@ -2,14 +2,28 @@ import ExcelJS from 'exceljs';
 import type { FinancialStatements, StatementTable } from './financial-statements';
 import { findLabelColumnIndex, isMetadataColumnName } from './statement-shared';
 import { classifyRowTier } from './row-style';
+import type { BusinessType } from '../business-type';
 
 // Ten sheet Excel gioi han 31 ky tu va khong duoc chua [ ] : * ? / \ - cac ten
 // duoi day deu an toan.
-const SHEETS: { key: keyof FinancialStatements; name: string }[] = [
+const DEFAULT_SHEETS: { key: keyof FinancialStatements; name: string }[] = [
   { key: 'balanceSheet', name: 'Cân đối kế toán' },
   { key: 'incomeStatement', name: 'KQ kinh doanh' },
   { key: 'cashFlow', name: 'Lưu chuyển tiền tệ' },
 ];
+
+// CTCK (Mau B01-CTCK): thay "Luu chuyen tien te" bang "Cac chi tieu ngoai
+// BCTC" (tai san/tien CTCK quan ly ho nha dau tu, KHONG thuoc BCDKT chinh -
+// xem statement-shared.ts) - yeu cau user 2026-07-11.
+const SECURITIES_SHEETS: { key: keyof FinancialStatements; name: string }[] = [
+  { key: 'balanceSheet', name: 'Cân đối kế toán' },
+  { key: 'offBalanceSheet', name: 'Chỉ tiêu ngoài BCTC' },
+  { key: 'incomeStatement', name: 'KQ kinh doanh' },
+];
+
+function sheetsForBusinessType(businessType: BusinessType): { key: keyof FinancialStatements; name: string }[] {
+  return businessType === 'securities' ? SECURITIES_SHEETS : DEFAULT_SHEETS;
+}
 
 // Do rong cot tu chinh theo do dai noi dung THAT (thay vi 1 do rong co dinh
 // 32 cho MOI cot nhu truoc) - fix yeu cau user 2026-07-10: cot Ma so/Thuyet
@@ -86,12 +100,16 @@ function writeTable(sheet: ExcelJS.Worksheet, statementKey: keyof FinancialState
   }
 }
 
-// Ghi 3 bang so lieu (da duoc AI tach o lib/export/financial-statements.ts)
-// ra 1 file .xlsx, moi bang 1 tab, dung thu tu: can doi ke toan, ket qua kinh
-// doanh, luu chuyen tien te.
-export async function writeFinancialStatementsExcel(statements: FinancialStatements, destPath: string): Promise<void> {
+// Ghi cac bang so lieu (da duoc AI tach o lib/export/financial-statements.ts)
+// ra 1 file .xlsx, moi bang 1 tab - thu tu/danh sach bang phu thuoc businessType
+// (xem sheetsForBusinessType o tren, CTCK co bo bang rieng).
+export async function writeFinancialStatementsExcel(
+  statements: FinancialStatements,
+  destPath: string,
+  businessType: BusinessType
+): Promise<void> {
   const workbook = new ExcelJS.Workbook();
-  for (const { key, name } of SHEETS) {
+  for (const { key, name } of sheetsForBusinessType(businessType)) {
     const sheet = workbook.addWorksheet(name);
     writeTable(sheet, key, statements[key]);
   }

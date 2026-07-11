@@ -25,7 +25,7 @@ type RowFinder = (table: StatementTable) => Row | null;
 
 interface MetricDef {
   label: string;
-  statement: 'balanceSheet' | 'incomeStatement';
+  statement: 'balanceSheet' | 'incomeStatement' | 'offBalanceSheet';
   // 1 finder (chi tieu don), hoac 2 (gop ngan+dai han) - null neu BAT KY
   // finder nao khong tim thay dong => ca chi tieu tra ve null (khong doan
   // bua tu 1 phan du lieu).
@@ -76,6 +76,24 @@ function byLabelLast(include: string[], exclude: string[] = []): RowFinder {
       }
     }
     return result;
+  };
+}
+
+// Danh cho 1 khai niem duoc DIEN DAT KHAC HAN nhau giua cac cong ty chung
+// khoan (khac han insurance/other, noi cung 1 Thong tu nen chi lech vai tu -
+// da xac nhan qua doi chieu that SSI/MBS 2026-07-11, vd dong "Lo tu cac tai
+// san tai chinh FVTPL" cua SSI ghi dung tat "FVTPL" ngay trong ten, con MBS
+// lai bo han tu viet tat nay o dong cha, chi con trong dong con). Thu tung bo
+// include theo THU TU, tra ve dong KHOP DAU TIEN cua BO DAU TIEN CO KHOP -
+// khong tron cac bo include lai voi nhau (tranh 1 bo qua long leo vo tinh
+// khop nham dong khac).
+function byLabelAnyOf(variants: string[][]): RowFinder {
+  return (table) => {
+    for (const include of variants) {
+      const row = findRowByLabel(table, (label) => include.every((m) => label.includes(m)));
+      if (row) return row;
+    }
+    return null;
   };
 }
 
@@ -370,6 +388,231 @@ const INSURANCE_METRICS: MetricDef[] = [
   },
 ];
 
+const SECURITIES_THRESHOLDS_A: Thresholds = { level1: 20, level2: 30 };
+const SECURITIES_THRESHOLDS_B: Thresholds = { level1: 40, level2: 50 };
+
+// 30 chi tieu tang truong danh cho businessType === 'securities' (Mau
+// B01-CTCK/B02-CTCK, Thong tu 210/2014/TT-BTC + sua doi 334/2016/TT-BTC),
+// yeu cau user 2026-07-11, doi chieu nhan that qua 2 bao cao doc lap (script
+// tam OCR, khong luu lai): SSI (hop nhat, Quy 1/2026) va MBS (kiem toan, nam
+// 2025) - CO CHU DICH chon 2 cong ty khac nhau de phat hien cau chu khac
+// nhau giua cac CTCK (vd SSI "TỔNG CỘNG TÀI SẢN" vs MBS "TỔNG TÀI SẢN"; SSI
+// "của CTCK"/"Trung tâm Lưu ký Chứng khoán" vs MBS "của công ty chứng
+// khoán"/"VSDC" - ten moi cua chinh to chuc luu ky) - CHI dua vao 1 bao cao
+// se de ra finder qua khop chat, sai voi cong ty khac.
+//
+// Rieng "TS Ngan Han"/"Vay"/"Trai phieu phat hanh"/"No"/"TSTC Niem Yet Cua
+// CTCK" va nhieu dong KQKD KHONG co nguong (theo dung yeu cau user, chi hien
+// %, khong to mau tier).
+//
+// "Vay"/"Trai phieu phat hanh" gop ca ngan+dai han (2 finder, ca 2 phai tim
+// thay moi cong - xem sumFindersAtColumn) nhung CA 2 bao cao mau deu chi co 1
+// trong 2 ky han cho tung dong (SSI: Vay ngan han, KHONG co Trai phieu; MBS:
+// Trai phieu dai han, KHONG co Vay dai han rieng) - dung "—" o ky han con
+// thieu la HANH VI DUNG THEO QUY UOC DA CHOT (giong "Tra truoc nguoi ban"
+// NH+DH cua nhom 'other'), KHONG phai bug.
+const SECURITIES_METRICS: MetricDef[] = [
+  {
+    label: 'Tiền',
+    statement: 'balanceSheet',
+    finders: [byLabel(['TIEN VA CAC KHOAN TUONG DUONG TIEN'])],
+    thresholds: SECURITIES_THRESHOLDS_A,
+  },
+  {
+    label: 'FVTPL',
+    statement: 'balanceSheet',
+    finders: [byLabel(['FVTPL'])],
+    thresholds: SECURITIES_THRESHOLDS_A,
+  },
+  {
+    label: 'HTM',
+    statement: 'balanceSheet',
+    // Ngan han: dong DAU TIEN gioi thieu ca ten day + viet tat "(HTM)". Dai
+    // han: dong lap lai o "Tai san dai han" KHONG con viet tat (quy uoc rut
+    // gon khi nhac lai lan 2 - da xac nhan SSI, dong 1.1 duoi "TÀI SẢN DÀI
+    // HẠN" khong co "(HTM)") - dung co/khong "HTM" de phan biet ngan/dai.
+    finders: [
+      byLabel(['CAC KHOAN DAU TU NAM GIU DEN NGAY DAO HAN', 'HTM']),
+      byLabel(['CAC KHOAN DAU TU NAM GIU DEN NGAY DAO HAN'], ['HTM']),
+    ],
+    thresholds: SECURITIES_THRESHOLDS_A,
+  },
+  {
+    label: 'AFS',
+    statement: 'balanceSheet',
+    finders: [byLabel(['TAI SAN TAI CHINH SAN SANG DE BAN'])],
+    thresholds: SECURITIES_THRESHOLDS_A,
+  },
+  {
+    label: 'Cho Vay',
+    statement: 'balanceSheet',
+    finders: [byLabel(['CAC KHOAN CHO VAY'])],
+    thresholds: SECURITIES_THRESHOLDS_A,
+  },
+  {
+    label: 'TS Ngắn Hạn',
+    statement: 'balanceSheet',
+    finders: [byLabel(['TAI SAN NGAN HAN'])],
+    thresholds: null,
+  },
+  {
+    label: 'Tổng TS',
+    statement: 'balanceSheet',
+    // "TONG" va "TAI SAN" rieng (khong doi hoi lien tiep) de khop CA 2 bien
+    // the: "TỔNG CỘNG TÀI SẢN" (SSI) va "TỔNG TÀI SẢN" (MBS).
+    finders: [byLabel(['TONG', 'TAI SAN'])],
+    thresholds: SECURITIES_THRESHOLDS_A,
+  },
+  {
+    label: 'Vay',
+    statement: 'balanceSheet',
+    finders: [byLabel(['VAY VA NO THUE', 'NGAN HAN']), byLabel(['VAY VA NO THUE', 'DAI HAN'])],
+    thresholds: null,
+  },
+  {
+    label: 'Trái phiếu phát hành',
+    statement: 'balanceSheet',
+    finders: [byLabel(['TRAI PHIEU PHAT HANH', 'NGAN HAN']), byLabel(['TRAI PHIEU PHAT HANH', 'DAI HAN'])],
+    thresholds: null,
+  },
+  {
+    label: 'Nợ',
+    statement: 'balanceSheet',
+    finders: [byLabel(['NO PHAI TRA'])],
+    thresholds: null,
+  },
+  {
+    label: 'Vốn CSH',
+    statement: 'balanceSheet',
+    finders: [byLabel(['VON CHU SO HUU'], [], true)],
+    thresholds: SECURITIES_THRESHOLDS_A,
+  },
+  {
+    label: 'TSTC Niêm Yết Của CTCK',
+    statement: 'offBalanceSheet',
+    // Loai truong hop "...cua Nha dau tu" (dong khac, xem duoi) - dong nay la
+    // tai san CUA CHINH CTCK.
+    finders: [byLabel(['TAI SAN TAI CHINH', 'NIEM YET'], ['NHA DAU TU'])],
+    thresholds: null,
+  },
+  {
+    label: 'TSTC Niêm Yết Của NĐT',
+    statement: 'offBalanceSheet',
+    finders: [byLabel(['TAI SAN TAI CHINH', 'NIEM YET', 'NHA DAU TU'])],
+    thresholds: SECURITIES_THRESHOLDS_A,
+  },
+  {
+    label: 'Tiền Của KH',
+    statement: 'offBalanceSheet',
+    finders: [byLabel(['TIEN GUI CUA KHACH HANG'])],
+    thresholds: SECURITIES_THRESHOLDS_A,
+  },
+  {
+    label: 'Phải Trả Của NĐT Về GDCK',
+    statement: 'offBalanceSheet',
+    // Dong cha luon dung TRUOC 2 dong con "...trong nuoc"/"...nuoc ngoai" (y
+    // het cung 1 dong nay) - khop dau tien la dung, khong can preferSubtotal.
+    finders: [byLabel(['PHAI TRA', 'NHA DAU TU', 'VE TIEN GUI GIAO DICH CHUNG KHOAN'])],
+    thresholds: SECURITIES_THRESHOLDS_A,
+  },
+  {
+    label: 'Lãi FVTPL',
+    statement: 'incomeStatement',
+    finders: [byLabel(['LAI TU CAC TAI SAN TAI CHINH', 'FVTPL'])],
+    thresholds: null,
+  },
+  {
+    label: 'Lỗ FVTPL',
+    statement: 'incomeStatement',
+    // SSI ghi "FVTPL" ngay trong ten dong; MBS bo tu viet tat nay o dong cha
+    // (chi con trong dong con "a. Lo tu ban...FVTPL") - can 2 bien the.
+    finders: [
+      byLabelAnyOf([['LO TU CAC TAI SAN TAI CHINH', 'FVTPL'], ['LO CAC TAI SAN TAI CHINH DUOC GHI NHAN']]),
+    ],
+    thresholds: null,
+  },
+  {
+    label: 'Lãi/Lỗ HTM',
+    statement: 'incomeStatement',
+    finders: [byLabel(['LAI TU CAC KHOAN DAU TU NAM GIU DEN NGAY DAO HAN'])],
+    thresholds: null,
+  },
+  {
+    label: 'Lãi cho vay',
+    statement: 'incomeStatement',
+    finders: [byLabel(['LAI TU CAC KHOAN CHO VAY VA PHAI THU'])],
+    thresholds: SECURITIES_THRESHOLDS_A,
+  },
+  {
+    label: 'CP Lãi Vay',
+    statement: 'incomeStatement',
+    finders: [byLabel(['CHI PHI LAI VAY'])],
+    thresholds: null,
+  },
+  {
+    label: 'Lãi AFS',
+    statement: 'incomeStatement',
+    finders: [byLabel(['TAI SAN TAI CHINH SAN SANG DE BAN'])],
+    thresholds: null,
+  },
+  {
+    label: 'Lỗ AFS',
+    statement: 'incomeStatement',
+    finders: [byLabel(['TAI SAN TAI CHINH AFS KHI PHAN LOAI LAI'])],
+    thresholds: null,
+  },
+  {
+    label: 'DT Môi Giới',
+    statement: 'incomeStatement',
+    finders: [byLabel(['DOANH THU NGHIEP VU MOI GIOI CHUNG KHOAN'])],
+    thresholds: SECURITIES_THRESHOLDS_A,
+  },
+  {
+    label: 'CP Môi Giới',
+    statement: 'incomeStatement',
+    finders: [byLabel(['CHI PHI NGHIEP VU MOI GIOI CHUNG KHOAN'])],
+    thresholds: null,
+  },
+  {
+    label: 'DT Hoạt Động',
+    statement: 'incomeStatement',
+    finders: [byLabel(['CONG DOANH THU HOAT DONG'])],
+    thresholds: SECURITIES_THRESHOLDS_A,
+  },
+  {
+    label: 'CP Hoạt Động',
+    statement: 'incomeStatement',
+    finders: [byLabel(['CONG CHI PHI HOAT DONG'])],
+    thresholds: null,
+  },
+  {
+    label: 'CP Quản lý',
+    statement: 'incomeStatement',
+    finders: [byLabel(['CHI PHI QUAN LY'])],
+    thresholds: SECURITIES_THRESHOLDS_A,
+  },
+  {
+    label: 'LNTT',
+    statement: 'incomeStatement',
+    finders: [byLabel(['TONG LOI NHUAN KE TOAN TRUOC THUE'])],
+    thresholds: SECURITIES_THRESHOLDS_B,
+  },
+  {
+    label: 'LNST',
+    statement: 'incomeStatement',
+    finders: [byLabel(['LOI NHUAN KE TOAN SAU THUE'])],
+    thresholds: SECURITIES_THRESHOLDS_B,
+  },
+  {
+    label: 'LNST Công Ty Mẹ',
+    statement: 'incomeStatement',
+    // Chi co o bao cao Hop nhat (co cong ty con) - bao cao Rieng le se tra
+    // null cho ca chi tieu nay (khong co dong nay), theo dung quy uoc chung.
+    finders: [byLabelAnyOf([['LOI NHUAN', 'PHAN BO', 'CHU SO HUU'], ['LOI NHUAN SAU THUE', 'CO DONG', 'CONG TY ME']])],
+    thresholds: SECURITIES_THRESHOLDS_B,
+  },
+];
+
 // "-" VA o trong (null) deu duoc coi la 0 (quy uoc BCTC VN: khong phat sinh)
 // (doi huong 2026-07-08 - truoc do chi "-" moi la 0, o trong bi coi la
 // "khong doc duoc"; nhung doi chieu markdown-tables.ts thi o trong markdown
@@ -445,13 +688,27 @@ function tierFor(percentChange: number | null, thresholds: Thresholds | null): '
   return null;
 }
 
+// offBalanceSheet (rieng CTCK) co CUNG hinh dang cot voi balanceSheet (Ma so/
+// Chi tieu/Thuyet minh/2 cot gia tri "cuoi ky"/"dau nam") nen dung lai chinh
+// ham balanceSheetPeriodColumns(), khong can viet rieng.
 function buildAnalysisRows(statements: FinancialStatements, metrics: MetricDef[]): AnalysisRow[] {
   const balanceSheetPeriods = balanceSheetPeriodColumns(statements.balanceSheet);
   const incomeStatementPeriods = incomeStatementPeriodColumns(statements.incomeStatement);
+  const offBalanceSheetPeriods = balanceSheetPeriodColumns(statements.offBalanceSheet);
 
   return metrics.map((metric) => {
-    const table = metric.statement === 'balanceSheet' ? statements.balanceSheet : statements.incomeStatement;
-    const periods = metric.statement === 'balanceSheet' ? balanceSheetPeriods : incomeStatementPeriods;
+    const table =
+      metric.statement === 'balanceSheet'
+        ? statements.balanceSheet
+        : metric.statement === 'offBalanceSheet'
+          ? statements.offBalanceSheet
+          : statements.incomeStatement;
+    const periods =
+      metric.statement === 'balanceSheet'
+        ? balanceSheetPeriods
+        : metric.statement === 'offBalanceSheet'
+          ? offBalanceSheetPeriods
+          : incomeStatementPeriods;
 
     if (periods === null) {
       return { label: metric.label, percentChange: null, tier: null };
@@ -466,17 +723,20 @@ function buildAnalysisRows(statements: FinancialStatements, metrics: MetricDef[]
 
 // Dispatch theo businessType: 'other' dung 21 chi tieu (yeu cau user
 // 2026-07-08), 'insurance' dung 17 chi tieu rieng (yeu cau user 2026-07-10,
-// mau B01/B02a-DNPNT). GATE BAT BUOC cho 2 nhom con lai (bank/securities): da
-// verify qua du lieu OCR that (bao cao MBS - chung khoan) mot so ten chi tieu
-// TRUNG hoac gan giong nhau nhung KHAC NGHIA hoan toan voi doanh nghiep
-// thuong (bieu mau CTCK/Ngan hang theo thong tu rieng, khong phai VAS thuong)
-// - tra cuu vo dieu kien co the ra SO SAI NHUNG TRONG HOP LE, rat nguy hiem
-// cho 1 cong cu tai chinh. Ngan hang/Chung khoan van tra du 21 nhan cua nhom
-// 'other' (percentChange/tier deu null, chi hien "—") cho toi khi co tieu chi
-// that rieng cho tung nhom, giu dong nhat voi hanh vi cu.
+// mau B01/B02a-DNPNT), 'securities' dung 30 chi tieu rieng (yeu cau user
+// 2026-07-11, mau B01-CTCK/B02-CTCK). GATE BAT BUOC cho nhom con lai (bank):
+// da verify qua du lieu OCR that mot so ten chi tieu TRUNG hoac gan giong
+// nhau nhung KHAC NGHIA hoan toan voi doanh nghiep thuong (bieu mau Ngan hang
+// theo thong tu rieng, khong phai VAS thuong) - tra cuu vo dieu kien co the
+// ra SO SAI NHUNG TRONG HOP LE, rat nguy hiem cho 1 cong cu tai chinh. Ngan
+// hang van tra du 21 nhan cua nhom 'other' (percentChange/tier deu null, chi
+// hien "—") cho toi khi co tieu chi that rieng, giu dong nhat voi hanh vi cu.
 export function computeAnalysisRows(statements: FinancialStatements, businessType: BusinessType): AnalysisRow[] {
   if (businessType === 'insurance') {
     return buildAnalysisRows(statements, INSURANCE_METRICS);
+  }
+  if (businessType === 'securities') {
+    return buildAnalysisRows(statements, SECURITIES_METRICS);
   }
   if (businessType !== 'other') {
     return OTHER_METRICS.map((metric) => ({ label: metric.label, percentChange: null, tier: null }));
