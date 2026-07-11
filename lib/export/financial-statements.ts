@@ -3,6 +3,16 @@ import { validateFinancialStatements, findAllGroupSumMismatches, type TaggedGrou
 import { containsNotesSectionMarker, parseStatementsFromMarkdown } from './markdown-tables';
 import { classifyBusinessType, type BusinessType } from '../business-type';
 import { unreliableCellKeysFromMismatches, type FinancialStatements, type UnreliableCells } from './statement-shared';
+import { looksLikeVietnameseText } from '../pdf-text';
+
+// Bao cao scan dai (extractFinancialStatementsWithOcrProbe duoi) khong co
+// text layer that de kiem tra ngon ngu MIEN PHI truoc khi OCR (khac voi
+// nhanh co text layer, xem lib/pdf-text.ts isLikelyNonVietnamese) - phai doi
+// den SAU LO OCR DAU TIEN moi co noi dung de xet. Nem loi rieng (khong phai
+// loi mang/tam thoi) de lib/report-extract.ts bat duoc va DUNG NGAY, khong
+// tiep tuc OCR them lo nao/khong retry (retry se khong bien tieng Anh thanh
+// tieng Viet) - xem NonVietnameseContentError o duoi.
+export class NonVietnameseContentError extends Error {}
 
 // Re-export de cac file khac (excel.ts, pdf.ts, validate-statements.ts, lib/export/index.ts...)
 // tiep tuc import type tu day nhu truoc, khong can sua lai import o noi khac.
@@ -148,6 +158,7 @@ export async function extractFinancialStatementsWithOcrProbe(filePath: string, t
   const { markdown, statements, mismatches } = await extractWithGroupCheckRetry(async () => {
     const collected: MistralOcrPage[] = [];
     let cursor = 0;
+    let checkedLanguage = false;
 
     while (cursor < totalPages) {
       const step = collected.length === 0 ? INITIAL_PROBE_BATCH_SIZE : EXPAND_STEP;
@@ -158,6 +169,15 @@ export async function extractFinancialStatementsWithOcrProbe(filePath: string, t
       cursor = batchEnd;
 
       const markdownSoFar = collected.map((p) => p.markdown).join('\n\n');
+      // Chi kiem tra 1 lan, ngay sau lo DAU TIEN - du du lieu de ket luan
+      // (xem VIETNAMESE_DIACRITIC_RATIO_THRESHOLD) VA dung som truoc khi ton
+      // them cac lo mo rong tiep theo cho 1 tai lieu khong phai tieng Viet.
+      if (!checkedLanguage) {
+        checkedLanguage = true;
+        if (!looksLikeVietnameseText(markdownSoFar)) {
+          throw new NonVietnameseContentError('Noi dung khong phai tieng Viet (phat hien sau lo OCR dau tien)');
+        }
+      }
       if (containsNotesSectionMarker(markdownSoFar)) break;
     }
 

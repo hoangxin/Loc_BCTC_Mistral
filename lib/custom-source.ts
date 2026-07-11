@@ -174,10 +174,24 @@ async function downloadAndProcessCustomReport(fileUrl: string, companyNameGuess:
     }
 
     // Nguon rieng chi ung voi 1 cong ty/1 lan paste link - neu zip/rar chua
-    // nhieu file, chi lay file DAU TIEN (khac batch Vietstock, xem lib/pipeline.ts,
-    // vi o day khong co "danh sach nhieu cong ty" de tach dong rieng).
-    const resolvedFile = resolved[0];
-    const content = await extractReportContent(resolvedFile);
+    // nhieu file, UU TIEN file DAU TIEN (khac batch Vietstock, xem
+    // lib/pipeline.ts, vi o day khong co "danh sach nhieu cong ty" de tach
+    // dong rieng), nhung THU LAN LUOT sang file tiep theo neu file dang xet
+    // bi loai vi khong phai tieng Viet (extractReportContent tra ve null,
+    // xem lib/report-extract.ts) - "file dau tien" trong 1 zip khong dam bao
+    // la ban tieng Viet (thu tu entry phu thuoc Vietstock dong goi).
+    let resolvedFile = resolved[0];
+    let content: Awaited<ReturnType<typeof extractReportContent>> = null;
+    for (const candidate of resolved) {
+      content = await extractReportContent(candidate);
+      if (content) {
+        resolvedFile = candidate;
+        break;
+      }
+    }
+    if (!content) {
+      throw new Error('Không tìm thấy bản tiếng Việt của BCTC trong file này (chỉ có bản dịch tiếng Anh hoặc nội dung không đọc được)');
+    }
     const { quarter, year } = getPreviousQuarter();
 
     return {

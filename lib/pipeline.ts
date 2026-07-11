@@ -234,6 +234,13 @@ export async function runFetchPipeline(options: RunFetchPipelineOptions = {}): P
         for (const resolvedFile of resolved) {
           try {
             const content = await extractReportContent(resolvedFile);
+            // null = file bi loai co chu dich (vd ban dich tieng Anh cua
+            // CHINH bao cao nay, xem lib/report-extract.ts) - khong phai loi,
+            // bo qua im lang, khong day vao reportEntries lan failedEntries.
+            if (!content) {
+              console.log('bo qua file khong phai tieng Viet', resolvedFile.filePath);
+              continue;
+            }
             if (content.warnings.length > 0) {
               console.warn('bang so lieu con lech sau khi cau truc hoa', resolvedFile.filePath, content.warnings);
             }

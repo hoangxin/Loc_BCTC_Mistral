@@ -30,6 +30,31 @@ function normalizeForMatch(text: string): string {
     .toUpperCase();
 }
 
+// Phan biet ban tieng Viet voi ban tieng Anh CUNG 1 BCTC (Vietstock thuong
+// kem ca 2 ban trong 1 zip, xem lib/report-source.ts isEnglishVariantEntry -
+// loc theo TEN FILE that bai voi cac file KHONG co dau hieu ngon ngu trong
+// ten, vd "HCM_Baocaotaichinh_Q1_2026.pdf" vs "..._1.pdf", da gap that
+// 2026-07-12). Kiem tra theo NOI DUNG: mat do ky tu co dau tieng Viet (dau
+// thanh sau khi tach NFD, VA chu "d") tren tong so ky tu chu - van ban tieng
+// Viet that (BCTC) luon co ty le RAT CAO (~0.33-0.38, do that tren mau OCR
+// TIX/MBS that), tieng Anh gan nhu tuyet doi 0 (khong co dau nao). Nguong
+// 0.03 thap hon ~10 lan so voi ty le that de chiu duoc trang ít chu/nhieu
+// bang so, van cach xa tuyet doi voi tieng Anh.
+const VIETNAMESE_DIACRITIC_RATIO_THRESHOLD = 0.03;
+
+export function vietnameseDiacriticRatio(text: string): number {
+  const letters = text.match(/\p{L}/gu) ?? [];
+  if (letters.length === 0) return 0;
+  const normalized = text.normalize('NFD');
+  const diacriticCount = (normalized.match(COMBINING_DIACRITICS) ?? []).length;
+  const dCount = (text.match(/đ|Đ/g) ?? []).length; // "d" KHONG tach duoc qua NFD (la 1 ky tu rieng, khong phai d+dau ket hop)
+  return (diacriticCount + dCount) / letters.length;
+}
+
+export function looksLikeVietnameseText(text: string): boolean {
+  return vietnameseDiacriticRatio(text) >= VIETNAMESE_DIACRITIC_RATIO_THRESHOLD;
+}
+
 // Levenshtein + fuzzy match - dung rieng cho truong hop text layer THAT (PDF
 // born-digital) vi text nay van co the co loi go/OCR-nguon-goc nhe. Truong
 // hop scan (xem needsOcrProbe duoi) khong con qua day nua - Mistral OCR do
@@ -162,12 +187,22 @@ export interface PageScopeResult {
   // that de doc), caller (lib/export/financial-statements.ts) phai tu OCR
   // theo lo qua Mistral thay vi dung `pageNumbers` (luc nay la null).
   needsOcrProbe?: boolean;
+  // true neu text layer THAT (khong OCR gi ca, hoan toan mien phi) cho thay
+  // day KHONG PHAI ban tieng Viet - Vietstock thuong kem san ban dich tieng
+  // Anh trong CUNG 1 zip (xem lib/report-source.ts isEnglishVariantEntry),
+  // loc theo TEN FILE that bai voi file KHONG co dau hieu ngon ngu trong ten
+  // (da gap that HCM Q1/2026, 2026-07-12: "HCM_Baocaotaichinh_Q1_2026.pdf" vs
+  // "..._1.pdf" - khong the biet ban nao la Anh chi tu ten). Chi tinh cho
+  // truong hop CO text that (khong OCR them de kiem tra) - bao cao scan dai
+  // (needsOcrProbe=true) duoc kiem tra RIENG sau lo OCR dau tien, xem
+  // lib/export/financial-statements.ts.
+  isLikelyNonVietnamese?: boolean;
   error?: string;
 }
 
 async function determineOne(
   filePath: string
-): Promise<{ pageNumbers: number[] | null; totalPages: number; needsOcrProbe: boolean }> {
+): Promise<{ pageNumbers: number[] | null; totalPages: number; needsOcrProbe: boolean; isLikelyNonVietnamese: boolean }> {
   // CHI doc text layer (pdf-parse getText()) - KHONG render anh/canvas gi ca
   // (khac han cach cu dung Tesseract phai render tung trang thanh anh truoc,
   // tung gay crash "Create skia surface failed" tren bao cao scan dai, xem
@@ -186,25 +221,30 @@ async function determineOne(
       .filter((page) => page.text.trim().length < MIN_PAGE_TEXT_LENGTH)
       .map((page) => page.num);
 
+    const combinedText = rawPages.map((page) => page.text).join('\n');
+    const isLikelyNonVietnamese = !looksLikeVietnameseText(combinedText);
+
     // Toan bo la text layer that (PDF born-digital, khong can OCR) - tim diem
     // cat truc tiep tren text that co san.
     if (allScannedPageNumbers.length === 0) {
       const entries: CutoffProbeEntry[] = rawPages.map((page) => ({ num: page.num, text: page.text.trim() }));
       const cutoffEntry = findNotesCutoffEntry(entries, allPageNumbers);
       const pageNumbers = cutoffEntry ? allPageNumbers.filter((num) => num <= cutoffEntry.num) : allPageNumbers;
-      return { pageNumbers, totalPages, needsOcrProbe: false };
+      return { pageNumbers, totalPages, needsOcrProbe: false, isLikelyNonVietnamese };
     }
 
     // It trang can OCR (bao cao ngan) - khong dang de tham do rieng, giu
     // nguyen hanh vi cu: coi toan bo la trong pham vi, Mistral OCR o buoc sau
     // se tu doc va bo qua phan khong lien quan neu co.
     if (allScannedPageNumbers.length <= NOTES_EARLY_STOP_BATCH_SIZE) {
-      return { pageNumbers: allPageNumbers, totalPages, needsOcrProbe: false };
+      return { pageNumbers: allPageNumbers, totalPages, needsOcrProbe: false, isLikelyNonVietnamese };
     }
 
     // Bao cao scan dai - khong co text that de tu do diem cat, phai OCR. Bao
     // hieu cho caller tu OCR THEO LO qua Mistral (xem needsOcrProbe tren).
-    return { pageNumbers: null, totalPages, needsOcrProbe: true };
+    // isLikelyNonVietnamese luon false o day (khong co text that de xet) -
+    // caller tu kiem tra rieng sau lo OCR dau tien.
+    return { pageNumbers: null, totalPages, needsOcrProbe: true, isLikelyNonVietnamese: false };
   } finally {
     await parser.destroy();
   }
@@ -230,8 +270,8 @@ export async function determineStatementPageScope(filePaths: string[]): Promise<
       const index = nextIndex++;
       const filePath = filePaths[index];
       try {
-        const { pageNumbers, totalPages, needsOcrProbe } = await determineOne(filePath);
-        resultMap.set(filePath, { pageNumbers, totalPages, needsOcrProbe });
+        const { pageNumbers, totalPages, needsOcrProbe, isLikelyNonVietnamese } = await determineOne(filePath);
+        resultMap.set(filePath, { pageNumbers, totalPages, needsOcrProbe, isLikelyNonVietnamese });
       } catch (error) {
         console.error('determine page scope error', filePath, error);
         resultMap.set(filePath, {
