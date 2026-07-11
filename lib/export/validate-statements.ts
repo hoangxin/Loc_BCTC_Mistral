@@ -8,6 +8,9 @@ import {
   findRowByCode,
   isLikelySubtotalRow,
   findIncomeStatementGroupMismatches,
+  findDecimalCodeGroupMismatches,
+  findBalanceSheetLevel2Mismatches,
+  type GroupSumMismatch,
 } from './statement-shared';
 
 export interface ValidationIssue {
@@ -321,6 +324,12 @@ function validateBalanceSheetSubtotals(table: StatementTable): ValidationIssue[]
   issues.push(
     ...validateChildrenSum(table, 'TS dai han', longTermAssets, childrenBetween(table, labelIndex, longTermAssetsIdx, totalAssetsIdx))
   );
+  // Sau hon 1 tang nua (2026-07-12, yeu cau nguoi dung): trong CHINH nhom "TS
+  // ngan han"/"TS dai han" da biet ranh gioi o tren, kiem tra TIEP tung dong
+  // "cap 1" (I./II...) co khop voi tong cac dong con CUA NO hay khong (xem
+  // findBalanceSheetLevel2Mismatches) - khoanh vung sau hon nua neu co lech.
+  issues.push(...groupSumMismatchesToIssues('balanceSheet', findBalanceSheetLevel2Mismatches(table, shortTermAssetsIdx, longTermAssetsIdx)));
+  issues.push(...groupSumMismatchesToIssues('balanceSheet', findBalanceSheetLevel2Mismatches(table, longTermAssetsIdx, totalAssetsIdx)));
 
   const liabilitiesIdx = findRowIndex(table, labelIndex, (l) => l.includes('NO PHAI TRA'), { preferSubtotal: true });
   const equityIdx = findRowIndex(table, labelIndex, (l) => l.includes('VON CHU SO HUU'), { preferSubtotal: true });
@@ -344,6 +353,8 @@ function validateBalanceSheetSubtotals(table: StatementTable): ValidationIssue[]
   );
   issues.push(...validateChildrenSum(table, 'No phai tra', liabilities, childrenBetween(table, labelIndex, liabilitiesIdx, equityIdx)));
   issues.push(...validateChildrenSum(table, 'Von chu so huu', equity, childrenBetween(table, labelIndex, equityIdx, totalCapitalIdx)));
+  issues.push(...groupSumMismatchesToIssues('balanceSheet', findBalanceSheetLevel2Mismatches(table, liabilitiesIdx, equityIdx)));
+  issues.push(...groupSumMismatchesToIssues('balanceSheet', findBalanceSheetLevel2Mismatches(table, equityIdx, totalCapitalIdx)));
 
   return issues;
 }
@@ -449,16 +460,32 @@ function validateIncomeStatementTax(table: StatementTable): ValidationIssue[] {
   return issues;
 }
 
+// Chuyen 1 danh sach GroupSumMismatch (statement-shared.ts, dung chung cho
+// nhieu kieu kiem tra: nhom phang KQKD, ma so thap phan, cap1->cap2 BCDKT)
+// thanh ValidationIssue - tranh lap lai cung 1 doan dung message o nhieu noi.
+function groupSumMismatchesToIssues(table: 'balanceSheet' | 'incomeStatement', mismatches: GroupSumMismatch[]): ValidationIssue[] {
+  return mismatches.map((m) => ({
+    table,
+    message: `"${m.columnName}": Tong cac dong con cua "${m.groupLabel}" (${m.sum}) khong khop chinh dong "${m.groupLabel}" (${m.reported}) - co the do OCR gop/bia dong, can xem tay.`,
+  }));
+}
+
 // Kiem tra "tong cac chi tieu 01,02,03...= dong Cong .../Tong ..." cua CHINH
 // nhom do trong KQKD - dung chung cho MOI loai hinh DN (khong rieng CTCK, xem
 // findIncomeStatementGroupMismatches). Phat hien duoc loi OCR gop/bia dong
 // (MBS Q2/2026, 2026-07-11) ma cac kiem tra VAS co dinh o tren (Loi nhuan gop
 // = DT thuan - Gia von...) khong bat duoc vi khac cong thuc/khac chi tieu.
 function validateIncomeStatementGroupSums(table: StatementTable): ValidationIssue[] {
-  return findIncomeStatementGroupMismatches(table).map((m) => ({
-    table: 'incomeStatement',
-    message: `"${m.columnName}": Tong cac chi tieu trong nhom "${m.groupLabel}" (${m.sum}) khong khop chinh dong "${m.groupLabel}" (${m.reported}) - co the do OCR gop/bia dong, can xem tay.`,
-  }));
+  return groupSumMismatchesToIssues('incomeStatement', findIncomeStatementGroupMismatches(table));
+}
+
+// Ma so dang thap phan (X.Y, vd "111.1"/"111.2" la con cua "111") phai co
+// tong khop voi CHINH dong cha (X) - dua HOAN TOAN vao cau truc ma so, KHONG
+// phu thuoc ten tieng Viet, nen ap dung duoc CHUNG cho ca balanceSheet lan
+// incomeStatement (2026-07-12, yeu cau nguoi dung mo rong kiem tra cheo "sau
+// hon" - xem findDecimalCodeGroupMismatches).
+function validateDecimalCodeGroupSums(table: StatementTable, tableName: 'balanceSheet' | 'incomeStatement'): ValidationIssue[] {
+  return groupSumMismatchesToIssues(tableName, findDecimalCodeGroupMismatches(table));
 }
 
 // Kiem tra tinh nhat quan noi tai cua so lieu da trich - hoan toan cuc bo,
@@ -467,12 +494,55 @@ function validateIncomeStatementGroupSums(table: StatementTable): ValidationIssu
 // (2026-07-05): "khong kiem tra duoc" LUON duoc coi la 1 canh bao can bao ra,
 // khong bao gio am tham tra ve "khong co van de gi" chi vi thieu du lieu de so
 // sanh - xem comment chi tiet o compareOrFlag/validateIdentity/validateChildrenSum.
+//
+// validateBalanceSheetSubtotals() da TU GOI them findBalanceSheetLevel2Mismatches
+// (cap1->cap2, vd "I. Tai san tai chinh" = tong cac dong 111-117) ngay ben
+// trong no (can ranh gioi 4 nhom da tinh san o do) - khong goi lai o day de
+// tranh trung lap.
 export function validateFinancialStatements(statements: FinancialStatements): ValidationIssue[] {
   return [
     ...validateBalanceSheet(statements.balanceSheet),
     ...validateBalanceSheetSubtotals(statements.balanceSheet),
+    ...validateDecimalCodeGroupSums(statements.balanceSheet, 'balanceSheet'),
     ...validateIncomeStatement(statements.incomeStatement),
     ...validateIncomeStatementTax(statements.incomeStatement),
     ...validateIncomeStatementGroupSums(statements.incomeStatement),
+    ...validateDecimalCodeGroupSums(statements.incomeStatement, 'incomeStatement'),
+  ];
+}
+
+// Gom TAT CA mismatch dang co cau truc (GroupSumMismatch, chua chuyen thanh
+// chuoi ValidationIssue) tu ca 2 bang - dung CHUNG cho ca validateFinancialStatements
+// (map thanh canh bao doc duoc o tren) LAN lib/export/financial-statements.ts
+// (dem so luong de quyet dinh retry + khoanh vung o (rowIndex,columnIndex)
+// "khong dang tin cay" cho lib/analysis.ts) - MOT nguon du lieu duy nhat,
+// tranh tinh lai ranh gioi 4 nhom BCDKT 2 lan o 2 noi khac nhau.
+export interface TaggedGroupSumMismatch extends GroupSumMismatch {
+  table: 'balanceSheet' | 'incomeStatement';
+}
+
+export function findAllGroupSumMismatches(statements: FinancialStatements): TaggedGroupSumMismatch[] {
+  const bs = statements.balanceSheet;
+  const is = statements.incomeStatement;
+  const labelIndex = findLabelColumnIndex(bs);
+
+  const shortTermAssetsIdx = findRowIndex(bs, labelIndex, (l) => l.includes('TAI SAN NGAN HAN') && !l.includes('KHAC'), { preferSubtotal: true });
+  const longTermAssetsIdx = findRowIndex(bs, labelIndex, (l) => l.includes('TAI SAN DAI HAN') && !l.includes('KHAC'), { preferSubtotal: true });
+  const totalAssetsIdx = findRowIndex(bs, labelIndex, (l) => l.includes('TONG CONG TAI SAN'));
+  const liabilitiesIdx = findRowIndex(bs, labelIndex, (l) => l.includes('NO PHAI TRA'), { preferSubtotal: true });
+  const equityIdx = findRowIndex(bs, labelIndex, (l) => l.includes('VON CHU SO HUU'), { preferSubtotal: true });
+  const totalCapitalIdx = findRowIndex(bs, labelIndex, (l) => l.includes('TONG CONG NGUON VON'));
+
+  const tagBs = (m: GroupSumMismatch): TaggedGroupSumMismatch => ({ ...m, table: 'balanceSheet' });
+  const tagIs = (m: GroupSumMismatch): TaggedGroupSumMismatch => ({ ...m, table: 'incomeStatement' });
+
+  return [
+    ...findBalanceSheetLevel2Mismatches(bs, shortTermAssetsIdx, longTermAssetsIdx).map(tagBs),
+    ...findBalanceSheetLevel2Mismatches(bs, longTermAssetsIdx, totalAssetsIdx).map(tagBs),
+    ...findBalanceSheetLevel2Mismatches(bs, liabilitiesIdx, equityIdx).map(tagBs),
+    ...findBalanceSheetLevel2Mismatches(bs, equityIdx, totalCapitalIdx).map(tagBs),
+    ...findDecimalCodeGroupMismatches(bs).map(tagBs),
+    ...findIncomeStatementGroupMismatches(is).map(tagIs),
+    ...findDecimalCodeGroupMismatches(is).map(tagIs),
   ];
 }

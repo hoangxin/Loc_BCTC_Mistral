@@ -3,7 +3,7 @@ import { extractFinancialStatements, extractFinancialStatementsWithOcrProbe } fr
 import { extractFinancialStatementsFromDocx } from './export/docx-statements';
 import { extractFinancialStatementsFromDoc } from './export/doc-statements';
 import { classifyBusinessType, type BusinessType } from './business-type';
-import type { FinancialStatements } from './export/statement-shared';
+import type { FinancialStatements, UnreliableCells } from './export/statement-shared';
 import type { ResolvedReportFile } from './report-source';
 
 // Diem noi DUY NHAT re nhanh theo dinh dang file (pdf/docx/doc, xem
@@ -24,17 +24,19 @@ export interface ReportContentResult {
   // duoc phat hien). docx/doc la parse van ban tat dinh (khong OCR, khong co
   // rui ro hallucination tuong tu) nen luon rong - khong chay kiem tra tong
   // nhom rieng cho 2 dinh dang nay (ngoai pham vi yeu cau nguoi dung 2026-07-11).
-  unreliableIncomeStatementCells: Set<string>;
+  unreliableCells: UnreliableCells;
 }
+
+const NO_UNRELIABLE_CELLS: UnreliableCells = { balanceSheet: new Set(), incomeStatement: new Set() };
 
 export async function extractReportContent(resolved: ResolvedReportFile): Promise<ReportContentResult> {
   if (resolved.format === 'docx') {
     const { statements, fullText, warnings } = await extractFinancialStatementsFromDocx(resolved.filePath);
-    return { statements, warnings, fullText, businessType: classifyBusinessType(fullText), unreliableIncomeStatementCells: new Set() };
+    return { statements, warnings, fullText, businessType: classifyBusinessType(fullText), unreliableCells: NO_UNRELIABLE_CELLS };
   }
   if (resolved.format === 'doc') {
     const { statements, fullText, warnings } = await extractFinancialStatementsFromDoc(resolved.filePath);
-    return { statements, warnings, fullText, businessType: classifyBusinessType(fullText), unreliableIncomeStatementCells: new Set() };
+    return { statements, warnings, fullText, businessType: classifyBusinessType(fullText), unreliableCells: NO_UNRELIABLE_CELLS };
   }
 
   const scopeLabel = `[perf] determineStatementPageScope ${resolved.filePath}`;

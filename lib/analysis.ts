@@ -7,6 +7,7 @@ import {
   findRowByLabel,
   type FinancialStatements,
   type StatementTable,
+  type UnreliableCells,
 } from './export/statement-shared';
 
 export interface AnalysisRow {
@@ -720,20 +721,18 @@ function tierFor(percentChange: number | null, thresholds: Thresholds | null): '
 }
 
 const NO_UNRELIABLE_CELLS: Set<string> = new Set();
+const NO_UNRELIABLE_CELLS_BY_TABLE: UnreliableCells = { balanceSheet: NO_UNRELIABLE_CELLS, incomeStatement: NO_UNRELIABLE_CELLS };
 
 // offBalanceSheet (rieng CTCK) co CUNG hinh dang cot voi balanceSheet (Ma so/
 // Chi tieu/Thuyet minh/2 cot gia tri "cuoi ky"/"dau nam") nen dung lai chinh
 // ham balanceSheetPeriodColumns(), khong can viet rieng.
 //
-// unreliableIncomeStatementCells (tu ExtractFinancialStatementsResult) CHI ap
-// dung cho bang KQKD (xem findIncomeStatementGroupMismatches - khong chay cho
-// balanceSheet/offBalanceSheet) - truyen Set RONG cho 2 bang con lai de tranh
-// rowIndex trung ngau nhien giua cac bang khac nhau bi hieu nham.
-function buildAnalysisRows(
-  statements: FinancialStatements,
-  metrics: MetricDef[],
-  unreliableIncomeStatementCells: Set<string>
-): AnalysisRow[] {
+// unreliableCells (tu ExtractFinancialStatementsResult) chi co gia tri thuc
+// su cho balanceSheet/incomeStatement (2026-07-12, mo rong tu ban dau CHI co
+// incomeStatement - xem findAllGroupSumMismatches, lib/export/validate-statements.ts)
+// - offBalanceSheet LUON dung Set RONG (chua co kiem tra cheo rieng cho bang
+// nay) de tranh rowIndex trung ngau nhien giua cac bang khac nhau bi hieu nham.
+function buildAnalysisRows(statements: FinancialStatements, metrics: MetricDef[], unreliableCells: UnreliableCells): AnalysisRow[] {
   const balanceSheetPeriods = balanceSheetPeriodColumns(statements.balanceSheet);
   const incomeStatementPeriods = incomeStatementPeriodColumns(statements.incomeStatement);
   const offBalanceSheetPeriods = balanceSheetPeriodColumns(statements.offBalanceSheet);
@@ -756,9 +755,14 @@ function buildAnalysisRows(
       return { label: metric.label, percentChange: null, tier: null, unreliable: false };
     }
 
-    const unreliableCells = metric.statement === 'incomeStatement' ? unreliableIncomeStatementCells : NO_UNRELIABLE_CELLS;
-    const current = sumFindersAtColumn(table, metric.finders, periods.currentIndex, unreliableCells);
-    const prior = sumFindersAtColumn(table, metric.finders, periods.priorIndex, unreliableCells);
+    const unreliableCellsForTable =
+      metric.statement === 'balanceSheet'
+        ? unreliableCells.balanceSheet
+        : metric.statement === 'incomeStatement'
+          ? unreliableCells.incomeStatement
+          : NO_UNRELIABLE_CELLS;
+    const current = sumFindersAtColumn(table, metric.finders, periods.currentIndex, unreliableCellsForTable);
+    const prior = sumFindersAtColumn(table, metric.finders, periods.priorIndex, unreliableCellsForTable);
     const unreliable = current.unreliable || prior.unreliable;
     const percentChange = unreliable ? null : computePercentChange(current.value, prior.value);
     return { label: metric.label, percentChange, tier: tierFor(percentChange, metric.thresholds), unreliable };
@@ -778,16 +782,16 @@ function buildAnalysisRows(
 export function computeAnalysisRows(
   statements: FinancialStatements,
   businessType: BusinessType,
-  unreliableIncomeStatementCells: Set<string> = NO_UNRELIABLE_CELLS
+  unreliableCells: UnreliableCells = NO_UNRELIABLE_CELLS_BY_TABLE
 ): AnalysisRow[] {
   if (businessType === 'insurance') {
-    return buildAnalysisRows(statements, INSURANCE_METRICS, unreliableIncomeStatementCells);
+    return buildAnalysisRows(statements, INSURANCE_METRICS, unreliableCells);
   }
   if (businessType === 'securities') {
-    return buildAnalysisRows(statements, SECURITIES_METRICS, unreliableIncomeStatementCells);
+    return buildAnalysisRows(statements, SECURITIES_METRICS, unreliableCells);
   }
   if (businessType !== 'other') {
     return OTHER_METRICS.map((metric) => ({ label: metric.label, percentChange: null, tier: null, unreliable: false }));
   }
-  return buildAnalysisRows(statements, OTHER_METRICS, unreliableIncomeStatementCells);
+  return buildAnalysisRows(statements, OTHER_METRICS, unreliableCells);
 }

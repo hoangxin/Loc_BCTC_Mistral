@@ -146,20 +146,48 @@ export function findRowByCode(
 }
 
 // Muc con CAP 3 (chi tiet duoi 1 nhom La Ma, vd "1./ Tien", "7 Vay va no...")
-// luon bat dau bang SO A-RAP (co the kem "." hoac "/" roi khoang trang) - dau
-// hieu nay dang tin cay hon "ma so chia het cho 10" (xem comment duoi day).
-const ARABIC_ITEM_PREFIX = /^\d+[.\/)]?\s/;
+// luon bat dau bang SO A-RAP (co the kem "." va/hoac "/" roi khoang trang) -
+// dau hieu nay dang tin cay hon "ma so chia het cho 10" (xem comment duoi
+// day). CHO PHEP NHIEU ky tu dau cau lien tiep (khong chi 1) - da gap that
+// (2026-07-12, doi chieu TIX): dang "1./ Chi phi san xuat kinh doanh do dang
+// dai han" dung CA HAI dau "." VA "/" lien nhau, pattern cu (chi 1 ky tu dau
+// cau) khong khop, khien dong CHI TIET nay bi hieu nham la dong TONG NHOM -
+// lam sai ca Excel in dam nham LAN kiem tra cheo tong nhom cap sau
+// (findBalanceSheetLevel2Mismatches, lib/export/validate-statements.ts).
+const ARABIC_ITEM_PREFIX = /^\d+[.\/)]*\s/;
 
 // Muc con CAP 4 (chi tiet duoi CA dong cap 3, vd "- Nguyen gia"/"- Gia tri
-// hao mon luy ke (*)" duoi TSCD, "a)"/"b)" duoi 1 muc sinh hoc) - KHONG bao
-// gio la dong tong nhom, du KHONG bat dau bang so A-rap (da gap that
-// 2026-07-08, doi chieu that voi BCTC IDV: cac dong nay bi tinh nham la "dong
-// tong" - giong het loi voi ARABIC_ITEM_PREFIX o tren - lam bang Excel in dam
-// nham HANG LOAT dong con (lib/export/row-style.ts) VA lam sai lech phep
-// cong "tong cac muc con" trong validate-statements.ts, vi 1 dong da duoc
-// tinh trong gia tri cua dong cha "1./2./3." lai bi cong THEM 1 lan nua nhu
-// the no la 1 nhom rieng).
-const NON_SUBTOTAL_DETAIL_PREFIX = /^(-|[a-z]\))\s/;
+// hao mon luy ke" hoac "* Nguyen gia"/"* Gia tri hao mon luy ke" (tuy cong
+// ty) duoi TSCD, "a)"/"b)" duoi 1 muc sinh hoc) - KHONG bao gio la dong tong
+// nhom, du KHONG bat dau bang so A-rap (da gap that 2026-07-08, doi chieu
+// that voi BCTC IDV: cac dong nay bi tinh nham la "dong tong" - giong het
+// loi voi ARABIC_ITEM_PREFIX o tren - lam bang Excel in dam nham HANG LOAT
+// dong con (lib/export/row-style.ts) VA lam sai lech phep cong "tong cac muc
+// con" trong validate-statements.ts, vi 1 dong da duoc tinh trong gia tri
+// cua dong cha "1./2./3." lai bi cong THEM 1 lan nua nhu the no la 1 nhom
+// rieng). Them "*" vao bo tien to (2026-07-12, doi chieu TIX: cung 1 vai tro
+// cap-4 "Nguyen gia"/"Gia tri hao mon luy ke" nhung dung "*" thay vi "-") -
+// da xac nhan qua tinh tay: "- LNST chua phan phoi luy ke den cuoi ky truoc"
+// + "- LNST chua phan phoi ky nay" CONG DUNG BANG dong cha "11./ Loi nhuan
+// sau thue chua phan phoi" (khong phai 2 khoan MUC RIENG), nen PHAI loai ca
+// 2 dang tien to nay khoi tong "cac dong con" (findBalanceSheetLevel2Mismatches/
+// findIncomeStatementGroupMismatches), khong chi khoi isLikelySubtotalRow.
+const NON_SUBTOTAL_DETAIL_PREFIX = /^(-|\*|[a-z]\))\s/;
+
+// "Nguyen gia"/"Gia tri hao mon luy ke" LUON la dong cap-4 duoi 1 muc TSCD/
+// BDS dau tu, theo dung thuat ngu chuan VAS - nhung TIEN TO/HAU TO cua tung
+// cong ty khac nhau qua nhieu de liet ke het (da gap that: TIX dung "*",
+// MBS/IDV dung "-", DIC 2026-07-12 dung tien to "." VA hau to "(*)" rieng -
+// "Giá trị hao mòn lũy kế (*)"). Thay vi tiep tuc doi pho tung ky tu tien to
+// moi (dua tren ky tu, de nham NGOAI le), nhan dien truc tiep qua NOI DUNG
+// chuan (khong doi giua cac cong ty, chi khac phan trang tri xung quanh) -
+// dang tin cay hon cho DUNG 2 thuat ngu nay.
+const KNOWN_CAP4_LABEL_CONTENT = ['NGUYEN GIA', 'GIA TRI HAO MON LUY KE'];
+
+function isKnownCap4Label(label: string): boolean {
+  const normalized = normalizeLabelText(label);
+  return KNOWN_CAP4_LABEL_CONTENT.some((marker) => normalized.includes(marker));
+}
 
 // Phan biet dong "cap 2" (I, II, III... - dong tong cua 1 nhom) voi dong "cap
 // 3" (chi tiet don le duoi 1 nhom) - truoc day CHI dua vao "ma so la boi so
@@ -185,7 +213,7 @@ const GROUP_STT_PATTERN = /^[A-Z]+\.?$/;
 
 export function isLikelySubtotalRow(table: StatementTable, row: (string | number | null)[], labelIndex: number): boolean {
   const label = String(row[labelIndex] ?? '').trim();
-  if (NON_SUBTOTAL_DETAIL_PREFIX.test(label)) return false;
+  if (NON_SUBTOTAL_DETAIL_PREFIX.test(label) || isKnownCap4Label(label)) return false;
 
   let sttIndex = table.columns.findIndex((col) => normalizeLabelText(col).includes('STT'));
   // Neu KHONG co cot dat ten "STT" ro rang, thu cot NGAY TRUOC cot nhan (neu
@@ -254,8 +282,10 @@ const GROUP_SUM_TOLERANCE_ABSOLUTE = 1000;
 // THONG TIN CHI TIET (khong chi 1 Set key) de dung duoc cho CA 2 muc dich:
 // dung cho canh bao co the doc (lib/export/validate-statements.ts) VA khoanh
 // vung chinh xac (rowIndex, columnIndex) can null hoa (lib/analysis.ts, xem
-// unreliableCellKeysFromMismatches duoi).
-export interface IncomeStatementGroupMismatch {
+// unreliableCellKeysFromMismatches duoi). Ten TONG QUAT (khong con rieng
+// "IncomeStatement" - 2026-07-12, mo rong them findDecimalCodeGroupMismatches/
+// findBalanceSheetLevel2Mismatches ben duoi dung CHUNG kieu du lieu nay).
+export interface GroupSumMismatch {
   groupLabel: string;
   columnName: string;
   columnIndex: number;
@@ -265,11 +295,19 @@ export interface IncomeStatementGroupMismatch {
   reported: number;
 }
 
-export function findIncomeStatementGroupMismatches(table: StatementTable): IncomeStatementGroupMismatch[] {
+// Cac o (rowIndex:columnIndex) can coi la "khong dang tin cay" - dung chung
+// cho ca balanceSheet va incomeStatement (goi ham nay RIENG cho tung bang,
+// KHONG tron lan - xem UnreliableCells/lib/analysis.ts).
+export interface UnreliableCells {
+  balanceSheet: Set<string>;
+  incomeStatement: Set<string>;
+}
+
+export function findIncomeStatementGroupMismatches(table: StatementTable): GroupSumMismatch[] {
   const labelIndex = findLabelColumnIndex(table.columns, table.rows);
   const maSoIndex = findMaSoColumnIndex(table) ?? -1;
   const valueColIndexes = valueColumnIndexes(table);
-  const mismatches: IncomeStatementGroupMismatch[] = [];
+  const mismatches: GroupSumMismatch[] = [];
   let groupStart = 0;
 
   for (let i = 0; i < table.rows.length; i++) {
@@ -285,6 +323,13 @@ export function findIncomeStatementGroupMismatches(table: StatementTable): Incom
       // 2 lan).
       if (typeof maSo === 'string' && maSo.includes('.')) continue;
       if (isLikelySubtotalRow(table, table.rows[j], labelIndex)) continue;
+      // Muc con CAP 4 (tien to "-"/"*"/"a)"... hoac noi dung chuan "Nguyen
+      // gia"/"Gia tri hao mon luy ke") - da GOP SAN vao gia tri dong cha cap 3
+      // ngay truoc no, cong THEM o day se dem 2 lan (xem NON_SUBTOTAL_DETAIL_PREFIX/
+      // isKnownCap4Label - isLikelySubtotalRow da tra ve false cho dong nay
+      // nen KHONG bi loai boi dieu kien tren, phai kiem tra rieng).
+      const memberLabel = String(table.rows[j][labelIndex] ?? '').trim();
+      if (NON_SUBTOTAL_DETAIL_PREFIX.test(memberLabel) || isKnownCap4Label(memberLabel)) continue;
       memberRowIndexes.push(j);
     }
 
@@ -323,10 +368,194 @@ export function findIncomeStatementGroupMismatches(table: StatementTable): Incom
   return mismatches;
 }
 
+const DECIMAL_CHILD_CODE_PATTERN = /^(\d+)\.\d+$/;
+
+// Kiem tra "cac dong con co ma so dang THAP PHAN THUAN (X.Y, vd '111.1' la
+// con cua '111') co tong khop voi CHINH dong cha (ma so X) hay khong" - khac
+// findIncomeStatementGroupMismatches (dua vao TEN "Cong.../Tong..." de nhan
+// dien dong tong), o day dua HOAN TOAN vao CAU TRUC MA SO (khong phu thuoc
+// ten tieng Viet/cach viet tat cua tung cong ty) nen AP DUNG DUOC CHUNG cho
+// CA balanceSheet LAN incomeStatement (2026-07-12, yeu cau nguoi dung mo
+// rong kiem tra cheo "sau hon" sau khi xac nhan nhom phang KQKD hoat dong
+// tot). Da xac nhan qua doi chieu that MBS Q2/2026: BCDKT "111.1"+"111.2" =
+// "111"; "417.1"+"417.2" = "417"; KQKD "01.1"+"01.2"+"01.3"+"01.4" = "01" -
+// khop tuyet doi voi du lieu that ca 2 bang.
+//
+// CHI nhan ma so dang "X.Y" THUAN so (khong ke hau to chu nhu "411.1a") -
+// truong hop nay hiem VA neu ep coi "411.1a" la con cua "411" (thay vi con
+// cua "411.1") se gom SAI nhom (411.1a thuc ra la con CUA 411.1, khong phai
+// con truc tiep cua 411) - uu tien AN TOAN (bo qua, khong kiem tra duoc con
+// nay o ca 2 tang) hon la kiem tra SAI.
+//
+// BAT BUOC phai co dong ".1" (X.1) thi moi kiem tra nhom cua "X" - da gap
+// that MBS Q2/2026 (2026-07-12): "117.2"/"117.3"/"117.4" (khong co "117.1")
+// nhin GIONG 3 con truc tiep cua "117", nhung thuc ra "117.3"/"117.4" la
+// con CUA "117.2" (chi la cong ty ghi phang "117.3"/"117.4" thay vi dung ky
+// hieu 3 cap "117.2.1"/"117.2.2") - sum ra gan dung GAP DOI gia tri that (vi
+// 117.3+117.4 = 117.2, cong them ca 117.2 la dem 2 lan). Theo dung quy uoc
+// VAS, 1 nhom da chia nho LUON bat dau tu ".1" - neu thieu ".1" la dau hieu
+// dang tin cay cho thay danh sach ".2"/".3".. tim duoc co the LONG SAU HON 1
+// cap (khong phai anh xa phang don gian), uu tien AN TOAN bo qua ca nhom.
+export function findDecimalCodeGroupMismatches(table: StatementTable): GroupSumMismatch[] {
+  const labelIndex = findLabelColumnIndex(table.columns, table.rows);
+  const maSoIndex = findMaSoColumnIndex(table);
+  if (maSoIndex === null) return [];
+  const valueColIndexes = valueColumnIndexes(table);
+  const mismatches: GroupSumMismatch[] = [];
+
+  const childrenByParentCode = new Map<string, number[]>();
+  table.rows.forEach((row, i) => {
+    const code = row[maSoIndex];
+    if (typeof code !== 'string') return;
+    const match = DECIMAL_CHILD_CODE_PATTERN.exec(code.trim());
+    if (!match) return;
+    const parentCode = match[1];
+    const existing = childrenByParentCode.get(parentCode);
+    if (existing) existing.push(i);
+    else childrenByParentCode.set(parentCode, [i]);
+  });
+
+  for (const [parentCode, memberRowIndexes] of childrenByParentCode) {
+    const hasFirstChild = memberRowIndexes.some((j) => String(table.rows[j][maSoIndex] ?? '').trim() === `${parentCode}.1`);
+    if (!hasFirstChild) continue;
+    const parentRowIndex = table.rows.findIndex((row) => String(row[maSoIndex] ?? '').trim() === parentCode);
+    if (parentRowIndex === -1) continue; // chi co dong .1/.2... ma khong co dong goc - khong du du lieu de so sanh
+    const parentRow = table.rows[parentRowIndex];
+    // "?? " khong bat duoc nhan la CHUOI RONG (chi bat null/undefined) - dong
+    // that su co the co nhan rong (bang phan tich hong o cho khac lam lech
+    // cot, da gap that qua doi chieu that DCS/PAP/DIC Q1/2026, 2026-07-12) -
+    // luon co MA SO trong thong bao de nguoi xem con dinh vi duoc dong nao,
+    // thay vi thong bao rong vo dung "" khong khop "".
+    const rawLabel = String(parentRow[labelIndex] ?? '').trim();
+    const groupLabel = rawLabel || `ma so ${parentCode}`;
+
+    for (const col of valueColIndexes) {
+      let sum = 0;
+      let sawDetail = false;
+      for (const j of memberRowIndexes) {
+        const cell = table.rows[j][col];
+        const value = typeof cell === 'number' ? cell : cell === '-' || cell === null ? 0 : null;
+        if (value === null) continue;
+        sum += value;
+        sawDetail = true;
+      }
+      if (!sawDetail) continue;
+
+      const parentCell = parentRow[col];
+      const reported = typeof parentCell === 'number' ? parentCell : parentCell === '-' || parentCell === null ? 0 : null;
+      if (reported === null) continue;
+
+      if (Math.abs(sum - reported) > Math.max(GROUP_SUM_TOLERANCE_ABSOLUTE, Math.abs(reported) * GROUP_SUM_TOLERANCE_RATIO)) {
+        mismatches.push({ groupLabel, columnName: table.columns[col] ?? `cot ${col}`, columnIndex: col, subtotalRowIndex: parentRowIndex, memberRowIndexes, sum, reported });
+      }
+    }
+  }
+
+  return mismatches;
+}
+
+// Tong quat hoa 1 buoc kiem tra da co (validateBalanceSheetSubtotals,
+// lib/export/validate-statements.ts) tu "1 tang" (dong tong cap-0 vd "TS
+// ngan han" = tong cac dong "cap 1" I/II/III...) len "2 tang" (2026-07-12,
+// yeu cau nguoi dung): VOI MOI dong "cap 1" tim thay trong 1 nhom cap-0 da
+// biet ranh gioi (groupStartIdx/groupEndIdx, do NGOAI truyen vao - da xac
+// dinh dang tin cay qua ten chi tieu o validateBalanceSheetSubtotals), kiem
+// tra CHINH dong "cap 1" do co khop voi tong CAC DONG NAM GIUA no va dong
+// "cap 1" TIEP THEO (hoac het pham vi nhom) hay khong.
+//
+// KHONG can phan biet "A" (cap 0) voi "I" (cap 1) bang pattern rieng (ca 2
+// deu la chu hoa, khong the phan biet do dai/hinh thuc mot cach dang tin
+// cay - da xac nhan qua du lieu that: STT co the la chu hoa 1 ky tu ("A",
+// "D") LAN so La Ma nhieu ky tu ("I","II","V") LAN CA so thuong khong theo
+// quy luat ro rang o cac dong sau do) - vi da co san ranh gioi ngoai dang
+// tin cay lam moc (tu 4 nhom da biet ten chinh xac), trong 1 nhom cap-0, bat
+// ky dong "subtotal-like" nao tim thay (isLikelySubtotalRow) CHAC CHAN la
+// cap 1 cua chinh no, khong can biet no la "A" hay "I" ve mat hinh thuc.
+export function findBalanceSheetLevel2Mismatches(table: StatementTable, groupStartIdx: number, groupEndIdx: number): GroupSumMismatch[] {
+  if (groupStartIdx === -1 || groupEndIdx === -1 || groupEndIdx <= groupStartIdx) return [];
+  const labelIndex = findLabelColumnIndex(table.columns, table.rows);
+  const maSoIndex = findMaSoColumnIndex(table);
+  const valueColIndexes = valueColumnIndexes(table);
+  const mismatches: GroupSumMismatch[] = [];
+
+  const level1Indexes: number[] = [];
+  for (let i = groupStartIdx + 1; i < groupEndIdx; i++) {
+    if (isLikelySubtotalRow(table, table.rows[i], labelIndex)) level1Indexes.push(i);
+  }
+
+  for (let k = 0; k < level1Indexes.length; k++) {
+    const startIdx = level1Indexes[k];
+    const endIdx = k + 1 < level1Indexes.length ? level1Indexes[k + 1] : groupEndIdx;
+    const parentRow = table.rows[startIdx];
+    // Nhan rong (bang phan tich hong o cho khac lam lech cot, khong phai loi
+    // rieng cua ham nay) van can 1 moc de nguoi xem dinh vi duoc dong nao -
+    // dung ma so (neu co) thay vi de thong bao rong vo dung "" khong khop "".
+    const rawLabel = String(parentRow[labelIndex] ?? '').trim();
+    const parentMaSo = maSoIndex === null ? null : parentRow[maSoIndex];
+    const groupLabel = rawLabel || (typeof parentMaSo === 'string' && parentMaSo ? `ma so ${parentMaSo}` : `dong ${startIdx + 1}`);
+
+    const memberRowIndexes: number[] = [];
+    for (let j = startIdx + 1; j < endIdx; j++) {
+      // Dong ma so dang thap phan (X.Y) da duoc kiem tra rieng qua
+      // findDecimalCodeGroupMismatches (gop vao gia tri dong cha X) - bo qua
+      // o day de tranh dem 2 lan.
+      const maSo = maSoIndex === null ? null : table.rows[j][maSoIndex];
+      if (typeof maSo === 'string' && maSo.includes('.')) continue;
+      // Muc con CAP 4 (tien to "-"/"*"/"a)"... hoac noi dung chuan "Nguyen
+      // gia"/"Gia tri hao mon luy ke") - da GOP SAN vao gia tri dong cha cap 3
+      // ngay truoc no (vd "- LNST chua phan phoi ky nay" da nam trong "11./
+      // Loi nhuan sau thue chua phan phoi") - cong THEM o day se dem 2 lan
+      // (da xac nhan qua doi chieu that TIX/DIC, 2026-07-12).
+      const memberLabel = String(table.rows[j][labelIndex] ?? '').trim();
+      if (NON_SUBTOTAL_DETAIL_PREFIX.test(memberLabel) || isKnownCap4Label(memberLabel)) continue;
+      memberRowIndexes.push(j);
+    }
+    if (memberRowIndexes.length === 0) continue;
+
+    for (const col of valueColIndexes) {
+      let sum = 0;
+      let sawDetail = false;
+      let previousValue: number | null = null;
+      for (const j of memberRowIndexes) {
+        const cell = table.rows[j][col];
+        const value = typeof cell === 'number' ? cell : cell === '-' || cell === null ? 0 : null;
+        if (value === null) continue;
+        // Dong TRUNG GIA TRI voi dong LIEN TRUOC (cung cot) - dau hieu day la
+        // BAN NHAC LAI CHI TIET cua chinh dong truoc (khong phai 1 khoan CONG
+        // THEM), gap khi ma so/STT KHONG theo dung quy uoc thap phan chuan.
+        // Da xac nhan qua doi chieu that MBS Q2/2026: dong "1 Vay va no thue
+        // tai chinh ngan han" (ma 311) va dong NGAY SAU "11 Vay ngan han" (ma
+        // 312, KHONG co dau cham nen khong bi loai boi kiem tra ma so o tren)
+        // co GIA TRI Y HET nhau moi cot - dong 312 chi la nhac lai chi tiet
+        // duy nhat cua 311, cong them se dem 2 lan dung 1 khoan.
+        if (previousValue !== null && value === previousValue) {
+          previousValue = value;
+          continue;
+        }
+        sum += value;
+        sawDetail = true;
+        previousValue = value;
+      }
+      if (!sawDetail) continue;
+
+      const parentCell = parentRow[col];
+      const reported = typeof parentCell === 'number' ? parentCell : parentCell === '-' || parentCell === null ? 0 : null;
+      if (reported === null) continue;
+
+      if (Math.abs(sum - reported) > Math.max(GROUP_SUM_TOLERANCE_ABSOLUTE, Math.abs(reported) * GROUP_SUM_TOLERANCE_RATIO)) {
+        mismatches.push({ groupLabel, columnName: table.columns[col] ?? `cot ${col}`, columnIndex: col, subtotalRowIndex: startIdx, memberRowIndexes, sum, reported });
+      }
+    }
+  }
+
+  return mismatches;
+}
+
 // Khoanh vung (rowIndex, columnIndex) can null hoa trong lib/analysis.ts -
-// gom CA cac dong chi tiet LAN chinh dong "Cong ..." (khong biet chac ben nao
-// sai, xem comment o findIncomeStatementGroupMismatches).
-export function unreliableCellKeysFromMismatches(mismatches: IncomeStatementGroupMismatch[]): Set<string> {
+// gom CA cac dong chi tiet LAN chinh dong tong (khong biet chac ben nao sai,
+// xem comment o findIncomeStatementGroupMismatches/findDecimalCodeGroupMismatches/
+// findBalanceSheetLevel2Mismatches).
+export function unreliableCellKeysFromMismatches(mismatches: GroupSumMismatch[]): Set<string> {
   const keys = new Set<string>();
   for (const m of mismatches) {
     for (const j of m.memberRowIndexes) keys.add(`${j}:${m.columnIndex}`);

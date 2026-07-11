@@ -1,13 +1,8 @@
 import { callMistralOcr, type MistralOcrPage } from '../ai/mistral-ocr';
-import { validateFinancialStatements } from './validate-statements';
+import { validateFinancialStatements, findAllGroupSumMismatches, type TaggedGroupSumMismatch } from './validate-statements';
 import { containsNotesSectionMarker, parseStatementsFromMarkdown } from './markdown-tables';
 import { classifyBusinessType, type BusinessType } from '../business-type';
-import {
-  findIncomeStatementGroupMismatches,
-  unreliableCellKeysFromMismatches,
-  type FinancialStatements,
-  type IncomeStatementGroupMismatch,
-} from './statement-shared';
+import { unreliableCellKeysFromMismatches, type FinancialStatements, type UnreliableCells } from './statement-shared';
 
 // Re-export de cac file khac (excel.ts, pdf.ts, validate-statements.ts, lib/export/index.ts...)
 // tiep tuc import type tu day nhu truoc, khong can sua lai import o noi khac.
@@ -38,27 +33,28 @@ export interface ExtractFinancialStatementsResult {
   // cho phep (xem extractWithGroupCheckRetry) - lib/analysis.ts dung de bao
   // "khong dang tin cay" thay vi so % tinh tu du lieu co the da bi OCR
   // gop/bia dong (yeu cau nguoi dung 2026-07-11). Rong neu khong co van de gi.
-  unreliableIncomeStatementCells: Set<string>;
+  unreliableCells: UnreliableCells;
 }
 
 // 1 lan dau + 2 lan retry (yeu cau nguoi dung 2026-07-11: "cho phep retry 2
-// lan"). CHI retry khi kiem tra cheo tong nhom KQKD (findIncomeStatementGroupMismatches)
-// phat hien sai - KHONG retry cho cac loai canh bao khac cua validateFinancialStatements
-// (vd thieu dong "Tong cong tai san") vi retry OCR kho long sua duoc loi CAU
-// TRUC bang (vd bao cao dung mau khac thuong), chi co ich cho loi NOI DUNG cuc
-// bo (OCR gop/bia dong 1 vai o) ma kiem tra tong nhom phat hien duoc.
+// lan"). CHI retry khi kiem tra cheo tong nhom (findAllGroupSumMismatches -
+// nhom phang KQKD, ma so thap phan BCDKT+KQKD, cap1->cap2 BCDKT) phat hien sai
+// - KHONG retry cho cac loai canh bao khac cua validateFinancialStatements (vd
+// thieu dong "Tong cong tai san") vi retry OCR kho long sua duoc loi CAU TRUC
+// bang (vd bao cao dung mau khac thuong), chi co ich cho loi NOI DUNG cuc bo
+// (OCR gop/bia dong 1 vai o) ma kiem tra tong nhom phat hien duoc.
 const MAX_OCR_ATTEMPTS = 3;
 
 interface OcrAttemptResult {
   markdown: string;
   statements: FinancialStatements;
-  mismatches: IncomeStatementGroupMismatch[];
+  mismatches: TaggedGroupSumMismatch[];
 }
 
 // Goi lai TOAN BO 1 lan OCR (runOcrPass) toi da MAX_OCR_ATTEMPTS lan, dung
-// ngay khi kiem tra cheo tong nhom KQKD het loi. Neu van con loi sau tat ca
-// cac lan thu, giu lai lan co IT LOI NHAT (uu tien lan som hon neu bang nhau).
-// Da xac nhan qua doi chieu that (MBS Q2/2026, 2026-07-11): Mistral OCR co the
+// ngay khi kiem tra cheo tong nhom het loi. Neu van con loi sau tat ca cac
+// lan thu, giu lai lan co IT LOI NHAT (uu tien lan som hon neu bang nhau). Da
+// xac nhan qua doi chieu that (MBS Q2/2026, 2026-07-11): Mistral OCR co the
 // tra ve KET QUA GIONG HET nhau qua nhieu lan goi cho 1 trang loi cu the - nen
 // retry o day la CO CHE PHONG NGUA CHUNG (bao cao khac, trang khac co the ra
 // ket qua khac nhau giua cac lan goi that), khong dam bao sua duoc MOI truong hop.
@@ -67,11 +63,18 @@ async function extractWithGroupCheckRetry(runOcrPass: () => Promise<string>): Pr
   for (let attempt = 0; attempt < MAX_OCR_ATTEMPTS; attempt++) {
     const markdown = await runOcrPass();
     const statements = parseStatementsFromMarkdown(markdown);
-    const mismatches = findIncomeStatementGroupMismatches(statements.incomeStatement);
+    const mismatches = findAllGroupSumMismatches(statements);
     if (mismatches.length === 0) return { markdown, statements, mismatches };
     if (!best || mismatches.length < best.mismatches.length) best = { markdown, statements, mismatches };
   }
   return best!;
+}
+
+function toUnreliableCells(mismatches: TaggedGroupSumMismatch[]): UnreliableCells {
+  return {
+    balanceSheet: unreliableCellKeysFromMismatches(mismatches.filter((m) => m.table === 'balanceSheet')),
+    incomeStatement: unreliableCellKeysFromMismatches(mismatches.filter((m) => m.table === 'incomeStatement')),
+  };
 }
 
 // Thay the hoan toan Qwen vision (2026-07-05, xem memory/README): goi thang
@@ -92,10 +95,10 @@ async function extractWithGroupCheckRetry(runOcrPass: () => Promise<string>): Pr
 // tong nhom KQKD phat hien sai - dua tren nhan xet Mistral OCR co the (though
 // khong dam bao) tra ve ket qua khac nhau giua cac lan goi doc lap cho cung 1
 // trang loi. Neu van con loi sau tat ca cac lan thu, cac o lien quan duoc
-// khoanh vung (unreliableIncomeStatementCells) de lib/analysis.ts bao "khong
-// dang tin cay" thay vi tinh % tu du lieu co the da bi OCR gop/bia dong - VAN
-// khong tu "sua" so lieu, chi bao ro hon (fail-closed, dung nguyen tac chuan
-// cua project nay).
+// khoanh vung (unreliableCells) de lib/analysis.ts bao "khong dang tin cay"
+// thay vi tinh % tu du lieu co the da bi OCR gop/bia dong - VAN khong tu
+// "sua" so lieu, chi bao ro hon (fail-closed, dung nguyen tac chuan cua
+// project nay).
 export async function extractFinancialStatements(
   input: ExtractFinancialStatementsInput
 ): Promise<ExtractFinancialStatementsResult> {
@@ -110,7 +113,7 @@ export async function extractFinancialStatements(
     statements,
     warnings: issues.map((issue) => issue.message),
     businessType: classifyBusinessType(markdown),
-    unreliableIncomeStatementCells: unreliableCellKeysFromMismatches(mismatches),
+    unreliableCells: toUnreliableCells(mismatches),
   };
 }
 
@@ -166,6 +169,6 @@ export async function extractFinancialStatementsWithOcrProbe(filePath: string, t
     statements,
     warnings: issues.map((issue) => issue.message),
     businessType: classifyBusinessType(markdown),
-    unreliableIncomeStatementCells: unreliableCellKeysFromMismatches(mismatches),
+    unreliableCells: toUnreliableCells(mismatches),
   };
 }

@@ -248,7 +248,7 @@ export async function runFetchPipeline(options: RunFetchPipelineOptions = {}): P
                 lastUpdate: resolvedFile.report.lastUpdate.toISOString(),
                 statementScope: classifyStatementScope(buildStatementScopeInput(resolvedFile, content.fullText ?? undefined)),
                 businessType: content.businessType,
-                analysis: computeAnalysisRows(content.statements, content.businessType, content.unreliableIncomeStatementCells),
+                analysis: computeAnalysisRows(content.statements, content.businessType, content.unreliableCells),
                 statements: content.statements,
                 financeUrl: resolvedFile.report.financeUrl,
                 fileUrl: resolvedFile.report.fileUrl,
