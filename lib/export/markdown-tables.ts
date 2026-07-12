@@ -275,6 +275,20 @@ const BALANCE_SHEET_CONTENT_MARKERS = [
   'TONG CONG TAI SAN',
   'TONG CONG NGUON VON',
   'VAY VA NO THUE TAI CHINH',
+  // BCDKT Ngan hang (Mau B02a/TCTD-HN, Thong tu 49/2014/TT-NHNN) bi Mistral
+  // tach thanh 2 bang RIENG giong VAS thuong (nua "A. TAI SAN" + nua "B. NO
+  // PHAI TRA VA VON CHU SO HUU" o trang sau) - nhung nua B chi co 1 diem
+  // khop VAS ("VON CHU SO HUU") trong khi cung khop luon marker offBalanceSheet
+  // "TIEN GUI CUA KHACH HANG" (dong "III. Tien gui cua khach hang" that su cua
+  // BCDKT, TRUNG chu voi dong "Tien gui cua khach hang" trong bang ngoai BCTC
+  // cua CTCK) -> diem hoa 1-1, ca nua B bi am tham loai bo (da xac nhan qua
+  // OCR that HDB Q1/2026, 2026-07-12). Them 2 marker RIENG cua NH (khong xuat
+  // hien o CTCK/bao hiem/DN thuong) de nua B luon thang diem ro rang.
+  'TIEN GUI VA VAY CAC TCTD KHAC',
+  // VCB viet day du "to chuc tin dung", khong viet tat "TCTD" - can ca 2 bien
+  // the (da xac nhan qua VCB Q1/2026, 2026-07-12).
+  'TIEN GUI VA VAY CAC TO CHUC TIN DUNG KHAC',
+  'PHAT HANH GIAY TO CO GIA',
 ];
 
 const INCOME_STATEMENT_CONTENT_MARKERS = [
@@ -314,6 +328,23 @@ const INCOME_STATEMENT_CONTENT_MARKERS = [
   'CONG CHI PHI HOAT DONG',
   'TONG LOI NHUAN KE TOAN TRUOC THUE',
   'LOI NHUAN KE TOAN SAU THUE',
+  // KQKD mau Ngan hang (Mau B03/TCTD-HN, Thong tu 49/2014/TT-NHNN) dung tu
+  // ngu rieng, khong trung markers VAS/bao hiem/CTCK nao o tren - da xac nhan
+  // qua 2 bao cao that HDB/VCB Q1/2026 (2026-07-12). Truoc khi them 2 marker
+  // nay, bang van duoc gan dung nho 1 diem khop TINH CO ("LOI NHUAN THUAN TU
+  // HOAT DONG KINH DOANH" khop 1 phan trong dong "Loi nhuan thuan tu hoat dong
+  // kinh doanh TRUOC CHI PHI DU PHONG RUI RO TIN DUNG") - them marker RIENG de
+  // khong con phu thuoc may rui 1 diem khop nhu vay. KQKD Ngan hang co CA cot
+  // "Quy nay"/"Luy ke tu dau nam" (rong hon, vd VCB) hay bi Mistral tach
+  // THANH 2 TRANG RIENG (trang 1: tu "Thu nhap lai thuan" den "Tong loi nhuan
+  // truoc thue"; trang 2 "tiep theo": tu "Chi phi thue TNDN" den "Loi nhuan
+  // thuan...phan bo cho co dong") - trang 2 KHONG khop bat ky marker nao o
+  // tren (chi con "Chi phi thue TNDN"/"Loi nhuan sau thue" ngan gon, khac
+  // 'other' luon viet day du "...THU NHAP DOANH NGHIEP") nen bi am tham loai
+  // bo, lam LNST/LNST Cty Me luon null - da xac nhan qua VCB Q1/2026
+  // (2026-07-12, HDB KHONG co cot Luy ke nen KQKD gon hon, khong bi tach
+  // trang). Them marker CHI cho trang 2 nay.
+  'CHI PHI THUE TNDN',
 ];
 
 const CASH_FLOW_CONTENT_MARKERS = [
@@ -337,12 +368,19 @@ const CASH_FLOW_CONTENT_MARKERS = [
 // dung "CHUNG QUYEN" lam marker (co xuat hien lai trong KQKD - vd "danh gia
 // lai phai tra chung quyen" - se gay diem hoa voi incomeStatement, xem
 // classifyTableByContent).
+// "NO KHO DOI DA XU LY" (co san o tren) tinh co cung xuat hien trong bang
+// "Cac chi tieu ngoai bao cao tinh hinh tai chinh" cua Ngan hang (muc 7, Mau
+// B02a/TCTD-HN) - da xac nhan qua 3 bao cao that HDB/VCB/MBB Q1/2026
+// (2026-07-12), nen bang nay da duoc gan dung KEY ngay ca truoc khi them
+// marker rieng. Them "BAO LANH VAY VON" (dong 1, dac trung rieng cua NH,
+// khong trung CTCK) de khong con phu thuoc 1 marker dung chung ngau nhien.
 const OFF_BALANCE_SHEET_CONTENT_MARKERS = [
   'TAI SAN QUAN LY THEO CAM KET',
   'NO KHO DOI DA XU LY',
   'CO PHIEU DANG LUU HANH',
   'TIEN GUI CUA KHACH HANG',
   'VE TIEN GUI GIAO DICH CHUNG KHOAN',
+  'BAO LANH VAY VON',
 ];
 
 const CONTENT_MARKERS_BY_KEY: { key: keyof FinancialStatements; markers: string[] }[] = [
@@ -505,6 +543,35 @@ function parseAllTablesInRange(lines: string[]): ParsedTable[] {
       }
       rawRows.push(rowCells);
       j++;
+    }
+    // Header bi NGAT TRANG giua bang co the CHI lap lai cac cot GIA TRI o
+    // cuoi (bo sot han cot STT/nhan o dau) - da gap that VCB Q1/2026
+    // (2026-07-12): bang "Cac chi tieu ngoai BCTC" cua Ngan hang nam LIEN
+    // TIEP sau BCDKT, dong header lap lai giua trang chi con "| Thuyet minh |
+    // 31/3/2026 | 31/12/2025 |" (3 cot) trong khi MOI dong du lieu van du 5 o
+    // (STT/Nhan/Thuyet minh/2 cot gia tri) - realignRowByContent (thiet ke cho
+    // lech 1 cot don le) khong du cho lech DEN 2 cot he thong nhu the nay, dem
+    // GOP NHAM 1 trong 2 cot gia tri that vao vi tri Thuyet minh, day cot gia
+    // tri con lai (dau ky) ra NGOAI PHAM VI header, bi ROI MAT hoan toan - sai
+    // ca 2 cot gia tri (khong phai null, la SO SAI trong nhu dung). Neu da so
+    // dong du lieu (qua nua) DEU dai hon header 1 luong CO DINH, suy ra header
+    // that su phai rong hon - bu them cot RONG o DAU (STT/nhan luon o dau, gia
+    // tri luon o cuoi - xem quy uoc trailing-align o alignRowToColumns duoi).
+    if (rawRows.length > 0) {
+      const rowLengthCounts = new Map<number, number>();
+      for (const row of rawRows) rowLengthCounts.set(row.length, (rowLengthCounts.get(row.length) ?? 0) + 1);
+      let dominantLength = effectiveHeaderCells.length;
+      let dominantCount = 0;
+      for (const [len, count] of rowLengthCounts) {
+        if (count > dominantCount) {
+          dominantCount = count;
+          dominantLength = len;
+        }
+      }
+      if (dominantLength > effectiveHeaderCells.length && dominantCount > rawRows.length / 2) {
+        const missing = dominantLength - effectiveHeaderCells.length;
+        effectiveHeaderCells = [...new Array(missing).fill(''), ...effectiveHeaderCells];
+      }
     }
     // Tinh labelIdx SAU KHI da doc het dong tho cua bang (khong con truoc do
     // nua) - can du lieu mau de content-scoring hoat dong khi header khong dat

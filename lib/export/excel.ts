@@ -21,8 +21,24 @@ const SECURITIES_SHEETS: { key: keyof FinancialStatements; name: string }[] = [
   { key: 'incomeStatement', name: 'KQ kinh doanh' },
 ];
 
+// Ngan hang (Mau B02a/TCTD-HN, Thong tu 49/2014/TT-NHNN): cung bo "Luu chuyen
+// tien te" (yeu cau user 2026-07-12 - NH khong dung bang nay de phan tich) va
+// them "Cac chi tieu ngoai BCTC" - o day la bang "CAC CHI TIEU NGOAI BAO CAO
+// TINH HINH TAI CHINH" that su cua NH (muc "Nghia vu no tiem an": Bao lanh vay
+// von, Cam ket giao dich hoi doai, Cam ket cho vay khong huy ngang, Cam ket
+// trong nghiep vu L/C, Bao lanh khac, Cam ket khac... - da xac nhan qua 3 bao
+// cao that HDB/VCB/MBB Q1/2026 + mau EIB nguoi dung cung cap, KHAC ban chat
+// voi bang cung ten cua CTCK).
+const BANK_SHEETS: { key: keyof FinancialStatements; name: string }[] = [
+  { key: 'balanceSheet', name: 'Cân đối kế toán' },
+  { key: 'offBalanceSheet', name: 'Chỉ tiêu ngoài BCTC' },
+  { key: 'incomeStatement', name: 'KQ kinh doanh' },
+];
+
 function sheetsForBusinessType(businessType: BusinessType): { key: keyof FinancialStatements; name: string }[] {
-  return businessType === 'securities' ? SECURITIES_SHEETS : DEFAULT_SHEETS;
+  if (businessType === 'securities') return SECURITIES_SHEETS;
+  if (businessType === 'bank') return BANK_SHEETS;
+  return DEFAULT_SHEETS;
 }
 
 // Do rong cot tu chinh theo do dai noi dung THAT (thay vi 1 do rong co dinh

@@ -40,6 +40,16 @@ interface MetricDef {
   // bua tu 1 phan du lieu).
   finders: RowFinder[];
   thresholds: Thresholds | null;
+  // CHI dung cho "No Tiem An Ngoai Bang" (ngan hang): dong nao trong 5 dong
+  // cong lai KHONG in (tuy tung ngan hang, KHONG bat buoc theo mau - da xac
+  // nhan qua doi chieu that 2026-07-12: HDB/VCB/MBB deu KHONG co dong "Cam ket
+  // cho vay khong huy ngang", trong khi mau EIB nguoi dung cung cap CO dong
+  // nay nhung gia tri "-") duoc coi la 0, KHAC voi quy uoc mac dinh (thieu 1
+  // dong la ca chi tieu tra ve null - dung cho moi chi tieu nhieu-finder khac,
+  // vd "Tra truoc nguoi ban" NH+DH). Yeu cau rieng cua user cho dung 1 chi tieu
+  // nay, KHONG doi hanh vi mac dinh cua sumFindersAtColumn cho cac chi tieu con
+  // lai.
+  treatMissingRowAsZero?: boolean;
 }
 
 const BCDKT_THRESHOLDS: Thresholds = { level1: 20, level2: 40 };
@@ -632,6 +642,192 @@ const SECURITIES_METRICS: MetricDef[] = [
   },
 ];
 
+const BANK_THRESHOLDS_A: Thresholds = { level1: 10, level2: 20 };
+const BANK_THRESHOLDS_B: Thresholds = { level1: 20, level2: 30 };
+const BANK_THRESHOLDS_C: Thresholds = { level1: 30, level2: 40 };
+
+// 18 chi tieu tang truong danh cho businessType === 'bank' (Mau B02a/B03a/
+// TCTD-HN, Thong tu 49/2014/TT-NHNN), yeu cau user 2026-07-12, doi chieu nhan
+// that qua 3 bao cao Q1/2026 (HDBank, Vietcombank, MB Bank - script tam OCR,
+// khong luu lai) + 1 mau anh chup nguoi dung cung cap (EIB). BCDKT NH bi
+// Mistral tach 2 bang RIENG giong VAS thuong (nua "A. Tai san" + nua "B. No
+// phai tra va Von chu so huu" trang sau) - xem 2 marker rieng them vao
+// BALANCE_SHEET_CONTENT_MARKERS (markdown-tables.ts) de nua B khong bi rot
+// nham vao offBalanceSheet do trung chu "Tien gui cua khach hang" voi bang
+// ngoai BCTC cua CTCK.
+const BANK_METRICS: MetricDef[] = [
+  {
+    label: 'Tiền Gửi & Cho Vay TCTD Khác',
+    statement: 'balanceSheet',
+    // "TCTD" (viet tat) hay "to chuc tin dung" (viet day du) tuy ngan hang -
+    // da xac nhan HDB/MBB dung "TCTD" nhung VCB viet day du khong viet tat,
+    // can 2 bien the (giong cach xu ly "L/C"/"thu tin dung" o duoi).
+    finders: [byLabelAnyOf([['TIEN GUI TAI', 'CHO VAY CAC TCTD KHAC'], ['TIEN GUI TAI', 'CHO VAY CAC TO CHUC TIN DUNG KHAC']])],
+    thresholds: null,
+  },
+  {
+    label: 'Cho Vay KH',
+    statement: 'balanceSheet',
+    // "Cho vay khach hang" la ten CA dong tong (VI.) LAN dong con duy nhat
+    // (1.) cua no - dong tong luon dung TRUOC dong con trong tai lieu goc
+    // (khop dau tien la dung, khong can preferSubtotal - xem GROUP_STT_PATTERN
+    // o statement-shared.ts cho truong hop can phan biet ro hon).
+    finders: [byLabel(['CHO VAY KHACH HANG'])],
+    thresholds: BANK_THRESHOLDS_A,
+  },
+  {
+    label: 'CK Đầu Tư',
+    statement: 'balanceSheet',
+    finders: [byLabel(['CHUNG KHOAN DAU TU'])],
+    thresholds: null,
+  },
+  {
+    label: 'Lãi, Phí Phải Thu',
+    statement: 'balanceSheet',
+    // Tach rieng 2 cum (khong dung nguyen ca cau co dau phay) - OCR/bao cao
+    // khac nhau co the ghi dau phay khac di, 2 cum con la dac trung du de
+    // khong nham dong nao khac.
+    finders: [byLabel(['CAC KHOAN LAI', 'PHI PHAI THU'])],
+    thresholds: null,
+  },
+  {
+    label: 'Tổng TS',
+    statement: 'balanceSheet',
+    finders: [byLabel(['TONG TAI SAN'])],
+    thresholds: BANK_THRESHOLDS_A,
+  },
+  {
+    label: 'Tiền & Vay TCTD Khác',
+    statement: 'balanceSheet',
+    // Ben No phai tra: "Tien gui VA vay cac TCTD khac" (khac "Tien gui TAI VA
+    // CHO vay..." ben Tai san o tren - PHAI phan biet ro, 2 chi tieu khac
+    // nhau hoan toan). Can 2 bien the "TCTD"/"to chuc tin dung" giong chi tieu
+    // tren.
+    finders: [byLabelAnyOf([['TIEN GUI VA VAY CAC TCTD KHAC'], ['TIEN GUI VA VAY CAC TO CHUC TIN DUNG KHAC']])],
+    thresholds: null,
+  },
+  {
+    label: 'Tiền Gửi Của KH',
+    statement: 'balanceSheet',
+    finders: [byLabel(['TIEN GUI CUA KHACH HANG'])],
+    thresholds: BANK_THRESHOLDS_A,
+  },
+  {
+    label: 'Giấy Tờ Có Giá',
+    statement: 'balanceSheet',
+    finders: [byLabel(['PHAT HANH GIAY TO CO GIA'])],
+    thresholds: null,
+  },
+  {
+    label: 'Vốn CSH',
+    statement: 'balanceSheet',
+    // "Von chu so huu" xuat hien LAP LAI trong CA dong tieu de muc lon "B. No
+    // phai tra VA von chu so huu" (khong co gia tri, chi la header) LAN dong
+    // tong "Tong no phai tra VA von chu so huu" (gia tri SAI - gom ca no phai
+    // tra) - CA 2 deu chua "NO PHAI TRA" nen loai truc tiep bang exclude, an
+    // toan hon dua vao preferSubtotal (da gap that HDB/VCB 2026-07-12:
+    // preferSubtotal tung chon NHAM dong tieu de "B." vi GROUP_STT_PATTERN
+    // chap nhan moi chu hoa don, khong phan biet duoc "B" (header) voi "VIII"
+    // (dong nhom that su) - dong tieu de LUON dung TRUOC nen bi .find() chon
+    // truoc, tra ve toan gia tri null). VCB con dung ten khac han "Von va cac
+    // quy" cho dong nhom, chi co dong TONG moi ghi "TONG VON CHU SO HUU" - loai
+    // "NO PHAI TRA" van an toan cho ca 2 kieu bao cao.
+    finders: [byLabel(['VON CHU SO HUU'], ['NO PHAI TRA'])],
+    thresholds: BANK_THRESHOLDS_B,
+  },
+  {
+    label: 'Nợ Tiềm Ẩn Ngoại Bảng',
+    statement: 'offBalanceSheet',
+    // 5 chi tieu trong muc "Nghia vu no tiem an" (mau B02a/TCTD-HN) - KHONG
+    // gom "Cam ket giao dich hoi doai" (khac ban chat, rui ro thi truong chu
+    // khong phai rui ro tin dung - yeu cau user 2026-07-12, loai khoi tong).
+    // "Cam ket trong nghiep vu L/C" co 2 bien the ten: da xac nhan HDB/MBB
+    // dung "L/C" nhung VCB lai dung "thu tin dung" (khong viet tat), can
+    // byLabelAnyOf. treatMissingRowAsZero: mot vai dong (vd "Cam ket cho vay
+    // khong huy ngang") TUY NGAN HANG co in hay khong (da xac nhan qua doi
+    // chieu that: HDB/VCB/MBB deu KHONG co dong nay, mau EIB nguoi dung cung
+    // cap CO nhung gia tri "-") - dong thieu duoc coi la 0 theo yeu cau user,
+    // KHONG lam ca chi tieu tra ve null nhu quy uoc mac dinh.
+    finders: [
+      byLabel(['BAO LANH VAY VON']),
+      byLabel(['CAM KET CHO VAY KHONG HUY NGANG']),
+      byLabelAnyOf([['CAM KET TRONG NGHIEP VU', 'L/C'], ['CAM KET TRONG NGHIEP VU', 'THU TIN DUNG']]),
+      byLabel(['BAO LANH KHAC']),
+      byLabel(['CAM KET KHAC']),
+    ],
+    thresholds: BANK_THRESHOLDS_B,
+    treatMissingRowAsZero: true,
+  },
+  {
+    label: 'Thu Nhập Lãi Thuần',
+    statement: 'incomeStatement',
+    finders: [byLabel(['THU NHAP LAI THUAN'])],
+    thresholds: BANK_THRESHOLDS_B,
+  },
+  {
+    label: 'Tổng TN Hoạt Động',
+    statement: 'incomeStatement',
+    // Mau B03/TCTD-HN KHONG in san dong tong nay (da xac nhan qua 2 bao cao
+    // that HDB/VCB Q1/2026, 2026-07-12) - phai tinh bang tong 7 dong nhom I-VII
+    // (Thu nhap lai thuan + Lai thuan HD dich vu + Lai thuan HDKD ngoai hoi +
+    // (Lo)/Lai CK kinh doanh + Lai/(Lo) CK dau tu + Lai thuan HD khac + Thu
+    // nhap gop von mua co phan) = dung 7 finder cong lai (sumFindersAtColumn),
+    // da verify khop tuyet doi voi so lieu that VCB (IX - VIII = tong 7 dong).
+    finders: [
+      byLabel(['THU NHAP LAI THUAN']),
+      byLabel(['LAI THUAN TU HOAT DONG DICH VU']),
+      byLabel(['LAI THUAN TU HOAT DONG KINH DOANH NGOAI HOI']),
+      byLabel(['THUAN TU MUA BAN CHUNG KHOAN KINH DOANH']),
+      byLabel(['THUAN TU MUA BAN CHUNG KHOAN DAU TU']),
+      byLabel(['LAI THUAN TU HOAT DONG KHAC']),
+      byLabel(['THU NHAP TU GOP VON', 'MUA CO PHAN']),
+    ],
+    thresholds: BANK_THRESHOLDS_B,
+  },
+  {
+    label: 'CP Hoạt Động',
+    statement: 'incomeStatement',
+    // Loai 2 dong con trung tu ngu "Chi phi hoat dong dich vu"/"Chi phi hoat
+    // dong khac" (deu chua "CHI PHI HOAT DONG" nhu dong nhom that su).
+    finders: [byLabel(['CHI PHI HOAT DONG'], ['DICH VU', 'KHAC'])],
+    thresholds: null,
+  },
+  {
+    label: 'LN Thuần Trước Dự Phòng',
+    statement: 'incomeStatement',
+    finders: [byLabel(['LOI NHUAN THUAN', 'TRUOC CHI PHI DU PHONG RUI RO TIN DUNG'])],
+    thresholds: BANK_THRESHOLDS_C,
+  },
+  {
+    label: 'CP Dự Phòng',
+    statement: 'incomeStatement',
+    finders: [byLabel(['CHI PHI DU PHONG RUI RO TIN DUNG'])],
+    thresholds: BANK_THRESHOLDS_C,
+  },
+  {
+    label: 'LNTT',
+    statement: 'incomeStatement',
+    finders: [byLabel(['TONG LOI NHUAN TRUOC THUE'])],
+    thresholds: BANK_THRESHOLDS_C,
+  },
+  {
+    label: 'LNST',
+    statement: 'incomeStatement',
+    finders: [byLabel(['LOI NHUAN SAU THUE'], ['CO DONG'])],
+    thresholds: BANK_THRESHOLDS_C,
+  },
+  {
+    label: 'LNST Cty Mẹ',
+    statement: 'incomeStatement',
+    // Ten dong nay khac han giua cac ngan hang (da xac nhan HDB "Loi nhuan
+    // thuan CUA CHU SO HUU" vs VCB "Loi nhuan thuan...PHAN BO cho CO DONG cua
+    // Ngan hang") - can 2 bien the, giong cach lam voi SECURITIES_METRICS
+    // "LNST Cong Ty Me" (xem comment byLabelAnyOf o tren).
+    finders: [byLabelAnyOf([['LOI NHUAN THUAN', 'CHU SO HUU'], ['LOI NHUAN THUAN', 'PHAN BO', 'CO DONG']])],
+    thresholds: BANK_THRESHOLDS_C,
+  },
+];
+
 // "-" VA o trong (null) deu duoc coi la 0 (quy uoc BCTC VN: khong phat sinh)
 // (doi huong 2026-07-08 - truoc do chi "-" moi la 0, o trong bi coi la
 // "khong doc duoc"; nhung doi chieu markdown-tables.ts thi o trong markdown
@@ -657,13 +853,21 @@ function sumFindersAtColumn(
   table: StatementTable,
   finders: RowFinder[],
   columnIndex: number,
-  unreliableCells: Set<string>
+  unreliableCells: Set<string>,
+  treatMissingRowAsZero = false
 ): { value: number | null; unreliable: boolean } {
   let sum = 0;
   let unreliable = false;
   for (const find of finders) {
     const row = find(table);
-    if (!row) return { value: null, unreliable }; // chi tieu khong ton tai trong bang nay (vd khac bieu mau) - khong tinh duoc
+    if (!row) {
+      // chi tieu khong ton tai trong bang nay (vd khac bieu mau) - mac dinh
+      // khong tinh duoc (an toan hon la doan bua). treatMissingRowAsZero: rieng
+      // "No Tiem An Ngoai Bang" (xem comment MetricDef.treatMissingRowAsZero)
+      // - coi dong thieu la 0, tiep tuc cong cac finder con lai thay vi bo cuoc.
+      if (treatMissingRowAsZero) continue;
+      return { value: null, unreliable };
+    }
     if (unreliableCells.size > 0) {
       const rowIndex = table.rows.indexOf(row);
       if (unreliableCells.has(`${rowIndex}:${columnIndex}`)) unreliable = true;
@@ -761,8 +965,8 @@ function buildAnalysisRows(statements: FinancialStatements, metrics: MetricDef[]
         : metric.statement === 'incomeStatement'
           ? unreliableCells.incomeStatement
           : NO_UNRELIABLE_CELLS;
-    const current = sumFindersAtColumn(table, metric.finders, periods.currentIndex, unreliableCellsForTable);
-    const prior = sumFindersAtColumn(table, metric.finders, periods.priorIndex, unreliableCellsForTable);
+    const current = sumFindersAtColumn(table, metric.finders, periods.currentIndex, unreliableCellsForTable, metric.treatMissingRowAsZero);
+    const prior = sumFindersAtColumn(table, metric.finders, periods.priorIndex, unreliableCellsForTable, metric.treatMissingRowAsZero);
     const unreliable = current.unreliable || prior.unreliable;
     const percentChange = unreliable ? null : computePercentChange(current.value, prior.value);
     return { label: metric.label, percentChange, tier: tierFor(percentChange, metric.thresholds), unreliable };
@@ -772,13 +976,8 @@ function buildAnalysisRows(statements: FinancialStatements, metrics: MetricDef[]
 // Dispatch theo businessType: 'other' dung 21 chi tieu (yeu cau user
 // 2026-07-08), 'insurance' dung 17 chi tieu rieng (yeu cau user 2026-07-10,
 // mau B01/B02a-DNPNT), 'securities' dung 30 chi tieu rieng (yeu cau user
-// 2026-07-11, mau B01-CTCK/B02-CTCK). GATE BAT BUOC cho nhom con lai (bank):
-// da verify qua du lieu OCR that mot so ten chi tieu TRUNG hoac gan giong
-// nhau nhung KHAC NGHIA hoan toan voi doanh nghiep thuong (bieu mau Ngan hang
-// theo thong tu rieng, khong phai VAS thuong) - tra cuu vo dieu kien co the
-// ra SO SAI NHUNG TRONG HOP LE, rat nguy hiem cho 1 cong cu tai chinh. Ngan
-// hang van tra du 21 nhan cua nhom 'other' (percentChange/tier deu null, chi
-// hien "—") cho toi khi co tieu chi that rieng, giu dong nhat voi hanh vi cu.
+// 2026-07-11, mau B01-CTCK/B02-CTCK), 'bank' dung 18 chi tieu rieng (yeu cau
+// user 2026-07-12, mau B02a/B03a-TCTD-HN).
 export function computeAnalysisRows(
   statements: FinancialStatements,
   businessType: BusinessType,
@@ -790,8 +989,8 @@ export function computeAnalysisRows(
   if (businessType === 'securities') {
     return buildAnalysisRows(statements, SECURITIES_METRICS, unreliableCells);
   }
-  if (businessType !== 'other') {
-    return OTHER_METRICS.map((metric) => ({ label: metric.label, percentChange: null, tier: null, unreliable: false }));
+  if (businessType === 'bank') {
+    return buildAnalysisRows(statements, BANK_METRICS, unreliableCells);
   }
   return buildAnalysisRows(statements, OTHER_METRICS, unreliableCells);
 }
