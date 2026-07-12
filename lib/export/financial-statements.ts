@@ -1,4 +1,11 @@
-import { callMistralOcr, type MistralOcrPage } from '../ai/mistral-ocr';
+// Doi sang Batch API (2026-07-12, sau khi bat billing tren Mistral console -
+// xem memory/reference_mistral_batch_api.md). Giu dong import dong bo cu O
+// DAY (comment lai, khong xoa) de doi lai nhanh neu callMistralOcrBatch gap
+// van de (dinh dang dong ket qua batch chua duoc xac nhan qua test that, xem
+// canh bao trong lib/ai/mistral-ocr-batch.ts):
+// import { callMistralOcr } from '../ai/mistral-ocr';
+import { callMistralOcrBatch } from '../ai/mistral-ocr-batch';
+import type { MistralOcrPage } from '../ai/mistral-ocr';
 import { validateFinancialStatements, findAllGroupSumMismatches, type TaggedGroupSumMismatch } from './validate-statements';
 import { containsNotesSectionMarker, parseStatementsFromMarkdown } from './markdown-tables';
 import { classifyBusinessType, type BusinessType } from '../business-type';
@@ -114,7 +121,9 @@ export async function extractFinancialStatements(
 ): Promise<ExtractFinancialStatementsResult> {
   const pagesZeroBased = input.pageNumbers.map((n) => n - 1);
   const { markdown, statements, mismatches } = await extractWithGroupCheckRetry(async () => {
-    const { pages } = await callMistralOcr(input.filePath, { pages: pagesZeroBased });
+    // const { pages } = await callMistralOcr(input.filePath, { pages: pagesZeroBased }); // fallback dong bo, xem comment o dau file
+    const { pages } = await callMistralOcrBatch(input.filePath, { pages: pagesZeroBased });
+    console.log(`[mistral-ocr] ${input.filePath}: OCR ${pagesZeroBased.length} trang`);
     return pages.map((p) => p.markdown).join('\n\n');
   });
   const issues = validateFinancialStatements(statements);
@@ -164,7 +173,8 @@ export async function extractFinancialStatementsWithOcrProbe(filePath: string, t
       const step = collected.length === 0 ? INITIAL_PROBE_BATCH_SIZE : EXPAND_STEP;
       const batchEnd = Math.min(cursor + step, totalPages);
       const pagesZeroBased = Array.from({ length: batchEnd - cursor }, (_, i) => cursor + i);
-      const { pages } = await callMistralOcr(filePath, { pages: pagesZeroBased });
+      // const { pages } = await callMistralOcr(filePath, { pages: pagesZeroBased }); // fallback dong bo, xem comment o dau file
+      const { pages } = await callMistralOcrBatch(filePath, { pages: pagesZeroBased });
       collected.push(...pages);
       cursor = batchEnd;
 
@@ -181,6 +191,7 @@ export async function extractFinancialStatementsWithOcrProbe(filePath: string, t
       if (containsNotesSectionMarker(markdownSoFar)) break;
     }
 
+    console.log(`[mistral-ocr] ${filePath}: OCR ${collected.length} trang (tong cong, qua ${collected.length === totalPages ? 'het file' : 'probe tang dan'})`);
     return collected.map((p) => p.markdown).join('\n\n');
   });
   const issues = validateFinancialStatements(statements);

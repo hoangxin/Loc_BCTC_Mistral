@@ -1,4 +1,5 @@
 import { readFile } from 'fs/promises';
+import { slicePdfPages } from './pdf-slice';
 
 // Client Mistral OCR (API rieng cua Mistral, endpoint /v1/ocr - KHONG qua
 // OpenRouter) - thay the hoan toan Qwen vision (lib/ai/qwen-vision.ts, van con
@@ -78,13 +79,16 @@ export async function callMistralOcr(filePath: string, options?: CallMistralOcrO
     throw new Error('Thieu MISTRAL_API_KEY');
   }
 
-  const buffer = await readFile(filePath);
-  const base64Pdf = buffer.toString('base64');
+  const originalBuffer = await readFile(filePath);
+  // Cat truoc con dung cac trang can OCR (xem lib/ai/pdf-slice.ts) - KHONG con
+  // truyen `pages` cho Mistral nua vi tai lieu gui di gio da CHI chua dung cac
+  // trang do, dinh so lai tu 0.
+  const pdfBuffer = options?.pages ? await slicePdfPages(originalBuffer, options.pages) : originalBuffer;
+  const base64Pdf = pdfBuffer.toString('base64');
 
   const body = JSON.stringify({
     model: process.env.MISTRAL_OCR_MODEL || 'mistral-ocr-latest',
     document: { type: 'document_url', document_url: `data:application/pdf;base64,${base64Pdf}` },
-    ...(options?.pages ? { pages: options.pages } : {}),
     include_image_base64: false,
   });
 
