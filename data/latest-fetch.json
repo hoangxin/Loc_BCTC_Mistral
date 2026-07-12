@@ -1,12 +1,63 @@
 {
   "running": false,
-  "generatedAt": "2026-07-11T19:38:03.047Z",
+  "generatedAt": "2026-07-12T05:13:44.251Z",
   "periodLabel": "Quý 1/2026",
   "year": 2026,
   "totalFound": 1946,
-  "totalMatched": 1,
-  "downloaded": 1,
-  "failed": [],
+  "totalMatched": 10,
+  "downloaded": 10,
+  "failed": [
+    {
+      "stockCode": "CIG",
+      "title": "BCTC Hợp nhất quý 1 năm 2026 (điều chỉnh)",
+      "error": "Mistral OCR request failed (401)"
+    },
+    {
+      "stockCode": "TMB",
+      "title": "BCTC quý 1 năm 2026",
+      "error": "Mistral OCR request failed (401)"
+    },
+    {
+      "stockCode": "PRE",
+      "title": "BCTC Soát xét quý 1 năm 2026",
+      "error": "Mistral OCR request failed (401)"
+    },
+    {
+      "stockCode": "BVH",
+      "title": "BCTC Hợp nhất Soát xét quý 1 năm 2026",
+      "error": "Mistral OCR request failed (401)"
+    },
+    {
+      "stockCode": "PHS",
+      "title": "BCTC Soát xét quý 1 năm 2026",
+      "error": "Mistral OCR request failed (401)"
+    },
+    {
+      "stockCode": "PRT",
+      "title": "BCTC Hợp nhất quý 1 năm 2026",
+      "error": "Mistral OCR request failed (401)"
+    },
+    {
+      "stockCode": "BDT",
+      "title": "BCTC Công ty mẹ quý 1 năm 2026",
+      "error": "Mistral OCR request failed (401)"
+    },
+    {
+      "stockCode": "PVS",
+      "title": "BCTC Hợp nhất quý 1 năm 2026",
+      "error": "Mistral OCR request failed (401)"
+    },
+    {
+      "stockCode": "MWG",
+      "title": "BCTC Hợp nhất quý 1 năm 2026",
+      "error": "Mistral OCR request failed (401)"
+    },
+    {
+      "stockCode": "SHS",
+      "title": "BCTC quý 1 năm 2026",
+      "error": "Unexpected token '<', \"<html>\r\n<h\"... is not valid JSON"
+    }
+  ],
   "reports": [
     {
       "source": "vietstock",
