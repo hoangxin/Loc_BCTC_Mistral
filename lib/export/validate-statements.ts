@@ -9,8 +9,10 @@ import {
   findRowByCode,
   isLikelySubtotalRow,
   isDuplicateKnownBalanceSheetLevel1Row,
+  isInsideKnownContainer,
   hasReliableSubtotalSignal,
   findIncomeStatementGroupMismatches,
+  findIncomeStatementFormulaMismatches,
   findDecimalCodeGroupMismatches,
   findBalanceSheetLevel2Mismatches,
   type GroupSumMismatch,
@@ -110,6 +112,9 @@ function childrenBetween(
     // Dong con lap lai y het ten nhom cha (vd "Hang ton kho" khi chi co 1 muc
     // con) - loai de tranh dem 2 lan (xem isDuplicateKnownBalanceSheetLevel1Row).
     if (isDuplicateKnownBalanceSheetLevel1Row(table, labelIndex, startIdx + 1, i)) continue;
+    // Dong con cua 1 "container" (vd CTCK "Tai san tai chinh") du TEN KHAC
+    // (khong phai lap lai) - xem isInsideKnownContainer.
+    if (isInsideKnownContainer(table, labelIndex, startIdx + 1, i)) continue;
     result.push(row);
   }
   return result;
@@ -549,13 +554,16 @@ function groupSumMismatchesToIssues(table: 'balanceSheet' | 'incomeStatement', m
   }));
 }
 
-// Kiem tra "tong cac chi tieu 01,02,03...= dong Cong .../Tong ..." cua CHINH
-// nhom do trong KQKD - dung chung cho MOI loai hinh DN (khong rieng CTCK, xem
-// findIncomeStatementGroupMismatches). Phat hien duoc loi OCR gop/bia dong
-// (MBS Q2/2026, 2026-07-11) ma cac kiem tra VAS co dinh o tren (Loi nhuan gop
-// = DT thuan - Gia von...) khong bat duoc vi khac cong thuc/khac chi tieu.
-function validateIncomeStatementGroupSums(table: StatementTable): ValidationIssue[] {
-  return groupSumMismatchesToIssues('incomeStatement', findIncomeStatementGroupMismatches(table));
+// Kiem tra "tong cac dong con = dong Cong/Tong..." trong KQKD - tu 2026-07-13
+// dung CONG THUC CHINH THUC rieng cho tung loai hinh (findIncomeStatementFormulaMismatches,
+// xem comment chi tiet o statement-shared.ts) thay vi doan qua VI TRI/
+// GROUP_SUBTOTAL_LABEL_PREFIX nhu findIncomeStatementGroupMismatches cu (ham
+// cu van giu nguyen cho findAllGroupSumMismatches - retry/unreliable-cell,
+// pham vi khac, chua doi trong lan sua nay). Phat hien duoc loi OCR gop/bia
+// dong (MBS Q2/2026, 2026-07-11) ma cac kiem tra VAS co dinh o tren (Loi
+// nhuan gop = DT thuan - Gia von...) khong bat duoc vi khac cong thuc/chi tieu.
+function validateIncomeStatementGroupSums(table: StatementTable, businessType: BusinessType): ValidationIssue[] {
+  return groupSumMismatchesToIssues('incomeStatement', findIncomeStatementFormulaMismatches(table, businessType));
 }
 
 // Ma so dang thap phan (X.Y, vd "111.1"/"111.2" la con cua "111") phai co
@@ -613,7 +621,7 @@ export function validateFinancialStatements(statements: FinancialStatements, bus
     ...validateDecimalCodeGroupSums(statements.balanceSheet, 'balanceSheet'),
     ...(businessType === 'other' ? validateIncomeStatement(statements.incomeStatement) : []),
     ...validateIncomeStatementTax(statements.incomeStatement),
-    ...validateIncomeStatementGroupSums(statements.incomeStatement),
+    ...validateIncomeStatementGroupSums(statements.incomeStatement, businessType),
     ...validateDecimalCodeGroupSums(statements.incomeStatement, 'incomeStatement'),
   ];
 
