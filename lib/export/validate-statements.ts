@@ -149,13 +149,41 @@ function compareOrFlag(
   };
 }
 
+// Dong "Tong cong tai san"/"Tong cong nguon von" doi ten theo TUNG mau bieu
+// (DN thuong/CTCK/Ngan hang) - da xac nhan qua doi chieu that (2026-07-12):
+// TCB/HDB (Mau B02a/TCTD-HN, Thong tu 49/2014) ghi "TONG TAI SAN CO" (khong
+// co chu "CONG") va "TONG NO PHAI TRA VA VON CHU SO HUU" (khong phai "NGUON
+// VON"); SHS (Mau B01-CTCK) ghi "TONG CONG NO VA VON CHU SO HUU" (thieu chu
+// "PHAI TRA" so voi ban Ngan hang). TRUOC KHI them cac bien the nay, ca 2
+// loai bao cao deu bi bao SAI "khong tim thay dong Tong cong..." tren MOI
+// bao cao (khong phai loi rieng le) du du lieu van parse dung va hien du
+// trong Excel (classifyTableByContent dung marker linh hoat hon, khong bi
+// anh huong) - CHI rieng validateBalanceSheet/validateBalanceSheetSubtotals/
+// findAllGroupSumMismatches dung chuoi cung nhac nen moi bi.
+function isTotalAssetsLabel(label: string): boolean {
+  // 'TONG TAI SAN' (khong "CONG", khong "CO") - xac nhan them qua MBS Q2/2026
+  // (Mau B01-CTCK): "TONG TAI SAN (270 = 100 + 200)". Luu y day la BIEN THE
+  // THU 3, khac ca 2 bien the CTCK/Ngan hang da co - cung 1 loai hinh doanh
+  // nghiep (CTCK) van co the dung tu ngu khac nhau giua cac cong ty
+  // (SHS ghi "TONG CONG TAI SAN" nhu DN thuong, MBS ghi "TONG TAI SAN" tron).
+  return label.includes('TONG CONG TAI SAN') || label.includes('TONG TAI SAN CO') || label.includes('TONG TAI SAN');
+}
+
+function isTotalCapitalLabel(label: string): boolean {
+  return (
+    label.includes('TONG CONG NGUON VON') ||
+    label.includes('TONG CONG NO VA VON CHU SO HUU') ||
+    label.includes('TONG NO PHAI TRA VA VON CHU SO HUU')
+  );
+}
+
 // Nguyen tac ke toan bat buoc dung voi MOI bang can doi ke toan, khong phu
 // thuoc tung cong ty: Tong cong tai san = Tong cong nguon von. Day la dang
 // thuc toan hoc chu khong phai AI doan - lech nghia la co it nhat 1 o so bi
 // trich/OCR sai o dau do.
 function validateBalanceSheet(table: StatementTable): ValidationIssue[] {
-  const assetsRow = findRow(table, (label) => label.includes('TONG CONG TAI SAN'));
-  const capitalRow = findRow(table, (label) => label.includes('TONG CONG NGUON VON'));
+  const assetsRow = findRow(table, isTotalAssetsLabel);
+  const capitalRow = findRow(table, isTotalCapitalLabel);
   if (!assetsRow || !capitalRow) {
     return [
       {
@@ -300,7 +328,7 @@ function validateBalanceSheetSubtotals(table: StatementTable): ValidationIssue[]
   const longTermAssetsIdx = findRowIndex(table, labelIndex, (l) => l.includes('TAI SAN DAI HAN') && !l.includes('KHAC'), {
     preferSubtotal: true,
   });
-  const totalAssetsIdx = findRowIndex(table, labelIndex, (l) => l.includes('TONG CONG TAI SAN'));
+  const totalAssetsIdx = findRowIndex(table, labelIndex, isTotalAssetsLabel);
 
   const shortTermAssets = shortTermAssetsIdx === -1 ? null : table.rows[shortTermAssetsIdx];
   const longTermAssets = longTermAssetsIdx === -1 ? null : table.rows[longTermAssetsIdx];
@@ -333,7 +361,7 @@ function validateBalanceSheetSubtotals(table: StatementTable): ValidationIssue[]
 
   const liabilitiesIdx = findRowIndex(table, labelIndex, (l) => l.includes('NO PHAI TRA'), { preferSubtotal: true });
   const equityIdx = findRowIndex(table, labelIndex, (l) => l.includes('VON CHU SO HUU'), { preferSubtotal: true });
-  const totalCapitalIdx = findRowIndex(table, labelIndex, (l) => l.includes('TONG CONG NGUON VON'));
+  const totalCapitalIdx = findRowIndex(table, labelIndex, isTotalCapitalLabel);
 
   const liabilities = liabilitiesIdx === -1 ? null : table.rows[liabilitiesIdx];
   const equity = equityIdx === -1 ? null : table.rows[equityIdx];
@@ -528,10 +556,10 @@ export function findAllGroupSumMismatches(statements: FinancialStatements): Tagg
 
   const shortTermAssetsIdx = findRowIndex(bs, labelIndex, (l) => l.includes('TAI SAN NGAN HAN') && !l.includes('KHAC'), { preferSubtotal: true });
   const longTermAssetsIdx = findRowIndex(bs, labelIndex, (l) => l.includes('TAI SAN DAI HAN') && !l.includes('KHAC'), { preferSubtotal: true });
-  const totalAssetsIdx = findRowIndex(bs, labelIndex, (l) => l.includes('TONG CONG TAI SAN'));
+  const totalAssetsIdx = findRowIndex(bs, labelIndex, isTotalAssetsLabel);
   const liabilitiesIdx = findRowIndex(bs, labelIndex, (l) => l.includes('NO PHAI TRA'), { preferSubtotal: true });
   const equityIdx = findRowIndex(bs, labelIndex, (l) => l.includes('VON CHU SO HUU'), { preferSubtotal: true });
-  const totalCapitalIdx = findRowIndex(bs, labelIndex, (l) => l.includes('TONG CONG NGUON VON'));
+  const totalCapitalIdx = findRowIndex(bs, labelIndex, isTotalCapitalLabel);
 
   const tagBs = (m: GroupSumMismatch): TaggedGroupSumMismatch => ({ ...m, table: 'balanceSheet' });
   const tagIs = (m: GroupSumMismatch): TaggedGroupSumMismatch => ({ ...m, table: 'incomeStatement' });
