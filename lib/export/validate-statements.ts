@@ -1,4 +1,5 @@
 import type { FinancialStatements, StatementTable } from './financial-statements';
+import type { BusinessType } from '../business-type';
 import {
   normalizeLabelText as normalizeLabel,
   findLabelColumnIndex as findLabelColumnIndexOnColumns,
@@ -527,12 +528,28 @@ function validateDecimalCodeGroupSums(table: StatementTable, tableName: 'balance
 // (cap1->cap2, vd "I. Tai san tai chinh" = tong cac dong 111-117) ngay ben
 // trong no (can ranh gioi 4 nhom da tinh san o do) - khong goi lai o day de
 // tranh trung lap.
-export function validateFinancialStatements(statements: FinancialStatements): ValidationIssue[] {
+// CAP NHAT 2026-07-12 (yeu cau nguoi dung, sau khi TCB/cac bao cao Ngan hang
+// bi bao HANG LOAT canh bao "khong tim thay dong..." vi cac chi tieu KHONG
+// TON TAI o loai hinh do, khong phai loi OCR/parse): ham nay TRUOC DAY khong
+// biet businessType, luon chay HET moi kiem tra cho MOI bao cao - 2 kiem tra
+// duoi day KHONG PHAI universal, phai bo qua dung loai hinh:
+// - validateBalanceSheetSubtotals (TS ngan han + TS dai han = Tong TS): Ngan
+//   hang KHONG chia tai san theo ngan han/dai han (xac nhan qua HDB/VCB that
+//   - BCDKT ngan hang liet ke theo loai tai san: tien mat, tien gui SBV, cho
+//   vay TCTD khac..., khong co "A. TAI SAN NGAN HAN"/"B. TAI SAN DAI HAN" nao
+//   ca) - kiem tra nay LUON that bai voi ngan hang, khong phai loi. CTCK/DN
+//   thuong/Bao hiem VAN co cau truc nay (xac nhan qua SHS that) nen van chay.
+// - validateIncomeStatement (Loi nhuan gop = Doanh thu thuan - Gia von hang
+//   ban): CHI ap dung cho DN thuong (ban hang hoa/dich vu that) - Ngan
+//   hang/CTCK/Bao hiem khong co khai niem "gia von hang ban" (Ngan hang co
+//   thu nhap lai, CTCK co lai/lo tai san tai chinh, Bao hiem co phi bao
+//   hiem...) nen luon "khong tim thay dong Gia von hang ban", khong phai loi.
+export function validateFinancialStatements(statements: FinancialStatements, businessType: BusinessType): ValidationIssue[] {
   return [
     ...validateBalanceSheet(statements.balanceSheet),
-    ...validateBalanceSheetSubtotals(statements.balanceSheet),
+    ...(businessType === 'bank' ? [] : validateBalanceSheetSubtotals(statements.balanceSheet)),
     ...validateDecimalCodeGroupSums(statements.balanceSheet, 'balanceSheet'),
-    ...validateIncomeStatement(statements.incomeStatement),
+    ...(businessType === 'other' ? validateIncomeStatement(statements.incomeStatement) : []),
     ...validateIncomeStatementTax(statements.incomeStatement),
     ...validateIncomeStatementGroupSums(statements.incomeStatement),
     ...validateDecimalCodeGroupSums(statements.incomeStatement, 'incomeStatement'),

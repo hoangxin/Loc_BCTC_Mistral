@@ -1,6 +1,7 @@
 import { callMistralOcr } from '../ai/mistral-ocr';
 import { parseStatementsFromMarkdown, cleanMarkdownForPdfText } from './markdown-tables';
 import { validateFinancialStatements } from './validate-statements';
+import { classifyBusinessType } from '../business-type';
 import type { FinancialStatements } from './statement-shared';
 
 // DU PHONG - KHONG con noi nao goi (2026-07-07, xem app/api/report-file/route.ts):
@@ -35,7 +36,7 @@ export async function extractFullReportFromPdf(filePath: string): Promise<FullRe
 
   const statements = parseStatementsFromMarkdown(markdown);
   const fullText = cleanMarkdownForPdfText(markdown);
-  const issues = validateFinancialStatements(statements);
+  const issues = validateFinancialStatements(statements, classifyBusinessType(markdown));
 
   return { statements, fullText, warnings: issues.map((issue) => issue.message) };
 }

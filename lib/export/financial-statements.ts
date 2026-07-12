@@ -199,7 +199,11 @@ export async function extractFinancialStatementsWithOcrProbe(filePath: string, t
     console.log(`[mistral-ocr] ${filePath}: OCR ${collected.length} trang (tong cong, qua ${collected.length === totalPages ? 'het file' : 'probe tang dan'})`);
     return collected.map((p) => p.markdown).join('\n\n');
   });
-  const issues = validateFinancialStatements(statements);
+  // Tinh businessType TRUOC (can truyen vao validateFinancialStatements de bo
+  // qua dung kiem tra khong ap dung duoc cho tung loai hinh - xem comment tai
+  // dinh nghia ham do).
+  const businessType = classifyBusinessType(markdown);
+  const issues = validateFinancialStatements(statements, businessType);
   // Canh bao rieng, DE HIEU NGAY (khac voi 9+ dong ky thuat le te cua
   // validateFinancialStatements) khi van con rong sau ca MAX_OCR_ATTEMPTS lan
   // thu - yeu cau nguoi dung 2026-07-12: can noi bat ro rang truong hop nay
@@ -212,7 +216,7 @@ export async function extractFinancialStatementsWithOcrProbe(filePath: string, t
   return {
     statements,
     warnings,
-    businessType: classifyBusinessType(markdown),
+    businessType,
     unreliableCells: toUnreliableCells(mismatches),
   };
 }

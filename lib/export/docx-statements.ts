@@ -1,6 +1,7 @@
 import mammoth from 'mammoth';
 import { parseStatementsFromMarkdown } from './markdown-tables';
 import { validateFinancialStatements } from './validate-statements';
+import { classifyBusinessType } from '../business-type';
 import type { FinancialStatements } from './statement-shared';
 
 export interface ExtractFromDocxResult {
@@ -80,7 +81,7 @@ export async function extractFinancialStatementsFromDocx(filePath: string): Prom
 
   const markdown = htmlTablesToMarkdown(htmlResult.value);
   const statements = parseStatementsFromMarkdown(markdown);
-  const issues = validateFinancialStatements(statements);
+  const issues = validateFinancialStatements(statements, classifyBusinessType(textResult.value));
 
   return { statements, fullText: textResult.value, warnings: issues.map((issue) => issue.message) };
 }

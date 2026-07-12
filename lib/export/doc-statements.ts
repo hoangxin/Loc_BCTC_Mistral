@@ -2,6 +2,7 @@ import WordExtractor from 'word-extractor';
 import { parseStatementsFromMarkdown } from './markdown-tables';
 import { validateFinancialStatements } from './validate-statements';
 import { autoColumnarize } from '../text-columnarize';
+import { classifyBusinessType } from '../business-type';
 import type { FinancialStatements } from './statement-shared';
 
 export interface ExtractFromDocResult {
@@ -65,7 +66,7 @@ export async function extractFinancialStatementsFromDoc(filePath: string): Promi
 
   const pseudoMarkdown = docTextToPseudoMarkdown(fullText);
   const statements = parseStatementsFromMarkdown(pseudoMarkdown);
-  const issues = validateFinancialStatements(statements);
+  const issues = validateFinancialStatements(statements, classifyBusinessType(fullText));
 
   return { statements, fullText, warnings: issues.map((issue) => issue.message) };
 }
