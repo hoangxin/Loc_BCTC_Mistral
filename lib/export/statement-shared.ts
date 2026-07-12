@@ -104,6 +104,22 @@ export function isMetadataColumnName(columnName: string | undefined): boolean {
   return METADATA_COLUMN_MARKERS.some((marker) => normalized.includes(marker));
 }
 
+// "Chi tieu" la TEN CUA CHINH cot nhan (khong phai 1 dong du lieu that) - co
+// the bi OCR/tach trang lam LAP LAI thanh 1 dong GIUA than bang (vd khi 1
+// bang bi ngat qua nhieu trang, dong tieu de cot o dau TRANG MOI bi doc nham
+// thanh 1 dong du lieu) - da xac nhan qua HVA that (2026-07-13): dong
+// "Chỉ tiêu" (+ "Số cuối quý"/"Số đầu năm" lap lai o cac cot gia tri, dang
+// CHUOI khong phai SO) chen GIUA pham vi "Von chu so huu", bi isLikelySubtotalRow
+// (nhanh fallback cuoi, mac dinh true khi khong co gi bac bo) tinh NHAM la
+// dong tong DUY NHAT tim thay trong pham vi, lam tong "cac muc con" = 0 (cac
+// gia tri chuoi cua no bi sumRows bo qua) thay vi tong dung. Chan NGAY tu dau
+// (khong doi tien to/STT) vi day KHONG BAO GIO la 1 chi tieu ke toan that.
+const TABLE_HEADER_ECHO_LABEL_CONTENT = ['CHI TIEU'];
+
+function isTableHeaderEchoLabel(label: string): boolean {
+  return TABLE_HEADER_ECHO_LABEL_CONTENT.includes(normalizeLabelText(label));
+}
+
 // Danh sach chi so cot THAT SU la so lieu (loai tru cot nhan va cac cot
 // metadata o tren) - dung chung cho moi vong lap cong/so sanh tren 1
 // StatementTable (lib/export/validate-statements.ts, lib/analysis.ts). Loai
@@ -242,6 +258,75 @@ const KNOWN_CAP4_LABEL_CONTENT = ['NGUYEN GIA', 'GIA TRI HAO MON LUY KE'];
 function isKnownCap4Label(label: string): boolean {
   const normalized = normalizeLabelText(label);
   return KNOWN_CAP4_LABEL_CONTENT.some((marker) => normalized.includes(marker));
+}
+
+// Ten CHUAN cua cac dong CON (cap 2/3, KHONG BAO GIO la dong tong cap-1) duoc
+// liet ke CO DINH trong Thong tu 200/2014 - can nhan dien QUA NOI DUNG, tach
+// rieng khoi tin hieu STT/tien to La Ma/A-rap (KHONG dua vao tien to/STT de
+// quyet dinh cap do, du OCR co doc dung hay sai tien to):
+// - mã 221/224/227: 3 dong con DUY NHAT cua "II. Tai san co dinh" (mã 220) -
+//   da xac nhan qua CT6 that (2026-07-13): OCR doc nham tien to "1." (dung,
+//   dong con) thanh "I." (La Ma), khien cot STT rieng cung ghi lai "I", tinh
+//   NHAM dong "Tai san co dinh huu hinh" la 1 dong tong cap-1 doc lap, cong
+//   TRUNG chinh gia tri cua no vao tong "TS dai han".
+// - mã 420: dong con DUY NHAT quan trong cua "D. Von chu so huu" (mã 400) -
+//   da xac nhan qua KSQ that (2026-07-13): OCR ghi "10 Lợi nhuận sau thuế
+//   chưa phân phối" (ROT MAT dau cham sau "10"), khien ARABIC_ITEM_PREFIX
+//   khong khop, isLikelySubtotalRow roi vao fallback cuoi (mac dinh true khi
+//   khong co gi bac bo) tinh NHAM day la dong tong DUY NHAT trong pham vi,
+//   lam tong "cac muc con" = chinh gia tri cua no (thay vi tong dung ca
+//   nhom). Nhan dien qua NOI DUNG (khong doi giua cac cong ty/thong tu) tranh
+//   phai vá tung truong hop rot dau cau rieng le.
+const KNOWN_ALWAYS_CHILD_CONTENT = [
+  'TAI SAN CO DINH HUU HINH',
+  'TAI SAN CO DINH THUE TAI CHINH',
+  'TAI SAN CO DINH VO HINH',
+  'LOI NHUAN SAU THUE CHUA PHAN PHOI',
+];
+
+// Dung .includes() (khong phai EXACT sau khi bo tien to) vi tien to STT o
+// day co the MAT LUON dau phan cach ("10 Lợi nhuận..." khong dau cham, xem
+// KSQ that o tren) nen LEADING_GROUP_MARKER_PREFIX (doi hoi it nhat 1 dau
+// phan cach) khong bo duoc tien to nay - marker o day du dai/cu the (ten day
+// du theo Thong tu) nen an toan khi dung substring, khong can EXACT.
+function isKnownAlwaysChildLabel(label: string): boolean {
+  const normalized = normalizeLabelText(label);
+  return KNOWN_ALWAYS_CHILD_CONTENT.some((marker) => normalized.includes(marker));
+}
+
+// Fallback khi 1 nhom cap-1 (vd "D - Von chu so huu") KHONG co lop "cap 2"
+// (Roman/noi dung da biet) trung gian nao ca giua no va dong tong tiep theo -
+// truong hop nay THUONG GAP voi "Von chu so huu": TT200 chinh thuc co 2 nhom
+// con ("I. Von chu so huu"/"II. Nguon kinh phi va quy khac"), nhung da so DN
+// KHONG co nhom "Nguon kinh phi" (chi ap dung cho don vi hanh chinh su
+// nghiep) nen nhieu bao cao that KHONG in dong "I. Von chu so huu" rieng vi
+// no se trung ten Y HET dong cha "D - Von chu so huu" ngay tren - xac nhan
+// qua HVA/KSQ that (2026-07-13): cac dong con di THANG vao so A-rap "1. Von
+// gop cua chu so huu", "2. Thang du von"... ngay sau dong nhom, khong co dong
+// trung gian nao ca. Khi do, chinh cac dong con so A-rap TRUC TIEP (khong
+// phai dong cap-4 "-"/"*" duoi no) la thanh phan can cong, khong co lop nao
+// khac de tranh dem trung.
+export function arabicDirectChildRows(
+  table: StatementTable,
+  labelIndex: number,
+  startIdx: number,
+  endIdx: number
+): (string | number | null)[][] {
+  const result: (string | number | null)[][] = [];
+  for (let i = startIdx + 1; i < endIdx; i++) {
+    const row = table.rows[i];
+    const label = String(row[labelIndex] ?? '').trim();
+    // Chap nhan CA dong khop noi dung "luon la con" (isKnownAlwaysChildLabel)
+    // du KHONG co tien to so A-rap chuan - da xac nhan qua KSQ that
+    // (2026-07-13): "10 Lợi nhuận sau thuế..." mat dau cham sau "10" nen
+    // khong khop ARABIC_ITEM_PREFIX, nhung VAN la 1 thanh phan THAT SU can
+    // cong (khong phai dong tong/trung lap) - thieu no lam tong hut dung bang
+    // gia tri cua no.
+    if (!looksLikeArabicItemPrefix(label) && !isKnownAlwaysChildLabel(label)) continue;
+    if (NON_SUBTOTAL_DETAIL_PREFIX.test(label) || isKnownCap4Label(label)) continue;
+    result.push(row);
+  }
+  return result;
 }
 
 // Phan biet dong "cap 2" (I, II, III... - dong tong cua 1 nhom) voi dong "cap
@@ -458,8 +543,31 @@ export function isInsideKnownContainer(table: StatementTable, labelIndex: number
 // gia. Bao "khong du tin hieu de kiem tra sau hon" (rieng, it ồn hon nhieu so
 // voi hang chuc canh bao sai) thay vi im lang HOAN TOAN, giu dung nguyen tac
 // fail-closed cua project (luon bao ro khi khong the xac minh).
-function columnHasGroupSttValue(table: StatementTable, colIndex: number): boolean {
-  return table.rows.some((r) => GROUP_STT_PATTERN.test(String(r[colIndex] ?? '').trim()));
+// Danh gioi THAT SU cua phan than BCDKT (truoc dong "Tổng tài sản") - mot so
+// bao cao OCR gan LIEN mot bang phu lục/thuyet minh NGAY SAU dong tong nay
+// (vd CT6 that, 2026-07-13: mot bang con "Xây dựng cơ bản dở dang" o cuoi
+// bang, dung LAI dung cot "TT" voi gia tri La Ma "I"/"II" cho cau truc RIENG
+// cua no, khong lien quan gi toi cau truc BCDKT chinh). Neu khong gioi han
+// pham vi quet, columnHasGroupSttValue se tin NHAM cot do la 1 "cot STT that"
+// cho CA bang (kho co gia tri La Ma o dau do trong TOAN BANG), roi tin sai
+// gia tri RONG cua no trong phan than chinh la "khong du du lieu de bac bo,
+// mac dinh dong tong" - xem cho tiet loi that trong isLikelySubtotalRow.
+const BALANCE_SHEET_BODY_END_MARKERS = ['TONG TAI SAN', 'TONG CONG TAI SAN'];
+
+function findBalanceSheetBodyEndIndex(table: StatementTable, labelIndex: number): number {
+  for (let i = 0; i < table.rows.length; i++) {
+    const label = String(table.rows[i][labelIndex] ?? '').trim();
+    if (BALANCE_SHEET_BODY_END_MARKERS.includes(normalizeGroupLabelForContentMatch(label))) return i;
+  }
+  return table.rows.length;
+}
+
+function columnHasGroupSttValue(table: StatementTable, colIndex: number, labelIndex?: number): boolean {
+  const endIndex = labelIndex === undefined ? table.rows.length : findBalanceSheetBodyEndIndex(table, labelIndex);
+  for (let i = 0; i < endIndex; i++) {
+    if (GROUP_STT_PATTERN.test(String(table.rows[i][colIndex] ?? '').trim())) return true;
+  }
+  return false;
 }
 
 // Tin hieu CAU TRUC (cot STT co gia tri La Ma/chu hoa that, hoac tien to so
@@ -481,8 +589,8 @@ function hasStructuralSubtotalSignal(table: StatementTable, labelIndex: number):
   // gia tri khop GROUP_STT_PATTERN o dau do trong bang hay khong, khong chi
   // dua vao TEN cot.
   const sttNamedIndex = table.columns.findIndex((col) => normalizeLabelText(col).includes('STT'));
-  if (sttNamedIndex !== -1 && columnHasGroupSttValue(table, sttNamedIndex)) return true;
-  if (labelIndex > 0 && !isMetadataColumnName(table.columns[labelIndex - 1]) && columnHasGroupSttValue(table, labelIndex - 1)) {
+  if (sttNamedIndex !== -1 && columnHasGroupSttValue(table, sttNamedIndex, labelIndex)) return true;
+  if (labelIndex > 0 && !isMetadataColumnName(table.columns[labelIndex - 1]) && columnHasGroupSttValue(table, labelIndex - 1, labelIndex)) {
     return true;
   }
   return table.rows.some((r) => looksLikeArabicItemPrefix(String(r[labelIndex] ?? '').trim()));
@@ -518,7 +626,8 @@ export function isLikelySubtotalRow(table: StatementTable, row: (string | number
   // khong phai gia tri that). Chan som o day tranh ca lop loi nay, khong chi
   // sua thong bao hien thi.
   if (label === '') return false;
-  if (NON_SUBTOTAL_DETAIL_PREFIX.test(label) || isKnownCap4Label(label)) return false;
+  if (isTableHeaderEchoLabel(label)) return false;
+  if (NON_SUBTOTAL_DETAIL_PREFIX.test(label) || isKnownCap4Label(label) || isKnownAlwaysChildLabel(label)) return false;
 
   // Cac fallback CAU TRUC ben duoi (cot STT, tien to so A-rap) CHI dang tin
   // cay khi BANG THAT SU co tin hieu cau truc (xem hasStructuralSubtotalSignal)
@@ -546,7 +655,21 @@ export function isLikelySubtotalRow(table: StatementTable, row: (string | number
   if (sttIndex === -1 && labelIndex > 0 && !isMetadataColumnName(table.columns[labelIndex - 1])) {
     sttIndex = labelIndex - 1;
   }
-  if (sttIndex !== -1) {
+  // Chi TIN cot STT ung vien (dat ten ro rang HOAC cot ngay truoc nhan) neu no
+  // THAT SU chua it nhat 1 gia tri La Ma/chu hoa that o dau do trong bang (cung
+  // dieu kien da dung trong hasStructuralSubtotalSignal/columnHasGroupSttValue
+  // o tren) - da xac nhan qua CT6 that (2026-07-13): cot "TT" ton tai nhung
+  // LUON LUON rong (so thu tu nam ngay trong TEN chi tieu, vd "1. Chi phi cho
+  // phan bo dai han", khong o cot rieng) - truoc day sttValue==='' cho MOI
+  // dong (ca dong tong LAN dong con, vi ca cot deu rong nhu nhau) bi tra ve
+  // true BUA BAI, khien 1 dong con (vd "1. Chi phi cho phan bo dai han", con
+  // DUY NHAT cua "VII. Tai san dai han khac") bi dem THEM 1 lan nua nhu the no
+  // la 1 muc cap-1 doc lap - dung 1 LOI Y HET dang da sua cho ma so/tien
+  // to/STT khac trong session nay (tin vao 1 TIN HIEU VI TRI/CAU TRUC ma
+  // KHONG kiem tra tin hieu do co THAT SU dang tin cay o bang nay hay khong).
+  // Neu cot rong toan bo (khong dang tin cay), bo qua nhanh nay, roi ve doc
+  // THANG tien to trong TEN chi tieu (nhanh cuoi ham, `!looksLikeArabicItemPrefix`).
+  if (sttIndex !== -1 && columnHasGroupSttValue(table, sttIndex, labelIndex)) {
     const sttValue = String(row[sttIndex] ?? '').trim();
     if (sttValue === '') return true; // mot so dong tong khong co STT rieng - khong du du lieu de bac bo, giu nguyen hanh vi cu (chap nhan)
     return GROUP_STT_PATTERN.test(sttValue);

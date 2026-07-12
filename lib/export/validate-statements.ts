@@ -11,6 +11,7 @@ import {
   isDuplicateKnownBalanceSheetLevel1Row,
   isInsideKnownContainer,
   hasReliableSubtotalSignal,
+  arabicDirectChildRows,
   findIncomeStatementGroupMismatches,
   findIncomeStatementFormulaMismatches,
   findDecimalCodeGroupMismatches,
@@ -116,6 +117,13 @@ function childrenBetween(
     // (khong phai lap lai) - xem isInsideKnownContainer.
     if (isInsideKnownContainer(table, labelIndex, startIdx + 1, i)) continue;
     result.push(row);
+  }
+  // Khong tim thay dong nao co tin hieu "cap 2" (Roman/noi dung da biet) - co
+  // the vi nhom nay KHONG CO lop trung gian nao ca theo dung cau truc that
+  // (xem arabicDirectChildRows), khong phai vi bang thieu du lieu. Thu fallback
+  // truoc khi coi la "khong tim thay muc con nao".
+  if (result.length === 0) {
+    return arabicDirectChildRows(table, labelIndex, startIdx, endIdx);
   }
   return result;
 }
