@@ -1,6 +1,7 @@
 import { mkdir, readFile, rm } from 'fs/promises';
 import { extname, join, basename } from 'path';
 import AdmZip from 'adm-zip';
+import { PDFDocument } from 'pdf-lib';
 import type { DownloadResult } from './download';
 import type { ReportFile } from './vietstock-reports';
 
@@ -48,6 +49,20 @@ const ANCILLARY_DOCUMENT_PATTERNS: RegExp[] = [
   /cbtt/i, // viet tat "cong bo thong tin" (vd MBS: "cvcbtt")
   /nghi.?quyet/i, // nghi quyet HDQT/DHDCD dinh kem, khong phai BCTC
   /bien.?ban/i, // bien ban hop dinh kem
+  // "cong van so [N]" viet tat thanh "cv_[N]" trong ten file (thay vi viet ro
+  // "giai trinh") - da gap that LLM Q1/2026 (2026-07-12): zip co 2 file, file
+  // BCTC that ten "..._bctc_rieng_qi_2026_tv.pdf", file con lai ten
+  // "..._cv_280__gt_cllnst_rieng_q1_26_tv.pdf" ("cv 280" = cong van so 280,
+  // "gt" = giai trinh viet tat, "cllnst" = chenh lech LNST) - khong khop
+  // /giai.{0,3}trinh/ vi viet tat "gt" chu khong danh van day du, lot qua bo
+  // loc, tao ra 1 dong "bao cao" ao (0 dong ca 3 bang, vi day la van ban
+  // giai trinh ngan, khong phai BCTC that). Yeu cau "cv" di lien 1-4 chu so
+  // (so cong van, vd "cv_280"/"cv280") de tranh khop nham cac ma khac tinh co
+  // chua "cv". Dung (?!\d) thay vi \b sau chu so - "_" (dau lien sau trong
+  // ten file that, vd "cv_280__gt...") LA ky tu \w trong regex nen \b KHONG
+  // coi la ranh gioi giua so va "_", se khong khop neu dung \b thay vi
+  // (?!\d) (da tu kiem tra that truoc khi chot, xem git history neu can).
+  /cv[_-]?\d{1,4}(?!\d)/i,
 ];
 
 function isAncillaryDocumentEntry(entryName: string): boolean {
@@ -77,6 +92,44 @@ function pickPrimaryReportEntries<T>(entries: T[], getName: (entry: T) => string
   const candidates = nonAncillary.length > 0 ? nonAncillary : entries;
   const vietnameseOnly = candidates.filter((e) => !isEnglishVariantEntry(getName(e)));
   return vietnameseOnly.length > 0 ? vietnameseOnly : candidates;
+}
+
+// So trang toi da de coi 1 PDF la "van ban ngan" (cong van/giai trinh, KHONG
+// phai BCTC that - BCTC luon co it nhat 3 bang + thuyet minh, khong bao gio
+// gon duoi nguong nay). Lop phong ngua THU 2, DOC LAP voi loc theo TEN FILE
+// (isAncillaryDocumentEntry/isEnglishVariantEntry o tren) - yeu cau nguoi
+// dung 2026-07-12 sau bug LLM Q1/2026 (cong van "cv_280" lot qua loc ten vi
+// viet tat, khong khop tu khoa nao): loc theo TEN chi bat duoc CAC BIEN THE
+// DA BIET truoc, cong ty khac dat ten khac se lai lot qua - loc theo SO TRANG
+// khong phu thuoc cach dat ten, ben hon nhieu.
+const SHORT_DOCUMENT_MAX_PAGES = 3;
+
+async function getPdfPageCount(filePath: string): Promise<number | null> {
+  try {
+    const buffer = await readFile(filePath);
+    const doc = await PDFDocument.load(buffer, { ignoreEncryption: true });
+    return doc.getPageCount();
+  } catch (error) {
+    console.warn('getPdfPageCount: khong doc duoc so trang, bo qua loc theo trang cho file nay', filePath, error);
+    return null;
+  }
+}
+
+// Loc bo cac PDF QUA NGAN (<=SHORT_DOCUMENT_MAX_PAGES trang) trong 1 nhom
+// nhieu file CUNG 1 bao cao (zip/rar co >1 file) - CHI khi co it nhat 1 file
+// khac dai hon han (dam bao la BCTC that), tranh loai nham truong hop hiem
+// (vd bao cao that su chi co 1 file rat ngan - khong co gi de so sanh thi giu
+// nguyen, an toan hon la doan bua). DOCX/DOC khong loc (chi PDF moi dem trang
+// duoc de bang pdf-lib o day).
+async function dropShortAncillaryPdfs(resolved: ResolvedReportFile[]): Promise<ResolvedReportFile[]> {
+  if (resolved.length <= 1) return resolved;
+  const withPages = await Promise.all(
+    resolved.map(async (r) => ({ r, pages: r.format === 'pdf' ? await getPdfPageCount(r.filePath) : null }))
+  );
+  const hasLongDoc = withPages.some((x) => x.pages !== null && x.pages > SHORT_DOCUMENT_MAX_PAGES);
+  if (!hasLongDoc) return resolved;
+  const filtered = withPages.filter((x) => x.pages === null || x.pages > SHORT_DOCUMENT_MAX_PAGES).map((x) => x.r);
+  return filtered.length > 0 ? filtered : resolved;
 }
 
 function extToFormat(ext: string): ReportFileFormat | null {
@@ -198,8 +251,16 @@ export async function resolveReportSourceFiles(result: DownloadResult): Promise<
     return { resolved: [{ filePath, format, report: result.report }], errors: [] };
   }
 
-  if (ext === '.zip') return extractZip(filePath, result.report);
-  if (ext === '.rar') return extractRar(filePath, result.report);
+  // dropShortAncillaryPdfs: lop phong ngua THU 2 (theo so trang, xem comment
+  // o tren) - ap dung chung cho ca zip lan rar, sau khi da loc theo ten file.
+  if (ext === '.zip') {
+    const zipResult = extractZip(filePath, result.report);
+    return { resolved: await dropShortAncillaryPdfs(zipResult.resolved), errors: zipResult.errors };
+  }
+  if (ext === '.rar') {
+    const rarResult = await extractRar(filePath, result.report);
+    return { resolved: await dropShortAncillaryPdfs(rarResult.resolved), errors: rarResult.errors };
+  }
 
   return {
     resolved: [],
