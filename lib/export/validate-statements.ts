@@ -8,6 +8,7 @@ import {
   parseCode,
   findRowByCode,
   isLikelySubtotalRow,
+  isDuplicateKnownBalanceSheetLevel1Row,
   hasReliableSubtotalSignal,
   findIncomeStatementGroupMismatches,
   findDecimalCodeGroupMismatches,
@@ -102,7 +103,16 @@ function childrenBetween(
   // "khong tim thay muc con" (that tha "khong kiem tra duoc"), an toan hon la
   // ep isLikelySubtotalRow tra loi khi khong co du du lieu.
   if (!hasReliableSubtotalSignal(table, labelIndex)) return [];
-  return table.rows.slice(startIdx + 1, endIdx).filter((row) => isLikelySubtotalRow(table, row, labelIndex));
+  const result: (string | number | null)[][] = [];
+  for (let i = startIdx + 1; i < endIdx; i++) {
+    const row = table.rows[i];
+    if (!isLikelySubtotalRow(table, row, labelIndex)) continue;
+    // Dong con lap lai y het ten nhom cha (vd "Hang ton kho" khi chi co 1 muc
+    // con) - loai de tranh dem 2 lan (xem isDuplicateKnownBalanceSheetLevel1Row).
+    if (isDuplicateKnownBalanceSheetLevel1Row(table, labelIndex, startIdx + 1, i)) continue;
+    result.push(row);
+  }
+  return result;
 }
 
 // Cong don theo vi tri cot giua nhieu dong khop (vd "Chi phi thue TNDN" bi

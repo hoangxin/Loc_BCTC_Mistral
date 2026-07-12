@@ -266,6 +266,117 @@ function isKnownCap4Label(label: string): boolean {
 // "E"/"Z").
 const GROUP_STT_PATTERN = /^[A-Z]+\.?$/;
 
+// Ten CHUAN (khong doi giua cac cong ty/thong tu, chi khac vai tu dong nghia
+// da liet ke) cua cac nhom "cap 1" (I/II/III...) BEN TRONG TS ngan han/TS dai
+// han/No phai tra/Von chu so huu - THAY THE cho viec doan qua STT La Ma
+// (GROUP_STT_PATTERN, van giu lam tin hieu PHU nhung khong con la DUY NHAT) -
+// doc THANG noi dung nhan, dung y kien nguoi dung 2026-07-12 ("đọc tiêu đề
+// của từng chỉ tiêu... không dựa vào số thứ tự", ap dung ca cho BCDKT sau khi
+// da sua cho KQKD). Gom theo Thong tu 200/2014 (DN thuong), Thong tu 99/2025
+// (them "tai san sinh hoc"), va bien the CTCK ("Tai san tai chinh" thay
+// "Dau tu tai chinh").
+const KNOWN_BALANCE_SHEET_LEVEL1_CONTENT = [
+  // Duoi TS ngan han
+  'TIEN VA CAC KHOAN TUONG DUONG TIEN',
+  'DAU TU TAI CHINH NGAN HAN',
+  'TAI SAN TAI CHINH', // CTCK (vd SHS "I. Tài sản tài chính")
+  'CAC KHOAN PHAI THU NGAN HAN',
+  'HANG TON KHO',
+  'TAI SAN NGAN HAN KHAC',
+  // Duoi TS dai han
+  'CAC KHOAN PHAI THU DAI HAN',
+  'TAI SAN CO DINH',
+  'BAT DONG SAN DAU TU',
+  'TAI SAN DO DANG DAI HAN',
+  'DAU TU TAI CHINH DAI HAN',
+  'TAI SAN DAI HAN KHAC',
+  'TAI SAN SINH HOC DAI HAN', // Thong tu 99/2025
+  // Duoi No phai tra
+  'NO NGAN HAN',
+  'NO PHAI TRA NGAN HAN',
+  'NO DAI HAN',
+  'NO PHAI TRA DAI HAN',
+  // Duoi Von chu so huu
+  'VON CHU SO HUU',
+  'NGUON KINH PHI VA QUY KHAC',
+];
+
+// Bo tien to STT dau dong (La Ma "II."/chu hoa "A."/so A-rap "1.") TRUOC khi
+// so khop - CHI dung EXACT MATCH (khong phai .includes()) sau khi bo tien to,
+// KHONG dung substring: da gap loi that (IDV Q1/2026, 2026-07-12) khi dung
+// .includes() truc tiep - "TAI SAN CO DINH" (marker cho dong tong "II. Tài
+// sản cố định") VO TINH la substring cua CHINH dong CON cua no "1. Tài sản
+// cố định HỮU HÌNH" (dong chi tiet, KHONG phai dong tong) - khien dong con
+// nay CUNG bi tinh nham la dong tong. EXACT match sau khi bo tien to STT
+// tranh duoc loi nay vi "TAI SAN CO DINH HUU HINH" (con nguyen sau khi bo
+// tien to "1.") KHONG con bang EXACT voi marker "TAI SAN CO DINH" nua.
+const LEADING_GROUP_MARKER_PREFIX = /^([IVXLCDM]+|[A-Z]|\d+)[.\/)]*\s*/;
+
+// Dong tieu de nhom THUONG co cong thuc ma so o CUOI cau (vd "II. Tai san
+// ngan han khac (130 = 131 -> 139)", "Cong ket qua hoat dong khac (80= 71-72)")
+// - trong khi dong CON trung ten ngau nhien (vd "7. Tai san ngan han khac",
+// khong co cong thuc) thi KHONG co hau to nay. Neu chi bo TIEN TO ma khong bo
+// hau to nay, dong tieu de that (co cong thuc) se KHONG khop EXACT voi marker
+// nua (con du hau to), trong khi dong CON (khong hau to) lai khop dung - dao
+// nguoc thu tu "ai la header" ma isDuplicateKnownBalanceSheetLevel1Row dua
+// vao (dong xuat hien TRUOC trong pham vi la header that) - da xac nhan qua
+// PHS Q1/2026 (2026-07-12): dong 30 "7. Tai san ngan han khac" (con) khop
+// content, dong 23 "II. Tai san ngan han khac (130 = 131 -> 139)" (header that)
+// KHONG khop vi con hau to, khien dedup (dua tren thu tu dong khop content)
+// khong tim thay "dong truoc do da khop cung content" va coi dong 30 la dong
+// tong THAT (sai). Bo ca 2 dau (tien to + hau to cong thuc) truoc khi so sanh.
+const TRAILING_FORMULA_SUFFIX = /\s*\(\s*\d+\s*=[^)]*\)\s*$/;
+
+function normalizeGroupLabelForContentMatch(label: string): string {
+  return normalizeLabelText(label).replace(LEADING_GROUP_MARKER_PREFIX, '').replace(TRAILING_FORMULA_SUFFIX, '').trim();
+}
+
+function isKnownBalanceSheetLevel1Label(label: string): boolean {
+  // Dong tong cap-1 THAT trong MOI mau bieu that da doi chieu (PXA/IDV/DIC/
+  // PHS/VCK...) LUON danh so La Ma/chu hoa (hoac khong tien to, voi bang
+  // "sach") - KHONG BAO GIO danh so A-rap ("1."/"2."/"7."...). Dong A-rap
+  // trung TEN voi 1 marker cap-1 LUON la dong CON (lap lai/gan giong ten
+  // nhom cha), khong phai chinh no la dong tong - da xac nhan qua PHS Q1/2026
+  // (2026-07-12): "1. Tiền và các khoản tương đương tiền" (con cua "I. Tài
+  // sản tài chính" trong dinh dang CTCK) VA "7. Tài sản ngắn hạn khác" (con
+  // cua "II. Tài sản ngắn hạn khác") deu trung ten EXACT voi marker (ten nay
+  // la dong tong CAP 1 THAT trong dinh dang DN-thuong/TT200, nhung la dong
+  // CON trong dinh dang CTCK/TT210 - cung 1 ten, khac vai tro theo dinh dang)
+  // - chan tu day (khong phu thuoc dinh dang) an toan hon la liet ke rieng
+  // theo tung dinh dang.
+  if (looksLikeArabicItemPrefix(label)) return false;
+  const normalized = normalizeGroupLabelForContentMatch(label);
+  return KNOWN_BALANCE_SHEET_LEVEL1_CONTENT.includes(normalized);
+}
+
+// Mot so nhom "cap 1" (vd "Hang ton kho", "Bat dong san dau tu") CHI co DUNG 1
+// dong con khi cong ty chi co 1 loai muc do - va dong con do thuong LAP LAI Y
+// HET ten nhom cha (vd "IV. Hang ton kho" roi "1. Hang ton kho", ca 2 deu con
+// "HANG TON KHO" sau khi bo tien to STT) - da xac nhan qua IDV Q1/2026
+// (2026-07-12): isKnownBalanceSheetLevel1Label tra ve true cho CA HAI dong nay
+// (khong the phan biet chi bang NOI DUNG, vi noi dung giong het nhau), khien
+// dong con bi dem THEM 1 lan nua nhu the no la 1 nhom rieng trong tong "cac
+// muc cap 1", lam tong > gia tri that. Dong TONG luon dung TRUOC dong con
+// trong BCTC that (khong co ngoai le da gap) nen CHI lan xuat hien DAU TIEN
+// cua 1 noi dung trong pham vi duoc coi la dong tong that su - moi lan lap lai
+// SAU DO cung noi dung, trong CUNG pham vi, la dong con (bi loai khoi ket qua).
+export function isDuplicateKnownBalanceSheetLevel1Row(
+  table: StatementTable,
+  labelIndex: number,
+  rangeStartIdx: number,
+  rowIdx: number
+): boolean {
+  const label = String(table.rows[rowIdx][labelIndex] ?? '').trim();
+  if (!isKnownBalanceSheetLevel1Label(label)) return false;
+  const normalized = normalizeGroupLabelForContentMatch(label);
+  for (let i = rangeStartIdx; i < rowIdx; i++) {
+    const priorLabel = String(table.rows[i][labelIndex] ?? '').trim();
+    const priorNormalized = normalizeGroupLabelForContentMatch(priorLabel);
+    if (priorNormalized === normalized) return true;
+  }
+  return false;
+}
+
 // Bang co TIN HIEU DANG TIN CAY de phan biet dong tong cap-1 (STT La Ma/chu
 // hoa, hoac so A-rap nhung vao dau nhan) voi dong chi tiet hay khong - dung
 // truoc khi lam BAT KY kiem tra "tong cac muc con" nao (isLikelySubtotalRow va
@@ -281,15 +392,56 @@ const GROUP_STT_PATTERN = /^[A-Z]+\.?$/;
 // gia. Bao "khong du tin hieu de kiem tra sau hon" (rieng, it ồn hon nhieu so
 // voi hang chuc canh bao sai) thay vi im lang HOAN TOAN, giu dung nguyen tac
 // fail-closed cua project (luon bao ro khi khong the xac minh).
-export function hasReliableSubtotalSignal(table: StatementTable, labelIndex: number): boolean {
+function columnHasGroupSttValue(table: StatementTable, colIndex: number): boolean {
+  return table.rows.some((r) => GROUP_STT_PATTERN.test(String(r[colIndex] ?? '').trim()));
+}
+
+// Tin hieu CAU TRUC (cot STT co gia tri La Ma/chu hoa that, hoac tien to so
+// A-rap gan lien trong nhan) - TACH RIENG khoi tin hieu NOI DUNG (xem
+// isKnownBalanceSheetLevel1Label) vi 2 loai tin hieu nay duoc TIN CAY o 2 MUC
+// KHAC NHAU trong isLikelySubtotalRow (xem comment o do ve ly do khong the
+// dung chung 1 fallback cho ca 2).
+function hasStructuralSubtotalSignal(table: StatementTable, labelIndex: number): boolean {
+  // QUAN TRONG: chi vi CO cot dat ten "STT" khong co nghia gia tri BEN TRONG
+  // no dung duoc - da xac nhan qua PXA Q1/2026 (2026-07-12): cot "STT" that,
+  // nhung chi danh so THUONG (1,2,3...19), khong bao gio la chu La Ma/chu hoa
+  // (GROUP_STT_PATTERN). Truoc day chi kiem tra CO cot ten "STT" la tra ve
+  // true ngay, khien isLikelySubtotalRow test "1".match(GROUP_STT_PATTERN)
+  // LUON false cho MOI dong (khong dong nao khop mau La Ma) - khong dong nao
+  // bi loai khoi "thanh vien", cac dong tong long nhau (vd "Loi nhuan gop"
+  // rồi "Loi nhuan thuan tu HDKD") bi cong CA vao tong ben ngoai ("Tong loi
+  // nhuan ke toan truoc thue"), sai gap nhieu lan. Phai kiem tra THEM: gia tri
+  // TRONG cot STT (hoac cot fallback truoc nhan) co THAT SU chua it nhat 1
+  // gia tri khop GROUP_STT_PATTERN o dau do trong bang hay khong, khong chi
+  // dua vao TEN cot.
   const sttNamedIndex = table.columns.findIndex((col) => normalizeLabelText(col).includes('STT'));
-  if (sttNamedIndex !== -1) return true;
-  if (labelIndex > 0 && !isMetadataColumnName(table.columns[labelIndex - 1])) return true;
+  if (sttNamedIndex !== -1 && columnHasGroupSttValue(table, sttNamedIndex)) return true;
+  if (labelIndex > 0 && !isMetadataColumnName(table.columns[labelIndex - 1]) && columnHasGroupSttValue(table, labelIndex - 1)) {
+    return true;
+  }
   return table.rows.some((r) => looksLikeArabicItemPrefix(String(r[labelIndex] ?? '').trim()));
+}
+
+export function hasReliableSubtotalSignal(table: StatementTable, labelIndex: number): boolean {
+  if (hasStructuralSubtotalSignal(table, labelIndex)) return true;
+  // Tin hieu NOI DUNG (ten CHUAN nhu "Tien va cac khoan tuong duong tien"/
+  // "Hang ton kho"...) - doc THANG nhan thay vi doan qua cau truc/STT xung
+  // quanh (yeu cau nguoi dung 2026-07-12), dang tin cay HON ca cac tin hieu
+  // cau truc o tren nhung van kiem tra SAU CUNG o day vi chi can 1 trong tat
+  // ca cac tin hieu la du (ham nay chi tra loi CO/KHONG co tin hieu nao, xem
+  // isLikelySubtotalRow de biet thu tu uu tien THAT SU giua cac tin hieu).
+  return table.rows.some((r) => isKnownBalanceSheetLevel1Label(String(r[labelIndex] ?? '').trim()));
 }
 
 export function isLikelySubtotalRow(table: StatementTable, row: (string | number | null)[], labelIndex: number): boolean {
   const label = String(row[labelIndex] ?? '').trim();
+  // Doc NOI DUNG nhan TRUOC TIEN (dang tin cay hon cau truc/STT xung quanh -
+  // yeu cau nguoi dung 2026-07-12: "đọc tiêu đề của từng chỉ tiêu... không
+  // dựa vào số thứ tự", ap dung cho ca BCDKT sau khi da sua tuong tu cho
+  // KQKD). Ten nhom "cap 1" (Tien, Hang ton kho, No ngan han...) la thuat
+  // ngu CHUAN khong doi giua cac cong ty, dang tin cay hon nhieu so voi
+  // doan qua STT La Ma/so thu tu (da gay hoi quy qua lai TCB/HCM/PXA).
+  if (isKnownBalanceSheetLevel1Label(label)) return true;
   // Nhan rong KHONG bao gio la dong tong nhom that (dong tong/cap 1 luon co
   // ten trong BCTC that) - da xac nhan qua doi chieu that (2026-07-12, hang
   // loat bao cao DIC/DCS/PXA/HVA/PAP/KSQ): truoc day nhan rong (thuong do
@@ -301,6 +453,20 @@ export function isLikelySubtotalRow(table: StatementTable, row: (string | number
   // sua thong bao hien thi.
   if (label === '') return false;
   if (NON_SUBTOTAL_DETAIL_PREFIX.test(label) || isKnownCap4Label(label)) return false;
+
+  // Cac fallback CAU TRUC ben duoi (cot STT, tien to so A-rap) CHI dang tin
+  // cay khi BANG THAT SU co tin hieu cau truc (xem hasStructuralSubtotalSignal)
+  // - neu KHONG (vd bang "sach", nhan khong nhung so/khong co cot STT dung
+  // duoc, CHI duoc nhan dien qua tin hieu NOI DUNG o tren), KHONG duoc quay ve
+  // cac fallback nay: da xac nhan qua doi chieu that (2026-07-12, hang loat
+  // bao cao IDV/DIC/PXA/RYG/PAP/HVA/MBS/LLM/PHS/VCK) - fallback "sttValue==''
+  // => true" (dong 438 ben duoi) tra ve true BUA BAI cho MOI dong con KHAC
+  // (vi ca bang khong he co cot STT dung duoc), khien tong "cac muc cap 1" >
+  // gia tri that o rat nhieu bao cao ngay khi 1 marker NOI DUNG (vd "Tai san
+  // co dinh") lam hasReliableSubtotalSignal chuyen tu false sang true. Dong
+  // KHONG khop noi dung, trong 1 bang khong co tin hieu cau truc, PHAI la
+  // dong con (false), khong phai "khong biet nen mac dinh true".
+  if (!hasStructuralSubtotalSignal(table, labelIndex)) return false;
 
   let sttIndex = table.columns.findIndex((col) => normalizeLabelText(col).includes('STT'));
   // Neu KHONG co cot dat ten "STT" ro rang, thu cot NGAY TRUOC cot nhan (neu
@@ -361,6 +527,31 @@ export function findRowByLabel(
 }
 
 const GROUP_SUBTOTAL_LABEL_PREFIX = /^CONG\s|^TONG\s/;
+
+// Ten CHUAN (khong doi giua cac cong ty, quy dinh boi Thong tu ke toan) cua
+// cac dong TRUNG GIAN trong KQKD da TU LA tong cua nhung dong truoc no (vd
+// "Loi nhuan gop" = Doanh thu thuan - Gia von, TU BAN THAN no da la 1 phep
+// cong/tru, khong phai 1 chi tieu doc lap) - dung de LOAI cac dong nay khoi
+// danh sach "thanh vien" khi cong don cho dong TONG o SAU no (vd "Tong loi
+// nhuan ke toan truoc thue"), TRANH dem 2 lan. THAY THE cho viec doan qua so
+// thu tu/STT (da gap loi PXA Q1/2026, 2026-07-12: STT chi la so thuong 1,2,3,
+// khong phai chu La Ma, khien khong dong nao bi loai) - doc THANG NOI DUNG
+// nhan thay vi doan qua dinh dang xung quanh, dung y kien nguoi dung
+// ("đọc tiêu đề của từng chỉ tiêu... không dựa vào số thứ tự"). Ten CHUAN
+// theo Thong tu 200/2014 (DN thuong) va Thong tu 49/2014-NHNN (Ngan hang).
+const KNOWN_INCOME_STATEMENT_SUBTOTAL_CONTENT = [
+  'LOI NHUAN GOP', // DN thuong: = Doanh thu thuan - Gia von
+  'LOI NHUAN THUAN TU HOAT DONG KINH DOANH', // DN thuong: = LN gop + DT tai chinh - CP tai chinh - CP ban hang - CP QLDN
+  'LOI NHUAN KHAC', // DN thuong: = Thu nhap khac - Chi phi khac
+  'THU NHAP LAI THUAN', // Ngan hang: = Thu nhap lai - Chi phi lai
+  'LAI THUAN TU HOAT DONG', // Ngan hang: "Lai thuan tu hoat dong dich vu/ngoai hoi/CK kinh doanh/CK dau tu/khac" - deu la hieu cua 1 cap thu-chi truoc do
+  'LOI NHUAN THUAN TU HOAT DONG KINH DOANH TRUOC CHI PHI DU PHONG', // Ngan hang
+];
+
+function isKnownIncomeStatementSubtotalLabel(label: string): boolean {
+  const normalized = normalizeLabelText(label);
+  return KNOWN_INCOME_STATEMENT_SUBTOTAL_CONTENT.some((marker) => normalized.includes(marker));
+}
 const GROUP_SUM_TOLERANCE_RATIO = 0.005;
 const GROUP_SUM_TOLERANCE_ABSOLUTE = 1000;
 
@@ -402,14 +593,21 @@ export interface UnreliableCells {
 
 export function findIncomeStatementGroupMismatches(table: StatementTable): GroupSumMismatch[] {
   const labelIndex = findLabelColumnIndex(table.columns, table.rows);
-  // Khong co tin hieu dang tin cay (xem hasReliableSubtotalSignal) de biet
-  // dong nao la subtotal CAP 2 can LOAI khoi thanh vien (tranh dem 2 lan) -
-  // BO QUA thay vi doan, xem CAP NHAT 2026-07-12 o childrenBetween
-  // (lib/export/validate-statements.ts). Da xac nhan qua doi chieu that TCB
-  // (Ngan hang, KQKD khong danh so gi ca): neu khong bo qua o day,
-  // isLikelySubtotalRow tra ve false cho MOI dong (khong co tin hieu) nen
-  // KHONG dong nao bi loai, dem CA cac dong subtotal cap 2 (vd "Thu nhap lai
-  // thuan") LAN cac dong con cua no cung luc - dem 2 lan, sai gap doi.
+  // KHONG dung tin hieu NOI DUNG (isKnownIncomeStatementSubtotalLabel) de MO
+  // KHOA kiem tra nay khi bang thieu tin hieu cau truc - da THU qua (2026-07-12)
+  // va REVERT: khac voi BCDKT (cac nhom long nhau ro rang, khong "cong don"
+  // xuyen nhom), KQKD ngan hang dung cau truc "cong don" (1 dong trung gian =
+  // dong tong nhom TRUOC + 1 dong moi, vd TCB "Loi nhuan thuan tu HDKD truoc
+  // CP du phong" = "Tong thu nhap hoat dong" [nhom TRUOC, DA dong] + "Chi phi
+  // hoat dong") - thuat toan "loai dong khop marker noi dung khoi thanh vien"
+  // GIA DINH moi nhom doc lap, tu cong du tu cac dong RAW trong CHINH pham vi
+  // no, sai hoan toan voi cau truc cong don nay (dem thieu ca 1 nhom truoc).
+  // PXA cung lo ra thieu marker "DOANH THU THUAN" (dong tong trung gian khac
+  // ten CHUAN chua liet ke) gay dem trung. Ca 2 loi deu la vi dung noi dung
+  // de MO KHOA kiem tra cho bang KHONG co tin hieu cau truc dang tin cay -
+  // thay vi tiep tuc va liet ke them tung truong hop (chap va), GIU NGUYEN
+  // yeu cau tin hieu CAU TRUC that su (hasReliableSubtotalSignal) truoc khi
+  // chay kiem tra nay, dung nguyen tac "giam do sau" da chot voi nguoi dung.
   if (!hasReliableSubtotalSignal(table, labelIndex)) return [];
   const maSoIndex = findMaSoColumnIndex(table) ?? -1;
   const valueColIndexes = valueColumnIndexes(table);
@@ -428,13 +626,16 @@ export function findIncomeStatementGroupMismatches(table: StatementTable): Group
       // duoc gop vao gia tri dong cha ("01"), khong tinh lai o day (tranh dem
       // 2 lan).
       if (typeof maSo === 'string' && maSo.includes('.')) continue;
-      if (isLikelySubtotalRow(table, table.rows[j], labelIndex)) continue;
+      const memberLabel = String(table.rows[j][labelIndex] ?? '').trim();
+      // Doc NOI DUNG nhan TRUOC (dang tin cay hon, xem comment o tren) - chi
+      // fallback ve tin hieu cau truc (isLikelySubtotalRow) neu ten khong
+      // khop bat ky mau CHUAN nao da biet.
+      if (isKnownIncomeStatementSubtotalLabel(memberLabel) || isLikelySubtotalRow(table, table.rows[j], labelIndex)) continue;
       // Muc con CAP 4 (tien to "-"/"*"/"a)"... hoac noi dung chuan "Nguyen
       // gia"/"Gia tri hao mon luy ke") - da GOP SAN vao gia tri dong cha cap 3
       // ngay truoc no, cong THEM o day se dem 2 lan (xem NON_SUBTOTAL_DETAIL_PREFIX/
       // isKnownCap4Label - isLikelySubtotalRow da tra ve false cho dong nay
       // nen KHONG bi loai boi dieu kien tren, phai kiem tra rieng).
-      const memberLabel = String(table.rows[j][labelIndex] ?? '').trim();
       if (NON_SUBTOTAL_DETAIL_PREFIX.test(memberLabel) || isKnownCap4Label(memberLabel)) continue;
       memberRowIndexes.push(j);
     }
@@ -590,7 +791,9 @@ export function findBalanceSheetLevel2Mismatches(table: StatementTable, groupSta
 
   const level1Indexes: number[] = [];
   for (let i = groupStartIdx + 1; i < groupEndIdx; i++) {
-    if (isLikelySubtotalRow(table, table.rows[i], labelIndex)) level1Indexes.push(i);
+    if (!isLikelySubtotalRow(table, table.rows[i], labelIndex)) continue;
+    if (isDuplicateKnownBalanceSheetLevel1Row(table, labelIndex, groupStartIdx + 1, i)) continue;
+    level1Indexes.push(i);
   }
 
   for (let k = 0; k < level1Indexes.length; k++) {
