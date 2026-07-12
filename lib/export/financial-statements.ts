@@ -26,16 +26,6 @@ export class NonVietnameseContentError extends Error {}
 export type { StatementTable, FinancialStatements } from './statement-shared';
 export { findLabelColumnIndex, normalizeLabelText } from './statement-shared';
 
-export interface ExtractFinancialStatementsInput {
-  filePath: string;
-  // Danh sach so trang (1-based, dung so trang trong tai lieu goc) trong pham
-  // vi 3 bang chinh - da duoc lib/pdf-text.ts determineStatementPageScope xac
-  // dinh san TU TEXT LAYER THAT (khong OCR), dung cho truong hop PDF born-digital
-  // hoac scan ngan (xem needsOcrProbe). Bao cao scan dai dung
-  // extractFinancialStatementsWithOcrProbe duoi thay vi ham nay.
-  pageNumbers: number[];
-}
-
 export interface ExtractFinancialStatementsResult {
   statements: FinancialStatements;
   // Khac rong nghia la sau khi parse xong, so lieu van khong khop nguyen tac
@@ -94,50 +84,9 @@ function toUnreliableCells(mismatches: TaggedGroupSumMismatch[]): UnreliableCell
   };
 }
 
-// Thay the hoan toan Qwen vision (2026-07-05, xem memory/README): goi thang
-// Mistral OCR (KHONG qua OpenRouter, xem lib/ai/mistral-ocr.ts) tren CHINH file
-// PDF goc (khong can render anh tung trang qua pdf-lib/pdf-parse nhu truoc -
-// Mistral OCR nhan thang file PDF), roi parse markdown tra ve thanh 3 bang
-// HOAN TOAN LOCAL (lib/export/markdown-tables.ts, khong goi AI them). Da test
-// that (2026-07-05) tren 2 bao cao (HSG 6 trang, TIX 29 trang) - ca 2 deu dat
-// 0 loi validateFinancialStatements() sau khi sua cac bug parse markdown, so
-// voi Qwen vision truoc day thinh thoang van lech vai so.
-//
-// KHONG co "corrective retry" goi lai AI voi PROMPT sua loi nhu ban Qwen
-// vision cu (xem lich su o financial-statements.ts truoc day) - khai niem do
-// dua tren viec "yeu cau model doc lai anh ky hon", khong ap dung duoc voi OCR
-// (khong co hoi thoai sua loi, /v1/ocr khong nhan prompt). Nhung TU 2026-07-11
-// co them 1 loai retry KHAC: extractWithGroupCheckRetry goi lai TOAN BO OCR
-// (khong prompt sua loi, chi don gian doc lai) toi 2 lan khi kiem tra cheo
-// tong nhom KQKD phat hien sai - dua tren nhan xet Mistral OCR co the (though
-// khong dam bao) tra ve ket qua khac nhau giua cac lan goi doc lap cho cung 1
-// trang loi. Neu van con loi sau tat ca cac lan thu, cac o lien quan duoc
-// khoanh vung (unreliableCells) de lib/analysis.ts bao "khong dang tin cay"
-// thay vi tinh % tu du lieu co the da bi OCR gop/bia dong - VAN khong tu
-// "sua" so lieu, chi bao ro hon (fail-closed, dung nguyen tac chuan cua
-// project nay).
-export async function extractFinancialStatements(
-  input: ExtractFinancialStatementsInput
-): Promise<ExtractFinancialStatementsResult> {
-  const pagesZeroBased = input.pageNumbers.map((n) => n - 1);
-  const { markdown, statements, mismatches } = await extractWithGroupCheckRetry(async () => {
-    // const { pages } = await callMistralOcr(input.filePath, { pages: pagesZeroBased }); // fallback dong bo, xem comment o dau file
-    const { pages } = await callMistralOcrBatch(input.filePath, { pages: pagesZeroBased });
-    console.log(`[mistral-ocr] ${input.filePath}: OCR ${pagesZeroBased.length} trang`);
-    return pages.map((p) => p.markdown).join('\n\n');
-  });
-  const issues = validateFinancialStatements(statements);
-
-  return {
-    statements,
-    warnings: issues.map((issue) => issue.message),
-    businessType: classifyBusinessType(markdown),
-    unreliableCells: toUnreliableCells(mismatches),
-  };
-}
-
-// Lo DAU TIEN khi do diem cat bang chinh Mistral (bao cao scan dai, khong co
-// text layer that de tu do - xem lib/pdf-text.ts needsOcrProbe). Ban dau thu
+// Lo DAU TIEN cua vong OCR tang dan (goi 1 lan/bao cao, xem CAP NHAT
+// 2026-07-12 trong lib/pdf-text.ts - khong con nhanh rieng doan pham vi tu
+// text layer nua, MOI bao cao PDF deu qua ham nay). Ban dau thu
 // 6 trang + mo rong 1 trang/lan (2026-07-07) de toi thieu so trang OCR du,
 // nhung do that cho thay moi lan goi Mistral OCR co phi CO DINH ~4s (round-trip
 // mang, khong giam theo so trang) - mo rong tung trang cong don qua nhieu lan

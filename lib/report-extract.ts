@@ -1,5 +1,5 @@
 import { determineStatementPageScope, looksLikeVietnameseText } from './pdf-text';
-import { extractFinancialStatements, extractFinancialStatementsWithOcrProbe, NonVietnameseContentError } from './export/financial-statements';
+import { extractFinancialStatementsWithOcrProbe, NonVietnameseContentError } from './export/financial-statements';
 import { extractFinancialStatementsFromDocx } from './export/docx-statements';
 import { extractFinancialStatementsFromDoc } from './export/doc-statements';
 import { classifyBusinessType, type BusinessType } from './business-type';
@@ -61,26 +61,14 @@ export async function extractReportContent(resolved: ResolvedReportFile): Promis
   const ocrLabel = `[perf] extractFinancialStatements (Mistral) ${resolved.filePath}`;
   console.time(ocrLabel);
   try {
-    // Bao cao scan dai (khong co text layer that de tu do diem cat, xem
-    // lib/pdf-text.ts) - OCR THEO LO tang dan qua Mistral, vua tim diem cat
-    // vua lay noi dung trong CUNG 1 vong (xem lib/export/financial-statements.ts).
-    if (scope?.needsOcrProbe) {
-      if (!scope.totalPages) throw new Error('Khong xac dinh duoc tong so trang PDF');
-      const result = await extractFinancialStatementsWithOcrProbe(resolved.filePath, scope.totalPages);
-      console.timeEnd(ocrLabel);
-      return { ...result, fullText: null };
-    }
-
-    if (!scope?.pageNumbers) {
-      throw new Error(scope?.error || 'Khong xac dinh duoc pham vi trang PDF');
-    }
-    const result = await extractFinancialStatements({ filePath: resolved.filePath, pageNumbers: scope.pageNumbers });
+    // LUON OCR THEO LO tang dan qua Mistral (12 trang dau + mo rong 2
+    // trang/lan den khi thay "Thuyet minh") - khong con nhanh rieng doan pham
+    // vi tu text layer nua, xem CAP NHAT 2026-07-12 trong lib/pdf-text.ts.
+    if (!scope?.totalPages) throw new Error(scope?.error || 'Khong xac dinh duoc tong so trang PDF');
+    const result = await extractFinancialStatementsWithOcrProbe(resolved.filePath, scope.totalPages);
     console.timeEnd(ocrLabel);
     return { ...result, fullText: null };
   } catch (error) {
-    // Chi bao cao scan dai (needsOcrProbe) moi co the nem loi nay - nhanh co
-    // text layer that da bi chan tu truoc (isLikelyNonVietnamese o tren),
-    // khong bao gio toi day.
     if (error instanceof NonVietnameseContentError) {
       console.timeEnd(ocrLabel);
       return null;

@@ -20,14 +20,14 @@ interface Target {
   scopeKeyword?: string; // 'hợp nhất' | 'mẹ' - undefined = khong yeu cau, lay ban chinh dau tien
 }
 
+// Sua danh sach nay truc tiep moi khi can test 1 vai bao cao cu the (thay vi
+// chay ca 1946 bao cao Q1/2026) - giu lai lam cong cu tai su dung.
 const TARGETS: Target[] = [
   { stockCode: 'SHS' },
+  { stockCode: 'TCB' },
   { stockCode: 'PVS', scopeKeyword: 'hợp nhất' },
   { stockCode: 'PVI', scopeKeyword: 'hợp nhất' },
-  // TCB, ANT tam bo qua theo yeu cau nguoi dung 2026-07-12 - gioi han lai
-  // chi PVI/SHS/PVS cho lan test nay (sau khi sua cat trang + file-upload).
-  // { stockCode: 'TCB' },
-  // { stockCode: 'ANT', scopeKeyword: 'mẹ' },
+  { stockCode: 'ANT', scopeKeyword: 'mẹ' },
 ];
 
 function pickBestMatch(candidates: ReportFile[], target: Target): ReportFile | null {
