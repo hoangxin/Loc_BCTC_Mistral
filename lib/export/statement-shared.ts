@@ -88,7 +88,15 @@ export function findLabelColumnIndex(columns: string[], sampleRows?: (string | n
 // Cac cot chi chua ma/chu thich (STT, Ma so, Thuyet minh) - KHONG phai so
 // lieu that su, khong duoc cong/so sanh nhu cac cot "So cuoi ky"/"So dau
 // nam"/"Ky nay"/"Ky truoc" (xem valueColumnIndexes duoi).
-const METADATA_COLUMN_MARKERS = ['STT', 'MA SO', 'THUYET MINH', 'TM'];
+//
+// "MA CHI TIEU" them 2026-07-12 (xac nhan qua EBS Q1/2026): mot so cong ty
+// dat ten cot ma so la "Ma chi tieu" thay vi "Ma so" chuan - khong khop
+// "MA SO" (khac han "MA CHI TIEU"), khien cot nay KHONG duoc coi la metadata,
+// bi tinh nham thanh cot GIA TRI trong valueColumnIndexes - cong ca cac ma so
+// (110,120,200...) vao phep tong "cac muc con", sai hoan toan (vd "Tong cac
+// muc trong TS dai han (1680) khong khop dong TS dai han (200)" - ca 2 con so
+// deu la MA SO, khong phai gia tri tien that).
+const METADATA_COLUMN_MARKERS = ['STT', 'MA SO', 'MA CHI TIEU', 'THUYET MINH', 'TM'];
 
 export function isMetadataColumnName(columnName: string | undefined): boolean {
   if (!columnName) return false;
@@ -123,7 +131,12 @@ export function valueColumnIndexes(table: StatementTable): number[] {
 // (vd "Tai san ngan han KHAC" cung chua "TAI SAN NGAN HAN"). Ma so theo Thong
 // tu 200 la co dinh, khong phu thuoc cach dat ten cua tung cong ty.
 export function findMaSoColumnIndex(table: StatementTable): number | null {
-  const index = table.columns.findIndex((col) => normalizeLabelText(col).includes('MA SO'));
+  // "MA CHI TIEU" - xem comment METADATA_COLUMN_MARKERS ve ly do them bien
+  // the nay (EBS Q1/2026 dung ten nay thay vi "Ma so" chuan).
+  const index = table.columns.findIndex((col) => {
+    const normalized = normalizeLabelText(col);
+    return normalized.includes('MA SO') || normalized.includes('MA CHI TIEU');
+  });
   return index === -1 ? null : index;
 }
 
@@ -154,7 +167,44 @@ export function findRowByCode(
 // cau) khong khop, khien dong CHI TIET nay bi hieu nham la dong TONG NHOM -
 // lam sai ca Excel in dam nham LAN kiem tra cheo tong nhom cap sau
 // (findBalanceSheetLevel2Mismatches, lib/export/validate-statements.ts).
-const ARABIC_ITEM_PREFIX = /^\d+[.\/)]*\s/;
+//
+// SUA THEM 2026-07-12 (xac nhan qua SHS Q1/2026, anh huong HANG LOAT bao cao
+// khac trong 1500-bao-cao that: PVI/CIG/CT6/HCM/BVH/PRE/PHS/VCK...): 2 bug
+// nua trong CHINH pattern nay, ca 2 deu lam dong CHI TIET (cap 3/4) bi hieu
+// nham la dong TONG NHOM (cap 2), gay CONG DU/DUP muc con khi kiem tra tong
+// nhom (childrenBetween, lib/export/validate-statements.ts):
+// 1) Khong co khoang trang sau dau cham - SHS ghi "1.Tiền và các khoản..."
+//    (dinh lien "1." vao chu, khong co dau cach) thay vi "1./ Chi phi..." (co
+//    dau cach) nhu TIX - pattern cu BAT BUOC \s ngay sau dau cau nen khong
+//    khop, lam "1.Tien va cac khoan..." bi coi la dong tong.
+// 2) Ma so THAP PHAN (chi tiet cap 4 duoi 1 chi tiet cap 3, vd "1.1. Tiền",
+//    "7.2. Phải thu...") - pattern cu chi nhan 1 SO DUY NHAT roi dau cau, gap
+//    "1.1."/"7.2." (SO.SO.) thi dung lai ngay sau so dau tien ("1"), ky tu
+//    tiep theo la "." (thuoc [.\/)]*, khop duoc) nhung SAU DO lai la 1 CHU SO
+//    NUA ("1" trong "1.1") - khong phai \s, khop THAT BAI toan bo tu dau
+//    (regex co ^, khong the thu lai vi tri khac).
+// Them nhom "(\.\d+)*" de nhan chuoi so thap phan bat ky do dai ("1.1", "7.2",
+// "1.2.3"...) TRUOC khi den dau cau/khoang trang, va doi \s (bat buoc) thanh
+// \s* (tuy chon) de dau cham dinh lien chu (khong co dau cach) van khop duoc.
+const ARABIC_ITEM_PREFIX = /^\d+(\.\d+)*[.\/)]+\s*/;
+
+// Chuoi NGAY THANG (DD.MM.YYYY hoac DD/MM/YYYY) TRONG NHAM voi ma so thap
+// phan qua ARABIC_ITEM_PREFIX o tren - ca 2 deu la "so.so.so" - da xac nhan
+// qua doi chieu that HCM Q1/2026 (2026-07-12): 1 dong tieu de ngay thang
+// ("31.03.2026 VND") lot vao GIUA bang (loi tach trang o buoc OCR khac, KHONG
+// phai loi rieng cua ham nay) bi ARABIC_ITEM_PREFIX nhan NHAM la dong chi
+// tiet co ma so "31.03." - khien hasReliableSubtotalSignal tin nham la bang
+// nay CO tin hieu danh so (trong khi that ra khong co dong nao khac co), lam
+// isLikelySubtotalRow tiep tuc chay heuristic sai cho CA bang. Nam thap phan
+// cuoi cung cua 1 ngay LUON la nam (>=4 chu so, vd "2026") - ma so thuong that
+// KHONG bao gio dai qua 3 chu so (STT/ma so chi tiet toi da vai chuc/vai
+// tram) - dung dau hieu nay de loai truoc khi thu ARABIC_ITEM_PREFIX.
+const DATE_LIKE_PREFIX = /^\d{1,2}[.\/]\d{1,2}[.\/]\d{4}\b/;
+
+function looksLikeArabicItemPrefix(label: string): boolean {
+  if (DATE_LIKE_PREFIX.test(label)) return false;
+  return ARABIC_ITEM_PREFIX.test(label);
+}
 
 // Muc con CAP 4 (chi tiet duoi CA dong cap 3, vd "- Nguyen gia"/"- Gia tri
 // hao mon luy ke" hoac "* Nguyen gia"/"* Gia tri hao mon luy ke" (tuy cong
@@ -172,7 +222,12 @@ const ARABIC_ITEM_PREFIX = /^\d+[.\/)]*\s/;
 // sau thue chua phan phoi" (khong phai 2 khoan MUC RIENG), nen PHAI loai ca
 // 2 dang tien to nay khoi tong "cac dong con" (findBalanceSheetLevel2Mismatches/
 // findIncomeStatementGroupMismatches), khong chi khoi isLikelySubtotalRow.
-const NON_SUBTOTAL_DETAIL_PREFIX = /^(-|\*|[a-z]\))\s/;
+// \s* (khong bat buoc) thay vi \s (bat buoc) - da xac nhan qua LLM Q1/2026
+// (2026-07-12): "*Cổ phiếu phổ thông có quyền biểu quyết*" dinh lien dau "*"
+// vao chu (khong dau cach) thay vi "* Nguyen gia" (co dau cach) - cung 1 lop
+// loi da sua cho ARABIC_ITEM_PREFIX (xem comment o do), khien dong nay bi
+// tinh nham la dong tong, cong DU vao "tong cac muc con cua Von chu so huu".
+const NON_SUBTOTAL_DETAIL_PREFIX = /^(-|\*|[a-z]\))\s*/;
 
 // "Nguyen gia"/"Gia tri hao mon luy ke" LUON la dong cap-4 duoi 1 muc TSCD/
 // BDS dau tu, theo dung thuat ngu chuan VAS - nhung TIEN TO/HAU TO cua tung
@@ -211,8 +266,40 @@ function isKnownCap4Label(label: string): boolean {
 // "E"/"Z").
 const GROUP_STT_PATTERN = /^[A-Z]+\.?$/;
 
+// Bang co TIN HIEU DANG TIN CAY de phan biet dong tong cap-1 (STT La Ma/chu
+// hoa, hoac so A-rap nhung vao dau nhan) voi dong chi tiet hay khong - dung
+// truoc khi lam BAT KY kiem tra "tong cac muc con" nao (isLikelySubtotalRow va
+// cac ham dung no). QUYET DINH THIET KE 2026-07-12 (theo yeu cau nguoi dung
+// sau khi 1 heuristic vá lỗi lien tuc gay hoi quy qua lai giua cac dinh dang
+// bang khac nhau - TCB va HCM can 2 quy uoc NGUOC NHAU cho cung 1 tin hieu
+// "khong co STT/so"): thay vi co doan mot heuristic ngay cang phuc tap de
+// "doan dung" trong moi truong hop, GIAM DO SAU - khi bang KHONG co tin hieu
+// nao (khong co cot STT dung duoc, khong co nhan nao nhung so A-rap), CAC HAM
+// GOI (childrenBetween, findBalanceSheetLevel2Mismatches,
+// findIncomeStatementGroupMismatches) se BO QUA HOAN TOAN buoc kiem tra "tong
+// cac muc con" cho bang do, thay vi co doan (co the sai) roi bao canh bao
+// gia. Bao "khong du tin hieu de kiem tra sau hon" (rieng, it ồn hon nhieu so
+// voi hang chuc canh bao sai) thay vi im lang HOAN TOAN, giu dung nguyen tac
+// fail-closed cua project (luon bao ro khi khong the xac minh).
+export function hasReliableSubtotalSignal(table: StatementTable, labelIndex: number): boolean {
+  const sttNamedIndex = table.columns.findIndex((col) => normalizeLabelText(col).includes('STT'));
+  if (sttNamedIndex !== -1) return true;
+  if (labelIndex > 0 && !isMetadataColumnName(table.columns[labelIndex - 1])) return true;
+  return table.rows.some((r) => looksLikeArabicItemPrefix(String(r[labelIndex] ?? '').trim()));
+}
+
 export function isLikelySubtotalRow(table: StatementTable, row: (string | number | null)[], labelIndex: number): boolean {
   const label = String(row[labelIndex] ?? '').trim();
+  // Nhan rong KHONG bao gio la dong tong nhom that (dong tong/cap 1 luon co
+  // ten trong BCTC that) - da xac nhan qua doi chieu that (2026-07-12, hang
+  // loat bao cao DIC/DCS/PXA/HVA/PAP/KSQ): truoc day nhan rong (thuong do
+  // bang bi lech cot o noi khac, xem comment findBalanceSheetLevel2Mismatches)
+  // roi vao nhanh cuoi `!ARABIC_ITEM_PREFIX.test('')` = true (chuoi rong
+  // khong khop prefix so A-rap nao ca) nen bi tinh NHAM la dong tong, tao ra
+  // cac canh bao vo nghia dang "dong X khong khop dong X" (X la STT/index,
+  // khong phai gia tri that). Chan som o day tranh ca lop loi nay, khong chi
+  // sua thong bao hien thi.
+  if (label === '') return false;
   if (NON_SUBTOTAL_DETAIL_PREFIX.test(label) || isKnownCap4Label(label)) return false;
 
   let sttIndex = table.columns.findIndex((col) => normalizeLabelText(col).includes('STT'));
@@ -232,7 +319,17 @@ export function isLikelySubtotalRow(table: StatementTable, row: (string | number
     if (sttValue === '') return true; // mot so dong tong khong co STT rieng - khong du du lieu de bac bo, giu nguyen hanh vi cu (chap nhan)
     return GROUP_STT_PATTERN.test(sttValue);
   }
-  return !ARABIC_ITEM_PREFIX.test(label);
+  // GHI CHU 2026-07-12: da thu them 1 nhanh o day ("neu KHONG co dong nao
+  // trong ca bang khop ARABIC_ITEM_PREFIX thi tra ve false") de sua truong
+  // hop HCM/CT6/BVH/PRE/PHS/VCK (cot "Ma so" rieng, nhan sach khong nhung so)
+  // - nhung REVERT NGAY sau khi do that: tuy giam canh bao cho nhom bao cao
+  // do, lai lam TANG canh bao o nhom khac (TCB tu 0 len 8, HCM/BVH cung tang)
+  // vi nhieu bang THAT SU dung nhan sach (khong nhung so) NHUNG van dung
+  // dung isLikelySubtotalRow=true lam mac dinh (vd KQKD Ngan hang). Net effect
+  // am (272 > 254 tong canh bao tren 28 bao cao that) - chua tim ra tieu chi
+  // phan biet 2 truong hop nay an toan, de nguyen hanh vi cu (mac dinh true)
+  // o day, CAN quay lai dieu tra rieng cho tung mau bieu neu gap lai.
+  return !looksLikeArabicItemPrefix(label);
 }
 
 // Tim dong theo TEN CHI TIEU (khong phai ma so) - dung cho lib/analysis.ts,
@@ -305,6 +402,15 @@ export interface UnreliableCells {
 
 export function findIncomeStatementGroupMismatches(table: StatementTable): GroupSumMismatch[] {
   const labelIndex = findLabelColumnIndex(table.columns, table.rows);
+  // Khong co tin hieu dang tin cay (xem hasReliableSubtotalSignal) de biet
+  // dong nao la subtotal CAP 2 can LOAI khoi thanh vien (tranh dem 2 lan) -
+  // BO QUA thay vi doan, xem CAP NHAT 2026-07-12 o childrenBetween
+  // (lib/export/validate-statements.ts). Da xac nhan qua doi chieu that TCB
+  // (Ngan hang, KQKD khong danh so gi ca): neu khong bo qua o day,
+  // isLikelySubtotalRow tra ve false cho MOI dong (khong co tin hieu) nen
+  // KHONG dong nao bi loai, dem CA cac dong subtotal cap 2 (vd "Thu nhap lai
+  // thuan") LAN cac dong con cua no cung luc - dem 2 lan, sai gap doi.
+  if (!hasReliableSubtotalSignal(table, labelIndex)) return [];
   const maSoIndex = findMaSoColumnIndex(table) ?? -1;
   const valueColIndexes = valueColumnIndexes(table);
   const mismatches: GroupSumMismatch[] = [];
@@ -474,6 +580,10 @@ export function findDecimalCodeGroupMismatches(table: StatementTable): GroupSumM
 export function findBalanceSheetLevel2Mismatches(table: StatementTable, groupStartIdx: number, groupEndIdx: number): GroupSumMismatch[] {
   if (groupStartIdx === -1 || groupEndIdx === -1 || groupEndIdx <= groupStartIdx) return [];
   const labelIndex = findLabelColumnIndex(table.columns, table.rows);
+  // Khong co tin hieu dang tin cay - bo qua thay vi doan (xem
+  // hasReliableSubtotalSignal va CAP NHAT 2026-07-12 o childrenBetween,
+  // lib/export/validate-statements.ts).
+  if (!hasReliableSubtotalSignal(table, labelIndex)) return [];
   const maSoIndex = findMaSoColumnIndex(table);
   const valueColIndexes = valueColumnIndexes(table);
   const mismatches: GroupSumMismatch[] = [];

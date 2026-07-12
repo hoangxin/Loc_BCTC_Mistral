@@ -256,6 +256,17 @@ body {
   color: #b3261e;
 }
 
+/* Chi la "khong du tin hieu de kiem tra sau hon" (KHONG DU TIN HIEU:, xem
+   validateFinancialStatements) - KHONG PHAI phat hien sai lech, chi thieu du
+   lieu de xac minh - hien mo nhat de khong gay hoang nham voi canh bao that
+   su (yeu cau nguoi dung 2026-07-12). */
+.report-warning-badge-muted {
+  background: var(--surface);
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+  font-weight: 500;
+}
+
 .empty-state {
   background: var(--surface);
   border: 1px solid var(--border);

@@ -96,14 +96,27 @@ export default function ReportsSummaryTable({ reports }: { reports: DownloadedRe
                   hon) cho truong hop CA 3 BANG deu rong (canh bao dau tien bat
                   dau bang "CANH BAO:", xem extractFinancialStatementsWithOcrProbe)
                   - khac han vai canh bao nho (vd thieu 1 dong phu). */}
-                  {report.warnings.length > 0 && (
-                    <span
-                      className={`report-warning-badge ${report.warnings[0].startsWith('CANH BAO:') ? 'report-warning-badge-severe' : ''}`}
-                      title={report.warnings.join('\n')}
-                    >
-                      ⚠ {report.warnings.length}
-                    </span>
-                  )}
+                  {report.warnings.length > 0 && (() => {
+                    // 3 muc do (yeu cau nguoi dung 2026-07-12): "CANH BAO:" (ca
+                    // 3 bang rong) do dam nhat; canh bao THAT SU (phat hien so
+                    // lieu lech nhau) mau vang binh thuong; "KHONG DU TIN HIEU:"
+                    // (chi la thieu du lieu de xac minh sau hon, KHONG PHAI loi/
+                    // sai lech - xem validateFinancialStatements) hien MO nhat,
+                    // tranh gay hoang khi phan lon chi la "khong kiem tra duoc"
+                    // chu khong phai "sai".
+                    const isSevere = report.warnings[0].startsWith('CANH BAO:');
+                    const isOnlyUnverifiable = !isSevere && report.warnings.every((w) => w.startsWith('KHONG DU TIN HIEU:'));
+                    const severityClass = isSevere
+                      ? 'report-warning-badge-severe'
+                      : isOnlyUnverifiable
+                        ? 'report-warning-badge-muted'
+                        : '';
+                    return (
+                      <span className={`report-warning-badge ${severityClass}`} title={report.warnings.join('\n')}>
+                        ⚠ {report.warnings.length}
+                      </span>
+                    );
+                  })()}
                 </td>
                 <td className="exchange-col">
                   <span className="exchange-tag">{report.exchange}</span>

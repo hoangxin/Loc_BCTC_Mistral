@@ -8,6 +8,7 @@ import {
   parseCode,
   findRowByCode,
   isLikelySubtotalRow,
+  hasReliableSubtotalSignal,
   findIncomeStatementGroupMismatches,
   findDecimalCodeGroupMismatches,
   findBalanceSheetLevel2Mismatches,
@@ -96,6 +97,11 @@ function childrenBetween(
   endIdx: number
 ): (string | number | null)[][] {
   if (startIdx === -1 || endIdx === -1 || endIdx <= startIdx) return [];
+  // Khong co tin hieu dang tin cay nao (xem hasReliableSubtotalSignal) - BO
+  // QUA thay vi doan (co the sai) - tra ve [] cho validateChildrenSum bao
+  // "khong tim thay muc con" (that tha "khong kiem tra duoc"), an toan hon la
+  // ep isLikelySubtotalRow tra loi khi khong co du du lieu.
+  if (!hasReliableSubtotalSignal(table, labelIndex)) return [];
   return table.rows.slice(startIdx + 1, endIdx).filter((row) => isLikelySubtotalRow(table, row, labelIndex));
 }
 
@@ -353,12 +359,17 @@ function validateBalanceSheetSubtotals(table: StatementTable): ValidationIssue[]
   issues.push(
     ...validateChildrenSum(table, 'TS dai han', longTermAssets, childrenBetween(table, labelIndex, longTermAssetsIdx, totalAssetsIdx))
   );
-  // Sau hon 1 tang nua (2026-07-12, yeu cau nguoi dung): trong CHINH nhom "TS
-  // ngan han"/"TS dai han" da biet ranh gioi o tren, kiem tra TIEP tung dong
-  // "cap 1" (I./II...) co khop voi tong cac dong con CUA NO hay khong (xem
-  // findBalanceSheetLevel2Mismatches) - khoanh vung sau hon nua neu co lech.
-  issues.push(...groupSumMismatchesToIssues('balanceSheet', findBalanceSheetLevel2Mismatches(table, shortTermAssetsIdx, longTermAssetsIdx)));
-  issues.push(...groupSumMismatchesToIssues('balanceSheet', findBalanceSheetLevel2Mismatches(table, longTermAssetsIdx, totalAssetsIdx)));
+  // BO buoc "sau hon 1 tang" o day (tung dua vao findBalanceSheetLevel2Mismatches
+  // de kiem tra tung dong "cap 1" (I./II...) co khop tong cac dong con CUA NO
+  // hay khong) - GIAM DO SAU theo yeu cau nguoi dung (2026-07-12, sau khi thay
+  // di sau qua de gay hoi quy qua lai giua cac dinh dang bang khac nhau, xem
+  // hasReliableSubtotalSignal): CHI can dam bao "TS ngan han = tong cac dong
+  // cap 1 cua no" (validateChildrenSum o tren) - KHONG can kiem tra tiep tung
+  // dong cap 1 do (vd "I. Tai san tai chinh") co tu cong dung NOI BO no hay
+  // khong (vd "ton kho" khong can kiem tra cac dong con cua chinh no). Van
+  // giu findBalanceSheetLevel2Mismatches cho findAllGroupSumMismatches (goi
+  // rieng o duoi, dung cho co che retry OCR + co "khong dang tin cay" tren
+  // UI - muc dich khac, chua doi pham vi o day).
 
   const liabilitiesIdx = findRowIndex(table, labelIndex, (l) => l.includes('NO PHAI TRA'), { preferSubtotal: true });
   const equityIdx = findRowIndex(table, labelIndex, (l) => l.includes('VON CHU SO HUU'), { preferSubtotal: true });
@@ -382,8 +393,6 @@ function validateBalanceSheetSubtotals(table: StatementTable): ValidationIssue[]
   );
   issues.push(...validateChildrenSum(table, 'No phai tra', liabilities, childrenBetween(table, labelIndex, liabilitiesIdx, equityIdx)));
   issues.push(...validateChildrenSum(table, 'Von chu so huu', equity, childrenBetween(table, labelIndex, equityIdx, totalCapitalIdx)));
-  issues.push(...groupSumMismatchesToIssues('balanceSheet', findBalanceSheetLevel2Mismatches(table, liabilitiesIdx, equityIdx)));
-  issues.push(...groupSumMismatchesToIssues('balanceSheet', findBalanceSheetLevel2Mismatches(table, equityIdx, totalCapitalIdx)));
 
   return issues;
 }
@@ -447,9 +456,28 @@ function validateIncomeStatement(table: StatementTable): ValidationIssue[] {
 
 // Cong thuc co dinh theo VAS: Loi nhuan sau thue = Loi nhuan truoc thue - Chi
 // phi thue TNDN (hien hanh + hoan lai, cong don neu tach rieng 2 dong).
+//
+// SUA 2026-07-12 (xac nhan qua HDB/VCB that): mot so bao cao (dac biet Ngan
+// hang) in CA 2 dong CHI TIET ("Chi phi thue TNDN hien hanh", "Thu nhap/(Chi
+// phi) thue TNDN hoan lai") LAN 1 dong TONG da cong san ("Chi phi thue TNDN",
+// khong co hau to "hien hanh"/"hoan lai") - findRows(...'CHI PHI THUE') khop
+// CA dong chi tiet "hien hanh" LAN dong tong, sumRows() cong ca 2 lai thanh
+// GAP DOI gia tri thue that (da xac nhan qua so: HDB dong tong = -1.205.194,
+// nhung code cu tinh duoc -2.437.195 = tong sai do cong them dong chi tiet
+// -1.232.001 mot lan nua). Uu tien dong TONG (nhan KHONG chua "hien
+// hanh"/"hoan lai") neu co - chi fallback ve cong don cac dong chi tiet khi
+// KHONG co dong tong rieng (bao cao chi in 2 dong chi tiet, khong co dong
+// gop).
+function findIncomeTaxRows(table: StatementTable): (string | number | null)[][] {
+  const isDetailRow = (label: string) => label.includes('HIEN HANH') || label.includes('HOAN LAI');
+  const totalRow = findRow(table, (label) => label.includes('CHI PHI THUE') && !isDetailRow(label));
+  if (totalRow) return [totalRow];
+  return findRows(table, (label) => label.includes('CHI PHI THUE') || (label.includes('THUE TNDN') && isDetailRow(label)));
+}
+
 function validateIncomeStatementTax(table: StatementTable): ValidationIssue[] {
   const beforeTaxRow = findRow(table, (label) => label.includes('TRUOC THUE'));
-  const taxRows = findRows(table, (label) => label.includes('CHI PHI THUE'));
+  const taxRows = findIncomeTaxRows(table);
   const afterTaxRow = findRow(table, (label) => label.includes('LOI NHUAN SAU THUE'));
   const missing = [
     !beforeTaxRow && 'Loi nhuan truoc thue',
@@ -473,10 +501,22 @@ function validateIncomeStatementTax(table: StatementTable): ValidationIssue[] {
     const afterTax = afterTaxRow![i] ?? null;
     const columnName = table.columns[i] ?? `cot ${i}`;
     if (typeof beforeTax === 'number' && typeof tax === 'number' && typeof afterTax === 'number') {
-      if (!numbersClose(beforeTax - tax, afterTax)) {
+      // Dung Math.abs(tax) - xac nhan qua HDB/VCB/TPB/TCB/BVH that (2026-07-12):
+      // "Chi phi thue TNDN" co the in AM (vd HDB "-1.205.194", dung quy uoc
+      // dau am = khoan giam tru, cong THANG vao loi nhuan) HOAC DUONG (vd TIX
+      // "9.256.950.792", dung quy uoc la SO TRU, cong thuc ghi ro "60=50-51-52")
+      // tuy tung cong ty/mau bieu - cong thuc cu "beforeTax - tax" GIA DINH
+      // tax luon la SO DUONG can tru, nen khi tax am (HDB) thi tru so am =
+      // CONG THEM, sai gap doi (6.107.334 - (-1.205.194) = 7.312.528, trong
+      // khi LNST that = 4.902.140 = 6.107.334 + (-1.205.194)). Lay tri tuyet
+      // doi truoc khi tru xu ly duoc CA 2 quy uoc dau, vi "chi phi thue" luon
+      // mang y nghia GIAM loi nhuan (tru truong hop hiem duoc loi thue rong,
+      // chua gap trong du lieu that nao ca).
+      const taxMagnitude = Math.abs(tax);
+      if (!numbersClose(beforeTax - taxMagnitude, afterTax)) {
         issues.push({
           table: 'incomeStatement',
-          message: `"${columnName}": Loi nhuan sau thue (${afterTax}) khong khop Loi nhuan truoc thue - Chi phi thue TNDN (${beforeTax - tax})`,
+          message: `"${columnName}": Loi nhuan sau thue (${afterTax}) khong khop Loi nhuan truoc thue - Chi phi thue TNDN (${beforeTax - taxMagnitude})`,
         });
       }
     } else {
@@ -544,8 +584,20 @@ function validateDecimalCodeGroupSums(table: StatementTable, tableName: 'balance
 //   hang/CTCK/Bao hiem khong co khai niem "gia von hang ban" (Ngan hang co
 //   thu nhap lai, CTCK co lai/lo tai san tai chinh, Bao hiem co phi bao
 //   hiem...) nen luon "khong tim thay dong Gia von hang ban", khong phai loi.
+// "Khong kiem tra duoc" (thieu du lieu/tin hieu, xem hasReliableSubtotalSignal)
+// LA MOT LOAI CANH BAO KHAC HAN "phat hien so lieu sai lech" - dong dau la
+// THONG BAO TRUNG THUC (khong doan bua), dong sau la KET QUA THAT SU cua 1
+// phep cong. Gop rieng vi 1 bao cao co the ra 6-9 dong loai dau (moi dong cho
+// 1 chi tieu khac nhau khong tim thay) - yeu cau nguoi dung 2026-07-12: gop
+// lai thanh 1 DONG DUY NHAT/bao cao (thay vi liet ke tung dong rac roi) VA
+// hien thi MO HON tren UI (xem "KHONG DU TIN HIEU:" prefix, doi chieu voi
+// app/ReportsSummaryTable.tsx doc prefix nay de chon mau nhat hon).
+function isCannotVerifyMessage(message: string): boolean {
+  return message.startsWith('Khong tim thay') || message.includes('khong phai dang so hop le');
+}
+
 export function validateFinancialStatements(statements: FinancialStatements, businessType: BusinessType): ValidationIssue[] {
-  return [
+  const rawIssues = [
     ...validateBalanceSheet(statements.balanceSheet),
     ...(businessType === 'bank' ? [] : validateBalanceSheetSubtotals(statements.balanceSheet)),
     ...validateDecimalCodeGroupSums(statements.balanceSheet, 'balanceSheet'),
@@ -554,6 +606,22 @@ export function validateFinancialStatements(statements: FinancialStatements, bus
     ...validateIncomeStatementGroupSums(statements.incomeStatement),
     ...validateDecimalCodeGroupSums(statements.incomeStatement, 'incomeStatement'),
   ];
+
+  const realIssues = rawIssues.filter((i) => !isCannotVerifyMessage(i.message));
+  const cannotVerifyIssues = rawIssues.filter((i) => isCannotVerifyMessage(i.message));
+  if (cannotVerifyIssues.length === 0) return realIssues;
+
+  const balanceSheetCount = cannotVerifyIssues.filter((i) => i.table === 'balanceSheet').length;
+  const incomeStatementCount = cannotVerifyIssues.filter((i) => i.table === 'incomeStatement').length;
+  const parts = [
+    balanceSheetCount > 0 ? `${balanceSheetCount} muc trong BCDKT` : null,
+    incomeStatementCount > 0 ? `${incomeStatementCount} muc trong KQKD` : null,
+  ].filter((p): p is string => !!p);
+  const collapsed: ValidationIssue = {
+    table: 'balanceSheet',
+    message: `KHONG DU TIN HIEU: khong kiem tra cheo sau duoc ${parts.join(', ')} (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh.`,
+  };
+  return [...realIssues, collapsed];
 }
 
 // Gom TAT CA mismatch dang co cau truc (GroupSumMismatch, chua chuyen thanh
