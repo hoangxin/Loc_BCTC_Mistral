@@ -651,8 +651,24 @@ export function parseStatementsFromMarkdown(markdown: string): FinancialStatemen
   // chap nhan diem cat nam SAU dong dau tien co tu khoa noi dung THAT SU
   // (nam trong 1 bang, khong phai dang liet ke ten bang) - dam bao da qua
   // khoi trang bia/muc luc.
+  // CHI tinh la "dong noi dung that" khi dong do la 1 HANG BANG markdown that
+  // su (splitMarkdownRow khac null: bat dau/ket thuc bang "|") - KHONG chi can
+  // khop chuoi tren BAT KY dong nao. Da gap that (SHS Q1/2026, 2026-07-12):
+  // cong van cong bo thong tin (van xuoi, dung TRUOC ca trang bia/muc luc BCTC)
+  // co cau "Loi nhuan sau thue thu nhap doanh nghiep tai Bao cao ket qua kinh
+  // doanh Quy 1 nam 2026 giam 12%..." - TINH CO chua dung nguyen van marker
+  // "LOI NHUAN SAU THUE THU NHAP DOANH NGHIEP", khien firstContentLine khop
+  // qua SOM (dong van xuoi, khong phai dong bang that). Dieu do lam "mo khoa"
+  // qua som cho notesLine chap nhan dong muc luc "Bao cao tinh hinh bien dong
+  // von chu so huu" (chi la TEN liet ke trong "NOI DUNG", khong phai noi dung
+  // Thuyet minh that) lam diem cat, xoa mat CA 3 bang that phia sau (0 dong ca
+  // BCDKT/KQKD/LCTT). Yeu cau dong phai la hang bang that moi tinh, giong nguyen
+  // tac da ap dung cho looksLikeHeadingLine/MAX_HEADING_LINE_LENGTH o tren (loai
+  // cau van xuoi dai tinh co trung tu khoa).
   const allContentMarkers = CONTENT_MARKERS_BY_KEY.flatMap(({ markers }) => markers);
-  const firstContentLine = normalizedLines.findIndex((line) => allContentMarkers.some((m) => line.includes(m)));
+  const firstContentLine = lines.findIndex(
+    (line, i) => splitMarkdownRow(line) !== null && allContentMarkers.some((m) => normalizedLines[i].includes(m))
+  );
   const notesLine = lines.findIndex(
     (line, i) => (firstContentLine === -1 || i > firstContentLine) && containsHeadingMarkerNearStart(line, NOTES_SECTION_MARKERS)
   );

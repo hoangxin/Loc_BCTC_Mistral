@@ -11,15 +11,24 @@ import { PDFParse } from 'pdf-parse';
 
 const DETECT_CONCURRENCY = 2;
 
-// Nguong TONG DO DAI text that (ca tai lieu) toi thieu de tin tuong ket qua
-// kiem tra ngon ngu - tranh 1 dong watermark/chan trang ngan (vd he thong
-// eoffice cua 1 vai cong ty tu dong chen "Van ban duoc tai len he thong
-// eoffice.xxx.com.vn..." vao MOI trang) lam sai lech ty le. Bao cao scan that
-// (khong watermark) thuong co combinedText gan nhu rong - duoi nguong nay se
-// KHONG tin ket qua, tra ve false (giao cho buoc kiem tra ngon ngu SAU lo OCR
-// dau tien trong extractFinancialStatementsWithOcrProbe, xem
-// lib/export/financial-statements.ts) thay vi doan bua tren qua it text.
-const MIN_TEXT_LENGTH_FOR_LANGUAGE_CHECK = 200;
+// Nguong DO DAI text tren TUNG TRANG (khong phai tong ca tai lieu) de tin
+// trang do la "trang co noi dung that su", dung lam dieu kien tin tuong ket
+// qua kiem tra ngon ngu. SUA LAI 2026-07-12 sau khi phat hien bug: ban dau
+// dung nguong TONG (200 ky tu ca tai lieu) - nhung PVS/SHS deu co 1-2 trang
+// bia la "Cong bo thong tin" THAT (khong phai watermark, du dai ~2000-2400
+// ky tu/trang) viet SONG NGU Viet-Anh du chuan cua HNX/UBCKNN, cong lai vua
+// du vuot nguong tong nhung ty le dau tieng Viet bi tieng Anh xen ke pha
+// loang xuong duoi nguong 0.03 - khien SHS (BCTC tieng Viet that) bi loai
+// NHAM thanh "khong phai tieng Viet", bo qua hoan toan KHONG OCR (phat hien
+// qua ket qua thuc te, khong phai chi doan). Cac trang con lai (bang bieu
+// that) van la ANH SCAN, watermark eoffice 82 ky tu/trang - duoi nguong nay.
+// Yeu cau TAT CA cac trang deu vuot nguong (khong chi tong ca tai lieu) moi
+// tin ket qua - 1-2 trang bia khong the lam ca tai lieu "qua" duoc, phai la
+// tai lieu THAT SU born-digital toan bo (moi trang la ban dich/ban tieng Anh
+// day du) moi kich hoat duoc canh bao nay, giong dung y dinh ban dau (truoc
+// 2026-07-12 dung dieu kien tuong duong qua allScannedPageNumbers.length===0
+// voi nguong 30/trang - gio nang nguong len de watermark khong con qua duoc).
+const MIN_PAGE_TEXT_LENGTH_FOR_LANGUAGE_CHECK = 300;
 
 const COMBINING_DIACRITICS = new RegExp('[̀-ͯ]', 'g');
 
@@ -55,10 +64,10 @@ export interface PageScopeResult {
   // true neu text layer THAT (khong OCR gi ca, hoan toan mien phi) cho thay
   // day KHONG PHAI ban tieng Viet - Vietstock thuong kem san ban dich tieng
   // Anh trong CUNG 1 zip (xem lib/report-source.ts isEnglishVariantEntry).
-  // Chi tin ket qua nay khi tong do dai text du lon (xem
-  // MIN_TEXT_LENGTH_FOR_LANGUAGE_CHECK) - neu khong, de ngo (false) va giao
-  // cho buoc kiem tra RIENG sau lo OCR dau tien (xem
-  // lib/export/financial-statements.ts).
+  // Chi tin ket qua nay khi MOI trang deu co du text that (xem
+  // MIN_PAGE_TEXT_LENGTH_FOR_LANGUAGE_CHECK) - neu khong (vd chi 1-2 trang
+  // bia that, con lai la anh scan), de ngo (false) va giao cho buoc kiem tra
+  // RIENG sau lo OCR dau tien (xem lib/export/financial-statements.ts).
   isLikelyNonVietnamese?: boolean;
   error?: string;
 }
@@ -85,7 +94,7 @@ export interface PageScopeResult {
 // chi mat 1 lan goi OCR y het). Van GIU LAI buoc doc text layer o day CHI de
 // kiem tra ngon ngu MIEN PHI (isLikelyNonVietnamese) va dem tong so trang -
 // 2 thu nay van dung duoc tren PDF scan (watermark khong anh huong ket qua vi
-// co nguong do dai toi thieu, xem MIN_TEXT_LENGTH_FOR_LANGUAGE_CHECK).
+// yeu cau MOI TRANG deu co du text, xem MIN_PAGE_TEXT_LENGTH_FOR_LANGUAGE_CHECK).
 async function determineOne(filePath: string): Promise<{ totalPages: number; isLikelyNonVietnamese: boolean }> {
   const buffer = await readFile(filePath);
   const parser = new PDFParse({ data: buffer, CanvasFactory });
@@ -93,8 +102,9 @@ async function determineOne(filePath: string): Promise<{ totalPages: number; isL
   try {
     const { pages: rawPages } = await parser.getText();
     const totalPages = rawPages.length;
+    const allPagesHaveSubstantialText = rawPages.every((page) => page.text.trim().length >= MIN_PAGE_TEXT_LENGTH_FOR_LANGUAGE_CHECK);
     const combinedText = rawPages.map((page) => page.text).join('\n');
-    const isLikelyNonVietnamese = combinedText.trim().length >= MIN_TEXT_LENGTH_FOR_LANGUAGE_CHECK && !looksLikeVietnameseText(combinedText);
+    const isLikelyNonVietnamese = allPagesHaveSubstantialText && !looksLikeVietnameseText(combinedText);
     return { totalPages, isLikelyNonVietnamese };
   } finally {
     await parser.destroy();

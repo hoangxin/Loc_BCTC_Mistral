@@ -88,6 +88,22 @@ export default function ReportsSummaryTable({ reports }: { reports: DownloadedRe
                   <a href={report.financeUrl} target="_blank" rel="noreferrer" title={report.companyName}>
                     {report.stockCode || '—'}
                   </a>
+                  {/* Canh bao parse (validateFinancialStatements, xem
+                  lib/export/financial-statements.ts) TRUOC DAY chi nam trong
+                  data/latest-fetch.json, KHONG hien o dau trong UI ca - nguoi
+                  dung phai tu mo Excel moi phat hien bang rong (yeu cau nguoi
+                  dung 2026-07-12, sau bug SHS). Danh dau rieng biet (do dam
+                  hon) cho truong hop CA 3 BANG deu rong (canh bao dau tien bat
+                  dau bang "CANH BAO:", xem extractFinancialStatementsWithOcrProbe)
+                  - khac han vai canh bao nho (vd thieu 1 dong phu). */}
+                  {report.warnings.length > 0 && (
+                    <span
+                      className={`report-warning-badge ${report.warnings[0].startsWith('CANH BAO:') ? 'report-warning-badge-severe' : ''}`}
+                      title={report.warnings.join('\n')}
+                    >
+                      ⚠ {report.warnings.length}
+                    </span>
+                  )}
                 </td>
                 <td className="exchange-col">
                   <span className="exchange-tag">{report.exchange}</span>

@@ -4,6 +4,8 @@
 // van de (dinh dang dong ket qua batch chua duoc xac nhan qua test that, xem
 // canh bao trong lib/ai/mistral-ocr-batch.ts):
 // import { callMistralOcr } from '../ai/mistral-ocr';
+import { mkdir, writeFile } from 'fs/promises';
+import { join } from 'path';
 import { callMistralOcrBatch } from '../ai/mistral-ocr-batch';
 import type { MistralOcrPage } from '../ai/mistral-ocr';
 import { validateFinancialStatements, findAllGroupSumMismatches, type TaggedGroupSumMismatch } from './validate-statements';
@@ -58,21 +60,75 @@ interface OcrAttemptResult {
   mismatches: TaggedGroupSumMismatch[];
 }
 
+// Thu muc ghi markdown tho MOI khi ca 3 bang chinh deu parse ra 0 dong - yeu
+// cau nguoi dung 2026-07-12 sau khi gap SHS Q1/2026 xuat Excel trong tron
+// (BCDKT/KQKD/LCTT deu 0 dong). Chi ghi trong TRUONG HOP LOI NAY (khong ghi
+// moi lan chay) de co bang chung THAT ma khong can OCR lai tra tien - kiem
+// tra thu muc nay truoc khi doan mo hinh nguyen nhan tu dau.
+const EMPTY_PARSE_DEBUG_DIR = join(process.cwd(), 'data', 'debug-empty-parse');
+
+function isEmptyParse(statements: FinancialStatements): boolean {
+  return (
+    statements.balanceSheet.rows.length === 0 &&
+    statements.incomeStatement.rows.length === 0 &&
+    statements.cashFlow.rows.length === 0
+  );
+}
+
+async function dumpMarkdownForEmptyParse(filePath: string, attempt: number, markdown: string): Promise<void> {
+  try {
+    await mkdir(EMPTY_PARSE_DEBUG_DIR, { recursive: true });
+    const safeName = filePath.replace(/[\\/:]/g, '_').replace(/\.pdf$/i, '');
+    const dumpPath = join(EMPTY_PARSE_DEBUG_DIR, `${Date.now()}-attempt${attempt}-${safeName}.md`);
+    await writeFile(dumpPath, markdown, 'utf-8');
+    console.warn(`[debug] Ca 3 bang chinh deu 0 dong sau khi parse - da ghi markdown tho ra ${dumpPath}`);
+  } catch (error) {
+    console.error('Khong ghi duoc markdown debug (empty parse)', error);
+  }
+}
+
+// Diem "do te" cua 1 lan thu - CANG THAP CANG TOT, dung de so sanh cac lan
+// thu voi nhau (ca khi quyet dinh dung som lan khi giu lai lan "best"). Ca 3
+// bang deu 0 dong (isEmptyParse) la loi NANG HON han bat ky so luong mismatch
+// tong nhom nao (thuong chi vai o sai lech) - cong 1 trieu de LUON xep sau,
+// dam bao khong bao gio "return som" chi vi mismatches.length===0 TRUNG HOP
+// (khong co gi de kiem tra khi bang rong, xem yeu cau nguoi dung 2026-07-12
+// duoi day).
+function attemptSeverity(statements: FinancialStatements, mismatches: TaggedGroupSumMismatch[]): number {
+  return (isEmptyParse(statements) ? 1_000_000 : 0) + mismatches.length;
+}
+
 // Goi lai TOAN BO 1 lan OCR (runOcrPass) toi da MAX_OCR_ATTEMPTS lan, dung
-// ngay khi kiem tra cheo tong nhom het loi. Neu van con loi sau tat ca cac
-// lan thu, giu lai lan co IT LOI NHAT (uu tien lan som hon neu bang nhau). Da
-// xac nhan qua doi chieu that (MBS Q2/2026, 2026-07-11): Mistral OCR co the
-// tra ve KET QUA GIONG HET nhau qua nhieu lan goi cho 1 trang loi cu the - nen
-// retry o day la CO CHE PHONG NGUA CHUNG (bao cao khac, trang khac co the ra
-// ket qua khac nhau giua cac lan goi that), khong dam bao sua duoc MOI truong hop.
-async function extractWithGroupCheckRetry(runOcrPass: () => Promise<string>): Promise<OcrAttemptResult> {
+// ngay khi kiem tra cheo tong nhom het loi VA ca 3 bang khong rong. Neu van
+// con loi sau tat ca cac lan thu, giu lai lan "do te" thap nhat (xem
+// attemptSeverity, uu tien lan som hon neu bang nhau). Da xac nhan qua doi
+// chieu that (MBS Q2/2026, 2026-07-11): Mistral OCR co the tra ve KET QUA
+// GIONG HET nhau qua nhieu lan goi cho 1 trang loi cu the - nen retry o day
+// la CO CHE PHONG NGUA CHUNG (bao cao khac, trang khac co the ra ket qua khac
+// nhau giua cac lan goi that), khong dam bao sua duoc MOI truong hop.
+//
+// MO RONG dieu kien retry 2026-07-12 (yeu cau nguoi dung, sau bug SHS Q1/2026
+// ca 3 bang 0 dong): TRUOC DAY chi retry khi co mismatch tong nhom - 1 lan
+// parse ra HOAN TOAN RONG (0 dong ca 3 bang) lai co findAllGroupSumMismatches
+// tra ve [] (khong co gi de kiem tra), nen return NGAY tu lan dau, khong bao
+// gio duoc retry - dung chinh xac loi da gap voi SHS (da sua rieng nguyen
+// nhan goc o markdown-tables.ts, nhung day la LOP PHONG NGUA CHUNG cho cac
+// nguyen nhan KHAC co the con chua biet, tuong tu tinh than cua mismatch
+// retry). Luu y: retry o day KHONG chac chan sua duoc loi CAU TRUC (vd 1 mau
+// bieu hoan toan la, template moi chua duoc ho tro) - chi giup voi loi OCR
+// TAM THOI/khong nhat quan giua cac lan goi doc lap.
+async function extractWithGroupCheckRetry(filePath: string, runOcrPass: () => Promise<string>): Promise<OcrAttemptResult> {
   let best: OcrAttemptResult | null = null;
   for (let attempt = 0; attempt < MAX_OCR_ATTEMPTS; attempt++) {
     const markdown = await runOcrPass();
     const statements = parseStatementsFromMarkdown(markdown);
+    const empty = isEmptyParse(statements);
+    if (empty) await dumpMarkdownForEmptyParse(filePath, attempt, markdown);
     const mismatches = findAllGroupSumMismatches(statements);
-    if (mismatches.length === 0) return { markdown, statements, mismatches };
-    if (!best || mismatches.length < best.mismatches.length) best = { markdown, statements, mismatches };
+    if (!empty && mismatches.length === 0) return { markdown, statements, mismatches };
+    if (!best || attemptSeverity(statements, mismatches) < attemptSeverity(best.statements, best.mismatches)) {
+      best = { markdown, statements, mismatches };
+    }
   }
   return best!;
 }
@@ -113,7 +169,7 @@ const EXPAND_STEP = 2;
 // OCR duoc dung LUON lam dau vao parseStatementsFromMarkdown (ham do da tu
 // chan dung truoc "Thuyet minh" - xem NOTES_SECTION_MARKERS) - khong OCR lai lan 2.
 export async function extractFinancialStatementsWithOcrProbe(filePath: string, totalPages: number): Promise<ExtractFinancialStatementsResult> {
-  const { markdown, statements, mismatches } = await extractWithGroupCheckRetry(async () => {
+  const { markdown, statements, mismatches } = await extractWithGroupCheckRetry(filePath, async () => {
     const collected: MistralOcrPage[] = [];
     let cursor = 0;
     let checkedLanguage = false;
@@ -144,10 +200,18 @@ export async function extractFinancialStatementsWithOcrProbe(filePath: string, t
     return collected.map((p) => p.markdown).join('\n\n');
   });
   const issues = validateFinancialStatements(statements);
+  // Canh bao rieng, DE HIEU NGAY (khac voi 9+ dong ky thuat le te cua
+  // validateFinancialStatements) khi van con rong sau ca MAX_OCR_ATTEMPTS lan
+  // thu - yeu cau nguoi dung 2026-07-12: can noi bat ro rang truong hop nay
+  // trong UI (ReportsSummaryTable.tsx), khac han 1 vai canh bao nho le thuong
+  // gap (vd thieu 1 dong phu).
+  const warnings = isEmptyParse(statements)
+    ? ['CANH BAO: ca 3 bang chinh (BCDKT/KQKD/LCTT) deu khong doc duoc dong nao - can kiem tra tay.', ...issues.map((issue) => issue.message)]
+    : issues.map((issue) => issue.message);
 
   return {
     statements,
-    warnings: issues.map((issue) => issue.message),
+    warnings,
     businessType: classifyBusinessType(markdown),
     unreliableCells: toUnreliableCells(mismatches),
   };
