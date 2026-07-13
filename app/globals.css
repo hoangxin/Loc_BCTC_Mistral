@@ -434,6 +434,55 @@ body {
   font-size: 12px;
 }
 
+.selected-reports-panel {
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 14px;
+}
+
+.selected-reports-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.selected-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  max-height: 160px;
+  overflow-y: auto;
+}
+
+.selected-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--chip-bg, rgba(127, 127, 127, 0.15));
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 3px 6px 3px 10px;
+  font-size: 12px;
+}
+
+.selected-chip-remove {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1;
+  padding: 2px 4px;
+  color: var(--text-muted);
+}
+
+.selected-chip-remove:hover {
+  color: var(--text);
+}
+
 .preview-panel {
   width: 100%;
 }

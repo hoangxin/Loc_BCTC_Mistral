@@ -368,6 +368,46 @@ export default function FetchControls({
         </button>
       </div>
 
+      {/* Danh sach review cac bao cao da tick (yeu cau user 2026-07-13) - can
+      thiet vi bang preview co the co hang tram dong + dang bi loc theo Ma CK,
+      nen khong the "nhin lai" duoc da chon nhung gi neu khong co danh sach
+      rieng nay. Loc tu previewReports (KHONG phai filteredPreviewReports) vi
+      nguoi dung co the da bo tim kiem sau khi tick, danh sach nay phai thay
+      DUNG toan bo lua chon bat ke tim kiem hien tai. */}
+      {effectiveMode === 'select' && previewReports && selectedFileInfoIds.size > 0 && (
+        <div className="selected-reports-panel">
+          <div className="selected-reports-header">
+            <span className="field-label">Báo cáo đã chọn ({selectedFileInfoIds.size})</span>
+            <button
+              type="button"
+              className="secondary-button"
+              onClick={() => setSelectedFileInfoIds(new Set())}
+              disabled={busy}
+            >
+              Bỏ chọn tất cả
+            </button>
+          </div>
+          <div className="selected-chips">
+            {previewReports
+              .filter((r) => selectedFileInfoIds.has(r.fileInfoID))
+              .map((r) => (
+                <span key={r.fileInfoID} className="selected-chip" title={r.title}>
+                  {r.stockCode || r.title}
+                  <button
+                    type="button"
+                    className="selected-chip-remove"
+                    onClick={() => toggleSelectedReport(r.fileInfoID)}
+                    disabled={busy}
+                    aria-label={`Bỏ chọn ${r.stockCode || r.title}`}
+                  >
+                    ×
+                  </button>
+                </span>
+              ))}
+          </div>
+        </div>
+      )}
+
       {selectedTerm && (
         <div className="preview-panel">
           {previewStatus === 'loading' && <span className="trigger-message">Đang tải danh mục báo cáo thật của {periodDisplayLabel(selectedTerm)}...</span>}
