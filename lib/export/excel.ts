@@ -3,6 +3,7 @@ import type { FinancialStatements, StatementTable } from './financial-statements
 import { findLabelColumnIndex, isMetadataColumnName } from './statement-shared';
 import { classifyRowTier } from './row-style';
 import type { BusinessType } from '../business-type';
+import { balanceSheetPeriodColumns, computePercentChange, incomeStatementPeriodColumns, numericValue } from '../analysis';
 
 // Ten sheet Excel gioi han 31 ky tu va khong duoc chua [ ] : * ? / \ - cac ten
 // duoi day deu an toan.
@@ -61,23 +62,48 @@ function displayLength(value: string | number | null): number {
   return String(value).length;
 }
 
+// Cap cot "ky nay"/"ky truoc" dung de tinh cot "% thay doi" them cuoi bang
+// (yeu cau user 2026-07-13). KQKD dung incomeStatementPeriodColumns (CHI lay
+// cap Quy, KHONG lay Luy ke - nguoi dung yeu cau ro chi tinh % voi quy, luy ke
+// tu dau nam khong can vi de lap lai/gay nhieu voi % quy). Cac bang con lai
+// (BCDKT/"Chi tieu ngoai BCTC"/Luu chuyen tien te) chi co dung 1 cap cot gia
+// tri (ky nay/ky truoc hoac luy ke nam nay/nam truoc voi rieng Luu chuyen
+// tien te - ban chat BCLCTT luon la so luy ke, khong co ban quy rieng) nen
+// dung chung balanceSheetPeriodColumns (cot dau = ky nay, cot 2 = ky truoc).
+function percentChangeColumns(
+  statementKey: keyof FinancialStatements,
+  table: StatementTable
+): { currentIndex: number; priorIndex: number } | null {
+  return statementKey === 'incomeStatement' ? incomeStatementPeriodColumns(table) : balanceSheetPeriodColumns(table);
+}
+
 // In dam cac dong "tong nhom" (sub-heading) va dam+HOA cac dong "tong lon"
 // (heading) giong van ban goc (yeu cau user 2026-07-08) - xem
 // lib/export/row-style.ts de biet quy tac phan loai tung bang.
 function writeTable(sheet: ExcelJS.Worksheet, statementKey: keyof FinancialStatements, table: StatementTable): void {
-  if (table.columns.length > 0) {
-    const headerRow = sheet.addRow(table.columns);
+  const labelIndex = findLabelColumnIndex(table.columns, table.rows);
+  const periods = percentChangeColumns(statementKey, table);
+  const percentHeader = statementKey === 'incomeStatement' ? '% thay đổi (quý)' : '% thay đổi';
+  const columns = periods ? [...table.columns, percentHeader] : table.columns;
+  const percentColumnIndex = periods ? columns.length - 1 : -1;
+
+  if (columns.length > 0) {
+    const headerRow = sheet.addRow(columns);
     headerRow.font = { bold: true };
   }
 
-  const labelIndex = findLabelColumnIndex(table.columns, table.rows);
+  const writtenRows: (string | number | null)[][] = [];
   for (const row of table.rows) {
     const tier = classifyRowTier(statementKey, table, row, labelIndex);
     const values =
       tier === 'heading'
         ? row.map((cell, i) => (i === labelIndex && typeof cell === 'string' ? cell.toLocaleUpperCase('vi-VN') : cell))
         : row;
-    const excelRow = sheet.addRow(values);
+    const rowValues = periods
+      ? [...values, computePercentChange(numericValue(row[periods.currentIndex]), numericValue(row[periods.priorIndex]))]
+      : values;
+    writtenRows.push(rowValues);
+    const excelRow = sheet.addRow(rowValues);
     if (tier !== 'plain') excelRow.font = { bold: true };
   }
 
@@ -87,13 +113,14 @@ function writeTable(sheet: ExcelJS.Worksheet, statementKey: keyof FinancialState
   // khi da ghi het row. ExcelJS (Column._applyStyle) tu dong ap NGUOC LAI cho
   // ca cac o da ton tai lan luot cac o sinh sau nay, nen goi sau addRow van
   // ra dung ket qua cho MOI o trong cot (da xac nhan doc source exceljs).
-  const columnCount = Math.max(table.columns.length, ...table.rows.map((row) => row.length), 1);
+  const columnCount = Math.max(columns.length, ...writtenRows.map((row) => row.length), 1);
   for (let i = 1; i <= columnCount; i++) {
     const colIndex = i - 1;
     const isLabelColumn = colIndex === labelIndex;
-    const maxContentLength = table.rows.reduce(
+    const isPercentColumn = colIndex === percentColumnIndex;
+    const maxContentLength = writtenRows.reduce(
       (max, row) => Math.max(max, displayLength(row[colIndex] ?? null)),
-      displayLength(table.columns[colIndex] ?? null)
+      displayLength(columns[colIndex] ?? null)
     );
 
     const column = sheet.getColumn(i);
@@ -103,14 +130,20 @@ function writeTable(sheet: ExcelJS.Worksheet, statementKey: keyof FinancialState
     );
     // Cot dau (ten chi tieu) la text, tu cot 2 tro di la so lieu - dinh dang
     // dau phay ngan cach hang nghin (theo yeu cau user 2026-07-04, khac quy
-    // uoc dau cham cua ban goc) de de theo doi, khong anh huong cot text.
-    if (i > 1) column.numFmt = '#,##0';
+    // uoc dau cham cua ban goc) de de theo doi, khong anh huong cot text. Rieng
+    // cot "% thay doi" dung dinh dang phan tram (giong lib/export/summary-excel.ts)
+    // thay vi dau phay ngan cach hang nghin.
+    if (isPercentColumn) {
+      column.numFmt = '0.0"%"';
+    } else if (i > 1) {
+      column.numFmt = '#,##0';
+    }
     // Can le THEO CA COT, khong de ExcelJS tu can theo KIEU DU LIEU tung o -
     // truoc day 1 cot Ma so vua co gia tri so (411 -> tu dong sang phai) vua
     // co gia tri chu (411a/411b -> tu dong sang trai), lam lech hang trong
     // CUNG 1 cot (yeu cau user 2026-07-10, xac nhan that tren bao cao IDV).
     column.alignment = {
-      horizontal: isLabelColumn ? 'left' : isMetadataColumnName(table.columns[colIndex]) ? 'center' : 'right',
+      horizontal: isLabelColumn ? 'left' : isMetadataColumnName(columns[colIndex]) ? 'center' : 'right',
       vertical: 'middle',
     };
   }

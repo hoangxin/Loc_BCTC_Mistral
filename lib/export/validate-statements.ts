@@ -560,24 +560,30 @@ function validateIncomeStatement(table: StatementTable): ValidationIssue[] {
 // hanh"/"hoan lai") neu co - chi fallback ve cong don cac dong chi tiet khi
 // KHONG co dong tong rieng (bao cao chi in 2 dong chi tiet, khong co dong
 // gop).
+//
+// isIncomeTaxLabel: nhan dien 1 dong la "chi phi/thu nhap thue TNDN" (tong
+// hoac chi tiet). SUA 2026-07-13 (xac nhan qua DRI that): dieu kien cu doi
+// hoi CA cum "THUE" xuat hien - nhung DRI viet tat dong chi tiet "hien hanh"
+// thanh "Chi phí TNDN hiện hành" (BO HAN chu "thue" giua "Chi phi" va
+// "TNDN"), nen bi bo sot hoan toan khoi tong thue. Dong "Chi phí thuế TNDN
+// hoãn lại" (co du chu "thue") van khop binh thuong - hau qua la code cu chi
+// cong duoc nua "hoan lai" (104.804.555), thieu han nua "hien hanh"
+// (19.917.884.366), lam LNTT - thue tinh duoc SAI GAP ~20 ty so voi LNST that
+// (98.347.212.950 - 104.804.555 = 98.242.408.395, trong khi LNST that =
+// 78.324.524.029). Nhan dien them qua VIET TAT "TNDN" di kem "CHI PHI"/"THU
+// NHAP" du KHONG co chu "THUE" - CO Y BO "DOANH NGHIEP" (viet day du) khoi
+// nhanh viet tat nay vi se khop NHAM dong "Loi nhuan sau thue thu nhap doanh
+// nghiep" (chinh dong LNST, khong phai dong thue) do dong nay cung chua ca
+// "THU NHAP" lan "DOANH NGHIEP".
+function isIncomeTaxLabel(label: string): boolean {
+  return label.includes('CHI PHI THUE') || label.includes('THU NHAP THUE') || ((label.includes('CHI PHI') || label.includes('THU NHAP')) && label.includes('TNDN'));
+}
+
 function findIncomeTaxRows(table: StatementTable): (string | number | null)[][] {
   const isDetailRow = (label: string) => label.includes('HIEN HANH') || label.includes('HOAN LAI');
-  const totalRow = findRow(table, (label) => label.includes('CHI PHI THUE') && !isDetailRow(label));
+  const totalRow = findRow(table, (label) => isIncomeTaxLabel(label) && !isDetailRow(label));
   if (totalRow) return [totalRow];
-  // Dong "hoan lai" co the la THU NHAP (khoan duoc loi thue hoan lai, khong
-  // phai chi phi) chu khong luon la "Chi phi thue..." - da xac nhan qua BVH
-  // that (2026-07-13): "Thu nhập thuế thu nhập doanh nghiệp hoãn lại" (dong
-  // rieng, KHONG bat dau bang "Chi phi") khong khop dieu kien cu (doi hoi
-  // hoac "CHI PHI THUE" hoac viet tat "THUE TNDN" - bao cao nay viet day du
-  // "thue thu nhap doanh nghiep", khong bao gio viet tat) nen bi loai hoan
-  // toan khoi tong thue, lam "Loi nhuan sau thue" tinh duoc thieu dung bang
-  // gia tri khoan thu hoan lai nay. Nhan dien qua NOI DUNG rong hon: "THUE"
-  // + ("DOANH NGHIEP" day du HOAC "TNDN" viet tat) + hien hanh/hoan lai,
-  // khong doi hoi ca cum "CHI PHI"/"THUE TNDN" phai dung lien nhau.
-  return findRows(
-    table,
-    (label) => label.includes('CHI PHI THUE') || ((label.includes('DOANH NGHIEP') || label.includes('TNDN')) && label.includes('THUE') && isDetailRow(label))
-  );
+  return findRows(table, (label) => isIncomeTaxLabel(label) && isDetailRow(label));
 }
 
 function validateIncomeStatementTax(table: StatementTable): ValidationIssue[] {

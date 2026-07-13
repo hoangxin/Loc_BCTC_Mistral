@@ -91,8 +91,11 @@ diện web hoặc bằng lệnh `npm run fetch`.
     cho 10, vd mã 320/420) khớp với dòng tổng của nhóm.
   - Lợi nhuận gộp = Doanh thu thuần - Giá vốn hàng bán (dò theo tên, có fallback theo mã số 10 nếu tài
     liệu viết tắt "DT thuần" thay vì "Doanh thu thuần").
-  - Lợi nhuận sau thuế = Lợi nhuận trước thuế - Chi phí thuế TNDN.
-- `lib/export/excel.ts` - ghi 3 bảng ra 1 file `.xlsx`, mỗi bảng 1 sheet (chi tiết TỪNG báo cáo).
+  - Lợi nhuận sau thuế = Lợi nhuận trước thuế - Chi phí thuế TNDN (hiện hành + hoãn lại, cộng dồn 2 dòng
+    chi tiết nếu tách riêng - ưu tiên dòng tổng đã cộng sẵn nếu báo cáo có in).
+- `lib/export/excel.ts` - ghi 3 bảng ra 1 file `.xlsx`, mỗi bảng 1 sheet (chi tiết TỪNG báo cáo). Mỗi
+  sheet có thêm 1 cột "% thay đổi" cuối bảng (so cột kỳ này/kỳ trước của chính bảng đó) - riêng KQKD chỉ
+  so theo cặp cột Quý, không tính với Lũy kế từ đầu năm (yêu cầu user 2026-07-13).
 - `lib/export/pdf.ts` (`writeReportPdf`) - xuất PDF text sạch (không phải ảnh scan, chọn/copy/highlight
   được), gồm 3 bảng + toàn văn báo cáo (chi tiết TỪNG báo cáo).
 - `lib/export/pdf-shared.ts` - phần "vẽ bảng PDF" thuần tuý (font, `PdfWriter`, `computeColumnLayout`,

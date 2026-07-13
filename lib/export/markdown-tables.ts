@@ -134,27 +134,57 @@ const SINGLE_NUMBER_PATTERN = /^\(?-?[\d.,]+\)?$/;
 // dong do THAT SU co chu thich - phat hien qua doi chieu that MBS Q2/2026.
 const THUYET_MINH_REF_PATTERN = /^\d{1,3}\([a-z]\)$/i;
 
+// "Gia tri manh": co dau ngoac/am (quy uoc so am ke toan VN) HOAC dau phan
+// cach hang nghin/thap phan, HOAC >=4 chu so tran - phan biet voi 1 so thu tu
+// thuyet minh TRAN dinh truoc gia tri that (xem BARE_THUYET_MINH_REF_PATTERN
+// duoi day), vi thuyet minh BCTC VN chi danh so 1-99 (khong bao gio dai toi 4
+// chu so), con gia tri tien that hau nhu luon co dau phan cach hang nghin/am.
+function isFormattedValueToken(token: string): boolean {
+  return /[().,-]/.test(token) || token.replace(/\D/g, '').length >= 4;
+}
+
 function parseNumericCell(value: string): string | number | null {
   const trimmed = value.trim();
   if (!trimmed) return null;
 
-  // Tach theo khoang trang, phan loai TUNG token: 1 con so that (SINGLE_NUMBER_PATTERN),
-  // 1 tham chieu thuyet minh (bo qua), hoac thu gi khac (khong chac chan). CHI
-  // chap nhan dung 1 token la so - neu co >= 2 token deu la so (2 gia tri bi
-  // dinh lam 1, khong biet chac cai nao dung) hoac co token la mientide
-  // (VD nhan chi tieu, dong tien te...), giu nguyen CA CHUOI (tra ve null khi
-  // doc o lib/analysis.ts) thay vi doan bua.
-  const tokens = trimmed.split(/\s+/);
-  let numericToken: string | null = null;
-  for (const token of tokens) {
+  // Tach theo khoang trang, phan loai TUNG token: 1 con so co the (SINGLE_NUMBER_PATTERN),
+  // 1 tham chieu thuyet minh dang "32(a)" (bo qua luon, khong bao gio la gia
+  // tri that), hoac thu gi khac (khong chac chan, giu nguyen CA CHUOI - tra ve
+  // null khi doc o lib/analysis.ts thay vi doan bua).
+  const numberLikeTokens: string[] = [];
+  for (const token of trimmed.split(/\s+/)) {
+    if (THUYET_MINH_REF_PATTERN.test(token)) continue;
     if (SINGLE_NUMBER_PATTERN.test(token) && /\d/.test(token)) {
-      if (numericToken !== null) return trimmed;
-      numericToken = token;
-    } else if (!THUYET_MINH_REF_PATTERN.test(token)) {
-      return trimmed;
+      numberLikeTokens.push(token);
+      continue;
     }
+    return trimmed;
   }
-  if (numericToken === null) return trimmed;
+
+  // SUA 2026-07-13 (xac nhan qua ACG that): tham chieu thuyet minh doi khi
+  // dinh vao gia tri o dang so TRAN, KHONG co dau ngoac quanh chinh no (vd "32
+  // (30.725.460.877)" - "32" la so thuyet minh, "(30.725.460.877)" moi la gia
+  // tri that) - THUYET_MINH_REF_PATTERN (yeu cau dang "32(a)", dinh lien
+  // khong khoang trang) khong khop dang nay, truoc day ca o bi coi la "2 con
+  // so mo ho" nen tra ve chuoi tho, lam "Chi phi thue TNDN hien hanh" doc
+  // duoc = null, khien kiem tra cheo "LNST = LNTT - Chi phi thue TNDN" tinh
+  // thieu han dong nay va bao SAI mismatch (da xac nhan qua chinh dang thuc ke
+  // toan: LNTT - [30.725.460.877 + 3.019.863.797 (dong hoan lai, dinh tuong
+  // tu)] = dung bang LNST bao cao). Neu CHI CO DUNG 1 token "manh" (co dau
+  // ngoac/phan cach - chac chan la gia tri) va cac token con lai deu la so
+  // TRAN NGAN (<=3 chu so, dang so thu tu thuyet minh) thi uu tien lay token
+  // manh, bo qua cac token tran con lai. Truong hop CO TU 2 token "manh" tro
+  // len (vd 2 gia tri that bi dinh lam 1, khong co chu thich de tach) VAN giu
+  // nguyen an toan cu - tra ve chuoi tho, khong doan.
+  const strongTokens = numberLikeTokens.filter(isFormattedValueToken);
+  let numericToken: string;
+  if (strongTokens.length === 1) {
+    numericToken = strongTokens[0];
+  } else if (numberLikeTokens.length === 1) {
+    numericToken = numberLikeTokens[0];
+  } else {
+    return trimmed;
+  }
 
   const isNegative = numericToken.startsWith('(') || numericToken.startsWith('-');
   const digitsOnly = numericToken.replace(/\D/g, '');

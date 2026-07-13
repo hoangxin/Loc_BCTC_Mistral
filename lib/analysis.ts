@@ -40,16 +40,6 @@ interface MetricDef {
   // bua tu 1 phan du lieu).
   finders: RowFinder[];
   thresholds: Thresholds | null;
-  // CHI dung cho "No Tiem An Ngoai Bang" (ngan hang): dong nao trong 5 dong
-  // cong lai KHONG in (tuy tung ngan hang, KHONG bat buoc theo mau - da xac
-  // nhan qua doi chieu that 2026-07-12: HDB/VCB/MBB deu KHONG co dong "Cam ket
-  // cho vay khong huy ngang", trong khi mau EIB nguoi dung cung cap CO dong
-  // nay nhung gia tri "-") duoc coi la 0, KHAC voi quy uoc mac dinh (thieu 1
-  // dong la ca chi tieu tra ve null - dung cho moi chi tieu nhieu-finder khac,
-  // vd "Tra truoc nguoi ban" NH+DH). Yeu cau rieng cua user cho dung 1 chi tieu
-  // nay, KHONG doi hanh vi mac dinh cua sumFindersAtColumn cho cac chi tieu con
-  // lai.
-  treatMissingRowAsZero?: boolean;
 }
 
 const BCDKT_THRESHOLDS: Thresholds = { level1: 20, level2: 40 };
@@ -743,11 +733,10 @@ const BANK_METRICS: MetricDef[] = [
     // khong phai rui ro tin dung - yeu cau user 2026-07-12, loai khoi tong).
     // "Cam ket trong nghiep vu L/C" co 2 bien the ten: da xac nhan HDB/MBB
     // dung "L/C" nhung VCB lai dung "thu tin dung" (khong viet tat), can
-    // byLabelAnyOf. treatMissingRowAsZero: mot vai dong (vd "Cam ket cho vay
-    // khong huy ngang") TUY NGAN HANG co in hay khong (da xac nhan qua doi
-    // chieu that: HDB/VCB/MBB deu KHONG co dong nay, mau EIB nguoi dung cung
-    // cap CO nhung gia tri "-") - dong thieu duoc coi la 0 theo yeu cau user,
-    // KHONG lam ca chi tieu tra ve null nhu quy uoc mac dinh.
+    // byLabelAnyOf. Mot vai dong (vd "Cam ket cho vay khong huy ngang") TUY
+    // NGAN HANG co in hay khong (da xac nhan qua doi chieu that: HDB/VCB/MBB
+    // deu KHONG co dong nay, mau EIB nguoi dung cung cap CO nhung gia tri "-")
+    // - dong thieu duoc coi la 0 (xem sumFindersAtColumn).
     finders: [
       byLabel(['BAO LANH VAY VON']),
       byLabel(['CAM KET CHO VAY KHONG HUY NGANG']),
@@ -756,7 +745,6 @@ const BANK_METRICS: MetricDef[] = [
       byLabel(['CAM KET KHAC']),
     ],
     thresholds: BANK_THRESHOLDS_B,
-    treatMissingRowAsZero: true,
   },
   {
     label: 'Thu Nhập Lãi Thuần',
@@ -836,38 +824,40 @@ const BANK_METRICS: MetricDef[] = [
 // khong phai loi doc). Cell KHONG phai so va KHONG phai "-" (vd chu rac that
 // su hiem gap) van tra ve "khong tinh duoc" - chi undefined (hang bi lech
 // cot cau truc) moi giu nguyen an toan tuyet doi.
-function numericValue(cell: string | number | null | undefined): number | null {
+export function numericValue(cell: string | number | null | undefined): number | null {
   if (typeof cell === 'number') return cell;
   if (cell === '-' || cell === null) return 0;
   return null;
 }
 
-// Cong gia tri cac finder cua 1 chi tieu tai 1 cot gia tri cu the - null neu
-// BAT KY finder nao khong tim thay dong hoac gia tri khong doc duoc (an toan
-// hon la cong nhung gi tim duoc - tranh % tinh tu 1 phan du lieu ma trong nhu
-// day du). unreliableCells: key "rowIndex:columnIndex" cua BANG KQKD van con
-// sai kiem tra cheo tong nhom sau khi da retry (xem AnalysisRow.unreliable) -
-// tra ve co unreliable=true rieng, KHONG tron vao "khong tim thay" (value=null
-// thong thuong), de phia goi bao canh bao dung loai.
+// Cong gia tri cac finder cua 1 chi tieu tai 1 cot gia tri cu the.
+// unreliableCells: key "rowIndex:columnIndex" cua BANG KQKD van con sai kiem
+// tra cheo tong nhom sau khi da retry (xem AnalysisRow.unreliable) - tra ve co
+// unreliable=true rieng, KHONG tron vao "khong tim thay" (value=null thong
+// thuong), de phia goi bao canh bao dung loai.
+//
+// SUA 2026-07-13 (yeu cau user, xac nhan qua doi chieu that DRI/PTI/ACG/NTC):
+// truoc day 1 finder KHONG tim thay dong (vd nua "dai han" cua cap chi tieu
+// NH+DH nhu "Tra truoc nguoi ban") lam CA chi tieu tra ve null, du nua "ngan
+// han" van doc day du - hau qua la cot % thay doi trong toang o hau het bao
+// cao, vi da so cong ty KHONG in dong "dai han" khi so du = 0 (bo han dong,
+// khong phai OCR doc sai) thay vi in kem gia tri "-". Gio coi dong thieu la 0
+// va cong tiep cac finder con lai - dung quy uoc "-"/o trong = 0 (xem
+// numericValue) nhung ap dung o CAP CA DONG, khong chi CAP O TRONG TRONG 1
+// dong da tim thay. Truong hop hiem TAT CA finder deu thieu se cho sum=0 o CA
+// 2 ky, computePercentChange() da tu chan chia cho 0 (tra null, hien "—")
+// nen khong hien nham "0%" trong truong hop nay.
 function sumFindersAtColumn(
   table: StatementTable,
   finders: RowFinder[],
   columnIndex: number,
-  unreliableCells: Set<string>,
-  treatMissingRowAsZero = false
+  unreliableCells: Set<string>
 ): { value: number | null; unreliable: boolean } {
   let sum = 0;
   let unreliable = false;
   for (const find of finders) {
     const row = find(table);
-    if (!row) {
-      // chi tieu khong ton tai trong bang nay (vd khac bieu mau) - mac dinh
-      // khong tinh duoc (an toan hon la doan bua). treatMissingRowAsZero: rieng
-      // "No Tiem An Ngoai Bang" (xem comment MetricDef.treatMissingRowAsZero)
-      // - coi dong thieu la 0, tiep tuc cong cac finder con lai thay vi bo cuoc.
-      if (treatMissingRowAsZero) continue;
-      return { value: null, unreliable };
-    }
+    if (!row) continue;
     if (unreliableCells.size > 0) {
       const rowIndex = table.rows.indexOf(row);
       if (unreliableCells.has(`${rowIndex}:${columnIndex}`)) unreliable = true;
@@ -882,7 +872,7 @@ function sumFindersAtColumn(
 // BCDKT: cot gia tri dau tien LUON la ky nay (cuoi ky), cot thu hai LUON la
 // dau ky/dau nam - da verify qua du lieu OCR that (SJ1 va IDV), khong can do
 // text.
-function balanceSheetPeriodColumns(table: StatementTable): { currentIndex: number; priorIndex: number } | null {
+export function balanceSheetPeriodColumns(table: StatementTable): { currentIndex: number; priorIndex: number } | null {
   const [currentIndex, priorIndex] = valueColumnIndexes(table);
   if (currentIndex === undefined || priorIndex === undefined) return null;
   return { currentIndex, priorIndex };
@@ -894,7 +884,7 @@ function balanceSheetPeriodColumns(table: StatementTable): { currentIndex: numbe
 // "NAM NAY" va KHONG chua "LUY KE" (loai 2 cot luy ke); "cung ky" tuong tu voi
 // "NAM TRUOC". Fallback ve vi tri (giong BCDKT) neu khong khop pattern nao ca
 // (vd bao cao dung tu ngu khac thuong).
-function incomeStatementPeriodColumns(table: StatementTable): { currentIndex: number; priorIndex: number } | null {
+export function incomeStatementPeriodColumns(table: StatementTable): { currentIndex: number; priorIndex: number } | null {
   const valueIndexes = valueColumnIndexes(table);
   const currentIndex = valueIndexes.find((i) => {
     const normalized = normalizeLabelText(table.columns[i] ?? '');
@@ -911,7 +901,7 @@ function incomeStatementPeriodColumns(table: StatementTable): { currentIndex: nu
   return { currentIndex: fallbackCurrent, priorIndex: fallbackPrior };
 }
 
-function computePercentChange(current: number | null, prior: number | null): number | null {
+export function computePercentChange(current: number | null, prior: number | null): number | null {
   if (current === null || prior === null) return null;
   if (prior === 0) return null; // khong tinh % tang truong tu goc 0 (vo cuc/khong xac dinh)
   return ((current - prior) / Math.abs(prior)) * 100;
@@ -965,8 +955,8 @@ function buildAnalysisRows(statements: FinancialStatements, metrics: MetricDef[]
         : metric.statement === 'incomeStatement'
           ? unreliableCells.incomeStatement
           : NO_UNRELIABLE_CELLS;
-    const current = sumFindersAtColumn(table, metric.finders, periods.currentIndex, unreliableCellsForTable, metric.treatMissingRowAsZero);
-    const prior = sumFindersAtColumn(table, metric.finders, periods.priorIndex, unreliableCellsForTable, metric.treatMissingRowAsZero);
+    const current = sumFindersAtColumn(table, metric.finders, periods.currentIndex, unreliableCellsForTable);
+    const prior = sumFindersAtColumn(table, metric.finders, periods.priorIndex, unreliableCellsForTable);
     const unreliable = current.unreliable || prior.unreliable;
     const percentChange = unreliable ? null : computePercentChange(current.value, prior.value);
     return { label: metric.label, percentChange, tier: tierFor(percentChange, metric.thresholds), unreliable };
