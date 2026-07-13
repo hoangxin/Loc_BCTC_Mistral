@@ -57,6 +57,7 @@ export default function ReportsSummaryTable({ reports }: { reports: DownloadedRe
       <table className="report-table">
         <thead>
           <tr>
+            <th>Xuất file</th>
             <th>STT</th>
             <th className="stockcode-col">Mã CK</th>
             <th className="exchange-col">Sàn GD</th>
@@ -64,7 +65,6 @@ export default function ReportsSummaryTable({ reports }: { reports: DownloadedRe
             {labels.map((label) => (
               <th key={label} className="pct-col-header">{label}</th>
             ))}
-            <th>Xuất file</th>
           </tr>
         </thead>
         <tbody>
@@ -79,6 +79,23 @@ export default function ReportsSummaryTable({ reports }: { reports: DownloadedRe
             const byLabel = new Map((report.analysis ?? []).map((item) => [item.label, item]));
             return (
               <tr key={report.filePath}>
+                <td>
+                  <div className="row-export-actions">
+                    {/* Excel: khong doi - server dung THANG report.statements da
+                    OCR san luc "Tai BCTC" (app/api/report-file), khong tai
+                    lai/OCR lai gi ca. */}
+                    <a className="secondary-button" href={excelFileHref(report.filePath)}>
+                      Excel
+                    </a>
+                    {/* PDF: KHONG con OCR toan van (lib/export/full-document.ts,
+                    da comment lai - xem app/api/report-file/route.ts) - mo
+                    THANG file goc tren Vietstock o tab moi (yeu cau user
+                    2026-07-07), trinh duyet tu tai/hien thi. */}
+                    <a className="secondary-button" href={buildOriginalFileUrl(report)} target="_blank" rel="noreferrer">
+                      PDF
+                    </a>
+                  </div>
+                </td>
                 <td>{index + 1}</td>
                 <td className="stockcode-col">
                   {/* Ten cong ty hien qua tooltip hover (title) thay vi cot rieng
@@ -142,23 +159,6 @@ export default function ReportsSummaryTable({ reports }: { reports: DownloadedRe
                     </td>
                   );
                 })}
-                <td>
-                  <div className="row-export-actions">
-                    {/* Excel: khong doi - server dung THANG report.statements da
-                    OCR san luc "Tai BCTC" (app/api/report-file), khong tai
-                    lai/OCR lai gi ca. */}
-                    <a className="secondary-button" href={excelFileHref(report.filePath)}>
-                      Excel
-                    </a>
-                    {/* PDF: KHONG con OCR toan van (lib/export/full-document.ts,
-                    da comment lai - xem app/api/report-file/route.ts) - mo
-                    THANG file goc tren Vietstock o tab moi (yeu cau user
-                    2026-07-07), trinh duyet tu tai/hien thi. */}
-                    <a className="secondary-button" href={buildOriginalFileUrl(report)} target="_blank" rel="noreferrer">
-                      PDF
-                    </a>
-                  </div>
-                </td>
               </tr>
             );
           })}

@@ -62,7 +62,7 @@ export default function HomePage() {
         resultsTab={
           <>
             {status.reports.length > 0 && (
-              <div className="summary-actions">
+              <div className="summary-actions summary-actions-end">
                 <ExportSummaryButton filePaths={status.reports.map((report) => report.filePath)} />
                 <ClearResultsButton currentGeneratedAt={status.generatedAt} />
               </div>
