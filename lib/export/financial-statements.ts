@@ -11,7 +11,7 @@ import type { MistralOcrPage } from '../ai/mistral-ocr';
 import { validateFinancialStatements, findAllGroupSumMismatches, type TaggedGroupSumMismatch } from './validate-statements';
 import { containsNotesSectionMarker, parseStatementsFromMarkdown } from './markdown-tables';
 import { classifyBusinessType, type BusinessType } from '../business-type';
-import { unreliableCellKeysFromMismatches, type FinancialStatements, type UnreliableCells } from './statement-shared';
+import { unreliableCellKeysFromMismatches, normalizeLabelText, type FinancialStatements, type UnreliableCells } from './statement-shared';
 import { looksLikeVietnameseText } from '../pdf-text';
 
 // Bao cao scan dai (extractFinancialStatementsWithOcrProbe duoi) khong co
@@ -22,6 +22,23 @@ import { looksLikeVietnameseText } from '../pdf-text';
 // tiep tuc OCR them lo nao/khong retry (retry se khong bien tieng Anh thanh
 // tieng Viet) - xem NonVietnameseContentError o duoi.
 export class NonVietnameseContentError extends Error {}
+
+// Mot so cong ty nop 1 "cong van dinh chinh" (sua lai vai chi tieu da cong bo
+// sai) len Vietstock CUNG KY voi BCTC that, mang tieu de gan giong BCTC that
+// (vd "BCTC Công ty mẹ quý 1 năm 2026 (điều chỉnh)") - nhung ban than file do
+// KHONG PHAI 1 BCTC day du, chi la 1 cong van 1-2 trang liet ke vai chi tieu
+// bi sua ("Thông tin đã công bố" / "Thông tin đính chính"), KHONG co KQKD/LCTT
+// va BCDKT chi con vai dong. Da xac nhan qua doi chieu that CIG Q1/2026 (file
+// "..._DieuChinh.pdf"): OCR doc DUNG NOI DUNG (khong phai loi OCR), nhung ket
+// qua nhin GIONG 1 bao cao bi hong/thieu du lieu vi ban than nguon chi co
+// vay. Nhan dien qua cum tu BAT BUOC theo mau cong van (Thong tu ke toan quy
+// dinh dung tu ngu nay cho loai cong van nay, khong doi giua cac cong ty) -
+// "V/v Đính chính thông tin trên Báo cáo tài chính" (Trích yếu cua cong van).
+const CORRECTION_NOTICE_MARKER = 'DINH CHINH THONG TIN TREN BAO CAO TAI CHINH';
+
+function isCorrectionNoticeMarkdown(markdown: string): boolean {
+  return normalizeLabelText(markdown).includes(CORRECTION_NOTICE_MARKER);
+}
 
 // Re-export de cac file khac (excel.ts, pdf.ts, validate-statements.ts, lib/export/index.ts...)
 // tiep tuc import type tu day nhu truoc, khong can sua lai import o noi khac.
@@ -45,14 +62,16 @@ export interface ExtractFinancialStatementsResult {
   unreliableCells: UnreliableCells;
 }
 
-// 1 lan dau + 2 lan retry (yeu cau nguoi dung 2026-07-11: "cho phep retry 2
-// lan"). CHI retry khi kiem tra cheo tong nhom (findAllGroupSumMismatches -
-// nhom phang KQKD, ma so thap phan BCDKT+KQKD, cap1->cap2 BCDKT) phat hien sai
-// - KHONG retry cho cac loai canh bao khac cua validateFinancialStatements (vd
-// thieu dong "Tong cong tai san") vi retry OCR kho long sua duoc loi CAU TRUC
-// bang (vd bao cao dung mau khac thuong), chi co ich cho loi NOI DUNG cuc bo
-// (OCR gop/bia dong 1 vai o) ma kiem tra tong nhom phat hien duoc.
-const MAX_OCR_ATTEMPTS = 3;
+// GIAM tu 3 xuong 1 (2026-07-13, theo yeu cau nguoi dung sau khi doi chieu
+// that CIG Q1/2026: goi lai Mistral OCR 3 lan doc lap cho CUNG 1 file ra
+// MARKDOWN GIONG HET nhau ca 3 lan - "co ve khong co tac dung gi"). Nguyen
+// nhan that: retry chi giup voi loi OCR TAM THOI/khong nhat quan giua cac lan
+// goi (xem comment extractWithGroupCheckRetry) - VOI 1 TAI LIEU CO NOI DUNG
+// ON DINH (du la BCTC binh thuong hay 1 cong van dinh chinh chi co vai dong),
+// Mistral OCR se doc RA CUNG 1 KET QUA moi lan, retry chi ton them 2 lan goi
+// API vo ich. Van giu nguyen co che "giu lai lan do te thap nhat" (chi con 1
+// lan nen luon la lan duy nhat) de khong phai sua lai cau truc extractWithGroupCheckRetry.
+const MAX_OCR_ATTEMPTS = 1;
 
 interface OcrAttemptResult {
   markdown: string;
@@ -209,9 +228,24 @@ export async function extractFinancialStatementsWithOcrProbe(filePath: string, t
   // thu - yeu cau nguoi dung 2026-07-12: can noi bat ro rang truong hop nay
   // trong UI (ReportsSummaryTable.tsx), khac han 1 vai canh bao nho le thuong
   // gap (vd thieu 1 dong phu).
-  const warnings = isEmptyParse(statements)
-    ? ['CANH BAO: ca 3 bang chinh (BCDKT/KQKD/LCTT) deu khong doc duoc dong nao - can kiem tra tay.', ...issues.map((issue) => issue.message)]
-    : issues.map((issue) => issue.message);
+  //
+  // 2026-07-13 (yeu cau nguoi dung, sau khi doi chieu CIG Q1/2026 - xem
+  // isCorrectionNoticeMarkdown): kiem tra TRUOC CA isEmptyParse, vi day la
+  // NGUYEN NHAN GOC neu co (khong phai loi OCR/parse) - "cong van dinh chinh"
+  // khong phai 1 BCTC day du nen KQKD/LCTT rong VA BCDKT chi vai dong LA HANH
+  // VI DUNG cua chinh nguon, khong phai loi can retry/sua. Canh bao noi bat
+  // rieng, KHAC han ca 2 loai canh bao "khong doc duoc"/"khong khop" khac -
+  // yeu cau nguoi dung tu tim ban BCTC goc (KHONG phai ban "(điều chỉnh)")
+  // thay vi dung so lieu tu file nay lam bao cao chinh.
+  const correctionNotice = isCorrectionNoticeMarkdown(markdown);
+  const warnings = correctionNotice
+    ? [
+        'CANH BAO: day co ve la CONG VAN DINH CHINH (chi sua lai vai chi tieu da cong bo truoc do), KHONG PHAI mot BCTC day du - can tu tim va doi chieu voi ban BAO CAO GOC (khong phai ban "(điều chỉnh)"), khong nen dung so lieu tu file nay lam bao cao chinh thuc.',
+        ...issues.map((issue) => issue.message),
+      ]
+    : isEmptyParse(statements)
+      ? ['CANH BAO: ca 3 bang chinh (BCDKT/KQKD/LCTT) deu khong doc duoc dong nao - can kiem tra tay.', ...issues.map((issue) => issue.message)]
+      : issues.map((issue) => issue.message);
 
   return {
     statements,
