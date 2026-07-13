@@ -86,24 +86,24 @@ function looksLikeHeadingLine(rawLine: string): boolean {
 // Dong "tham chieu cheo" (footer boilerplate LAP LAI o CUOI MOI TRANG, vd "...
 // phải được đọc cùng với Bản thuyết minh Báo cáo tài chính...") nhac lai
 // NGUYEN VAN cum trong NOTES_SECTION_MARKERS nhung KHONG PHAI tieu de muc that
-// - da gap that PTI That 2026-07-14: khac voi cau "Các thuyết minh là một bộ
-// phận không tách rời..." da biet o tren (co chen tu giua nen tu chan duoc),
-// bien the nay ("...phải được đọc cùng với Bản thuyết minh Báo cáo tài
-// chính...") giu NGUYEN VEN chuoi lien tiep "THUYET MINH BAO CAO TAI CHINH",
-// khien notesLine khop NGAY tu dong footer DAU TIEN (cuoi trang 2), cat mat
-// TOAN BO phan con lai cua BCDKT + TOAN BO KQKD/LCTT (PTI chi con lai 31/hang
-// tram dong that). Nhan dien rieng cum dac trung cua CAU DAN CHIEU ("PHAI DUOC
-// DOC" - "phải được đọc") de loai truoc khi so khop marker, AN TOAN HON la
-// sua nguong VI TRI trong dong (se pha vo tieu de hop le "Báo cáo tình hình
-// biến động vốn chủ sở hữu" - marker 'BIEN DONG VON CHU SO HUU' nam o GIUA cum
-// tieu de day du, khong o dau dong, nen sieet chan theo vi tri se loai nham).
-const REFERENCE_FOOTER_PATTERN = 'PHAI DUOC DOC';
-
+// - da gap that PTI that 2026-07-14, VOI IT NHAT 2 BIEN THE CAU CHU KHAC NHAU
+// TRONG CUNG 1 TAI LIEU ("...phải được đọc cùng với Bản thuyết minh...", VA
+// rieng biet "Tài liệu này phải được xác nhận với [Bưu] thuyết minh..." o 1
+// trang khac) - lan dau chi loai rieng cum "PHAI DUOC DOC" (vet 1 bien the),
+// nhung bien the thu 2 dung "PHAI DUOC XAC NHAN" nen lot qua, van gay dung 1
+// loi cat y het (mat toan bo KQKD/LCTT du BCDKT da het cat sai). Liet ke tung
+// cau dan chieu cu the la KHONG BEN VUNG (con nhieu bien the khac chua gap).
+// Doi sang dieu kien CAU TRUC thay vi TU NGU: MOI tieu de muc THAT trong tai
+// lieu (da xac nhan qua toan bo cac mau doc duoc: "# **BÁO CÁO TÀI CHÍNH HỢP
+// NHẤT**", "### BẢNG CÂN ĐỐI KẾ TOÁN...", "# **KẾT QUẢ HOẠT ĐỘNG KINH DOANH
+// HỢP NHẤT**"...) LUON duoc Mistral OCR ra dang dong HEADING MARKDOWN (bat dau
+// bang "#"), trong khi cau dan chieu/chu thich chan trang LUON la van xuoi
+// thuong (khong bao gio co "#") - doi hoi THEM dieu kien nay loai duoc CA LOP
+// cau dan chieu, bat ke dung tu ngu cu the nao.
 function containsHeadingMarkerNearStart(rawLine: string, markers: string[]): boolean {
   const trimmed = rawLine.trim();
-  if (trimmed.length === 0 || trimmed.startsWith('|')) return false;
+  if (trimmed.length === 0 || trimmed.startsWith('|') || !trimmed.startsWith('#')) return false;
   const normalized = normalizeLabelText(trimmed);
-  if (normalized.includes(REFERENCE_FOOTER_PATTERN)) return false;
   return markers.some((m) => {
     const index = normalized.indexOf(m);
     return index !== -1 && index + m.length <= MAX_HEADING_LINE_LENGTH;
@@ -405,6 +405,29 @@ const CASH_FLOW_CONTENT_MARKERS = [
   'TIEN CHI NOP THUE THU NHAP DOANH NGHIEP',
 ];
 
+// SUA 2026-07-14 (theo yeu cau nguoi dung, sau khi gap that PTI): diem CAT
+// truoc day dua vao tim diem BAT DAU cua "Thuyet minh" (NOTES_SECTION_MARKERS)
+// - phuong an nay YEU vi tu "thuyet minh" xuat hien RAT NHIEU noi khap tai
+// lieu (ten cot "Thuyet minh" o MOI bang, tham chieu chi so "IV.1"/"V.2"...,
+// va dac biet la dong chu thich cheo LAP LAI o CUOI MOI TRANG kieu "...phai
+// duoc doc cung voi Ban thuyet minh Bao cao tai chinh..." - da xac nhan PTI
+// that bi khop nham ngay dong dau tien, cat mat toan bo phan con lai cua tai
+// lieu du BCDKT/KQKD/LCTT deu con dai). Doi sang tim diem KET THUC that su cua
+// LCTT: dong "Tien va tuong duong tien cuoi ky" (ma so 70) LUON la dong CUOI
+// CUNG cua Luu chuyen tien te theo quy dinh (ca 2 phuong phap truc tiep/gian
+// tiep, moi loai hinh DN/NH/CTCK/bao hiem) - on dinh hon NHIEU vi day la 1 tin
+// hieu KET THUC duy nhat, khong bi lap lai rai rac nhu tu "thuyet minh". Cat
+// NGAY SAU dong nay se tu dong loai luon bang "Bao cao tinh hinh bien dong von
+// chu so huu" (CTCK, nam GIUA cashFlow va Thuyet minh) ma khong can rieng
+// marker 'BIEN DONG VON CHU SO HUU' trong NOTES_SECTION_MARKERS nua.
+const CASH_FLOW_END_MARKER = 'TIEN VA TUONG DUONG TIEN CUOI KY';
+
+function containsCashFlowEndRow(rawLine: string): boolean {
+  const trimmed = rawLine.trim();
+  if (!trimmed.startsWith('|')) return false;
+  return normalizeLabelText(trimmed).includes(CASH_FLOW_END_MARKER);
+}
+
 // Rieng CTCK (Mau B01-CTCK): "Cac chi tieu ngoai bao cao tinh hinh tai chinh"
 // - tai san/tien/no CTCK QUAN LY HO nha dau tu (KHONG thuoc BCDKT chinh cua
 // CTCK). Nam NGAY SAU BCDKT trong tai lieu goc - da xac nhan qua 2 bao cao
@@ -676,7 +699,7 @@ function parseAllTablesInRange(lines: string[]): ParsedTable[] {
 // khop chuoi thang la du).
 export function containsNotesSectionMarker(markdown: string): boolean {
   const lines = markdown.split(/\r?\n/);
-  return lines.some((line) => containsHeadingMarkerNearStart(line, NOTES_SECTION_MARKERS));
+  return lines.some((line) => containsCashFlowEndRow(line) || containsHeadingMarkerNearStart(line, NOTES_SECTION_MARKERS));
 }
 
 export function parseStatementsFromMarkdown(markdown: string): FinancialStatements {
@@ -716,9 +739,17 @@ export function parseStatementsFromMarkdown(markdown: string): FinancialStatemen
   const firstContentLine = lines.findIndex(
     (line, i) => splitMarkdownRow(line) !== null && allContentMarkers.some((m) => normalizedLines[i].includes(m))
   );
-  const notesLine = lines.findIndex(
-    (line, i) => (firstContentLine === -1 || i > firstContentLine) && containsHeadingMarkerNearStart(line, NOTES_SECTION_MARKERS)
-  );
+  // Uu tien diem cat theo dong KET THUC LCTT that su (on dinh hon nhieu - xem
+  // comment CASH_FLOW_END_MARKER o tren), chi fallback ve tim tieu de "Thuyet
+  // minh" khi khong tim thay dong ket thuc LCTT nao (bao cao khong co LCTT,
+  // hoac OCR khong doc duoc dong nay) - giu nguyen an toan cu cho truong hop
+  // hiem do, khong lam mat kha nang cat cua cac bao cao da hoat dong dung tu
+  // truoc (xem regression test that lai o scripts/_debug-validate-real-data.ts).
+  const cashFlowEndLine = lines.findIndex((line, i) => (firstContentLine === -1 || i > firstContentLine) && containsCashFlowEndRow(line));
+  const notesLine =
+    cashFlowEndLine !== -1
+      ? cashFlowEndLine + 1
+      : lines.findIndex((line, i) => (firstContentLine === -1 || i > firstContentLine) && containsHeadingMarkerNearStart(line, NOTES_SECTION_MARKERS));
   const relevantLines = notesLine !== -1 ? lines.slice(0, notesLine) : lines;
 
   // Tim TAT CA bang markdown trong pham vi, roi gan MOI bang vao 1 trong 3
