@@ -243,7 +243,12 @@ function looksLikeArabicItemPrefix(label: string): boolean {
 // vao chu (khong dau cach) thay vi "* Nguyen gia" (co dau cach) - cung 1 lop
 // loi da sua cho ARABIC_ITEM_PREFIX (xem comment o do), khien dong nay bi
 // tinh nham la dong tong, cong DU vao "tong cac muc con cua Von chu so huu".
-const NON_SUBTOTAL_DETAIL_PREFIX = /^(-|\*|[a-z]\))\s*/;
+// [a-z][.)] (chap nhan CA "a." LAN "a)") - da xac nhan qua PHS that
+// (2026-07-13): "a. Cổ phiếu phổ thông có quyền biểu quyết" (cap-4 duoi
+// "1.1. Vốn góp của chủ sở hữu") dung dau CHAM thay vi dong ngoac, truoc day
+// chi nhan "a)" nen dong nay khong khop, bi coi NHAM la dong tong, cong TRUNG
+// vao tong "Von chu so huu" (dung 1 lop loi voi cac tien to khac da sua).
+const NON_SUBTOTAL_DETAIL_PREFIX = /^(-|\*|[a-z][.)])\s*/;
 
 // "Nguyen gia"/"Gia tri hao mon luy ke" LUON la dong cap-4 duoi 1 muc TSCD/
 // BDS dau tu, theo dung thuat ngu chuan VAS - nhung TIEN TO/HAU TO cua tung
@@ -253,7 +258,12 @@ const NON_SUBTOTAL_DETAIL_PREFIX = /^(-|\*|[a-z]\))\s*/;
 // moi (dua tren ky tu, de nham NGOAI le), nhan dien truc tiep qua NOI DUNG
 // chuan (khong doi giua cac cong ty, chi khac phan trang tri xung quanh) -
 // dang tin cay hon cho DUNG 2 thuat ngu nay.
-const KNOWN_CAP4_LABEL_CONTENT = ['NGUYEN GIA', 'GIA TRI HAO MON LUY KE'];
+// "Gia tri khau hao luy ke" - tu dong nghia voi "hao mon" (BVH that,
+// 2026-07-13: dung "khấu hao" thay vi "hao mòn" cho CA TSCD huu hinh LAN Bat
+// dong san dau tu) - thieu bien the nay khien dong bi coi NHAM la dong tong
+// (roi vao fallback mac dinh true), cong TRUNG chinh no vao tong "TS dai han"
+// (no da la 1 PHAN của gia tri TSCD/BDSĐT cha, khong phai 1 muc doc lap).
+const KNOWN_CAP4_LABEL_CONTENT = ['NGUYEN GIA', 'GIA TRI HAO MON LUY KE', 'GIA TRI KHAU HAO LUY KE'];
 
 function isKnownCap4Label(label: string): boolean {
   const normalized = normalizeLabelText(label);
@@ -277,11 +287,18 @@ function isKnownCap4Label(label: string): boolean {
 //   lam tong "cac muc con" = chinh gia tri cua no (thay vi tong dung ca
 //   nhom). Nhan dien qua NOI DUNG (khong doi giua cac cong ty/thong tu) tranh
 //   phai vá tung truong hop rot dau cau rieng le.
+// mã 411a/411b (TT200): 2 dong chi tiet CO DINH duoi "Von gop cua chu so
+// huu" - da xac nhan qua PHS that (2026-07-13): dung tien to chu "a."/"b."
+// (dau CHAM) thay vi "a)"/"b)" (dong ngoac, dang NON_SUBTOTAL_DETAIL_PREFIX
+// da nhan truoc do) - nhan qua CHINH TEN chi tieu (khong doi giua cac cong
+// ty/kieu go dau cau) thay vi tiep tuc doi pho tung bien the dau cau moi.
 const KNOWN_ALWAYS_CHILD_CONTENT = [
   'TAI SAN CO DINH HUU HINH',
   'TAI SAN CO DINH THUE TAI CHINH',
   'TAI SAN CO DINH VO HINH',
   'LOI NHUAN SAU THUE CHUA PHAN PHOI',
+  'CO PHIEU PHO THONG CO QUYEN BIEU QUYET',
+  'CO PHIEU UU DAI',
 ];
 
 // Dung .includes() (khong phai EXACT sau khi bo tien to) vi tien to STT o
@@ -1335,6 +1352,23 @@ function decimalChildSign(childLabel: string): 1 | -1 {
   return normalizeLabelText(childLabel).includes('TANG DU PHONG') ? -1 : 1;
 }
 
+
+// "Doanh thu hoa hong chua duoc huong" (hoa hong tai bao hiem chua ghi nhan)
+// LUON la 1 khoan doanh thu/thu nhap hoan lai DOC LAP ve ban chat ke toan,
+// KHONG BAO GIO la 1 phan chia nho cua "Phai tra ngan han khac"/"Doanh thu
+// chua thuc hien..." (2 khai niem hoan toan khac nhau: 1 ben la cong no phai
+// tra "khac" gop chung, 1 ben la doanh thu hoan lai) - da xac nhan qua CA
+// BVH LAN PRE that (2026-07-13, cung 1 dang: cong ty bao hiem gan ma so lien
+// tiep "319.1" ngay sau ma "319" chi de xen vao bang ke toan noi bo, khong
+// phai 1 phep chia nho ke toan). Nhan dien qua CHINH TEN chi tieu nay (khong
+// doi giua cac cong ty), khong dua vao so thu tu/tien to in san.
+const NEVER_DECIMAL_CHILD_CONTENT = ['DOANH THU HOA HONG CHUA DUOC HUONG'];
+
+function isNeverDecimalChildLabel(label: string): boolean {
+  const normalized = normalizeLabelText(label);
+  return NEVER_DECIMAL_CHILD_CONTENT.some((marker) => normalized.includes(marker));
+}
+
 // Kiem tra "cac dong con co ma so dang THAP PHAN THUAN (X.Y, vd '111.1' la
 // con cua '111') co tong khop voi CHINH dong cha (ma so X) hay khong" - khac
 // findIncomeStatementGroupMismatches (dua vao TEN "Cong.../Tong..." de nhan
@@ -1402,6 +1436,7 @@ export function findDecimalCodeGroupMismatches(table: StatementTable): GroupSumM
         const value = typeof cell === 'number' ? cell : cell === '-' || cell === null ? 0 : null;
         if (value === null) continue;
         const childLabel = String(table.rows[j][labelIndex] ?? '').trim();
+        if (isNeverDecimalChildLabel(childLabel)) continue;
         const sign = decimalChildSign(childLabel);
         sum += sign === -1 ? -Math.abs(value) : value;
         sawDetail = true;

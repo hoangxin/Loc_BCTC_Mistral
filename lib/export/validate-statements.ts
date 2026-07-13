@@ -112,6 +112,17 @@ function childrenBetween(
     if (!isLikelySubtotalRow(table, row, labelIndex)) continue;
     // Dong con lap lai y het ten nhom cha (vd "Hang ton kho" khi chi co 1 muc
     // con) - loai de tranh dem 2 lan (xem isDuplicateKnownBalanceSheetLevel1Row).
+    // LUU Y (2026-07-13, xac nhan qua PHS that): "D. Von chu so huu" (dong
+    // bien, startIdx) va "I. Von chu so huu" (dong con dau tien) CUNG TEN
+    // nhung KHONG PHAI truong hop trung lap kieu "Hang ton kho" - day la 2
+    // CAP KHAC NHAU that su theo dung mau TT200 (D = I + II, "I. Von chu so
+    // huu" la 1 trong 2 nhom con THAT, chi tinh co bang chinh D vi nhom con
+    // con lai "II. Nguon kinh phi va quy khac" = 0 o bao cao nay) - da thu mo
+    // rong rangeStartIdx thanh startIdx de loai "I." nhu 1 dup, nhung lam sum
+    // tut ve 0 (thieu dung phan gia tri thuc), revert lai vi day la sai lam.
+    // KHONG duoc coi startIdx (dong bien) la "dong truoc do" khi kiem tra
+    // trung lap - chi cac dong THAT SU nam trong pham vi con (startIdx+1 tro
+    // di) moi duoc dung de phat hien trung lap.
     if (isDuplicateKnownBalanceSheetLevel1Row(table, labelIndex, startIdx + 1, i)) continue;
     // Dong con cua 1 "container" (vd CTCK "Tai san tai chinh") du TEN KHAC
     // (khong phai lap lai) - xem isInsideKnownContainer.
@@ -495,7 +506,20 @@ function findIncomeTaxRows(table: StatementTable): (string | number | null)[][] 
   const isDetailRow = (label: string) => label.includes('HIEN HANH') || label.includes('HOAN LAI');
   const totalRow = findRow(table, (label) => label.includes('CHI PHI THUE') && !isDetailRow(label));
   if (totalRow) return [totalRow];
-  return findRows(table, (label) => label.includes('CHI PHI THUE') || (label.includes('THUE TNDN') && isDetailRow(label)));
+  // Dong "hoan lai" co the la THU NHAP (khoan duoc loi thue hoan lai, khong
+  // phai chi phi) chu khong luon la "Chi phi thue..." - da xac nhan qua BVH
+  // that (2026-07-13): "Thu nhập thuế thu nhập doanh nghiệp hoãn lại" (dong
+  // rieng, KHONG bat dau bang "Chi phi") khong khop dieu kien cu (doi hoi
+  // hoac "CHI PHI THUE" hoac viet tat "THUE TNDN" - bao cao nay viet day du
+  // "thue thu nhap doanh nghiep", khong bao gio viet tat) nen bi loai hoan
+  // toan khoi tong thue, lam "Loi nhuan sau thue" tinh duoc thieu dung bang
+  // gia tri khoan thu hoan lai nay. Nhan dien qua NOI DUNG rong hon: "THUE"
+  // + ("DOANH NGHIEP" day du HOAC "TNDN" viet tat) + hien hanh/hoan lai,
+  // khong doi hoi ca cum "CHI PHI"/"THUE TNDN" phai dung lien nhau.
+  return findRows(
+    table,
+    (label) => label.includes('CHI PHI THUE') || ((label.includes('DOANH NGHIEP') || label.includes('TNDN')) && label.includes('THUE') && isDetailRow(label))
+  );
 }
 
 function validateIncomeStatementTax(table: StatementTable): ValidationIssue[] {
@@ -574,14 +598,19 @@ function validateIncomeStatementGroupSums(table: StatementTable, businessType: B
   return groupSumMismatchesToIssues('incomeStatement', findIncomeStatementFormulaMismatches(table, businessType));
 }
 
-// Ma so dang thap phan (X.Y, vd "111.1"/"111.2" la con cua "111") phai co
-// tong khop voi CHINH dong cha (X) - dua HOAN TOAN vao cau truc ma so, KHONG
-// phu thuoc ten tieng Viet, nen ap dung duoc CHUNG cho ca balanceSheet lan
-// incomeStatement (2026-07-12, yeu cau nguoi dung mo rong kiem tra cheo "sau
-// hon" - xem findDecimalCodeGroupMismatches).
-function validateDecimalCodeGroupSums(table: StatementTable, tableName: 'balanceSheet' | 'incomeStatement'): ValidationIssue[] {
-  return groupSumMismatchesToIssues(tableName, findDecimalCodeGroupMismatches(table));
-}
+// REMOVED tu duong canh bao hien thi (2026-07-13, theo yeu cau nguoi dung):
+// findDecimalCodeGroupMismatches kiem tra quan he cha-con cua cac dong CHI
+// TIET tu cong ty tu chia nho (vd "phai thu ve hop dong bao hiem"/"phai thu
+// khac"), KHONG phai ten chi tieu chuan theo Thong tu - khong co "quy tac ke
+// toan" nao de tra ten thay the, CHI co the nhan biet quan he nay qua CAU
+// TRUC MA SO (X.1 la con cua X). Vi day la kiem tra sau hon muc do cac Thong
+// tu quy dinh (cong ty tu lap, khong theo chuan chung), nguoi dung yeu cau bo
+// hoan toan khoi canh bao hien thi thay vi tiep tuc vá tung truong hop bang
+// tin hieu vi tri/so thu tu - giong quyet dinh giam do sau da lam voi
+// findBalanceSheetLevel2Mismatches (Phase 8). Ham findDecimalCodeGroupMismatches
+// (statement-shared.ts) van giu nguyen cho findAllGroupSumMismatches (retry
+// OCR/gan co "unreliable" - pham vi khac, khong hien thi truc tiep cho nguoi
+// dung), khong xoa ham do.
 
 // Kiem tra tinh nhat quan noi tai cua so lieu da trich - hoan toan cuc bo,
 // khong goi AI, khong ton token. Dung de phat hien loi do OCR/AI doc nham so,
@@ -626,11 +655,9 @@ export function validateFinancialStatements(statements: FinancialStatements, bus
   const rawIssues = [
     ...validateBalanceSheet(statements.balanceSheet),
     ...(businessType === 'bank' ? [] : validateBalanceSheetSubtotals(statements.balanceSheet)),
-    ...validateDecimalCodeGroupSums(statements.balanceSheet, 'balanceSheet'),
     ...(businessType === 'other' ? validateIncomeStatement(statements.incomeStatement) : []),
     ...validateIncomeStatementTax(statements.incomeStatement),
     ...validateIncomeStatementGroupSums(statements.incomeStatement, businessType),
-    ...validateDecimalCodeGroupSums(statements.incomeStatement, 'incomeStatement'),
   ];
 
   const realIssues = rawIssues.filter((i) => !isCannotVerifyMessage(i.message));
