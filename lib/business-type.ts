@@ -32,13 +32,32 @@ const FORM_CODE_RULES: { type: BusinessType; pattern: RegExp }[] = [
   { type: 'insurance', pattern: /DNBH|DNPNT|DNTBH/ }, // DNBH=nhan tho, DNPNT=phi nhan tho, DNTBH=tai bao hiem
 ];
 
+// SUA 2026-07-14 (xac nhan qua PTI - Tong CTCP Bao hiem Buu dien - that): ma
+// mau (DNPNT...) BAT BUOC theo phap luat nhung KHONG PHAI luon duoc OCR doc
+// duoc - da kiem chung truc tiep bang Mistral OCR tren PDF goc cua PTI (trang
+// bia, muc luc, toan bo BCDKT, trang dau KQKD): KHONG co dong "Mau so..."
+// xuat hien o dau ca, dan den FORM_CODE_RULES khong khop duoc gi va bao cao
+// roi ve 'other' du la cong ty bao hiem that. Fallback theo NOI DUNG cac chi
+// tieu DAC THU nganh bao hiem (khong bao gio xuat hien o DN thuong/ngan
+// hang/CTCK) - CHI dung thuat ngu du CU THE (khong dung tu "bao hiem" chung
+// chung, vi hau het DN thuong deu co dong "Chi phi bao hiem" tai san/nhan vien
+// hoac "Bao hiem xa hoi/y te" - se khop nham rat rong): "tai bao hiem" (tai
+// san/nghiep vu nhuong tai bao hiem, khai niem chi ton tai o cong ty bao hiem
+// tu nhuong bot rui ro) va "du phong nghiep vu" (du phong ky thuat bao hiem,
+// Thong tu 232/2012/TT-BTC). Da doi chieu qua 7 bao cao that dang cache
+// (data/latest-fetch.json, du 4 loai hinh) - 0 khop nham.
+const CONTENT_FALLBACK_RULES: { type: BusinessType; pattern: RegExp }[] = [{ type: 'insurance', pattern: /TAI BAO HIEM|DU PHONG NGHIEP VU/ }];
+
 // Dung tren markdown/text da OCR (hoac doc truc tiep tu docx/doc, khong OCR)
 // cua 1 bao cao - CHI can 1 lan xuat hien ma mau la du (in lap lai tren MOI
-// trang BCTC that). Mac dinh 'other' neu khong tim thay ma mau nao (bao cao
-// doanh nghiep thuong, hoac truong hop hiem OCR khong doc duoc dong ma mau).
+// trang BCTC that). Mac dinh 'other' neu khong tim thay ma mau LAN khong khop
+// fallback theo noi dung nao (bao cao doanh nghiep thuong).
 export function classifyBusinessType(text: string): BusinessType {
   const normalized = normalizeLabelText(text);
   for (const rule of FORM_CODE_RULES) {
+    if (rule.pattern.test(normalized)) return rule.type;
+  }
+  for (const rule of CONTENT_FALLBACK_RULES) {
     if (rule.pattern.test(normalized)) return rule.type;
   }
   return 'other';

@@ -83,10 +83,27 @@ function looksLikeHeadingLine(rawLine: string): boolean {
 // hoi tu khoa xuat hien XONG (ket thuc) trong MAX_HEADING_LINE_LENGTH ky tu
 // DAU dong, khong doi hoi toan bo dong phai ngan - van du chat de loai cau
 // van xuoi dai trong Thuyet minh (tu khoa thuong nam GIUA cau, xa vi tri dau).
+// Dong "tham chieu cheo" (footer boilerplate LAP LAI o CUOI MOI TRANG, vd "...
+// phải được đọc cùng với Bản thuyết minh Báo cáo tài chính...") nhac lai
+// NGUYEN VAN cum trong NOTES_SECTION_MARKERS nhung KHONG PHAI tieu de muc that
+// - da gap that PTI That 2026-07-14: khac voi cau "Các thuyết minh là một bộ
+// phận không tách rời..." da biet o tren (co chen tu giua nen tu chan duoc),
+// bien the nay ("...phải được đọc cùng với Bản thuyết minh Báo cáo tài
+// chính...") giu NGUYEN VEN chuoi lien tiep "THUYET MINH BAO CAO TAI CHINH",
+// khien notesLine khop NGAY tu dong footer DAU TIEN (cuoi trang 2), cat mat
+// TOAN BO phan con lai cua BCDKT + TOAN BO KQKD/LCTT (PTI chi con lai 31/hang
+// tram dong that). Nhan dien rieng cum dac trung cua CAU DAN CHIEU ("PHAI DUOC
+// DOC" - "phải được đọc") de loai truoc khi so khop marker, AN TOAN HON la
+// sua nguong VI TRI trong dong (se pha vo tieu de hop le "Báo cáo tình hình
+// biến động vốn chủ sở hữu" - marker 'BIEN DONG VON CHU SO HUU' nam o GIUA cum
+// tieu de day du, khong o dau dong, nen sieet chan theo vi tri se loai nham).
+const REFERENCE_FOOTER_PATTERN = 'PHAI DUOC DOC';
+
 function containsHeadingMarkerNearStart(rawLine: string, markers: string[]): boolean {
   const trimmed = rawLine.trim();
   if (trimmed.length === 0 || trimmed.startsWith('|')) return false;
   const normalized = normalizeLabelText(trimmed);
+  if (normalized.includes(REFERENCE_FOOTER_PATTERN)) return false;
   return markers.some((m) => {
     const index = normalized.indexOf(m);
     return index !== -1 && index + m.length <= MAX_HEADING_LINE_LENGTH;
