@@ -82,107 +82,128 @@
         {
           "label": "Tiền",
           "percentChange": -48.432878990934704,
-          "tier": null
+          "tier": null,
+          "unreliable": false
         },
         {
           "label": "Phải thu ngắn hạn khách hàng",
           "percentChange": 84.41977077987724,
-          "tier": "level2"
+          "tier": "level2",
+          "unreliable": false
         },
         {
           "label": "Trả trước người bán",
           "percentChange": -79.09319296529873,
-          "tier": null
+          "tier": null,
+          "unreliable": false
         },
         {
           "label": "Phải thu khác",
           "percentChange": 0.6485955497324185,
-          "tier": null
+          "tier": null,
+          "unreliable": false
         },
         {
           "label": "Tồn kho",
           "percentChange": 343.55004864909597,
-          "tier": "level2"
+          "tier": "level2",
+          "unreliable": false
         },
         {
           "label": "Nguyên giá tscđ hữu hình",
           "percentChange": 0.096760306623258,
-          "tier": null
+          "tier": null,
+          "unreliable": false
         },
         {
           "label": "BĐS Đầu tư",
           "percentChange": 1.0736357267350511,
-          "tier": null
+          "tier": null,
+          "unreliable": false
         },
         {
           "label": "TS Dở dang",
           "percentChange": 151.1300641890503,
-          "tier": "level2"
+          "tier": "level2",
+          "unreliable": false
         },
         {
           "label": "TS Thuế TN Hoãn lại",
           "percentChange": 68.01547663934171,
-          "tier": "level2"
+          "tier": "level2",
+          "unreliable": false
         },
         {
           "label": "Phải trả người bán",
           "percentChange": 1155.2027303889756,
-          "tier": "level2"
+          "tier": "level2",
+          "unreliable": false
         },
         {
           "label": "Người mua trả trước",
           "percentChange": null,
-          "tier": null
+          "tier": null,
+          "unreliable": false
         },
         {
           "label": "Chi phí phải trả",
           "percentChange": -27.230422623134192,
-          "tier": null
+          "tier": null,
+          "unreliable": false
         },
         {
           "label": "Phải trả khác",
           "percentChange": 678.7449716686358,
-          "tier": "level2"
+          "tier": "level2",
+          "unreliable": false
         },
         {
           "label": "Dự phòng phải trả",
           "percentChange": null,
-          "tier": null
+          "tier": null,
+          "unreliable": false
         },
         {
           "label": "Vay",
           "percentChange": -37.0560267108842,
-          "tier": null
+          "tier": null,
+          "unreliable": false
         },
         {
           "label": "Vốn CSH",
           "percentChange": -0.6682933877371245,
-          "tier": null
+          "tier": null,
+          "unreliable": false
         },
         {
           "label": "DT thuần",
           "percentChange": 15.406534732517423,
-          "tier": null
+          "tier": null,
+          "unreliable": false
         },
         {
           "label": "Lãi gộp",
           "percentChange": 23.55545212654227,
-          "tier": null
+          "tier": null,
+          "unreliable": false
         },
         {
           "label": "CPBH",
           "percentChange": 0,
-          "tier": null
+          "tier": null,
+          "unreliable": false
         },
         {
           "label": "CPQLDN",
           "percentChange": 0.41419126339287654,
-          "tier": null
+          "tier": null,
+          "unreliable": false
         },
         {
           "label": "LNST",
           "percentChange": -1.2681162029761197,
-          "tier": null
+          "tier": null,
+          "unreliable": false
         }
       ],
       "statements": {
@@ -1709,6 +1730,10 @@
               25330917698
             ]
           ]
+        },
+        "offBalanceSheet": {
+          "columns": [],
+          "rows": []
         }
       },
       "financeUrl": "https://finance.vietstock.vn/IDV-ctcp-phat-trien-ha-tang-vinh-phuc.htm",
@@ -1718,15 +1743,7 @@
       "entryName": "2_idv_2026_5_5_f6ebb87_vi_baocaotaichinhhopnhat_q2_2026.pdf",
       "periodYear": 2026,
       "periodSlug": "Q2",
-      "warnings": [
-        "\"Số cuối kỳ (31/03/2026)\": TS ngan han (222638737861) + TS dai han (1897199185722) khong khop Tong cong tai san (175810778898)",
-        "\"Số đầu năm (01/10/2025)\": TS ngan han (463891955031) + TS dai han (1537286048483) khong khop Tong cong tai san (177938459106)",
-        "\"Số cuối kỳ (31/03/2026)\": Tong cac muc trong TS dai han (1721388406824) khong khop dong TS dai han (1897199185722)",
-        "\"Số đầu năm (01/10/2025)\": Tong cac muc trong TS dai han (1359347589377) khong khop dong TS dai han (1537286048483)",
-        "\"Số cuối kỳ (31/03/2026)\": Tong cac muc trong Von chu so huu (367608759556) khong khop dong Von chu so huu (935423701300)",
-        "\"Số đầu năm (01/10/2025)\": Tong cac muc trong Von chu so huu (435797393134) khong khop dong Von chu so huu (941717134642)",
-        "Khong tim thay dong: Loi nhuan sau thue - khong kiem tra duoc \"Loi nhuan sau thue = Loi nhuan truoc thue - Chi phi thue TNDN\"."
-      ]
+      "warnings": []
     },
     {
       "source": "vietstock",
@@ -1741,107 +1758,128 @@
         {
           "label": "Tiền",
           "percentChange": 5.063811690827761,
-          "tier": null
+          "tier": null,
+          "unreliable": false
         },
         {
           "label": "Phải thu ngắn hạn khách hàng",
           "percentChange": -12.306670021650334,
-          "tier": null
+          "tier": null,
+          "unreliable": false
         },
         {
           "label": "Trả trước người bán",
           "percentChange": null,
-          "tier": null
+          "tier": null,
+          "unreliable": false
         },
         {
           "label": "Phải thu khác",
           "percentChange": 9.023272756096935,
-          "tier": null
+          "tier": null,
+          "unreliable": false
         },
         {
           "label": "Tồn kho",
           "percentChange": -6.187708241880365,
-          "tier": null
+          "tier": null,
+          "unreliable": false
         },
         {
           "label": "Nguyên giá tscđ hữu hình",
           "percentChange": 0.5061073624353866,
-          "tier": null
+          "tier": null,
+          "unreliable": false
         },
         {
           "label": "BĐS Đầu tư",
           "percentChange": -1.1358879477600077,
-          "tier": null
+          "tier": null,
+          "unreliable": false
         },
         {
           "label": "TS Dở dang",
           "percentChange": -57.739689452479745,
-          "tier": null
+          "tier": null,
+          "unreliable": false
         },
         {
           "label": "TS Thuế TN Hoãn lại",
           "percentChange": null,
-          "tier": null
+          "tier": null,
+          "unreliable": false
         },
         {
           "label": "Phải trả người bán",
           "percentChange": null,
-          "tier": null
+          "tier": null,
+          "unreliable": false
         },
         {
           "label": "Người mua trả trước",
           "percentChange": null,
-          "tier": null
+          "tier": null,
+          "unreliable": false
         },
         {
           "label": "Chi phí phải trả",
           "percentChange": null,
-          "tier": null
+          "tier": null,
+          "unreliable": false
         },
         {
           "label": "Phải trả khác",
           "percentChange": 48.186812747543705,
-          "tier": "level2"
+          "tier": "level2",
+          "unreliable": false
         },
         {
           "label": "Dự phòng phải trả",
           "percentChange": -8.667768032910999,
-          "tier": null
+          "tier": null,
+          "unreliable": false
         },
         {
           "label": "Vay",
           "percentChange": null,
-          "tier": null
+          "tier": null,
+          "unreliable": false
         },
         {
           "label": "Vốn CSH",
           "percentChange": 6.279916793020819,
-          "tier": null
+          "tier": null,
+          "unreliable": false
         },
         {
           "label": "DT thuần",
           "percentChange": 26.879097558939723,
-          "tier": "level1"
+          "tier": "level1",
+          "unreliable": false
         },
         {
           "label": "Lãi gộp",
           "percentChange": 73.9553451294595,
-          "tier": "level2"
+          "tier": "level2",
+          "unreliable": false
         },
         {
           "label": "CPBH",
           "percentChange": null,
-          "tier": null
+          "tier": null,
+          "unreliable": false
         },
         {
           "label": "CPQLDN",
           "percentChange": 16.752539877998295,
-          "tier": null
+          "tier": null,
+          "unreliable": false
         },
         {
           "label": "LNST",
           "percentChange": 64.63506419394031,
-          "tier": "level2"
+          "tier": "level2",
+          "unreliable": false
         }
       ],
       "statements": {
@@ -2704,6 +2742,10 @@
               729640110768
             ]
           ]
+        },
+        "offBalanceSheet": {
+          "columns": [],
+          "rows": []
         }
       },
       "financeUrl": "https://finance.vietstock.vn/PVI-ctcp-pvi.htm",
@@ -2713,12 +2755,7 @@
       "entryName": null,
       "periodYear": 2026,
       "periodSlug": "Q1",
-      "warnings": [
-        "\"Số cuối kỳ\": Tong cac muc trong TS dai han (6936209980593) khong khop dong TS dai han (5911662313608)",
-        "\"Số đầu kỳ\": Tong cac muc trong TS dai han (5543544320216) khong khop dong TS dai han (4507149326256)",
-        "\"Kỳ này\": Loi nhuan sau thue (571784316383) khong khop Loi nhuan truoc thue - Chi phi thue TNDN (556052109860)",
-        "\"Kỳ trước\": Loi nhuan sau thue (347304092954) khong khop Loi nhuan truoc thue - Chi phi thue TNDN (340480023997)"
-      ]
+      "warnings": []
     },
     {
       "source": "vietstock",
@@ -2786,39 +2823,39 @@
         },
         {
           "label": "Phải trả người bán",
-          "percentChange": null,
+          "percentChange": -1.2008156738261984,
           "tier": null,
-          "unreliable": true
+          "unreliable": false
         },
         {
           "label": "Người mua trả trước",
-          "percentChange": null,
+          "percentChange": -2.618393053137553,
           "tier": null,
-          "unreliable": true
+          "unreliable": false
         },
         {
           "label": "Chi phí phải trả",
-          "percentChange": null,
+          "percentChange": -0.15132770085155256,
           "tier": null,
-          "unreliable": true
+          "unreliable": false
         },
         {
           "label": "Phải trả khác",
-          "percentChange": null,
+          "percentChange": -82.55366958289643,
           "tier": null,
-          "unreliable": true
+          "unreliable": false
         },
         {
           "label": "Dự phòng phải trả",
           "percentChange": null,
           "tier": null,
-          "unreliable": true
+          "unreliable": false
         },
         {
           "label": "Vay",
-          "percentChange": null,
+          "percentChange": -0.40048179989768967,
           "tier": null,
-          "unreliable": true
+          "unreliable": false
         },
         {
           "label": "Vốn CSH",
@@ -4233,18 +4270,11 @@
       "periodYear": 2026,
       "periodSlug": "Q1",
       "warnings": [
-        "\"SỐ CUỐI KỲ\": Tong cong tai san (1066567018378) khong khop Tong cong nguon von (10665670183780)",
-        "\"SỐ ĐẦU NĂM\": Tong cong tai san (1128836712327) khong khop Tong cong nguon von (11288367123270)",
+        "\"SỐ CUỐI KỲ\": Tong cong nguon von in san (10665670183780) NGHI NGO bi OCR doc sai (lech dung 10 lan so voi Tong cong tai san) - No phai tra + Von chu so huu (1066567018378) khop voi Tong cong tai san (1066567018378), khong khop voi Tong cong nguon von.",
+        "\"SỐ ĐẦU NĂM\": Tong cong nguon von in san (11288367123270) NGHI NGO bi OCR doc sai (lech dung 10 lan so voi Tong cong tai san) - No phai tra + Von chu so huu (1128836712327) khop voi Tong cong tai san (1128836712327), khong khop voi Tong cong nguon von.",
         "\"SỐ CUỐI KỲ\": No phai tra (1130078834333) + Von chu so huu (-63511815955) khong khop Tong cong nguon von (10665670183780)",
         "\"SỐ ĐẦU NĂM\": No phai tra (1185917402975) + Von chu so huu (-57080690648) khong khop Tong cong nguon von (11288367123270)",
-        "\"SỐ CUỐI KỲ\": Tong cac dong con cua \"II. Nợ dài hạn\" (0) khong khop chinh dong \"II. Nợ dài hạn\" (473376391) - co the do OCR gop/bia dong, can xem tay.",
-        "\"SỐ ĐẦU NĂM\": Tong cac dong con cua \"II. Nợ dài hạn\" (0) khong khop chinh dong \"II. Nợ dài hạn\" (22376648) - co the do OCR gop/bia dong, can xem tay.",
-        "\"SỐ CUỐI KỲ\": Tong cac dong con cua \"\" (473376391) khong khop chinh dong \"\" (2) - co the do OCR gop/bia dong, can xem tay.",
-        "\"SỐ ĐẦU NĂM\": Tong cac dong con cua \"\" (22376648) khong khop chinh dong \"\" (3) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Quý này năm nay\": khong kiem tra duoc \"Loi nhuan gop = Doanh thu thuan - Gia von\" vi gia tri doc duoc khong phai dang so hop le - can xem tay.",
-        "\"Quý này năm trước\": khong kiem tra duoc \"Loi nhuan gop = Doanh thu thuan - Gia von\" vi gia tri doc duoc khong phai dang so hop le - can xem tay.",
-        "\"Lũy kế từ đầu năm đến cuối quý này (Năm)\": khong kiem tra duoc \"Loi nhuan gop = Doanh thu thuan - Gia von\" vi gia tri doc duoc khong phai dang so hop le - can xem tay.",
-        "\"Lũy kế từ đầu năm đến cuối quý này (Năm)\": khong kiem tra duoc \"Loi nhuan gop = Doanh thu thuan - Gia von\" vi gia tri doc duoc khong phai dang so hop le - can xem tay."
+        "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 4 muc trong KQKD (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
       ]
     },
     {
@@ -5761,10 +5791,7 @@
       "periodYear": 2026,
       "periodSlug": "Q1",
       "warnings": [
-        "\"Quý này (Năm nay)\": khong kiem tra duoc \"Loi nhuan gop = Doanh thu thuan - Gia von\" vi gia tri doc duoc khong phai dang so hop le - can xem tay.",
-        "\"Quý này (Năm trước)\": khong kiem tra duoc \"Loi nhuan gop = Doanh thu thuan - Gia von\" vi gia tri doc duoc khong phai dang so hop le - can xem tay.",
-        "\"Lũy kế từ đầu năm đến cuối quý này (Năm nay)\": khong kiem tra duoc \"Loi nhuan gop = Doanh thu thuan - Gia von\" vi gia tri doc duoc khong phai dang so hop le - can xem tay.",
-        "\"Lũy kế từ đầu năm đến cuối quý này (Năm trước)\": khong kiem tra duoc \"Loi nhuan gop = Doanh thu thuan - Gia von\" vi gia tri doc duoc khong phai dang so hop le - can xem tay."
+        "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 4 muc trong KQKD (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
       ]
     },
     {
@@ -5930,15 +5957,8 @@
       "periodYear": 2026,
       "periodSlug": "Q1",
       "warnings": [
-        "Khong tim thay dong \"Tong cong tai san\" va/hoac \"Tong cong nguon von\" - khong kiem tra cheo duoc, can xem tay.",
-        "Khong tim thay dong: TS ngan han, TS dai han, Tong cong tai san - khong kiem tra duoc dang thuc \"TS ngan han + TS dai han = Tong cong tai san\".",
-        "Khong tim thay dong \"TS ngan han\" - khong kiem tra duoc tong cac muc con.",
-        "Khong tim thay dong \"TS dai han\" - khong kiem tra duoc tong cac muc con.",
-        "Khong tim thay dong: No phai tra, Von chu so huu, Tong cong nguon von - khong kiem tra duoc dang thuc \"No phai tra + Von chu so huu = Tong cong nguon von\".",
-        "Khong tim thay dong \"No phai tra\" - khong kiem tra duoc tong cac muc con.",
-        "Khong tim thay dong \"Von chu so huu\" - khong kiem tra duoc tong cac muc con.",
-        "Khong tim thay dong: Doanh thu thuan, Gia von hang ban, Loi nhuan gop - khong kiem tra duoc \"Loi nhuan gop = Doanh thu thuan - Gia von\".",
-        "Khong tim thay dong: Loi nhuan truoc thue, Chi phi thue TNDN, Loi nhuan sau thue - khong kiem tra duoc \"Loi nhuan sau thue = Loi nhuan truoc thue - Chi phi thue TNDN\"."
+        "CANH BAO: ca 3 bang chinh (BCDKT/KQKD/LCTT) deu khong doc duoc dong nao - can kiem tra tay.",
+        "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 7 muc trong BCDKT, 2 muc trong KQKD (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
       ]
     },
     {
@@ -6360,15 +6380,7 @@
       "periodYear": 2026,
       "periodSlug": "Q1",
       "warnings": [
-        "Khong tim thay dong \"Tong cong tai san\" va/hoac \"Tong cong nguon von\" - khong kiem tra cheo duoc, can xem tay.",
-        "Khong tim thay dong: TS ngan han, TS dai han, Tong cong tai san - khong kiem tra duoc dang thuc \"TS ngan han + TS dai han = Tong cong tai san\".",
-        "Khong tim thay dong \"TS ngan han\" - khong kiem tra duoc tong cac muc con.",
-        "Khong tim thay dong \"TS dai han\" - khong kiem tra duoc tong cac muc con.",
-        "Khong tim thay dong: No phai tra, Von chu so huu, Tong cong nguon von - khong kiem tra duoc dang thuc \"No phai tra + Von chu so huu = Tong cong nguon von\".",
-        "Khong tim thay dong \"No phai tra\" - khong kiem tra duoc tong cac muc con.",
-        "Khong tim thay dong \"Von chu so huu\" - khong kiem tra duoc tong cac muc con.",
-        "Khong tim thay dong: Doanh thu thuan, Gia von hang ban, Loi nhuan gop - khong kiem tra duoc \"Loi nhuan gop = Doanh thu thuan - Gia von\".",
-        "Khong tim thay dong: Loi nhuan truoc thue, Chi phi thue TNDN, Loi nhuan sau thue - khong kiem tra duoc \"Loi nhuan sau thue = Loi nhuan truoc thue - Chi phi thue TNDN\"."
+        "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 7 muc trong BCDKT, 2 muc trong KQKD (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
       ]
     },
     {
@@ -6534,15 +6546,8 @@
       "periodYear": 2026,
       "periodSlug": "Q1",
       "warnings": [
-        "Khong tim thay dong \"Tong cong tai san\" va/hoac \"Tong cong nguon von\" - khong kiem tra cheo duoc, can xem tay.",
-        "Khong tim thay dong: TS ngan han, TS dai han, Tong cong tai san - khong kiem tra duoc dang thuc \"TS ngan han + TS dai han = Tong cong tai san\".",
-        "Khong tim thay dong \"TS ngan han\" - khong kiem tra duoc tong cac muc con.",
-        "Khong tim thay dong \"TS dai han\" - khong kiem tra duoc tong cac muc con.",
-        "Khong tim thay dong: No phai tra, Von chu so huu, Tong cong nguon von - khong kiem tra duoc dang thuc \"No phai tra + Von chu so huu = Tong cong nguon von\".",
-        "Khong tim thay dong \"No phai tra\" - khong kiem tra duoc tong cac muc con.",
-        "Khong tim thay dong \"Von chu so huu\" - khong kiem tra duoc tong cac muc con.",
-        "Khong tim thay dong: Doanh thu thuan, Gia von hang ban, Loi nhuan gop - khong kiem tra duoc \"Loi nhuan gop = Doanh thu thuan - Gia von\".",
-        "Khong tim thay dong: Loi nhuan truoc thue, Chi phi thue TNDN, Loi nhuan sau thue - khong kiem tra duoc \"Loi nhuan sau thue = Loi nhuan truoc thue - Chi phi thue TNDN\"."
+        "CANH BAO: ca 3 bang chinh (BCDKT/KQKD/LCTT) deu khong doc duoc dong nao - can kiem tra tay.",
+        "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 7 muc trong BCDKT, 2 muc trong KQKD (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
       ]
     },
     {
@@ -6611,39 +6616,39 @@
         },
         {
           "label": "Phải trả người bán",
-          "percentChange": null,
+          "percentChange": -76.80054327923746,
           "tier": null,
-          "unreliable": true
+          "unreliable": false
         },
         {
           "label": "Người mua trả trước",
           "percentChange": null,
           "tier": null,
-          "unreliable": true
+          "unreliable": false
         },
         {
           "label": "Chi phí phải trả",
           "percentChange": null,
           "tier": null,
-          "unreliable": true
+          "unreliable": false
         },
         {
           "label": "Phải trả khác",
-          "percentChange": null,
+          "percentChange": -76.48404414423878,
           "tier": null,
-          "unreliable": true
+          "unreliable": false
         },
         {
           "label": "Dự phòng phải trả",
           "percentChange": null,
           "tier": null,
-          "unreliable": true
+          "unreliable": false
         },
         {
           "label": "Vay",
-          "percentChange": null,
+          "percentChange": 0,
           "tier": null,
-          "unreliable": true
+          "unreliable": false
         },
         {
           "label": "Vốn CSH",
@@ -8091,10 +8096,7 @@
       "periodYear": 2026,
       "periodSlug": "Q1",
       "warnings": [
-        "\"Số cuối quý\": Tong cac dong con cua \"\" (27044408908) khong khop chinh dong \"\" (2) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Số đầu năm\": Tong cac dong con cua \"\" (39018272331) khong khop chinh dong \"\" (3) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Quý I/2025\": khong kiem tra duoc \"Loi nhuan gop = Doanh thu thuan - Gia von\" vi gia tri doc duoc khong phai dang so hop le - can xem tay.",
-        "\"Số từ đầu năm đến cuối quý này năm trước\": khong kiem tra duoc \"Loi nhuan gop = Doanh thu thuan - Gia von\" vi gia tri doc duoc khong phai dang so hop le - can xem tay."
+        "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 2 muc trong KQKD (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
       ]
     },
     {
@@ -8352,12 +8354,7 @@
       "warnings": [
         "\"Cuối kỳ\": Tong cac muc trong TS ngan han (1326157899178) khong khop dong TS ngan han (1375989160565)",
         "\"Cuối kỳ\": Tong cac muc trong TS dai han (0) khong khop dong TS dai han (1013620247442)",
-        "\"Cuối kỳ\": Tong cac dong con cua \"III. Các khoản phải thu ngắn hạn\" (272008478331) khong khop chinh dong \"III. Các khoản phải thu ngắn hạn\" (1326157899178) - co the do OCR gop/bia dong, can xem tay.",
-        "Khong tim thay dong: Von chu so huu - khong kiem tra duoc dang thuc \"No phai tra + Von chu so huu = Tong cong nguon von\".",
-        "Khong tim thay muc con nao cua \"No phai tra\" (dong \"cap 2\" I/II/III...) - khong kiem tra duoc tong cac muc con.",
-        "Khong tim thay dong \"Von chu so huu\" - khong kiem tra duoc tong cac muc con.",
-        "Khong tim thay dong: Doanh thu thuan, Gia von hang ban, Loi nhuan gop - khong kiem tra duoc \"Loi nhuan gop = Doanh thu thuan - Gia von\".",
-        "Khong tim thay dong: Loi nhuan truoc thue, Chi phi thue TNDN, Loi nhuan sau thue - khong kiem tra duoc \"Loi nhuan sau thue = Loi nhuan truoc thue - Chi phi thue TNDN\"."
+        "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 3 muc trong BCDKT, 2 muc trong KQKD (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
       ]
     },
     {
@@ -8468,27 +8465,27 @@
         },
         {
           "label": "DT thuần",
-          "percentChange": null,
+          "percentChange": -70.6406001376447,
           "tier": null,
-          "unreliable": true
+          "unreliable": false
         },
         {
           "label": "Lãi gộp",
-          "percentChange": null,
+          "percentChange": -77.82283899054453,
           "tier": null,
-          "unreliable": true
+          "unreliable": false
         },
         {
           "label": "CPBH",
-          "percentChange": null,
+          "percentChange": -73.8251679590045,
           "tier": null,
-          "unreliable": true
+          "unreliable": false
         },
         {
           "label": "CPQLDN",
-          "percentChange": null,
+          "percentChange": 44.92397049151556,
           "tier": null,
-          "unreliable": true
+          "unreliable": false
         },
         {
           "label": "LNST",
@@ -9912,18 +9909,8 @@
       "periodYear": 2026,
       "periodSlug": "Q1",
       "warnings": [
-        "\"SỐ CUỐI KỲ 31/03/2026\": Tong cac dong con cua \"VI. Tài sản ngắn hạn khác\" (3556513992) khong khop chinh dong \"VI. Tài sản ngắn hạn khác\" (4160249125) - co the do OCR gop/bia dong, can xem tay.",
-        "\"SỐ ĐẦU NĂM 01/01/2026\": Tong cac dong con cua \"VI. Tài sản ngắn hạn khác\" (7533995296) khong khop chinh dong \"VI. Tài sản ngắn hạn khác\" (8137730429) - co the do OCR gop/bia dong, can xem tay.",
-        "\"SỐ CUỐI KỲ 31/03/2026\": Tong cac dong con cua \"dong 32\" (603735133) khong khop chinh dong \"dong 32\" (2) - co the do OCR gop/bia dong, can xem tay.",
-        "\"SỐ ĐẦU NĂM 01/01/2026\": Tong cac dong con cua \"dong 32\" (603735133) khong khop chinh dong \"dong 32\" (3) - co the do OCR gop/bia dong, can xem tay.",
         "\"SỐ CUỐI KỲ 31/03/2026\": Tong cac muc trong Von chu so huu (152995952218) khong khop dong Von chu so huu (23393409761)",
-        "\"SỐ ĐẦU NĂM 01/01/2026\": Tong cac muc trong Von chu so huu (152995952218) khong khop dong Von chu so huu (30546496610)",
-        "\"SỐ CUỐI KỲ 31/03/2026\": Tong cac dong con cua \"I. Vốn chủ sở hữu\" (23393409761) khong khop chinh dong \"I. Vốn chủ sở hữu\" (152995952218) - co the do OCR gop/bia dong, can xem tay.",
-        "\"SỐ ĐẦU NĂM 01/01/2026\": Tong cac dong con cua \"I. Vốn chủ sở hữu\" (30546496610) khong khop chinh dong \"I. Vốn chủ sở hữu\" (152995952218) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Quý 1\": Tong cac dong con cua \"Tổng lợi nhuận kế toán trước thuế\" (24123887971) khong khop chinh dong \"Tổng lợi nhuận kế toán trước thuế\" (-4340076543) - co the do OCR gop/bia dong, can xem tay.",
-        "\"\": Tong cac dong con cua \"Tổng lợi nhuận kế toán trước thuế\" (83590638284) khong khop chinh dong \"Tổng lợi nhuận kế toán trước thuế\" (706684327) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Lũy kế từ đầu năm đến cuối quý này\": Tong cac dong con cua \"Tổng lợi nhuận kế toán trước thuế\" (24123887971) khong khop chinh dong \"Tổng lợi nhuận kế toán trước thuế\" (-4340076543) - co the do OCR gop/bia dong, can xem tay.",
-        "\"\": Tong cac dong con cua \"Tổng lợi nhuận kế toán trước thuế\" (83590638284) khong khop chinh dong \"Tổng lợi nhuận kế toán trước thuế\" (706684327) - co the do OCR gop/bia dong, can xem tay."
+        "\"SỐ ĐẦU NĂM 01/01/2026\": Tong cac muc trong Von chu so huu (152995952218) khong khop dong Von chu so huu (30546496610)"
       ]
     },
     {
@@ -11024,21 +11011,7 @@
       "periodYear": 2026,
       "periodSlug": "Q1",
       "warnings": [
-        "\"\": khong kiem tra duoc \"Tong cong tai san = Tong cong nguon von\" vi gia tri doc duoc khong phai dang so hop le (null / null) - can xem tay.",
-        "\"\": khong kiem tra duoc \"TS ngan han + TS dai han = Tong cong tai san\" vi gia tri doc duoc khong phai dang so hop le (null / null / null) - can xem tay.",
-        "\"\": khong kiem tra duoc \"tong cac muc con cua \"TS ngan han\"\" vi gia tri doc duoc khong phai dang so hop le (0 / null) - can xem tay.",
-        "\"\": khong kiem tra duoc \"tong cac muc con cua \"TS dai han\"\" vi gia tri doc duoc khong phai dang so hop le (0 / null) - can xem tay.",
-        "\"Đơn vị tính: VNĐ\": Tong cac muc trong TS dai han (2800621366860) khong khop dong TS dai han (1523187319793)",
-        "\"\": Tong cac muc trong TS dai han (2814161613620) khong khop dong TS dai han (1529958079538)",
-        "\"\": khong kiem tra duoc \"No phai tra + Von chu so huu = Tong cong nguon von\" vi gia tri doc duoc khong phai dang so hop le (null / \"V.11\" / null) - can xem tay.",
-        "\"\": khong kiem tra duoc \"tong cac muc con cua \"No phai tra\"\" vi gia tri doc duoc khong phai dang so hop le (0 / null) - can xem tay.",
-        "\"\": khong kiem tra duoc \"tong cac muc con cua \"Von chu so huu\"\" vi gia tri doc duoc khong phai dang so hop le (0 / \"V.11\") - can xem tay.",
-        "\"Đơn vị tính: VNĐ\": Tong cac muc trong Von chu so huu (592468000000) khong khop dong Von chu so huu (-30962399952)",
-        "\"\": Tong cac muc trong Von chu so huu (592468000000) khong khop dong Von chu so huu (-18668353320)",
-        "\"Tại ngày 31/03/2026\": Tong cac dong con cua \"I. Nợ ngắn hạn\" (4457) khong khop chinh dong \"I. Nợ ngắn hạn\" (310) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Tại ngày 31/03/2026\": Tong cac dong con cua \"II. Nợ dài hạn\" (4392) khong khop chinh dong \"II. Nợ dài hạn\" (330) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Đơn vị tính: VNĐ\": Tong cac dong con cua \"I. Vốn góp của chủ sở hữu\" (-623430399952) khong khop chinh dong \"I. Vốn góp của chủ sở hữu\" (592468000000) - co the do OCR gop/bia dong, can xem tay.",
-        "\"\": Tong cac dong con cua \"I. Vốn góp của chủ sở hữu\" (-611136353320) khong khop chinh dong \"I. Vốn góp của chủ sở hữu\" (592468000000) - co the do OCR gop/bia dong, can xem tay."
+        "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 7 muc trong BCDKT (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
       ]
     },
     {
@@ -13519,19 +13492,7 @@
       "periodYear": 2026,
       "periodSlug": "Q1",
       "warnings": [
-        "Khong tim thay dong \"Tong cong tai san\" va/hoac \"Tong cong nguon von\" - khong kiem tra cheo duoc, can xem tay.",
-        "Khong tim thay dong: Tong cong tai san - khong kiem tra duoc dang thuc \"TS ngan han + TS dai han = Tong cong tai san\".",
-        "\"Số cuối kỳ\": khong kiem tra duoc \"tong cac muc con cua \"TS ngan han\"\" vi gia tri doc duoc khong phai dang so hop le (0 / null) - can xem tay.",
-        "\"\": khong kiem tra duoc \"tong cac muc con cua \"TS ngan han\"\" vi gia tri doc duoc khong phai dang so hop le (0 / null) - can xem tay.",
-        "\"Số đầu năm\": Tong cac muc trong TS ngan han (314693423406) khong khop dong TS ngan han (157346711703)",
-        "\"\": Tong cac muc trong TS ngan han (365544265360) khong khop dong TS ngan han (182772132680)",
-        "Khong tim thay muc con nao cua \"TS dai han\" (dong \"cap 2\" I/II/III...) - khong kiem tra duoc tong cac muc con.",
-        "Khong tim thay dong: Tong cong nguon von - khong kiem tra duoc dang thuc \"No phai tra + Von chu so huu = Tong cong nguon von\".",
-        "\"Số cuối kỳ\": khong kiem tra duoc \"tong cac muc con cua \"No phai tra\"\" vi gia tri doc duoc khong phai dang so hop le (0 / null) - can xem tay.",
-        "\"\": khong kiem tra duoc \"tong cac muc con cua \"No phai tra\"\" vi gia tri doc duoc khong phai dang so hop le (0 / null) - can xem tay.",
-        "\"Số đầu năm\": Tong cac muc trong No phai tra (182925784460) khong khop dong No phai tra (91462892230)",
-        "\"\": Tong cac muc trong No phai tra (231518879146) khong khop dong No phai tra (115759439573)",
-        "Khong tim thay muc con nao cua \"Von chu so huu\" (dong \"cap 2\" I/II/III...) - khong kiem tra duoc tong cac muc con."
+        "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 11 muc trong BCDKT (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
       ]
     },
     {
@@ -15079,12 +15040,7 @@
       "entryName": "3_hva_2026_6_26_f8c4304_vi_baocaotaichinh_q1_2026_da_ky_so.pdf",
       "periodYear": 2026,
       "periodSlug": "Q1",
-      "warnings": [
-        "\"Số cuối quý\": Tong cac muc trong Von chu so huu (2) khong khop dong Von chu so huu (152362476394)",
-        "\"Số đầu năm\": Tong cac muc trong Von chu so huu (3) khong khop dong Von chu so huu (152271146324)",
-        "\"Số cuối quý\": Tong cac dong con cua \"dong 123\" (16053840030) khong khop chinh dong \"dong 123\" (2) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Số đầu năm\": Tong cac dong con cua \"dong 123\" (15962509960) khong khop chinh dong \"dong 123\" (3) - co the do OCR gop/bia dong, can xem tay."
-      ]
+      "warnings": []
     },
     {
       "source": "vietstock",
@@ -15188,7 +15144,7 @@
         },
         {
           "label": "Vốn CSH",
-          "percentChange": null,
+          "percentChange": 0.1689303183040717,
           "tier": null,
           "unreliable": false
         },
@@ -16256,17 +16212,7 @@
       "entryName": null,
       "periodYear": 2026,
       "periodSlug": "Q1",
-      "warnings": [
-        "\"31/03/2026 VND\": khong kiem tra duoc \"No phai tra + Von chu so huu = Tong cong nguon von\" vi gia tri doc duoc khong phai dang so hop le (1495398278384 / \"\\\"năm nay\\\" ; \\\"Cuối năm\\\" \\\"current year\\\" ; \\\"year-end\\\"\" / 2178546708087) - can xem tay.",
-        "\"01/01/2026 VND\": khong kiem tra duoc \"No phai tra + Von chu so huu = Tong cong nguon von\" vi gia tri doc duoc khong phai dang so hop le (1440860792252 / \"\\\"kỳ này\\\" ; \\\"Cuối kỳ\\\" \\\"current period\\\" ; \\\"period-end\\\"\" / 2122857123382) - can xem tay.",
-        "Khong tim thay muc con nao cua \"No phai tra\" (dong \"cap 2\" I/II/III...) - khong kiem tra duoc tong cac muc con.",
-        "\"31/03/2026 VND\": khong kiem tra duoc \"tong cac muc con cua \"Von chu so huu\"\" vi gia tri doc duoc khong phai dang so hop le (11441474814315 / \"\\\"năm nay\\\" ; \\\"Cuối năm\\\" \\\"current year\\\" ; \\\"year-end\\\"\") - can xem tay.",
-        "\"01/01/2026 VND\": khong kiem tra duoc \"tong cac muc con cua \"Von chu so huu\"\" vi gia tri doc duoc khong phai dang so hop le (11161874792217 / \"\\\"kỳ này\\\" ; \\\"Cuối kỳ\\\" \\\"current period\\\" ; \\\"period-end\\\"\") - can xem tay.",
-        "\"31/03/2026 VND\": Tong cac dong con cua \"I. Vốn chủ sở hữu\" (450000000000) khong khop chinh dong \"I. Vốn chủ sở hữu\" (683148429703) - co the do OCR gop/bia dong, can xem tay.",
-        "\"01/01/2026 VND\": Tong cac dong con cua \"I. Vốn chủ sở hữu\" (450000000000) khong khop chinh dong \"I. Vốn chủ sở hữu\" (681996331130) - co the do OCR gop/bia dong, can xem tay.",
-        "\"31/03/2026 VND\": Tong cac dong con cua \"Cổ phiếu phổ thông có quyền biểu quyết\" (233148429703) khong khop chinh dong \"Cổ phiếu phổ thông có quyền biểu quyết\" (450000000000) - co the do OCR gop/bia dong, can xem tay.",
-        "\"01/01/2026 VND\": Tong cac dong con cua \"Cổ phiếu phổ thông có quyền biểu quyết\" (231996331130) khong khop chinh dong \"Cổ phiếu phổ thông có quyền biểu quyết\" (450000000000) - co the do OCR gop/bia dong, can xem tay."
-      ]
+      "warnings": []
     },
     {
       "source": "vietstock",
@@ -17849,14 +17795,7 @@
       "periodYear": 2026,
       "periodSlug": "Q1",
       "warnings": [
-        "\"Số cuối quý\": Tong cac dong con cua \"II. Tài sản cố định\" (5064116251454) khong khop chinh dong \"II. Tài sản cố định\" (5093805269061) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Số đầu năm\": Tong cac dong con cua \"II. Tài sản cố định\" (3987491715988) khong khop chinh dong \"II. Tài sản cố định\" (4017118108754) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Số cuối quý\": Tong cac dong con cua \"dong 46\" (29689017607) khong khop chinh dong \"dong 46\" (2) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Số đầu năm\": Tong cac dong con cua \"dong 46\" (29626392766) khong khop chinh dong \"dong 46\" (3) - co the do OCR gop/bia dong, can xem tay.",
-        "Khong tim thay muc con nao cua \"Von chu so huu\" (dong \"cap 2\" I/II/III...) - khong kiem tra duoc tong cac muc con.",
-        "\"Quý 1 Năm nay\": khong kiem tra duoc \"Loi nhuan sau thue = Loi nhuan truoc thue - Chi phi thue TNDN\" vi gia tri doc duoc khong phai dang so hop le - can xem tay.",
-        "\"Quý 1 Năm trước\": khong kiem tra duoc \"Loi nhuan sau thue = Loi nhuan truoc thue - Chi phi thue TNDN\" vi gia tri doc duoc khong phai dang so hop le - can xem tay.",
-        "\"Lũy kế từ đầu năm đến cuối quý báo cáo Năm nay\": khong kiem tra duoc \"Loi nhuan sau thue = Loi nhuan truoc thue - Chi phi thue TNDN\" vi gia tri doc duoc khong phai dang so hop le - can xem tay."
+        "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 3 muc trong KQKD (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
       ]
     },
     {
@@ -18825,18 +18764,8 @@
       "periodYear": 2026,
       "periodSlug": "Q1",
       "warnings": [
-        "\"\": khong kiem tra duoc \"Tong cong tai san = Tong cong nguon von\" vi gia tri doc duoc khong phai dang so hop le (null / null) - can xem tay.",
-        "\"\": khong kiem tra duoc \"TS ngan han + TS dai han = Tong cong tai san\" vi gia tri doc duoc khong phai dang so hop le (null / null / null) - can xem tay.",
-        "\"\": khong kiem tra duoc \"tong cac muc con cua \"TS ngan han\"\" vi gia tri doc duoc khong phai dang so hop le (0 / null) - can xem tay.",
-        "\"\": khong kiem tra duoc \"tong cac muc con cua \"TS dai han\"\" vi gia tri doc duoc khong phai dang so hop le (0 / null) - can xem tay.",
-        "\"\": khong kiem tra duoc \"No phai tra + Von chu so huu = Tong cong nguon von\" vi gia tri doc duoc khong phai dang so hop le (null / \"V.11\" / null) - can xem tay.",
-        "\"\": khong kiem tra duoc \"tong cac muc con cua \"No phai tra\"\" vi gia tri doc duoc khong phai dang so hop le (0 / null) - can xem tay.",
-        "Khong tim thay muc con nao cua \"Von chu so huu\" (dong \"cap 2\" I/II/III...) - khong kiem tra duoc tong cac muc con.",
-        "\"Tại ngày 31/03/2026\": Tong cac dong con cua \"I. Nợ ngắn hạn\" (2532) khong khop chinh dong \"I. Nợ ngắn hạn\" (310) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Quý này năm nay\": khong kiem tra duoc \"Loi nhuan gop = Doanh thu thuan - Gia von\" vi gia tri doc duoc khong phai dang so hop le - can xem tay.",
-        "\"Quý này năm trước\": khong kiem tra duoc \"Loi nhuan gop = Doanh thu thuan - Gia von\" vi gia tri doc duoc khong phai dang so hop le - can xem tay.",
-        "\"Số lũy kế từ đầu năm đến cuối quý này (Năm nay)\": khong kiem tra duoc \"Loi nhuan gop = Doanh thu thuan - Gia von\" vi gia tri doc duoc khong phai dang so hop le - can xem tay.",
-        "\"Số lũy kế từ đầu năm đến cuối quý này (Năm trước)\": khong kiem tra duoc \"Loi nhuan gop = Doanh thu thuan - Gia von\" vi gia tri doc duoc khong phai dang so hop le - can xem tay."
+        "\"Tại ngày 31/03/2026\": Tong cac muc trong Von chu so huu (1661) khong khop dong Von chu so huu (400)",
+        "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 7 muc trong BCDKT, 4 muc trong KQKD (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
       ]
     },
     {
@@ -18851,37 +18780,37 @@
       "analysis": [
         {
           "label": "Tiền",
-          "percentChange": -99.99999957258571,
+          "percentChange": -5.19078710057558,
           "tier": null,
           "unreliable": false
         },
         {
           "label": "Phải thu ngắn hạn khách hàng",
-          "percentChange": -99.99999921833783,
+          "percentChange": 1.7851578088831996,
           "tier": null,
           "unreliable": false
         },
         {
           "label": "Trả trước người bán",
-          "percentChange": null,
+          "percentChange": 2.79908358988282,
           "tier": null,
-          "unreliable": true
+          "unreliable": false
         },
         {
           "label": "Phải thu khác",
-          "percentChange": null,
-          "tier": null,
-          "unreliable": true
+          "percentChange": 54.592752048153145,
+          "tier": "level2",
+          "unreliable": false
         },
         {
           "label": "Tồn kho",
-          "percentChange": -99.99999914823103,
+          "percentChange": -1.8933293172178833,
           "tier": null,
           "unreliable": false
         },
         {
           "label": "Nguyên giá tscđ hữu hình",
-          "percentChange": -99.99999955444093,
+          "percentChange": 0,
           "tier": null,
           "unreliable": false
         },
@@ -18907,41 +18836,41 @@
           "label": "Phải trả người bán",
           "percentChange": null,
           "tier": null,
-          "unreliable": true
+          "unreliable": false
         },
         {
           "label": "Người mua trả trước",
-          "percentChange": null,
+          "percentChange": -1.5892256447497983,
           "tier": null,
-          "unreliable": true
+          "unreliable": false
         },
         {
           "label": "Chi phí phải trả",
-          "percentChange": null,
+          "percentChange": -0.6176091303883614,
           "tier": null,
-          "unreliable": true
+          "unreliable": false
         },
         {
           "label": "Phải trả khác",
-          "percentChange": null,
-          "tier": null,
-          "unreliable": true
+          "percentChange": 154.14267843929827,
+          "tier": "level2",
+          "unreliable": false
         },
         {
           "label": "Dự phòng phải trả",
           "percentChange": null,
           "tier": null,
-          "unreliable": true
+          "unreliable": false
         },
         {
           "label": "Vay",
-          "percentChange": null,
+          "percentChange": 0.7426900807908023,
           "tier": null,
-          "unreliable": true
+          "unreliable": false
         },
         {
           "label": "Vốn CSH",
-          "percentChange": -99.99999971584114,
+          "percentChange": -6.299787014155059,
           "tier": null,
           "unreliable": false
         },
@@ -20256,16 +20185,7 @@
       "entryName": "3_ebs_2026_6_17_44747db_vi_baocaotaichinhhopnhat_q1_2026.pdf",
       "periodYear": 2026,
       "periodSlug": "Q1",
-      "warnings": [
-        "\"Mã chỉ tiêu\": Tong cac muc trong TS dai han (1680) khong khop dong TS dai han (200)",
-        "\"Mã chỉ tiêu\": Tong cac dong con cua \"I. Các khoản phải thu dài hạn\" (1281) khong khop chinh dong \"I. Các khoản phải thu dài hạn\" (210) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Mã chỉ tiêu\": Tong cac dong con cua \"VI. Đầu tư tài chính dài hạn\" (1315) khong khop chinh dong \"VI. Đầu tư tài chính dài hạn\" (260) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Mã chỉ tiêu\": Tong cac dong con cua \"I. Nợ ngắn hạn\" (4770) khong khop chinh dong \"I. Nợ ngắn hạn\" (310) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Mã chỉ tiêu\": Tong cac dong con cua \"II. Nợ dài hạn\" (4725) khong khop chinh dong \"II. Nợ dài hạn\" (330) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Mã chỉ tiêu\": Tong cac dong con cua \"I. Vốn chủ sở hữu\" (2065) khong khop chinh dong \"I. Vốn chủ sở hữu\" (410) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Số cuối kỳ\": Tong cac dong con cua \"I. Vốn chủ sở hữu\" (100747510926) khong khop chinh dong \"I. Vốn chủ sở hữu\" (140766336839) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Số đầu năm\": Tong cac dong con cua \"I. Vốn chủ sở hữu\" (100747510926) khong khop chinh dong \"I. Vốn chủ sở hữu\" (150230540949) - co the do OCR gop/bia dong, can xem tay."
-      ]
+      "warnings": []
     },
     {
       "source": "vietstock",
@@ -20279,33 +20199,33 @@
       "analysis": [
         {
           "label": "Tiền",
-          "percentChange": 43.93083353004859,
-          "tier": "level2",
-          "unreliable": false
+          "percentChange": null,
+          "tier": null,
+          "unreliable": true
         },
         {
           "label": "FVTPL",
-          "percentChange": -2.5805716487953925,
+          "percentChange": null,
           "tier": null,
-          "unreliable": false
+          "unreliable": true
         },
         {
           "label": "HTM",
-          "percentChange": -17.965909523722313,
+          "percentChange": null,
           "tier": null,
-          "unreliable": false
+          "unreliable": true
         },
         {
           "label": "AFS",
-          "percentChange": 54.91886569852223,
-          "tier": "level2",
-          "unreliable": false
+          "percentChange": null,
+          "tier": null,
+          "unreliable": true
         },
         {
           "label": "Cho Vay",
-          "percentChange": 11.884303408980552,
+          "percentChange": null,
           "tier": null,
-          "unreliable": false
+          "unreliable": true
         },
         {
           "label": "TS Ngắn Hạn",
@@ -20369,9 +20289,9 @@
         },
         {
           "label": "Lãi FVTPL",
-          "percentChange": null,
+          "percentChange": 88.35360353443271,
           "tier": null,
-          "unreliable": true
+          "unreliable": false
         },
         {
           "label": "Lỗ FVTPL",
@@ -20381,15 +20301,15 @@
         },
         {
           "label": "Lãi/Lỗ HTM",
-          "percentChange": null,
+          "percentChange": 64.5094501626623,
           "tier": null,
-          "unreliable": true
+          "unreliable": false
         },
         {
           "label": "Lãi cho vay",
           "percentChange": null,
           "tier": null,
-          "unreliable": true
+          "unreliable": false
         },
         {
           "label": "CP Lãi Vay",
@@ -20399,9 +20319,9 @@
         },
         {
           "label": "Lãi AFS",
-          "percentChange": null,
+          "percentChange": -14.745336219576513,
           "tier": null,
-          "unreliable": true
+          "unreliable": false
         },
         {
           "label": "Lỗ AFS",
@@ -20413,7 +20333,7 @@
           "label": "DT Môi Giới",
           "percentChange": null,
           "tier": null,
-          "unreliable": true
+          "unreliable": false
         },
         {
           "label": "CP Môi Giới",
@@ -20425,7 +20345,7 @@
           "label": "DT Hoạt Động",
           "percentChange": null,
           "tier": null,
-          "unreliable": true
+          "unreliable": false
         },
         {
           "label": "CP Hoạt Động",
@@ -22418,26 +22338,21 @@
       "periodYear": 2026,
       "periodSlug": "Q2",
       "warnings": [
-        "Khong tim thay dong \"Tong cong tai san\" va/hoac \"Tong cong nguon von\" - khong kiem tra cheo duoc, can xem tay.",
-        "Khong tim thay dong: Tong cong tai san - khong kiem tra duoc dang thuc \"TS ngan han + TS dai han = Tong cong tai san\".",
-        "Khong tim thay muc con nao cua \"TS dai han\" (dong \"cap 2\" I/II/III...) - khong kiem tra duoc tong cac muc con.",
-        "Khong tim thay dong: Tong cong nguon von - khong kiem tra duoc dang thuc \"No phai tra + Von chu so huu = Tong cong nguon von\".",
-        "Khong tim thay muc con nao cua \"Von chu so huu\" (dong \"cap 2\" I/II/III...) - khong kiem tra duoc tong cac muc con.",
-        "Khong tim thay dong: Gia von hang ban, Loi nhuan gop - khong kiem tra duoc \"Loi nhuan gop = Doanh thu thuan - Gia von\".",
-        "Khong tim thay dong: Loi nhuan sau thue - khong kiem tra duoc \"Loi nhuan sau thue = Loi nhuan truoc thue - Chi phi thue TNDN\".",
-        "\"Quý II Năm nay VND\": Tong cac dong con cua \"Cộng doanh thu hoạt động\" (1861818966449) khong khop chinh dong \"Cộng doanh thu hoạt động\" (0) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Quý II Năm trước VND\": Tong cac dong con cua \"Cộng doanh thu hoạt động\" (1254896211514) khong khop chinh dong \"Cộng doanh thu hoạt động\" (0) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Lũy kế từ đầu năm đến quý này Năm nay VND\": Tong cac dong con cua \"Cộng doanh thu hoạt động\" (3423604602679) khong khop chinh dong \"Cộng doanh thu hoạt động\" (0) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Lũy kế từ đầu năm đến quý này Năm trước VND\": Tong cac dong con cua \"Cộng doanh thu hoạt động\" (2275104539312) khong khop chinh dong \"Cộng doanh thu hoạt động\" (0) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Quý II Năm nay VND\": Tong cac dong con cua \"CỘNG KẾT QUẢ HOẠT ĐỘNG KHÁC (80 = 71 - 72)\" (434920555) khong khop chinh dong \"CỘNG KẾT QUẢ HOẠT ĐỘNG KHÁC (80 = 71 - 72)\" (0) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Quý II Năm trước VND\": Tong cac dong con cua \"CỘNG KẾT QUẢ HOẠT ĐỘNG KHÁC (80 = 71 - 72)\" (4422255023) khong khop chinh dong \"CỘNG KẾT QUẢ HOẠT ĐỘNG KHÁC (80 = 71 - 72)\" (0) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Lũy kế từ đầu năm đến quý này Năm nay VND\": Tong cac dong con cua \"CỘNG KẾT QUẢ HOẠT ĐỘNG KHÁC (80 = 71 - 72)\" (2217708325) khong khop chinh dong \"CỘNG KẾT QUẢ HOẠT ĐỘNG KHÁC (80 = 71 - 72)\" (0) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Lũy kế từ đầu năm đến quý này Năm trước VND\": Tong cac dong con cua \"CỘNG KẾT QUẢ HOẠT ĐỘNG KHÁC (80 = 71 - 72)\" (18268175845) khong khop chinh dong \"CỘNG KẾT QUẢ HOẠT ĐỘNG KHÁC (80 = 71 - 72)\" (0) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Quý II Năm nay VND\": Tong cac dong con cua \"TỔNG THU NHẬP TOÀN DIỆN KHÁC (400=301)\" (377232468678) khong khop chinh dong \"TỔNG THU NHẬP TOÀN DIỆN KHÁC (400=301)\" (0) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Quý II Năm trước VND\": Tong cac dong con cua \"TỔNG THU NHẬP TOÀN DIỆN KHÁC (400=301)\" (270925843389) khong khop chinh dong \"TỔNG THU NHẬP TOÀN DIỆN KHÁC (400=301)\" (-1600000000) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Lũy kế từ đầu năm đến quý này Năm nay VND\": Tong cac dong con cua \"TỔNG THU NHẬP TOÀN DIỆN KHÁC (400=301)\" (745254895148) khong khop chinh dong \"TỔNG THU NHẬP TOÀN DIỆN KHÁC (400=301)\" (0) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Lũy kế từ đầu năm đến quý này Năm trước VND\": Tong cac dong con cua \"TỔNG THU NHẬP TOÀN DIỆN KHÁC (400=301)\" (611461860325) khong khop chinh dong \"TỔNG THU NHẬP TOÀN DIỆN KHÁC (400=301)\" (0) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Lũy kế từ đầu năm đến quý này Năm trước VND\": Tong cac dong con cua \"Lãi từ các tài sản tài chính được ghi nhận theo giá trị hợp lý thông qua lãi/(lỗ) (\"FVTPL\")\" (277415872350) khong khop chinh dong \"Lãi từ các tài sản tài chính được ghi nhận theo giá trị hợp lý thông qua lãi/(lỗ) (\"FVTPL\")\" (299468777315) - co the do OCR gop/bia dong, can xem tay."
+        "\"Quý II Năm nay VND\": Tong cac dong con cua \"Cong chi phi hoat dong\" (557877375125) khong khop chinh dong \"Cong chi phi hoat dong\" (432684679251) - co the do OCR gop/bia dong, can xem tay.",
+        "\"Quý II Năm trước VND\": Tong cac dong con cua \"Cong chi phi hoat dong\" (358218755939) khong khop chinh dong \"Cong chi phi hoat dong\" (282116027436) - co the do OCR gop/bia dong, can xem tay.",
+        "\"Lũy kế từ đầu năm đến quý này Năm nay VND\": Tong cac dong con cua \"Cong chi phi hoat dong\" (982678613725) khong khop chinh dong \"Cong chi phi hoat dong\" (740117148369) - co the do OCR gop/bia dong, can xem tay.",
+        "\"Lũy kế từ đầu năm đến quý này Năm trước VND\": Tong cac dong con cua \"Cong chi phi hoat dong\" (534542745977) khong khop chinh dong \"Cong chi phi hoat dong\" (389815740772) - co the do OCR gop/bia dong, can xem tay.",
+        "\"Quý II Năm nay VND\": Tong cac dong con cua \"Ket qua hoat dong\" (-813887581686) khong khop chinh dong \"Ket qua hoat dong\" (378572695979) - co the do OCR gop/bia dong, can xem tay.",
+        "\"Quý II Năm trước VND\": Tong cac dong con cua \"Ket qua hoat dong\" (-521607748539) khong khop chinh dong \"Ket qua hoat dong\" (268103588366) - co the do OCR gop/bia dong, can xem tay.",
+        "\"Lũy kế từ đầu năm đến quý này Năm nay VND\": Tong cac dong con cua \"Ket qua hoat dong\" (-1463308078430) khong khop chinh dong \"Ket qua hoat dong\" (744812334679) - co the do OCR gop/bia dong, can xem tay.",
+        "\"Lũy kế từ đầu năm đến quý này Năm trước VND\": Tong cac dong con cua \"Ket qua hoat dong\" (-863956869948) khong khop chinh dong \"Ket qua hoat dong\" (593341572520) - co the do OCR gop/bia dong, can xem tay.",
+        "\"Quý II Năm nay VND\": Tong cac dong con cua \"Cong ket qua hoat dong khac\" (3115375157) khong khop chinh dong \"Cong ket qua hoat dong khac\" (0) - co the do OCR gop/bia dong, can xem tay.",
+        "\"Quý II Năm trước VND\": Tong cac dong con cua \"Cong ket qua hoat dong khac\" (-4422255023) khong khop chinh dong \"Cong ket qua hoat dong khac\" (0) - co the do OCR gop/bia dong, can xem tay.",
+        "\"Lũy kế từ đầu năm đến quý này Năm nay VND\": Tong cac dong con cua \"Cong ket qua hoat dong khac\" (1332587387) khong khop chinh dong \"Cong ket qua hoat dong khac\" (0) - co the do OCR gop/bia dong, can xem tay.",
+        "\"Lũy kế từ đầu năm đến quý này Năm trước VND\": Tong cac dong con cua \"Cong ket qua hoat dong khac\" (-17972399765) khong khop chinh dong \"Cong ket qua hoat dong khac\" (0) - co the do OCR gop/bia dong, can xem tay.",
+        "\"Quý II Năm trước VND\": Tong cac dong con cua \"Tong loi nhuan ke toan truoc thue\" (268103588366) khong khop chinh dong \"Tong loi nhuan ke toan truoc thue\" (272525843389) - co the do OCR gop/bia dong, can xem tay.",
+        "\"Lũy kế từ đầu năm đến quý này Năm trước VND\": Tong cac dong con cua \"Tong loi nhuan ke toan truoc thue\" (593341572520) khong khop chinh dong \"Tong loi nhuan ke toan truoc thue\" (611461860325) - co the do OCR gop/bia dong, can xem tay.",
+        "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 1 muc trong KQKD (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
       ]
     },
     {
@@ -22452,15 +22367,15 @@
       "analysis": [
         {
           "label": "Tiền",
-          "percentChange": -67.3384078457793,
+          "percentChange": null,
           "tier": null,
-          "unreliable": false
+          "unreliable": true
         },
         {
           "label": "FVTPL",
-          "percentChange": -26.564222840253976,
+          "percentChange": null,
           "tier": null,
-          "unreliable": false
+          "unreliable": true
         },
         {
           "label": "HTM",
@@ -22476,9 +22391,9 @@
         },
         {
           "label": "Cho Vay",
-          "percentChange": -0.03420744538320587,
+          "percentChange": null,
           "tier": null,
-          "unreliable": false
+          "unreliable": true
         },
         {
           "label": "TS Ngắn Hạn",
@@ -24134,21 +24049,7 @@
       "periodYear": 2026,
       "periodSlug": "Q1",
       "warnings": [
-        "Khong tim thay dong \"Tong cong tai san\" va/hoac \"Tong cong nguon von\" - khong kiem tra cheo duoc, can xem tay.",
-        "\"Tại ngày\": Tong cac muc trong TS ngan han (81823378577652) khong khop dong TS ngan han (40295277730797)",
-        "\"\": Tong cac muc trong TS ngan han (96389018919160) khong khop dong TS ngan han (46331257961416)",
-        "\"Tại ngày\": Tong cac muc trong TS dai han (352904479950) khong khop dong TS dai han (171452239975)",
-        "\"\": Tong cac muc trong TS dai han (345496496390) khong khop dong TS dai han (167748248195)",
-        "Khong tim thay dong: Tong cong nguon von - khong kiem tra duoc dang thuc \"No phai tra + Von chu so huu = Tong cong nguon von\".",
-        "\"Tại ngày\": Tong cac muc trong No phai tra (77544756926159) khong khop dong No phai tra (26064752435356)",
-        "\"\": Tong cac muc trong No phai tra (94800872494783) khong khop dong No phai tra (31955862213589)",
-        "Khong tim thay muc con nao cua \"Von chu so huu\" (dong \"cap 2\" I/II/III...) - khong kiem tra duoc tong cac muc con.",
-        "Khong tim thay dong: Gia von hang ban, Loi nhuan gop - khong kiem tra duoc \"Loi nhuan gop = Doanh thu thuan - Gia von\".",
-        "Khong tim thay dong: Loi nhuan sau thue - khong kiem tra duoc \"Loi nhuan sau thue = Loi nhuan truoc thue - Chi phi thue TNDN\".",
-        "\"Quý 1\": Tong cac dong con cua \"TỔNG DOANH THU HOẠT ĐỘNG\" (0) khong khop chinh dong \"TỔNG DOANH THU HOẠT ĐỘNG\" (1466403243730) - co the do OCR gop/bia dong, can xem tay.",
-        "\"\": Tong cac dong con cua \"TỔNG DOANH THU HOẠT ĐỘNG\" (0) khong khop chinh dong \"TỔNG DOANH THU HOẠT ĐỘNG\" (999576787007) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Quý 1\": Tong cac dong con cua \"TỔNG DOANH THU HOẠT ĐỘNG TÀI CHÍNH\" (0) khong khop chinh dong \"TỔNG DOANH THU HOẠT ĐỘNG TÀI CHÍNH\" (1178500625) - co the do OCR gop/bia dong, can xem tay.",
-        "\"\": Tong cac dong con cua \"TỔNG DOANH THU HOẠT ĐỘNG TÀI CHÍNH\" (0) khong khop chinh dong \"TỔNG DOANH THU HOẠT ĐỘNG TÀI CHÍNH\" (1509708398) - co the do OCR gop/bia dong, can xem tay."
+        "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 3 muc trong BCDKT, 1 muc trong KQKD (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
       ]
     },
     {
@@ -24368,15 +24269,8 @@
       "periodYear": 2026,
       "periodSlug": "Q1",
       "warnings": [
-        "Khong tim thay dong \"Tong cong tai san\" va/hoac \"Tong cong nguon von\" - khong kiem tra cheo duoc, can xem tay.",
-        "Khong tim thay dong: TS ngan han, TS dai han, Tong cong tai san - khong kiem tra duoc dang thuc \"TS ngan han + TS dai han = Tong cong tai san\".",
-        "Khong tim thay dong \"TS ngan han\" - khong kiem tra duoc tong cac muc con.",
-        "Khong tim thay dong \"TS dai han\" - khong kiem tra duoc tong cac muc con.",
-        "Khong tim thay dong: No phai tra, Von chu so huu, Tong cong nguon von - khong kiem tra duoc dang thuc \"No phai tra + Von chu so huu = Tong cong nguon von\".",
-        "Khong tim thay dong \"No phai tra\" - khong kiem tra duoc tong cac muc con.",
-        "Khong tim thay dong \"Von chu so huu\" - khong kiem tra duoc tong cac muc con.",
-        "Khong tim thay dong: Doanh thu thuan, Gia von hang ban, Loi nhuan gop - khong kiem tra duoc \"Loi nhuan gop = Doanh thu thuan - Gia von\".",
-        "Khong tim thay dong: Loi nhuan truoc thue, Chi phi thue TNDN, Loi nhuan sau thue - khong kiem tra duoc \"Loi nhuan sau thue = Loi nhuan truoc thue - Chi phi thue TNDN\"."
+        "CANH BAO: ca 3 bang chinh (BCDKT/KQKD/LCTT) deu khong doc duoc dong nao - can kiem tra tay.",
+        "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 7 muc trong BCDKT, 1 muc trong KQKD (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
       ]
     },
     {
@@ -25491,14 +25385,7 @@
       "entryName": "2_llm_2026_5_6_b9ba181_bctc_rieng_qi_2026_tv.PDF",
       "periodYear": 2026,
       "periodSlug": "Q1",
-      "warnings": [
-        "\"31/03/2026\": Tong cac muc trong Von chu so huu (2981796348991) khong khop dong Von chu so huu (1550439802693)",
-        "\"01/01/2026 (trình bày lại)\": Tong cac muc trong Von chu so huu (2810530781979) khong khop dong Von chu so huu (1464807019187)",
-        "\"31/03/2026\": Tong cac dong con cua \"I. Vốn chủ sở hữu\" (797261040000) khong khop chinh dong \"I. Vốn chủ sở hữu\" (1550439802693) - co the do OCR gop/bia dong, can xem tay.",
-        "\"01/01/2026 (trình bày lại)\": Tong cac dong con cua \"I. Vốn chủ sở hữu\" (797261040000) khong khop chinh dong \"I. Vốn chủ sở hữu\" (1464807019187) - co the do OCR gop/bia dong, can xem tay.",
-        "\"31/03/2026\": Tong cac dong con cua \"*Cổ phiếu phổ thông có quyền biểu quyết*\" (753178762693) khong khop chinh dong \"*Cổ phiếu phổ thông có quyền biểu quyết*\" (797261040000) - co the do OCR gop/bia dong, can xem tay.",
-        "\"01/01/2026 (trình bày lại)\": Tong cac dong con cua \"*Cổ phiếu phổ thông có quyền biểu quyết*\" (667545979187) khong khop chinh dong \"*Cổ phiếu phổ thông có quyền biểu quyết*\" (797261040000) - co the do OCR gop/bia dong, can xem tay."
-      ]
+      "warnings": []
     },
     {
       "source": "vietstock",
@@ -25664,15 +25551,7 @@
       "periodSlug": "Q1",
       "warnings": [
         "CANH BAO: ca 3 bang chinh (BCDKT/KQKD/LCTT) deu khong doc duoc dong nao - can kiem tra tay.",
-        "Khong tim thay dong \"Tong cong tai san\" va/hoac \"Tong cong nguon von\" - khong kiem tra cheo duoc, can xem tay.",
-        "Khong tim thay dong: TS ngan han, TS dai han, Tong cong tai san - khong kiem tra duoc dang thuc \"TS ngan han + TS dai han = Tong cong tai san\".",
-        "Khong tim thay dong \"TS ngan han\" - khong kiem tra duoc tong cac muc con.",
-        "Khong tim thay dong \"TS dai han\" - khong kiem tra duoc tong cac muc con.",
-        "Khong tim thay dong: No phai tra, Von chu so huu, Tong cong nguon von - khong kiem tra duoc dang thuc \"No phai tra + Von chu so huu = Tong cong nguon von\".",
-        "Khong tim thay dong \"No phai tra\" - khong kiem tra duoc tong cac muc con.",
-        "Khong tim thay dong \"Von chu so huu\" - khong kiem tra duoc tong cac muc con.",
-        "Khong tim thay dong: Doanh thu thuan, Gia von hang ban, Loi nhuan gop - khong kiem tra duoc \"Loi nhuan gop = Doanh thu thuan - Gia von\".",
-        "Khong tim thay dong: Loi nhuan truoc thue, Chi phi thue TNDN, Loi nhuan sau thue - khong kiem tra duoc \"Loi nhuan sau thue = Loi nhuan truoc thue - Chi phi thue TNDN\"."
+        "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 7 muc trong BCDKT, 2 muc trong KQKD (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
       ]
     },
     {
@@ -25777,9 +25656,9 @@
         },
         {
           "label": "LNTT",
-          "percentChange": null,
+          "percentChange": -0.14491138640270287,
           "tier": null,
-          "unreliable": true
+          "unreliable": false
         },
         {
           "label": "LNST",
@@ -26701,22 +26580,7 @@
       "periodYear": 2026,
       "periodSlug": "Q1",
       "warnings": [
-        "Khong tim thay dong \"Tong cong tai san\" va/hoac \"Tong cong nguon von\" - khong kiem tra cheo duoc, can xem tay.",
-        "Khong tim thay dong: TS ngan han, TS dai han, Tong cong tai san - khong kiem tra duoc dang thuc \"TS ngan han + TS dai han = Tong cong tai san\".",
-        "Khong tim thay dong \"TS ngan han\" - khong kiem tra duoc tong cac muc con.",
-        "Khong tim thay dong \"TS dai han\" - khong kiem tra duoc tong cac muc con.",
-        "Khong tim thay dong: Tong cong nguon von - khong kiem tra duoc dang thuc \"No phai tra + Von chu so huu = Tong cong nguon von\".",
-        "Khong tim thay muc con nao cua \"No phai tra\" (dong \"cap 2\" I/II/III...) - khong kiem tra duoc tong cac muc con.",
-        "Khong tim thay muc con nao cua \"Von chu so huu\" (dong \"cap 2\" I/II/III...) - khong kiem tra duoc tong cac muc con.",
-        "Khong tim thay dong: Doanh thu thuan, Gia von hang ban, Loi nhuan gop - khong kiem tra duoc \"Loi nhuan gop = Doanh thu thuan - Gia von\".",
-        "\"Quý I Năm nay Triệu VND\": Loi nhuan sau thue (1682225) khong khop Loi nhuan truoc thue - Chi phi thue TNDN (3004803)",
-        "\"Quý I Năm trước Triệu VND\": Loi nhuan sau thue (1686691) khong khop Loi nhuan truoc thue - Chi phi thue TNDN (2953243)",
-        "\"Lũy kế từ đầu năm đến cuối quý này Năm nay Triệu VND\": Loi nhuan sau thue (1682225) khong khop Loi nhuan truoc thue - Chi phi thue TNDN (3004803)",
-        "\"Lũy kế từ đầu năm đến cuối quý này Năm trước Triệu VND\": Loi nhuan sau thue (1686691) khong khop Loi nhuan truoc thue - Chi phi thue TNDN (2953243)",
-        "\"Quý I Năm nay Triệu VND\": Tong cac dong con cua \"Tổng lợi nhuận trước thuế\" (4982058) khong khop chinh dong \"Tổng lợi nhuận trước thuế\" (2105819) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Quý I Năm trước Triệu VND\": Tong cac dong con cua \"Tổng lợi nhuận trước thuế\" (4398206) khong khop chinh dong \"Tổng lợi nhuận trước thuế\" (2108875) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Lũy kế từ đầu năm đến cuối quý này Năm nay Triệu VND\": Tong cac dong con cua \"Tổng lợi nhuận trước thuế\" (4982058) khong khop chinh dong \"Tổng lợi nhuận trước thuế\" (2105819) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Lũy kế từ đầu năm đến cuối quý này Năm trước Triệu VND\": Tong cac dong con cua \"Tổng lợi nhuận trước thuế\" (4398206) khong khop chinh dong \"Tổng lợi nhuận trước thuế\" (2108875) - co the do OCR gop/bia dong, can xem tay."
+        "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 1 muc trong BCDKT (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
       ]
     },
     {
@@ -27974,34 +27838,7 @@
       "periodYear": 2026,
       "periodSlug": "Q1",
       "warnings": [
-        "\"Ngày 31 tháng 3 năm 2026\": Tong cac muc trong TS ngan han (156796352928212) khong khop dong TS ngan han (153490283847049)",
-        "\"Ngày 01 tháng 01 năm 2026 (trình bày lại)\": Tong cac muc trong TS ngan han (148972742353717) khong khop dong TS ngan han (146959701222064)",
-        "\"Ngày 31 tháng 3 năm 2026\": Tong cac muc trong TS dai han (151914688474058) khong khop dong TS dai han (153997427758180)",
-        "\"Ngày 01 tháng 01 năm 2026 (trình bày lại)\": Tong cac muc trong TS dai han (142793441834934) khong khop dong TS dai han (144845950868162)",
-        "\"Ngày 31 tháng 3 năm 2026\": Tong cac dong con cua \"III. Các khoản phải thu ngắn hạn\" (2408464553625) khong khop chinh dong \"III. Các khoản phải thu ngắn hạn\" (7477047099487) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Ngày 01 tháng 01 năm 2026 (trình bày lại)\": Tong cac dong con cua \"III. Các khoản phải thu ngắn hạn\" (1281646718410) khong khop chinh dong \"III. Các khoản phải thu ngắn hạn\" (5991244612473) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Ngày 31 tháng 3 năm 2026\": Tong cac dong con cua \"1.2 Phải thu về hoạt động đầu tư tài chính\" (5068582545862) khong khop chinh dong \"1.2 Phải thu về hoạt động đầu tư tài chính\" (971456915505) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Ngày 01 tháng 01 năm 2026 (trình bày lại)\": Tong cac dong con cua \"1.2 Phải thu về hoạt động đầu tư tài chính\" (4709597894063) khong khop chinh dong \"1.2 Phải thu về hoạt động đầu tư tài chính\" (38046865126) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Ngày 31 tháng 3 năm 2026\": Tong cac dong con cua \"V. Tài sản ngắn hạn khác\" (897604527538) khong khop chinh dong \"V. Tài sản ngắn hạn khác\" (917698623878) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Ngày 01 tháng 01 năm 2026 (trình bày lại)\": Tong cac dong con cua \"V. Tài sản ngắn hạn khác\" (731394413243) khong khop chinh dong \"V. Tài sản ngắn hạn khác\" (743595209649) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Ngày 31 tháng 3 năm 2026\": Tong cac dong con cua \"1.2 Chi phí chờ phân bổ ngắn hạn khác\" (20094096340) khong khop chinh dong \"1.2 Chi phí chờ phân bổ ngắn hạn khác\" (102166443059) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Ngày 01 tháng 01 năm 2026 (trình bày lại)\": Tong cac dong con cua \"1.2 Chi phí chờ phân bổ ngắn hạn khác\" (12200796406) khong khop chinh dong \"1.2 Chi phí chờ phân bổ ngắn hạn khác\" (111581090301) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Ngày 31 tháng 3 năm 2026\": Tong cac dong con cua \"II. Tài sản cố định\" (777832843443) khong khop chinh dong \"II. Tài sản cố định\" (1670992276357) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Ngày 01 tháng 01 năm 2026 (trình bày lại)\": Tong cac dong con cua \"II. Tài sản cố định\" (793037340532) khong khop chinh dong \"II. Tài sản cố định\" (1710867803238) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Ngày 31 tháng 3 năm 2026\": Tong cac dong con cua \"Giá trị khấu hao lũy kế\" (893159432914) khong khop chinh dong \"Giá trị khấu hao lũy kế\" (-1994233774096) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Ngày 01 tháng 01 năm 2026 (trình bày lại)\": Tong cac dong con cua \"Giá trị khấu hao lũy kế\" (917830462706) khong khop chinh dong \"Giá trị khấu hao lũy kế\" (-1965374373111) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Ngày 31 tháng 3 năm 2026\": Tong cac muc trong No phai tra (489616845130914) khong khop dong No phai tra (281191742461567)",
-        "\"Ngày 01 tháng 01 năm 2026 (trình bày lại)\": Tong cac muc trong No phai tra (470713601633283) khong khop dong No phai tra (266325310635901)",
-        "Khong tim thay muc con nao cua \"Von chu so huu\" (dong \"cap 2\" I/II/III...) - khong kiem tra duoc tong cac muc con.",
-        "\"Ngày 31 tháng 3 năm 2026\": Tong cac dong con cua \"I. Nợ ngắn hạn\" (2977237070468) khong khop chinh dong \"I. Nợ ngắn hạn\" (75433062623851) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Ngày 01 tháng 01 năm 2026 (trình bày lại)\": Tong cac dong con cua \"I. Nợ ngắn hạn\" (2705805497909) khong khop chinh dong \"I. Nợ ngắn hạn\" (64332654684300) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Ngày 31 tháng 3 năm 2026\": Tong cac dong con cua \"1.3 Phải trả khác cho người bán\" (71958087462864) khong khop chinh dong \"1.3 Phải trả khác cho người bán\" (77738302627) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Ngày 01 tháng 01 năm 2026 (trình bày lại)\": Tong cac dong con cua \"1.3 Phải trả khác cho người bán\" (61204798753163) khong khop chinh dong \"1.3 Phải trả khác cho người bán\" (72375587119) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Ngày 31 tháng 3 năm 2026\": Tong cac dong con cua \"6. Doanh thu chưa thực hiện ngắn hạn\" (497738090519) khong khop chinh dong \"6. Doanh thu chưa thực hiện ngắn hạn\" (269651853544) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Ngày 01 tháng 01 năm 2026 (trình bày lại)\": Tong cac dong con cua \"6. Doanh thu chưa thực hiện ngắn hạn\" (422050433228) khong khop chinh dong \"6. Doanh thu chưa thực hiện ngắn hạn\" (282160265889) - co the do OCR gop/bia dong, can xem tay.",
-        "Khong tim thay dong: Gia von hang ban - khong kiem tra duoc \"Loi nhuan gop = Doanh thu thuan - Gia von\".",
-        "\"Cho giai đoạn tài chính ba tháng kết thúc ngày 31 tháng 3 năm 2026\": Loi nhuan sau thue (815627689337) khong khop Loi nhuan truoc thue - Chi phi thue TNDN (1197803383321)",
-        "\"Cho giai đoạn tài chính ba tháng kết thúc ngày 31 tháng 3 năm 2025 (trình bày lại)\": Loi nhuan sau thue (686754473580) khong khop Loi nhuan truoc thue - Chi phi thue TNDN (1008252521206)"
+        "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 1 muc trong KQKD (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
       ]
     },
     {
@@ -28028,9 +27865,9 @@
         },
         {
           "label": "Dự phòng nghiệp vụ",
-          "percentChange": 1.6808111438630142,
+          "percentChange": null,
           "tier": null,
-          "unreliable": false
+          "unreliable": true
         },
         {
           "label": "Nợ",
@@ -28052,9 +27889,9 @@
         },
         {
           "label": "Phí Nhượng Tái BH",
-          "percentChange": null,
+          "percentChange": 29.52765760057177,
           "tier": null,
-          "unreliable": true
+          "unreliable": false
         },
         {
           "label": "DT Thuần HĐKDBH",
@@ -28999,20 +28836,7 @@
       "periodYear": 2026,
       "periodSlug": "Q1",
       "warnings": [
-        "Khong tim thay dong \"Tong cong tai san\" va/hoac \"Tong cong nguon von\" - khong kiem tra cheo duoc, can xem tay.",
-        "Khong tim thay dong: Tong cong tai san - khong kiem tra duoc dang thuc \"TS ngan han + TS dai han = Tong cong tai san\".",
-        "\"Tại ngày\": Tong cac muc trong TS ngan han (12857050388898) khong khop dong TS ngan han (5762036927946)",
-        "\"\": Tong cac muc trong TS ngan han (12876543862667) khong khop dong TS ngan han (5842280699484)",
-        "Khong tim thay muc con nao cua \"TS dai han\" (dong \"cap 2\" I/II/III...) - khong kiem tra duoc tong cac muc con.",
-        "Khong tim thay dong: Tong cong nguon von - khong kiem tra duoc dang thuc \"No phai tra + Von chu so huu = Tong cong nguon von\".",
-        "\"Tại ngày\": Tong cac muc trong No phai tra (18089898786148) khong khop dong No phai tra (6216849561020)",
-        "\"\": Tong cac muc trong No phai tra (16920096430450) khong khop dong No phai tra (5794805806700)",
-        "Khong tim thay muc con nao cua \"Von chu so huu\" (dong \"cap 2\" I/II/III...) - khong kiem tra duoc tong cac muc con.",
-        "\"Tại ngày\": Tong cac dong con cua \"Phải trả ngắn hạn khác\" (163704562072) khong khop chinh dong \"Phải trả ngắn hạn khác\" (9770735682) - co the do OCR gop/bia dong, can xem tay.",
-        "\"\": Tong cac dong con cua \"Phải trả ngắn hạn khác\" (146731645845) khong khop chinh dong \"Phải trả ngắn hạn khác\" (7927379544) - co the do OCR gop/bia dong, can xem tay.",
-        "Khong tim thay dong: Gia von hang ban - khong kiem tra duoc \"Loi nhuan gop = Doanh thu thuan - Gia von\".",
-        "\"Kỳ kế toán 3 tháng kết thúc ngày\": Tong cac dong con cua \"Phí nhượng tái bảo hiểm (02=02.1-02.2)\" (578828266969) khong khop chinh dong \"Phí nhượng tái bảo hiểm (02=02.1-02.2)\" (457388373361) - co the do OCR gop/bia dong, can xem tay.",
-        "\"\": Tong cac dong con cua \"Phí nhượng tái bảo hiểm (02=02.1-02.2)\" (394372679243) khong khop chinh dong \"Phí nhượng tái bảo hiểm (02=02.1-02.2)\" (353120238437) - co the do OCR gop/bia dong, can xem tay."
+        "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 3 muc trong BCDKT (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
       ]
     },
     {
@@ -30087,22 +29911,7 @@
       "entryName": null,
       "periodYear": 2026,
       "periodSlug": "Q1",
-      "warnings": [
-        "Khong tim thay dong \"Tong cong tai san\" va/hoac \"Tong cong nguon von\" - khong kiem tra cheo duoc, can xem tay.",
-        "Khong tim thay dong: TS ngan han, TS dai han, Tong cong tai san - khong kiem tra duoc dang thuc \"TS ngan han + TS dai han = Tong cong tai san\".",
-        "Khong tim thay dong \"TS ngan han\" - khong kiem tra duoc tong cac muc con.",
-        "Khong tim thay dong \"TS dai han\" - khong kiem tra duoc tong cac muc con.",
-        "Khong tim thay dong: Tong cong nguon von - khong kiem tra duoc dang thuc \"No phai tra + Von chu so huu = Tong cong nguon von\".",
-        "\"31/3/2026 triệu đồng\": khong kiem tra duoc \"tong cac muc con cua \"No phai tra\"\" vi gia tri doc duoc khong phai dang so hop le (2191391386 / null) - can xem tay.",
-        "\"31/12/2025 triệu đồng\": khong kiem tra duoc \"tong cac muc con cua \"No phai tra\"\" vi gia tri doc duoc khong phai dang so hop le (2201869475 / null) - can xem tay.",
-        "Khong tim thay muc con nao cua \"Von chu so huu\" (dong \"cap 2\" I/II/III...) - khong kiem tra duoc tong cac muc con.",
-        "Khong tim thay dong: Doanh thu thuan, Gia von hang ban, Loi nhuan gop - khong kiem tra duoc \"Loi nhuan gop = Doanh thu thuan - Gia von\".",
-        "\"Quý I\": Loi nhuan sau thue (6950280) khong khop Loi nhuan truoc thue - Chi phi thue TNDN (12710047)",
-        "\"\": Loi nhuan sau thue (6013511) khong khop Loi nhuan truoc thue - Chi phi thue TNDN (9680681)",
-        "\"Lũy kế từ đầu năm\": Loi nhuan sau thue (6950280) khong khop Loi nhuan truoc thue - Chi phi thue TNDN (12710047)",
-        "\"\": Loi nhuan sau thue (6013511) khong khop Loi nhuan truoc thue - Chi phi thue TNDN (9680681)",
-        "\"Quý I\": Tong cac dong con cua \"Tổng thu nhập hoạt động\" (0) khong khop chinh dong \"Tổng thu nhập hoạt động\" (13674274) - co the do OCR gop/bia dong, can xem tay."
-      ]
+      "warnings": []
     },
     {
       "source": "vietstock",
@@ -30158,15 +29967,15 @@
         },
         {
           "label": "Vay",
-          "percentChange": null,
+          "percentChange": 8.33221023437421,
           "tier": null,
-          "unreliable": true
+          "unreliable": false
         },
         {
           "label": "Trái phiếu phát hành",
           "percentChange": null,
           "tier": null,
-          "unreliable": true
+          "unreliable": false
         },
         {
           "label": "Nợ",
@@ -33075,37 +32884,7 @@
       "periodYear": 2026,
       "periodSlug": "Q1",
       "warnings": [
-        "Khong tim thay dong \"Tong cong tai san\" va/hoac \"Tong cong nguon von\" - khong kiem tra cheo duoc, can xem tay.",
-        "\"Số cuối kỳ\": Tong cac muc trong TS ngan han (5828141332722) khong khop dong TS ngan han (5503133265378)",
-        "\"Số đầu năm\": Tong cac muc trong TS ngan han (5516328098727) khong khop dong TS ngan han (5270896578783)",
-        "\"Số cuối kỳ\": Tong cac muc trong TS dai han (560840197422) khong khop dong TS dai han (310840197422)",
-        "\"Số đầu năm\": Tong cac muc trong TS dai han (563318299005) khong khop dong TS dai han (313318299005)",
-        "\"Số cuối kỳ\": Tong cac dong con cua \"I. Tài sản tài chính (110 = 111 → 129)\" (147848524002) khong khop chinh dong \"I. Tài sản tài chính (110 = 111 → 129)\" (5205518068603) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Số đầu năm\": Tong cac dong con cua \"I. Tài sản tài chính (110 = 111 → 129)\" (72550682358) khong khop chinh dong \"I. Tài sản tài chính (110 = 111 → 129)\" (5012652874830) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Số cuối kỳ\": Tong cac dong con cua \"1.2. Các khoản tương đương tiền\" (4981101400012) khong khop chinh dong \"1.2. Các khoản tương đương tiền\" (0) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Số đầu năm\": Tong cac dong con cua \"1.2. Các khoản tương đương tiền\" (4906303558762) khong khop chinh dong \"1.2. Các khoản tương đương tiền\" (0) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Số cuối kỳ\": Tong cac dong con cua \"7.2.2. Dự thu cổ tức, tiền lãi chưa đến ngày nhận\" (76568144589) khong khop chinh dong \"7.2.2. Dự thu cổ tức, tiền lãi chưa đến ngày nhận\" (88579771671) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Số đầu năm\": Tong cac dong con cua \"7.2.2. Dự thu cổ tức, tiền lãi chưa đến ngày nhận\" (33798633710) khong khop chinh dong \"7.2.2. Dự thu cổ tức, tiền lãi chưa đến ngày nhận\" (86440418793) - co the do OCR gop/bia dong, can xem tay.",
-        "Khong tim thay dong: Tong cong nguon von - khong kiem tra duoc dang thuc \"No phai tra + Von chu so huu = Tong cong nguon von\".",
-        "\"Số cuối kỳ\": Tong cac muc trong No phai tra (6780828687839) khong khop dong No phai tra (3670048687839)",
-        "\"Số đầu năm\": Tong cac muc trong No phai tra (6315316647541) khong khop dong No phai tra (3443797647541)",
-        "Khong tim thay muc con nao cua \"Von chu so huu\" (dong \"cap 2\" I/II/III...) - khong kiem tra duoc tong cac muc con.",
-        "\"Số cuối kỳ\": Tong cac dong con cua \"I. Nợ phải trả ngắn hạn\" (3110780000000) khong khop chinh dong \"I. Nợ phải trả ngắn hạn\" (3667638836019) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Số đầu năm\": Tong cac dong con cua \"I. Nợ phải trả ngắn hạn\" (2871519000000) khong khop chinh dong \"I. Nợ phải trả ngắn hạn\" (3441493060874) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Số cuối kỳ\": Tong cac dong con cua \"1.2. Nợ thuê tài chính ngắn hạn\" (556858836019) khong khop chinh dong \"1.2. Nợ thuê tài chính ngắn hạn\" (0) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Số đầu năm\": Tong cac dong con cua \"1.2. Nợ thuê tài chính ngắn hạn\" (569974060874) khong khop chinh dong \"1.2. Nợ thuê tài chính ngắn hạn\" (0) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Số cuối kỳ\": Tong cac dong con cua \"II. Nợ phải trả dài hạn\" (0) khong khop chinh dong \"II. Nợ phải trả dài hạn\" (2409851820) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Số đầu năm\": Tong cac dong con cua \"II. Nợ phải trả dài hạn\" (0) khong khop chinh dong \"II. Nợ phải trả dài hạn\" (2304586667) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Số cuối kỳ\": Tong cac dong con cua \"1.2. Nợ thuê tài chính dài hạn\" (2409851820) khong khop chinh dong \"1.2. Nợ thuê tài chính dài hạn\" (0) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Số đầu năm\": Tong cac dong con cua \"1.2. Nợ thuê tài chính dài hạn\" (2304586667) khong khop chinh dong \"1.2. Nợ thuê tài chính dài hạn\" (0) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Số cuối kỳ\": Tong cac dong con cua \"7. Các khoản phải thu\" (177159543342) khong khop chinh dong \"7. Các khoản phải thu\" (88579771671) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Số đầu năm\": Tong cac dong con cua \"7. Các khoản phải thu\" (172880837586) khong khop chinh dong \"7. Các khoản phải thu\" (86440418793) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Số cuối kỳ\": Tong cac dong con cua \"7.1. Tiền gửi của Nhà đầu tư về giao dịch chứng khoán theo phương thức CTCK quản lý\" (384248346353) khong khop chinh dong \"7.1. Tiền gửi của Nhà đầu tư về giao dịch chứng khoán theo phương thức CTCK quản lý\" (363991830764) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Số đầu năm\": Tong cac dong con cua \"7.1. Tiền gửi của Nhà đầu tư về giao dịch chứng khoán theo phương thức CTCK quản lý\" (357537508488) khong khop chinh dong \"7.1. Tiền gửi của Nhà đầu tư về giao dịch chứng khoán theo phương thức CTCK quản lý\" (341263173146) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Số cuối kỳ\": Tong cac dong con cua \"7. Nhận tiền gửi để thanh toán giao dịch chứng khoán của khách hàng\" (26710837865) khong khop chinh dong \"7. Nhận tiền gửi để thanh toán giao dịch chứng khoán của khách hàng\" (15458599819247) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Số đầu năm\": Tong cac dong con cua \"7. Nhận tiền gửi để thanh toán giao dịch chứng khoán của khách hàng\" (-5840541233) khong khop chinh dong \"7. Nhận tiền gửi để thanh toán giao dịch chứng khoán của khách hàng\" (11120290000600) - co the do OCR gop/bia dong, can xem tay.",
-        "Khong tim thay dong: Gia von hang ban, Loi nhuan gop - khong kiem tra duoc \"Loi nhuan gop = Doanh thu thuan - Gia von\".",
-        "Khong tim thay dong: Loi nhuan sau thue - khong kiem tra duoc \"Loi nhuan sau thue = Loi nhuan truoc thue - Chi phi thue TNDN\"."
+        "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 1 muc trong KQKD (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
       ]
     },
     {
@@ -33180,7 +32959,7 @@
         },
         {
           "label": "Vốn CSH",
-          "percentChange": null,
+          "percentChange": 4.377387052489452,
           "tier": null,
           "unreliable": false
         },
@@ -34843,42 +34622,7 @@
       "periodYear": 2026,
       "periodSlug": "Q1",
       "warnings": [
-        "Khong tim thay dong \"Tong cong tai san\" va/hoac \"Tong cong nguon von\" - khong kiem tra cheo duoc, can xem tay.",
-        "\"Ngày 31 tháng 03 năm 2026 VND\": Tong cac muc trong TS ngan han (59922932382457) khong khop dong TS ngan han (52606533903312)",
-        "\"Ngày 31 tháng 12 năm 2025 VND\": Tong cac muc trong TS ngan han (57258605093914) khong khop dong TS ngan han (47710682737676)",
-        "\"Ngày 31 tháng 03 năm 2026 VND\": Tong cac muc trong TS dai han (248505846336) khong khop dong TS dai han (610560374735)",
-        "\"Ngày 31 tháng 12 năm 2025 VND\": Tong cac muc trong TS dai han (348543397209) khong khop dong TS dai han (691697535982)",
-        "\"Ngày 31 tháng 03 năm 2026 VND\": Tong cac dong con cua \"I. Tài sản tài chính\" (6162175608883) khong khop chinh dong \"I. Tài sản tài chính\" (52582466343924) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Ngày 31 tháng 12 năm 2025 VND\": Tong cac dong con cua \"I. Tài sản tài chính\" (8680990313016) khong khop chinh dong \"I. Tài sản tài chính\" (47692438810317) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Ngày 31 tháng 03 năm 2026 VND\": Tong cac dong con cua \"1.2. Các khoản tương đương tiền\" (46341201321188) khong khop chinh dong \"1.2. Các khoản tương đương tiền\" (1896174712331) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Ngày 31 tháng 12 năm 2025 VND\": Tong cac dong con cua \"1.2. Các khoản tương đương tiền\" (38963211262541) khong khop chinh dong \"1.2. Các khoản tương đương tiền\" (4166004175670) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Ngày 31 tháng 03 năm 2026 VND\": Tong cac dong con cua \"6.2.1. Dự thu cổ tức, tiền lãi chưa đến ngày nhận\" (79089413853) khong khop chinh dong \"6.2.1. Dự thu cổ tức, tiền lãi chưa đến ngày nhận\" (577096078947) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Ngày 31 tháng 12 năm 2025 VND\": Tong cac dong con cua \"6.2.1. Dự thu cổ tức, tiền lãi chưa đến ngày nhận\" (48237234760) khong khop chinh dong \"6.2.1. Dự thu cổ tức, tiền lãi chưa đến ngày nhận\" (429510500748) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Ngày 31 tháng 03 năm 2026 VND\": Tong cac dong con cua \"I. Tài sản tài chính dài hạn\" (89726070000) khong khop chinh dong \"I. Tài sản tài chính dài hạn\" (75467379289) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Ngày 31 tháng 12 năm 2025 VND\": Tong cac dong con cua \"I. Tài sản tài chính dài hạn\" (102233570000) khong khop chinh dong \"I. Tài sản tài chính dài hạn\" (97336198316) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Ngày 31 tháng 03 năm 2026 VND\": Tong cac dong con cua \"2.1. Đầu tư dài hạn khác\" (-14258690711) khong khop chinh dong \"2.1. Đầu tư dài hạn khác\" (39696070000) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Ngày 31 tháng 12 năm 2025 VND\": Tong cac dong con cua \"2.1. Đầu tư dài hạn khác\" (-4897371684) khong khop chinh dong \"2.1. Đầu tư dài hạn khác\" (39696070000) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Ngày 31 tháng 03 năm 2026 VND\": Tong cac dong con cua \"II. Tài sản cố định\" (218987890147) khong khop chinh dong \"II. Tài sản cố định\" (406717923059) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Ngày 31 tháng 12 năm 2025 VND\": Tong cac dong con cua \"II. Tài sản cố định\" (219547206633) khong khop chinh dong \"II. Tài sản cố định\" (428449812552) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Ngày 31 tháng 03 năm 2026 VND\": Tong cac dong con cua \"1.2. Giá trị khấu hao lũy kế\" (187730032912) khong khop chinh dong \"1.2. Giá trị khấu hao lũy kế\" (-401750598399) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Ngày 31 tháng 12 năm 2025 VND\": Tong cac dong con cua \"1.2. Giá trị khấu hao lũy kế\" (208902605919) khong khop chinh dong \"1.2. Giá trị khấu hao lũy kế\" (-382850208773) - co the do OCR gop/bia dong, can xem tay.",
-        "Khong tim thay dong: Tong cong nguon von - khong kiem tra duoc dang thuc \"No phai tra + Von chu so huu = Tong cong nguon von\".",
-        "Khong tim thay muc con nao cua \"No phai tra\" (dong \"cap 2\" I/II/III...) - khong kiem tra duoc tong cac muc con.",
-        "Khong tim thay muc con nao cua \"Von chu so huu\" (dong \"cap 2\" I/II/III...) - khong kiem tra duoc tong cac muc con.",
-        "\"Ngày 31 tháng 03 năm 2026 VND\": Tong cac dong con cua \"6. Các khoản phải thu\" (1154222870262) khong khop chinh dong \"6. Các khoản phải thu\" (577126791315) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Ngày 31 tháng 12 năm 2025 VND\": Tong cac dong con cua \"6. Các khoản phải thu\" (866932043222) khong khop chinh dong \"6. Các khoản phải thu\" (437421542474) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Ngày 31 tháng 03 năm 2026 VND\": Tong cac dong con cua \"1. Vốn đầu tư của chủ sở hữu\" (24349197040000) khong khop chinh dong \"1. Vốn đầu tư của chủ sở hữu\" (26729023939152) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Ngày 31 tháng 12 năm 2025 VND\": Tong cac dong con cua \"1. Vốn đầu tư của chủ sở hữu\" (15218257000000) khong khop chinh dong \"1. Vốn đầu tư của chủ sở hữu\" (26729023939152) - co the do OCR gop/bia dong, can xem tay.",
-        "Khong tim thay dong: Gia von hang ban, Loi nhuan gop - khong kiem tra duoc \"Loi nhuan gop = Doanh thu thuan - Gia von\".",
-        "Khong tim thay dong: Loi nhuan sau thue - khong kiem tra duoc \"Loi nhuan sau thue = Loi nhuan truoc thue - Chi phi thue TNDN\".",
-        "\"Quý 1 Năm nay VND\": Tong cac dong con cua \"Tổng thu nhập toàn diện\" (1538458932779) khong khop chinh dong \"Tổng thu nhập toàn diện\" (-8457616791) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Quý 1 Năm trước VND\": Tong cac dong con cua \"Tổng thu nhập toàn diện\" (919386668744) khong khop chinh dong \"Tổng thu nhập toàn diện\" (0) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Lũy kế từ đầu năm đến cuối quý này Năm nay VND\": Tong cac dong con cua \"Tổng thu nhập toàn diện\" (1538458932779) khong khop chinh dong \"Tổng thu nhập toàn diện\" (-8457616791) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Lũy kế từ đầu năm đến cuối quý này Năm trước VND\": Tong cac dong con cua \"Tổng thu nhập toàn diện\" (919386668744) khong khop chinh dong \"Tổng thu nhập toàn diện\" (0) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Quý 1 Năm nay VND\": Tong cac dong con cua \"I. DOANH THU HOẠT ĐỘNG\" (392830229342) khong khop chinh dong \"I. DOANH THU HOẠT ĐỘNG\" (0) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Quý 1 Năm trước VND\": Tong cac dong con cua \"I. DOANH THU HOẠT ĐỘNG\" (223722359654) khong khop chinh dong \"I. DOANH THU HOẠT ĐỘNG\" (0) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Lũy kế từ đầu năm đến cuối quý này Năm nay VND\": Tong cac dong con cua \"I. DOANH THU HOẠT ĐỘNG\" (392830229342) khong khop chinh dong \"I. DOANH THU HOẠT ĐỘNG\" (0) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Lũy kế từ đầu năm đến cuối quý này Năm trước VND\": Tong cac dong con cua \"I. DOANH THU HOẠT ĐỘNG\" (223722359654) khong khop chinh dong \"I. DOANH THU HOẠT ĐỘNG\" (0) - co the do OCR gop/bia dong, can xem tay."
+        "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 3 muc trong BCDKT, 1 muc trong KQKD (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
       ]
     }
   ],
