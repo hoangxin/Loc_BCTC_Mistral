@@ -217,10 +217,40 @@ function isTotalCapitalLabel(label: string): boolean {
   );
 }
 
+// Phat hien loi OCR doc THUA/THIEU chu so 0 (lech dung 1 boi so 10 - vd
+// 1.066.567.018.378 bi in thanh 10.665.670.183.780, gap dung 10 lan) - loai
+// loi PHO BIEN hon 1 sai lech ngau nhien don le (OCR doc nham 1 so dai de
+// them/bot 1 chu so cuoi). Dung SO SANH TI LE (khong phai hieu tuyet doi) vi
+// day la loi NHAN chu khong phai loi CONG/TRU.
+function detectRoundScaleFactor(a: number, b: number): number | null {
+  if (a === 0 || b === 0) return null;
+  const ratio = Math.abs(a / b);
+  for (const factor of [10, 100, 1000]) {
+    if (Math.abs(ratio - factor) / factor < 0.001) return factor; // |a| = factor * |b|
+    if (Math.abs(ratio - 1 / factor) * factor < 0.001) return -factor; // |b| = factor * |a|
+  }
+  return null;
+}
+
 // Nguyen tac ke toan bat buoc dung voi MOI bang can doi ke toan, khong phu
 // thuoc tung cong ty: Tong cong tai san = Tong cong nguon von. Day la dang
 // thuc toan hoc chu khong phai AI doan - lech nghia la co it nhat 1 o so bi
 // trich/OCR sai o dau do.
+//
+// SUA 2026-07-13 (theo yeu cau nguoi dung, sau khi doi chieu DIC that: "Tong
+// cong tai san (1.066.567.018.378) khong khop Tong cong nguon von
+// (10.665.670.183.780)" - lech DUNG 10 lan, nhung thong bao cu chi noi "khong
+// khop", khong noi ben nao sai): thay vi chi bao "khong khop" suong, DOI
+// CHIEU THEM voi No phai tra + Von chu so huu (da tinh o validateBalanceSheetSubtotals,
+// tinh lai o day de doc lap - 2 kiem tra khong phu thuoc thu tu goi nhau) -
+// day la 1 CACH TINH THU HAI, DOC LAP voi ca 2 o "Tong cong..." dang so sanh,
+// nen neu no khop VOI MOT BEN nhung khong khop ben kia, day la BANG CHUNG
+// MANH cho thay ben KHONG khop la ben bi doc sai (khong phai doan, la suy ra
+// tu 1 phep tinh doc lap thu 3). Neu them ca ti le lech la 1 boi so tron cua
+// 10 (dac trung cua loi OCR du/thieu chu so 0 khi doc so dai) thi cang cung
+// co ket luan. CHI khi ca 2 dieu kien nay THAT SU khop (khong phai doan) moi
+// neu dich danh - neu khong du ro rang, quay ve thong bao chung nhu cu (an
+// toan hon la doan sai).
 function validateBalanceSheet(table: StatementTable): ValidationIssue[] {
   const assetsRow = findRow(table, isTotalAssetsLabel);
   const capitalRow = findRow(table, isTotalCapitalLabel);
@@ -234,15 +264,44 @@ function validateBalanceSheet(table: StatementTable): ValidationIssue[] {
     ];
   }
 
+  const liabilitiesRow = findRow(table, (l) => l.includes('NO PHAI TRA'));
+  const equityRow = findRow(table, (l) => l.includes('VON CHU SO HUU'));
+
   const issues: ValidationIssue[] = [];
   for (const i of valueColumnIndexes(table)) {
     const columnName = table.columns[i] ?? `cot ${i}`;
+    const assets = assetsRow[i] ?? null;
+    const capital = capitalRow[i] ?? null;
+    if (typeof assets === 'number' && typeof capital === 'number' && !numbersClose(assets, capital)) {
+      const liabilities = liabilitiesRow?.[i];
+      const equity = equityRow?.[i];
+      const scaleFactor = detectRoundScaleFactor(assets, capital);
+      if (typeof liabilities === 'number' && typeof equity === 'number' && scaleFactor !== null) {
+        const computedTotal = liabilities + equity;
+        const matchesAssets = numbersClose(computedTotal, assets);
+        const matchesCapital = numbersClose(computedTotal, capital);
+        if (matchesAssets && !matchesCapital) {
+          issues.push({
+            table: 'balanceSheet',
+            message: `"${columnName}": Tong cong nguon von in san (${capital}) NGHI NGO bi OCR doc sai (lech dung ${Math.abs(scaleFactor)} lan so voi Tong cong tai san) - No phai tra + Von chu so huu (${computedTotal}) khop voi Tong cong tai san (${assets}), khong khop voi Tong cong nguon von.`,
+          });
+          continue;
+        }
+        if (matchesCapital && !matchesAssets) {
+          issues.push({
+            table: 'balanceSheet',
+            message: `"${columnName}": Tong cong tai san in san (${assets}) NGHI NGO bi OCR doc sai (lech dung ${Math.abs(scaleFactor)} lan so voi Tong cong nguon von) - No phai tra + Von chu so huu (${computedTotal}) khop voi Tong cong nguon von (${capital}), khong khop voi Tong cong tai san.`,
+          });
+          continue;
+        }
+      }
+    }
     const issue = compareOrFlag(
       'balanceSheet',
       columnName,
       'Tong cong tai san = Tong cong nguon von',
-      assetsRow[i] ?? null,
-      capitalRow[i] ?? null,
+      assets,
+      capital,
       (a, b) => `"${columnName}": Tong cong tai san (${a}) khong khop Tong cong nguon von (${b})`
     );
     if (issue) issues.push(issue);
