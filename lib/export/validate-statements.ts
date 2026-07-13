@@ -11,10 +11,9 @@ import {
   isDuplicateKnownBalanceSheetLevel1Row,
   isInsideKnownContainer,
   hasReliableSubtotalSignal,
-  arabicDirectChildRows,
+  equityDirectChildRows,
   findIncomeStatementGroupMismatches,
   findIncomeStatementFormulaMismatches,
-  findDecimalCodeGroupMismatches,
   findBalanceSheetLevel2Mismatches,
   type GroupSumMismatch,
 } from './statement-shared';
@@ -129,12 +128,12 @@ function childrenBetween(
     if (isInsideKnownContainer(table, labelIndex, startIdx + 1, i)) continue;
     result.push(row);
   }
-  // Khong tim thay dong nao co tin hieu "cap 2" (Roman/noi dung da biet) - co
-  // the vi nhom nay KHONG CO lop trung gian nao ca theo dung cau truc that
-  // (xem arabicDirectChildRows), khong phai vi bang thieu du lieu. Thu fallback
+  // Khong tim thay dong nao co tin hieu "cap 2" (ten chuan da biet) - co the
+  // vi nhom nay KHONG CO lop trung gian nao ca theo dung cau truc that (xem
+  // equityDirectChildRows), khong phai vi bang thieu du lieu. Thu fallback
   // truoc khi coi la "khong tim thay muc con nao".
   if (result.length === 0) {
-    return arabicDirectChildRows(table, labelIndex, startIdx, endIdx);
+    return equityDirectChildRows(table, labelIndex, startIdx, endIdx);
   }
   return result;
 }
@@ -598,19 +597,18 @@ function validateIncomeStatementGroupSums(table: StatementTable, businessType: B
   return groupSumMismatchesToIssues('incomeStatement', findIncomeStatementFormulaMismatches(table, businessType));
 }
 
-// REMOVED tu duong canh bao hien thi (2026-07-13, theo yeu cau nguoi dung):
-// findDecimalCodeGroupMismatches kiem tra quan he cha-con cua cac dong CHI
-// TIET tu cong ty tu chia nho (vd "phai thu ve hop dong bao hiem"/"phai thu
-// khac"), KHONG phai ten chi tieu chuan theo Thong tu - khong co "quy tac ke
-// toan" nao de tra ten thay the, CHI co the nhan biet quan he nay qua CAU
-// TRUC MA SO (X.1 la con cua X). Vi day la kiem tra sau hon muc do cac Thong
-// tu quy dinh (cong ty tu lap, khong theo chuan chung), nguoi dung yeu cau bo
-// hoan toan khoi canh bao hien thi thay vi tiep tuc vá tung truong hop bang
-// tin hieu vi tri/so thu tu - giong quyet dinh giam do sau da lam voi
-// findBalanceSheetLevel2Mismatches (Phase 8). Ham findDecimalCodeGroupMismatches
-// (statement-shared.ts) van giu nguyen cho findAllGroupSumMismatches (retry
-// OCR/gan co "unreliable" - pham vi khac, khong hien thi truc tiep cho nguoi
-// dung), khong xoa ham do.
+// REMOVED HOAN TOAN (2026-07-13, theo yeu cau nguoi dung, bo triet de tin
+// hieu so thu tu khoi CA nhanh retry/unreliable-cell, khong chi nhanh hien
+// thi): `findDecimalCodeGroupMismatches` tung kiem tra quan he cha-con cua
+// cac dong CHI TIET tu cong ty tu chia nho (vd "phai thu ve hop dong bao
+// hiem"/"phai thu khac"), KHONG phai ten chi tieu chuan theo Thong tu - khong
+// co "quy tac ke toan" nao de tra ten thay the, CHI co the nhan biet quan he
+// nay qua CAU TRUC MA SO (X.1 la con cua X). Dau tien chi bo khoi canh bao
+// hien thi (giu lai cho findAllGroupSumMismatches, retry OCR/gan co
+// "unreliable"), nhung ban than viec dung CAU TRUC MA SO de quyet dinh (du
+// chi cho retry, khong hien thi) van la 1 dang phan loai theo so thu tu -
+// nen ham nay (va cac ham chi phuc vu no) DA BI XOA HOAN TOAN khoi
+// statement-shared.ts, khong con duoc goi o day nua.
 
 // Kiem tra tinh nhat quan noi tai cua so lieu da trich - hoan toan cuc bo,
 // khong goi AI, khong ton token. Dung de phat hien loi do OCR/AI doc nham so,
@@ -707,8 +705,6 @@ export function findAllGroupSumMismatches(statements: FinancialStatements): Tagg
     ...findBalanceSheetLevel2Mismatches(bs, longTermAssetsIdx, totalAssetsIdx).map(tagBs),
     ...findBalanceSheetLevel2Mismatches(bs, liabilitiesIdx, equityIdx).map(tagBs),
     ...findBalanceSheetLevel2Mismatches(bs, equityIdx, totalCapitalIdx).map(tagBs),
-    ...findDecimalCodeGroupMismatches(bs).map(tagBs),
     ...findIncomeStatementGroupMismatches(is).map(tagIs),
-    ...findDecimalCodeGroupMismatches(is).map(tagIs),
   ];
 }

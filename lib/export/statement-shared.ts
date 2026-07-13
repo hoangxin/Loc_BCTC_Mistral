@@ -174,81 +174,19 @@ export function findRowByCode(
   return null;
 }
 
-// Muc con CAP 3 (chi tiet duoi 1 nhom La Ma, vd "1./ Tien", "7 Vay va no...")
-// luon bat dau bang SO A-RAP (co the kem "." va/hoac "/" roi khoang trang) -
-// dau hieu nay dang tin cay hon "ma so chia het cho 10" (xem comment duoi
-// day). CHO PHEP NHIEU ky tu dau cau lien tiep (khong chi 1) - da gap that
-// (2026-07-12, doi chieu TIX): dang "1./ Chi phi san xuat kinh doanh do dang
-// dai han" dung CA HAI dau "." VA "/" lien nhau, pattern cu (chi 1 ky tu dau
-// cau) khong khop, khien dong CHI TIET nay bi hieu nham la dong TONG NHOM -
-// lam sai ca Excel in dam nham LAN kiem tra cheo tong nhom cap sau
-// (findBalanceSheetLevel2Mismatches, lib/export/validate-statements.ts).
-//
-// SUA THEM 2026-07-12 (xac nhan qua SHS Q1/2026, anh huong HANG LOAT bao cao
-// khac trong 1500-bao-cao that: PVI/CIG/CT6/HCM/BVH/PRE/PHS/VCK...): 2 bug
-// nua trong CHINH pattern nay, ca 2 deu lam dong CHI TIET (cap 3/4) bi hieu
-// nham la dong TONG NHOM (cap 2), gay CONG DU/DUP muc con khi kiem tra tong
-// nhom (childrenBetween, lib/export/validate-statements.ts):
-// 1) Khong co khoang trang sau dau cham - SHS ghi "1.Tiền và các khoản..."
-//    (dinh lien "1." vao chu, khong co dau cach) thay vi "1./ Chi phi..." (co
-//    dau cach) nhu TIX - pattern cu BAT BUOC \s ngay sau dau cau nen khong
-//    khop, lam "1.Tien va cac khoan..." bi coi la dong tong.
-// 2) Ma so THAP PHAN (chi tiet cap 4 duoi 1 chi tiet cap 3, vd "1.1. Tiền",
-//    "7.2. Phải thu...") - pattern cu chi nhan 1 SO DUY NHAT roi dau cau, gap
-//    "1.1."/"7.2." (SO.SO.) thi dung lai ngay sau so dau tien ("1"), ky tu
-//    tiep theo la "." (thuoc [.\/)]*, khop duoc) nhung SAU DO lai la 1 CHU SO
-//    NUA ("1" trong "1.1") - khong phai \s, khop THAT BAI toan bo tu dau
-//    (regex co ^, khong the thu lai vi tri khac).
-// Them nhom "(\.\d+)*" de nhan chuoi so thap phan bat ky do dai ("1.1", "7.2",
-// "1.2.3"...) TRUOC khi den dau cau/khoang trang, va doi \s (bat buoc) thanh
-// \s* (tuy chon) de dau cham dinh lien chu (khong co dau cach) van khop duoc.
-const ARABIC_ITEM_PREFIX = /^\d+(\.\d+)*[.\/)]+\s*/;
-
-// Chuoi NGAY THANG (DD.MM.YYYY hoac DD/MM/YYYY) TRONG NHAM voi ma so thap
-// phan qua ARABIC_ITEM_PREFIX o tren - ca 2 deu la "so.so.so" - da xac nhan
-// qua doi chieu that HCM Q1/2026 (2026-07-12): 1 dong tieu de ngay thang
-// ("31.03.2026 VND") lot vao GIUA bang (loi tach trang o buoc OCR khac, KHONG
-// phai loi rieng cua ham nay) bi ARABIC_ITEM_PREFIX nhan NHAM la dong chi
-// tiet co ma so "31.03." - khien hasReliableSubtotalSignal tin nham la bang
-// nay CO tin hieu danh so (trong khi that ra khong co dong nao khac co), lam
-// isLikelySubtotalRow tiep tuc chay heuristic sai cho CA bang. Nam thap phan
-// cuoi cung cua 1 ngay LUON la nam (>=4 chu so, vd "2026") - ma so thuong that
-// KHONG bao gio dai qua 3 chu so (STT/ma so chi tiet toi da vai chuc/vai
-// tram) - dung dau hieu nay de loai truoc khi thu ARABIC_ITEM_PREFIX.
-const DATE_LIKE_PREFIX = /^\d{1,2}[.\/]\d{1,2}[.\/]\d{4}\b/;
-
-function looksLikeArabicItemPrefix(label: string): boolean {
-  if (DATE_LIKE_PREFIX.test(label)) return false;
-  return ARABIC_ITEM_PREFIX.test(label);
-}
-
-// Muc con CAP 4 (chi tiet duoi CA dong cap 3, vd "- Nguyen gia"/"- Gia tri
-// hao mon luy ke" hoac "* Nguyen gia"/"* Gia tri hao mon luy ke" (tuy cong
-// ty) duoi TSCD, "a)"/"b)" duoi 1 muc sinh hoc) - KHONG bao gio la dong tong
-// nhom, du KHONG bat dau bang so A-rap (da gap that 2026-07-08, doi chieu
-// that voi BCTC IDV: cac dong nay bi tinh nham la "dong tong" - giong het
-// loi voi ARABIC_ITEM_PREFIX o tren - lam bang Excel in dam nham HANG LOAT
-// dong con (lib/export/row-style.ts) VA lam sai lech phep cong "tong cac muc
-// con" trong validate-statements.ts, vi 1 dong da duoc tinh trong gia tri
-// cua dong cha "1./2./3." lai bi cong THEM 1 lan nua nhu the no la 1 nhom
-// rieng). Them "*" vao bo tien to (2026-07-12, doi chieu TIX: cung 1 vai tro
-// cap-4 "Nguyen gia"/"Gia tri hao mon luy ke" nhung dung "*" thay vi "-") -
-// da xac nhan qua tinh tay: "- LNST chua phan phoi luy ke den cuoi ky truoc"
-// + "- LNST chua phan phoi ky nay" CONG DUNG BANG dong cha "11./ Loi nhuan
-// sau thue chua phan phoi" (khong phai 2 khoan MUC RIENG), nen PHAI loai ca
-// 2 dang tien to nay khoi tong "cac dong con" (findBalanceSheetLevel2Mismatches/
-// findIncomeStatementGroupMismatches), khong chi khoi isLikelySubtotalRow.
-// \s* (khong bat buoc) thay vi \s (bat buoc) - da xac nhan qua LLM Q1/2026
-// (2026-07-12): "*Cổ phiếu phổ thông có quyền biểu quyết*" dinh lien dau "*"
-// vao chu (khong dau cach) thay vi "* Nguyen gia" (co dau cach) - cung 1 lop
-// loi da sua cho ARABIC_ITEM_PREFIX (xem comment o do), khien dong nay bi
-// tinh nham la dong tong, cong DU vao "tong cac muc con cua Von chu so huu".
-// [a-z][.)] (chap nhan CA "a." LAN "a)") - da xac nhan qua PHS that
-// (2026-07-13): "a. Cổ phiếu phổ thông có quyền biểu quyết" (cap-4 duoi
-// "1.1. Vốn góp của chủ sở hữu") dung dau CHAM thay vi dong ngoac, truoc day
-// chi nhan "a)" nen dong nay khong khop, bi coi NHAM la dong tong, cong TRUNG
-// vao tong "Von chu so huu" (dung 1 lop loi voi cac tien to khac da sua).
-const NON_SUBTOTAL_DETAIL_PREFIX = /^(-|\*|[a-z][.)])\s*/;
+// GHI CHU 2026-07-13 (theo yeu cau nguoi dung, bo HOAN TOAN tin hieu so thu
+// tu khoi phan loai cap-do chi tieu): 2 pattern tung dung o day -
+// ARABIC_ITEM_PREFIX (doc tien to so A-rap "1."/"7./" trong TEN de doan dong
+// KHONG phai dong tong) va NON_SUBTOTAL_DETAIL_PREFIX (doc tien to dau cau
+// "-"/"*"/"a)" de doan dong la chi tiet cap-4) - DA BI XOA khoi day. Ca 2 deu
+// la tin hieu VI TRI/DINH DANG (khong phai TEN chi tieu), gay loi lap lai
+// nhieu lan khi OCR doc nham/thieu tien to (vd doi cham "10" thanh "I.", xem
+// KSQ/BOT that trong findEquityDirectChildRows). Thay the: `isKnownCap4Label`
+// (duoi day, mo rong 2026-07-13) nhan chi tiet cap-4 qua NOI DUNG chuan (VAS/
+// Thong tu), va `isKnownEquityDirectChildLabel` (tren, TT200 Dieu 112) nhan
+// dong con truc tiep cua Von chu so huu qua TEN chuan thay vi tien to so
+// A-rap. Neu can xem lai code cu, tim "ARABIC_ITEM_PREFIX"/
+// "NON_SUBTOTAL_DETAIL_PREFIX" trong lich su git truoc commit sua doi nay.
 
 // "Nguyen gia"/"Gia tri hao mon luy ke" LUON la dong cap-4 duoi 1 muc TSCD/
 // BDS dau tu, theo dung thuat ngu chuan VAS - nhung TIEN TO/HAU TO cua tung
@@ -263,7 +201,36 @@ const NON_SUBTOTAL_DETAIL_PREFIX = /^(-|\*|[a-z][.)])\s*/;
 // dong san dau tu) - thieu bien the nay khien dong bi coi NHAM la dong tong
 // (roi vao fallback mac dinh true), cong TRUNG chinh no vao tong "TS dai han"
 // (no da la 1 PHAN của gia tri TSCD/BDSĐT cha, khong phai 1 muc doc lap).
-const KNOWN_CAP4_LABEL_CONTENT = ['NGUYEN GIA', 'GIA TRI HAO MON LUY KE', 'GIA TRI KHAU HAO LUY KE'];
+//
+// MO RONG 2026-07-13 (thay the HOAN TOAN cho NON_SUBTOTAL_DETAIL_PREFIX - xem
+// comment o isLikelySubtotalRow ve ly do bo han tien to dau cau "-"/"*"/"a)"):
+// doi chieu qua corpus 28 bao cao that (data/latest-fetch.json) tim them cac
+// bien the NOI DUNG can nhan dien qua ten thay vi qua dau cau dung truoc:
+// - "HAO MON LUY KE"/"KHAU HAO LUY KE" rong hon "GIA TRI HAO MON/KHAU HAO LUY
+//   KE" cu (van khop ca 2, vi la .includes() - chi bo bot chu "GIA TRI" bat
+//   buoc o dau, bat them bien the ngan hon "Hao mòn lũy kế*").
+// - "HAO MON TAI SAN CO DINH" - bien the khac "Hao mòn tài sản cố định*"
+//   (khong co "luy ke"), gap trong corpus that.
+// - "THEO GIA TRI HOP LY" - dong "Đánh giá TSCĐHH/TSCĐTTC/TSCĐVH/BĐSĐT theo
+//   giá trị hợp lý" (chi tiet cap-4 rieng, khong phai muc doc lap).
+// - "GIAI DOAN" - chi tiet sinh hoc TT99 duoi 1 muc "Súc/Sức vật nuôi..."
+//   ("...chưa đến giai đoạn (trưởng thành)"/"...đến giai đoạn (trước/trưởng
+//   thành)") - da ra soat TOAN BO corpus, cum tu "giai đoạn" CHI xuat hien o
+//   cac dong chi tiet sinh hoc nay, an toan lam marker rieng (khong dung cho
+//   chinh dong cap-3 goc "1. Súc vật nuôi cho sản phẩm định kỳ" vi dong do
+//   KHONG chua "giai đoạn").
+// - "CHUA PHAN PHOI KY NAY"/"CHUA PHAN PHOI LUY KE DEN CUOI" - 2 dong chi
+//   tiet co dinh cua "Loi nhuan sau thue chua phan phoi" (mã 420a/420b).
+const KNOWN_CAP4_LABEL_CONTENT = [
+  'NGUYEN GIA',
+  'HAO MON LUY KE',
+  'KHAU HAO LUY KE',
+  'HAO MON TAI SAN CO DINH',
+  'THEO GIA TRI HOP LY',
+  'GIAI DOAN',
+  'CHUA PHAN PHOI KY NAY',
+  'CHUA PHAN PHOI LUY KE DEN CUOI',
+];
 
 function isKnownCap4Label(label: string): boolean {
   const normalized = normalizeLabelText(label);
@@ -311,19 +278,57 @@ function isKnownAlwaysChildLabel(label: string): boolean {
   return KNOWN_ALWAYS_CHILD_CONTENT.some((marker) => normalized.includes(marker));
 }
 
+// Ten CHUAN cac muc ma 411-422 (Thong tu 200/2014 Dieu 112, ke ca cac bien
+// the TT99/bao cao hop nhat) - dung LAM TIN HIEU NOI DUNG cho fallback duoi
+// (thay the HOAN TOAN "arabicDirectChildRows" cu dua vao tien to so A-rap).
+const KNOWN_EQUITY_DIRECT_CHILD_CONTENT = [
+  'VON GOP CUA CHU SO HUU',
+  'THANG DU VON', // khop ca "Thặng dư vốn" (PXA that) lan "Thặng dư vốn cổ phần" (ten day du TT200)
+  'QUYEN CHON CHUYEN DOI TRAI PHIEU',
+  'VON KHAC CUA CHU SO HUU',
+  'CO PHIEU MUA LAI CUA CHINH MINH',
+  'CO PHIEU QUY',
+  'CHENH LECH DANH GIA LAI TAI SAN',
+  'CHENH LECH TY GIA HOI DOAI',
+  'QUY DAU TU PHAT TRIEN', // khop luon bien the gop "Quỹ đầu tư phát triển và dự phòng tài chính" (BVH that, .includes())
+  'QUY KHAC THUOC VON CHU SO HUU',
+  'LOI NHUAN SAU THUE CHUA PHAN PHOI', // trung voi KNOWN_ALWAYS_CHILD_CONTENT - giu ca 2 noi, dung cho 2 muc dich khac nhau
+  'LOI NHUAN SAU THUE DA THUC HIEN CHUA PHAN PHOI', // bien the Bao hiem (BVH that 2026-07-13: "đã thực hiện" chen giua, khong con la substring lien tuc cua marker tren)
+  'QUY DU TRU BAT BUOC', // Bao hiem, TT232/2012 (BVH: "Quỹ dự trữ bắt buộc hoạt động bảo hiểm", ma 423)
+  'NGUON VON DAU TU XDCB',
+  'NGUON VON DAU TU XAY DUNG CO BAN',
+  'LOI ICH CO DONG KHONG KIEM SOAT', // bao cao hop nhat
+];
+
+function isKnownEquityDirectChildLabel(label: string): boolean {
+  const normalized = normalizeLabelText(label);
+  return KNOWN_EQUITY_DIRECT_CHILD_CONTENT.some((marker) => normalized.includes(marker));
+}
+
 // Fallback khi 1 nhom cap-1 (vd "D - Von chu so huu") KHONG co lop "cap 2"
-// (Roman/noi dung da biet) trung gian nao ca giua no va dong tong tiep theo -
-// truong hop nay THUONG GAP voi "Von chu so huu": TT200 chinh thuc co 2 nhom
-// con ("I. Von chu so huu"/"II. Nguon kinh phi va quy khac"), nhung da so DN
-// KHONG co nhom "Nguon kinh phi" (chi ap dung cho don vi hanh chinh su
-// nghiep) nen nhieu bao cao that KHONG in dong "I. Von chu so huu" rieng vi
-// no se trung ten Y HET dong cha "D - Von chu so huu" ngay tren - xac nhan
-// qua HVA/KSQ that (2026-07-13): cac dong con di THANG vao so A-rap "1. Von
-// gop cua chu so huu", "2. Thang du von"... ngay sau dong nhom, khong co dong
-// trung gian nao ca. Khi do, chinh cac dong con so A-rap TRUC TIEP (khong
-// phai dong cap-4 "-"/"*" duoi no) la thanh phan can cong, khong co lop nao
-// khac de tranh dem trung.
-export function arabicDirectChildRows(
+// (theo TEN da biet - xem isKnownBalanceSheetLevel1Label) trung gian nao ca
+// giua no va dong tong tiep theo - truong hop nay THUONG GAP voi "Von chu so
+// huu": TT200 chinh thuc co 2 nhom con ("I. Von chu so huu"/"II. Nguon kinh
+// phi va quy khac"), nhung da so DN KHONG co nhom "Nguon kinh phi" (chi ap
+// dung cho don vi hanh chinh su nghiep) nen nhieu bao cao that KHONG in dong
+// "I. Von chu so huu" rieng vi no se trung ten Y HET dong cha "D - Von chu so
+// huu" ngay tren - xac nhan qua HVA/KSQ that (2026-07-13): cac dong con di
+// THANG vao "Von gop cua chu so huu"/"Thang du von"... ngay sau dong nhom,
+// khong co dong trung gian nao ca.
+//
+// SUA 2026-07-13 (theo yeu cau nguoi dung, bo HOAN TOAN tin hieu so thu tu):
+// truoc day nhan dien qua tien to so A-rap trong nhan ("1."/"2."...) - da gap
+// loi THAT qua doi chieu BOT (corpus 28 bao cao): dong "Vốn góp của chủ sở
+// hữu" (ma 411) bi OCR in nham TIEN TO La Ma "I." (thay vi "1." dung), khien
+// tien to so A-rap KHONG khop, nhung dong nay VAN duoc tinh (qua nhanh fallback
+// khac cua ham cu) trong khi dong em "Lợi nhuận sau thuế chưa phân phối" (ma
+// 420, tien to dung "10.") lai bi loai (vi isKnownAlwaysChildLabel luon thang,
+// bat ke tien to) - tong tinh duoc THIEU dung gia tri LNST, sai lech. Doi
+// HOAN TOAN sang nhan dien qua TEN CHUAN Thong tu 200 (KNOWN_EQUITY_DIRECT_CHILD_CONTENT)
+// - khong con phu thuoc OCR co doc dung tien to hay khong, sua dung ca 2 lop
+// loi cung luc (dong "I." gia + dong "10." that deu duoc nhan qua ten, khong
+// qua tien to).
+export function equityDirectChildRows(
   table: StatementTable,
   labelIndex: number,
   startIdx: number,
@@ -333,54 +338,41 @@ export function arabicDirectChildRows(
   for (let i = startIdx + 1; i < endIdx; i++) {
     const row = table.rows[i];
     const label = String(row[labelIndex] ?? '').trim();
-    // Chap nhan CA dong khop noi dung "luon la con" (isKnownAlwaysChildLabel)
-    // du KHONG co tien to so A-rap chuan - da xac nhan qua KSQ that
-    // (2026-07-13): "10 Lợi nhuận sau thuế..." mat dau cham sau "10" nen
-    // khong khop ARABIC_ITEM_PREFIX, nhung VAN la 1 thanh phan THAT SU can
-    // cong (khong phai dong tong/trung lap) - thieu no lam tong hut dung bang
-    // gia tri cua no.
-    if (!looksLikeArabicItemPrefix(label) && !isKnownAlwaysChildLabel(label)) continue;
-    if (NON_SUBTOTAL_DETAIL_PREFIX.test(label) || isKnownCap4Label(label)) continue;
+    if (!isKnownEquityDirectChildLabel(label)) continue;
+    if (isKnownCap4Label(label)) continue;
     result.push(row);
   }
   return result;
 }
 
 // Phan biet dong "cap 2" (I, II, III... - dong tong cua 1 nhom) voi dong "cap
-// 3" (chi tiet don le duoi 1 nhom) - truoc day CHI dua vao "ma so la boi so
-// cua 10", da gap that (2026-07-05, smoke test tren HSG qua Mistral): mot so
-// dong CHI TIET (khong phai dong tong) tinh co cung co ma so chia het cho 10
-// (vd ma 320 "Vay va no thue tai chinh ngan han", ma 420 "Quy khac thuoc von
-// chu so huu" - ca 2 deu la muc le, KHONG phai dong tong nhom, nhung 320%10=0
-// va 420%10=0 nen bi heuristic cu tinh nham la "cap 2", cong du vao tong gay
-// lech). Dung THEM tin hieu STT (neu bang co cot STT rieng, gia tri La Ma nhu
-// "I"/"II" moi la dong tong that su - "7" la so A-rap nghia la muc chi tiet)
-// hoac tien to trong TEN CHI TIEU (neu bang KHONG co cot STT rieng, vd TIX -
-// La Ma nam ngay trong ten nhu "III. Bat dong san dau tu" cho dong tong, con
-// "1./ Phai thu..." cho muc chi tiet) de loai cac dong chi tiet gia mao nay
-// ra khoi tong, thay vi chi dua vao ma so chia het cho 10 (van giu lam dieu
-// kien BAT BUOC, chi khong con la dieu kien DU nua).
-// Nhan ca chu La Ma (I/II/III) LAN chu thuong don (A/B/C/D - nhom lon nhat
-// cua BCDKT, "C"/"D" trung ngau nhien voi ky tu La Ma hop le nhung "A"/"B"
-// thi khong) va cho phep dau cham theo sau ("A."/"I." - dung dang thuc te
-// cua o STT, xem comment o duoi) - rong hon ROMAN_NUMERAL_PATTERN cu nhung
-// van an toan (STT chi hinh bang nay khong bao gio dung chu ngau nhien nhu
-// "E"/"Z").
-const GROUP_STT_PATTERN = /^[A-Z]+\.?$/;
+// 3" (chi tiet don le duoi 1 nhom) - phan loai HOAN TOAN theo TEN chuan (xem
+// KNOWN_BALANCE_SHEET_LEVEL1_CONTENT duoi day), khong con dua vao ma so/STT/
+// tien to duoi bat ky hinh thuc nao (2026-07-13, theo yeu cau nguoi dung).
 
 // Ten CHUAN (khong doi giua cac cong ty/thong tu, chi khac vai tu dong nghia
 // da liet ke) cua cac nhom "cap 1" (I/II/III...) BEN TRONG TS ngan han/TS dai
-// han/No phai tra/Von chu so huu - THAY THE cho viec doan qua STT La Ma
-// (GROUP_STT_PATTERN, van giu lam tin hieu PHU nhung khong con la DUY NHAT) -
-// doc THANG noi dung nhan, dung y kien nguoi dung 2026-07-12 ("đọc tiêu đề
+// han/No phai tra/Von chu so huu - doc THANG noi dung nhan, dung y kien nguoi dung 2026-07-12 ("đọc tiêu đề
 // của từng chỉ tiêu... không dựa vào số thứ tự", ap dung ca cho BCDKT sau khi
 // da sua cho KQKD). Gom theo Thong tu 200/2014 (DN thuong), Thong tu 99/2025
 // (them "tai san sinh hoc"), va bien the CTCK ("Tai san tai chinh" thay
 // "Dau tu tai chinh").
 const KNOWN_BALANCE_SHEET_LEVEL1_CONTENT = [
+  // "TAI SAN NGAN HAN"/"TAI SAN DAI HAN" (bare, cap-0) - dong vai tro GIONG
+  // HET "VON CHU SO HUU"/"NO PHAI TRA" bare o duoi (xem comment
+  // isKnownBalanceSheetLevel1Label): can de preferSubtotal (validate-statements.ts)
+  // chon DUNG chinh dong cap-0 lam bien "longTermAssetsIdx"/"shortTermAssetsIdx"
+  // khi co dong CON khac cung chua substring "TAI SAN NGAN/DAI HAN" (vd PHS
+  // that 2026-07-13: "VI. Dự phòng suy giảm giá trị tài sản dài hạn" cung
+  // chua "TAI SAN DAI HAN" nhu 1 phan cau, neu khong co marker bare nay,
+  // preferSubtotal se chon NHAM dong "VI." lam bien nhom, khien toan bo TS
+  // ngan han bi tinh nham gom ca phan TS dai han vao pham vi cua no).
+  'TAI SAN NGAN HAN',
+  'TAI SAN DAI HAN',
   // Duoi TS ngan han
   'TIEN VA CAC KHOAN TUONG DUONG TIEN',
   'DAU TU TAI CHINH NGAN HAN',
+  'CAC KHOAN DAU TU TAI CHINH NGAN HAN', // bien the co "Cac khoan" - da xac nhan qua doi chieu that
   'TAI SAN TAI CHINH', // CTCK (vd SHS "I. Tài sản tài chính")
   'CAC KHOAN PHAI THU NGAN HAN',
   'HANG TON KHO',
@@ -390,8 +382,11 @@ const KNOWN_BALANCE_SHEET_LEVEL1_CONTENT = [
   'CAC KHOAN PHAI THU DAI HAN',
   'TAI SAN CO DINH',
   'BAT DONG SAN DAU TU',
-  'TAI SAN DO DANG DAI HAN',
+  'TAI SAN DO DANG DAI HAN', // "Chi phí xây dựng cơ bản dở dang" (CTCK) canonical hoa ve day - xem GROUP_LABEL_SYNONYM_CANONICAL
   'DAU TU TAI CHINH DAI HAN',
+  'CAC KHOAN DAU TU TAI CHINH DAI HAN', // bien the co "Cac khoan" - da xac nhan qua DIC that
+  'TAI SAN TAI CHINH DAI HAN', // CTCK (vd MBS "I. Tài sản tài chính dài hạn" - bien the ten khac "Dau tu tai chinh dai han")
+  'DU PHONG SUY GIAM GIA TRI TAI SAN DAI HAN', // CTCK (vd PHS "VI. Dự phòng suy giảm giá trị tài sản dài hạn")
   'TAI SAN DAI HAN KHAC',
   'TAI SAN SINH HOC DAI HAN', // Thong tu 99/2025
   // Duoi No phai tra
@@ -399,6 +394,15 @@ const KNOWN_BALANCE_SHEET_LEVEL1_CONTENT = [
   'NO PHAI TRA NGAN HAN',
   'NO DAI HAN',
   'NO PHAI TRA DAI HAN',
+  // "NO PHAI TRA" (bare, khong "ngan/dai han") - CUNG dong vai tro dong CAP-0
+  // "C. NỢ PHẢI TRẢ" nhu "VON CHU SO HUU" dong vai tro dong "D." o duoi (xem
+  // comment isKnownBalanceSheetLevel1Label ve co che preferSubtotal): da xac
+  // nhan qua MBS that (2026-07-13, sau khi bo fallback so thu tu) - dong "C."
+  // "NỢ PHẢI TRẢ (300 = 310+340)" VA dong con "I. Nợ phải trả ngắn hạn" deu
+  // chua substring "NO PHAI TRA" trong tim kiem tho (validate-statements.ts),
+  // preferSubtotal can khop CHINH TEN dong cap-0 truoc de chon dung no (thay
+  // vi nham chon dong con dau tien tim thay).
+  'NO PHAI TRA',
   // Duoi Von chu so huu
   'VON CHU SO HUU',
   'NGUON KINH PHI VA QUY KHAC',
@@ -413,10 +417,10 @@ const KNOWN_BALANCE_SHEET_LEVEL1_CONTENT = [
 // nay CUNG bi tinh nham la dong tong. EXACT match sau khi bo tien to STT
 // tranh duoc loi nay vi "TAI SAN CO DINH HUU HINH" (con nguyen sau khi bo
 // tien to "1.") KHONG con bang EXACT voi marker "TAI SAN CO DINH" nua.
-// BAT BUOC it nhat 1 dau phan cach ([.\/)]+ - khong con la * tuy chon) ngay
+// BAT BUOC it nhat 1 dau phan cach ([.\/)-]+ - khong con la * tuy chon) ngay
 // sau STT - da phat hien qua PHS that (2026-07-13): "Cộng doanh thu hoạt
 // động" bat dau bang "C" (VUA la chu hoa VUA la ky tu La Ma hop le trong
-// [IVXLCDM]), khi [.\/)]* cho phep KHONG can dau phan cach thi bi cat NHAM
+// [IVXLCDM]), khi [.\/)-]* cho phep KHONG can dau phan cach thi bi cat NHAM
 // mat chu "C" dau (tuong la STT "C." roi tu coi la khong co dau cham), lam
 // "CONG DOANH THU HOAT DONG..." bi cat con "ONG DOANH THU HOAT DONG...",
 // hong toan bo so khop CHINH XAC (rot xuong tang substring, khop NHAM voi
@@ -424,7 +428,27 @@ const KNOWN_BALANCE_SHEET_LEVEL1_CONTENT = [
 // cham/gach cheo/ngoac dong ngay sau se KHONG con cat nham tu thuong (vd
 // "Chi phí"/"Cộng...") bat dau bang mot chu cai La Ma hop le nhung KHONG co
 // dau phan cach theo sau.
-const LEADING_GROUP_MARKER_PREFIX = /^([IVXLCDM]+|[A-Z]|\d+)[.\/)]+\s*/;
+//
+// THEM "-" (VA khoang trang TRUOC dau phan cach) vao tap dau phan cach
+// (2026-07-13, phat hien qua PXA/BOT that khi bo fallback "mac dinh true" o
+// isLikelySubtotalRow): cap-0 header dung dang "A - TÀI SẢN NGẮN HẠN"/"D -
+// VỐN CHỦ SỞ HỮU" (CO KHOANG TRANG truoc gach ngang, khong phai cham dinh
+// lien) truoc day VAN duoc nhan la "dong tong" nho fallback cu (bat ky nhan
+// nao khong bat dau bang so A-rap deu mac dinh true), nhung sau khi bo
+// fallback do (chi con dua vao khop TEN qua normalizeGroupLabelForContentMatch),
+// "D - VỐN CHỦ SỞ HỮU" khong bi cat tien to (pattern cu doi hoi dau phan cach
+// NGAY SAU ky tu, khong cho phep khoang trang o giua) nen KHONG con khop
+// EXACT voi marker "VON CHU SO HUU" nua - lam preferSubtotal o
+// validateBalanceSheetSubtotals/findAllGroupSumMismatches (lib/export/
+// validate-statements.ts) chon NHAM dong con "I. Vốn chủ sở hữu" (co the cat
+// tien to dung, "I.") thay vi chinh dong cap-0 "D -..." khi ca 2 cung khop
+// substring "VON CHU SO HUU". Them \s* TRUOC nhom dau phan cach (van BAT
+// BUOC phai co it nhat 1 ky tu trong [.\/)-] o dau do, chi cho phep khoang
+// trang XEN GIUA chu cai va dau do) - khong lam yeu di dieu kien chan
+// "Cộng..."/"Chi phí..." (PHS that) vi ky tu NGAY SAU "C" trong "Cộng" la 1
+// chu cai khac ("ộng"), khong phai khoang trang lien tiep roi den dau phan
+// cach.
+const LEADING_GROUP_MARKER_PREFIX = /^([IVXLCDM]+|[A-Z]|\d+)\s*[.\/)-]+\s*/;
 
 // Dong tieu de nhom THUONG co cong thuc ma so o CUOI cau (vd "II. Tai san
 // ngan han khac (130 = 131 -> 139)", "Cong ket qua hoat dong khac (80= 71-72)")
@@ -441,24 +465,45 @@ const LEADING_GROUP_MARKER_PREFIX = /^([IVXLCDM]+|[A-Z]|\d+)[.\/)]+\s*/;
 // tong THAT (sai). Bo ca 2 dau (tien to + hau to cong thuc) truoc khi so sanh.
 const TRAILING_FORMULA_SUFFIX = /\s*\(\s*\d+\s*=[^)]*\)\s*$/;
 
+// Mot so ten chi tieu la BUT DANH khac nhau cho CUNG 1 khai niem ke toan, tuy
+// mau bieu/loai hinh - vd "Chi phí xây dựng cơ bản dở dang" LA CHINH dong
+// cap-1 trong mau CTCK/TT210 (PHS/VCK "III./IV. Chi phí xây dựng cơ bản dở
+// dang", KHONG co dong "Tài sản dở dang dài hạn" trung gian nao khac), NHUNG
+// LA dong con cap-2 duoi "V. Tài sản dở dang dài hạn" trong mau DN-thuong/
+// TT200 (IDV "2. Chi phí xây dựng cơ bản dở dang", mã 252, nam DUOI "V. Tài
+// sản dở dang dài hạn" mã 250) - da xac nhan qua doi chieu that IDV
+// (2026-07-13): neu coi CA HAI la marker cap-1 DOC LAP, dong con IDV bi dem
+// THEM 1 lan nua cung voi chinh dong cha cua no, cong TRUNG dung bang gia tri
+// cua no. Anh xa VE CHUNG 1 dang CANONICAL truoc khi so khop/so sanh trung
+// lap - de isDuplicateKnownBalanceSheetLevel1Row (dong xuat hien DAU TIEN
+// trong pham vi la header that, cac lan sau la dong con) tu dong xu ly dung
+// ca 2 truong hop (CTCK: chi 1 lan xuat hien, duoc tinh; DN-thuong: lan thu 2
+// trung ten canonical voi dong cha "Tài sản dở dang dài hạn" o TRUOC no, bi
+// loai nhu 1 dong con) - khong can logic rieng cho tung mau bieu.
+const GROUP_LABEL_SYNONYM_CANONICAL: Record<string, string> = {
+  'CHI PHI XAY DUNG CO BAN DO DANG': 'TAI SAN DO DANG DAI HAN',
+};
+
 function normalizeGroupLabelForContentMatch(label: string): string {
-  return normalizeLabelText(label).replace(LEADING_GROUP_MARKER_PREFIX, '').replace(TRAILING_FORMULA_SUFFIX, '').trim();
+  const normalized = normalizeLabelText(label).replace(LEADING_GROUP_MARKER_PREFIX, '').replace(TRAILING_FORMULA_SUFFIX, '').trim();
+  return GROUP_LABEL_SYNONYM_CANONICAL[normalized] ?? normalized;
 }
 
 function isKnownBalanceSheetLevel1Label(label: string): boolean {
-  // Dong tong cap-1 THAT trong MOI mau bieu that da doi chieu (PXA/IDV/DIC/
-  // PHS/VCK...) LUON danh so La Ma/chu hoa (hoac khong tien to, voi bang
-  // "sach") - KHONG BAO GIO danh so A-rap ("1."/"2."/"7."...). Dong A-rap
-  // trung TEN voi 1 marker cap-1 LUON la dong CON (lap lai/gan giong ten
-  // nhom cha), khong phai chinh no la dong tong - da xac nhan qua PHS Q1/2026
-  // (2026-07-12): "1. Tiền và các khoản tương đương tiền" (con cua "I. Tài
-  // sản tài chính" trong dinh dang CTCK) VA "7. Tài sản ngắn hạn khác" (con
-  // cua "II. Tài sản ngắn hạn khác") deu trung ten EXACT voi marker (ten nay
-  // la dong tong CAP 1 THAT trong dinh dang DN-thuong/TT200, nhung la dong
-  // CON trong dinh dang CTCK/TT210 - cung 1 ten, khac vai tro theo dinh dang)
-  // - chan tu day (khong phu thuoc dinh dang) an toan hon la liet ke rieng
-  // theo tung dinh dang.
-  if (looksLikeArabicItemPrefix(label)) return false;
+  // Mot ten CHUAN (vd "Tien va cac khoan tuong duong tien") co the la dong
+  // tong CAP 1 THAT trong dinh dang DN-thuong/TT200, nhung lai la dong CON
+  // cua 1 container (vd "Tài sản tài chính" trong dinh dang CTCK/TT210) hoac
+  // lap lai Y HET ten nhom cha (vd "Hàng tồn kho") o dinh dang khac - da xac
+  // nhan qua PHS/IDV that (2026-07-12). TRUOC DAY dung tien to so A-rap
+  // ("1."/"7."...) de loai truong hop nay ngay tai day - theo yeu cau nguoi
+  // dung (2026-07-13, bo HOAN TOAN tin hieu so thu tu), viec phan biet "dong
+  // tong that" voi "dong con trung ten" chuyen HOAN TOAN sang 2 co che NOI
+  // DUNG+VI TRI da co san, khong lien quan gi den so thu tu: dong LAP LAI
+  // trong CUNG 1 pham vi bi loai qua `isDuplicateKnownBalanceSheetLevel1Row`
+  // (uu tien lan xuat hien DAU TIEN), dong nam BEN TRONG 1 container da biet
+  // (vd "Tài sản tài chính") bi loai qua `isInsideKnownContainer` - ca 2 deu
+  // da duoc goi o childrenBetween (lib/export/validate-statements.ts) SAU buoc
+  // nay, nen ham nay chi can khop TEN, khong can tu loai truoc theo tien to.
   const normalized = normalizeGroupLabelForContentMatch(label);
   return KNOWN_BALANCE_SHEET_LEVEL1_CONTENT.includes(normalized);
 }
@@ -496,25 +541,39 @@ export function isDuplicateKnownBalanceSheetLevel1Row(
 // khoan tuong duong tien, Cac tai san tai chinh FVTPL...) TRUNG TEN voi
 // chinh cac marker cap-1 khac (vi cung 1 thuat ngu "Tien va cac khoan tuong
 // duong tien" la muc cap-1 THAT trong DN-thuong, nhung la muc CON trong CTCK).
-// Da xu ly cho truong hop dong con co TIEN TO SO A-RAP rieng (xem
-// isKnownBalanceSheetLevel1Label, loai qua looksLikeArabicItemPrefix) - NHUNG
-// mot so bao cao (HCM that, 2026-07-13) ghi nhan SACH, KHONG co tien to nao
-// ca (ma so nam o cot rieng) - khong co "so A-rap" nao de loai, khien "Tien
-// va cac khoan tuong duong tien" (con cua "Tai san tai chinh") van bi dem
+// Khong dua vao tien to so A-rap cua dong con de nhan dien (xem comment
+// isKnownBalanceSheetLevel1Label - da bo tin hieu nay 2026-07-13) - mot so
+// bao cao (HCM that) ghi nhan SACH, KHONG co tien to nao ca (ma so nam o cot
+// rieng), nen day PHAI la co che DUY NHAT (khong phai fallback) de tranh
+// "Tien va cac khoan tuong duong tien" (con cua "Tai san tai chinh") bi dem
 // THEM 1 lan nua nhu the no la 1 muc cap-1 doc lap, cong du vao tong TS ngan
 // han. Giai phap: SAU KHI gap 1 dong khop marker CONTAINER trong pham vi, MOI
 // dong tiep theo (du co khop marker KHAC, KHONG giong het container) deu bi
 // coi la con cua container do (loai khoi ket qua) CHO DEN KHI het pham vi -
 // vi CTCK chi co DUY NHAT 1 container nhu vay truoc "Tai san ngan han khac".
-const CONTAINER_LEVEL1_MARKERS = ['TAI SAN TAI CHINH'];
+//
+// "TAI SAN TAI CHINH DAI HAN" (them 2026-07-13, xac nhan qua VCK that) la
+// CONTAINER TUONG TU o phia TS dai han: dong con "Cac khoan phai thu dai
+// han" (mã 211, con cua "I. Tài sản tài chính dài hạn" mã 210 trong CTCK)
+// TRUNG TEN EXACT voi marker cap-1 "CAC KHOAN PHAI THU DAI HAN" (dong cap-1
+// DOC LAP trong DN-thuong) - neu khong loai qua container, dong con nay bi
+// dem THEM 1 lan cung voi chinh gia tri da gop san trong dong "I." cha no.
+const CONTAINER_LEVEL1_MARKERS = ['TAI SAN TAI CHINH', 'TAI SAN TAI CHINH DAI HAN'];
 
-// Container CHI "mo" toi khi gap 1 trong 2 marker nay (luon la muc NGANG
+// Container CHI "mo" toi khi gap 1 trong cac marker nay (luon la muc NGANG
 // HANG that su voi container theo dung cau truc TT210, KHONG bao gio la con
 // cua no) - da phat hien qua HCM that (2026-07-13): fix ban dau (container
 // "nuot" toan bo pham vi con lai) VO TINH nuot LUON "Tai san ngan han khac"
 // (mot muc cap-1 THAT SU, dung SAU container, khong phai con cua no), lam
-// tong tinh duoc THIEU dung bang gia tri cua no.
-const CONTAINER_CLOSING_MARKERS = ['TAI SAN NGAN HAN KHAC', 'TAI SAN DAI HAN KHAC'];
+// tong tinh duoc THIEU dung bang gia tri cua no. "TAI SAN CO DINH" them
+// 2026-07-13 (xac nhan qua VCK/PHS/MBS that): trong CA 3 bao cao CTCK that,
+// "II. Tài sản cố định" LUON la dong NGAY SAU container "Tài sản tài chính
+// dài hạn" (khac voi phia ngan han, container dai han KHONG dung ngay truoc
+// "Tai san dai han khac" - co 1-2 nhom doc lap khac [Tai san co dinh, co the
+// them Bat dong san dau tu/Tai san do dang dai han] xen giua) - can dong nay
+// lam diem dong rieng cho container dai han, tranh no "nuot" luon ca "Tai san
+// co dinh" (mot nhom hoan toan doc lap, khong phai con cua container).
+const CONTAINER_CLOSING_MARKERS = ['TAI SAN NGAN HAN KHAC', 'TAI SAN DAI HAN KHAC', 'TAI SAN CO DINH'];
 
 function isKnownContainerLabel(label: string): boolean {
   const normalized = normalizeGroupLabelForContentMatch(label);
@@ -560,148 +619,34 @@ export function isInsideKnownContainer(table: StatementTable, labelIndex: number
 // gia. Bao "khong du tin hieu de kiem tra sau hon" (rieng, it ồn hon nhieu so
 // voi hang chuc canh bao sai) thay vi im lang HOAN TOAN, giu dung nguyen tac
 // fail-closed cua project (luon bao ro khi khong the xac minh).
-// Danh gioi THAT SU cua phan than BCDKT (truoc dong "Tổng tài sản") - mot so
-// bao cao OCR gan LIEN mot bang phu lục/thuyet minh NGAY SAU dong tong nay
-// (vd CT6 that, 2026-07-13: mot bang con "Xây dựng cơ bản dở dang" o cuoi
-// bang, dung LAI dung cot "TT" voi gia tri La Ma "I"/"II" cho cau truc RIENG
-// cua no, khong lien quan gi toi cau truc BCDKT chinh). Neu khong gioi han
-// pham vi quet, columnHasGroupSttValue se tin NHAM cot do la 1 "cot STT that"
-// cho CA bang (kho co gia tri La Ma o dau do trong TOAN BANG), roi tin sai
-// gia tri RONG cua no trong phan than chinh la "khong du du lieu de bac bo,
-// mac dinh dong tong" - xem cho tiet loi that trong isLikelySubtotalRow.
-const BALANCE_SHEET_BODY_END_MARKERS = ['TONG TAI SAN', 'TONG CONG TAI SAN'];
-
-function findBalanceSheetBodyEndIndex(table: StatementTable, labelIndex: number): number {
-  for (let i = 0; i < table.rows.length; i++) {
-    const label = String(table.rows[i][labelIndex] ?? '').trim();
-    if (BALANCE_SHEET_BODY_END_MARKERS.includes(normalizeGroupLabelForContentMatch(label))) return i;
-  }
-  return table.rows.length;
-}
-
-function columnHasGroupSttValue(table: StatementTable, colIndex: number, labelIndex?: number): boolean {
-  const endIndex = labelIndex === undefined ? table.rows.length : findBalanceSheetBodyEndIndex(table, labelIndex);
-  for (let i = 0; i < endIndex; i++) {
-    if (GROUP_STT_PATTERN.test(String(table.rows[i][colIndex] ?? '').trim())) return true;
-  }
-  return false;
-}
-
-// Tin hieu CAU TRUC (cot STT co gia tri La Ma/chu hoa that, hoac tien to so
-// A-rap gan lien trong nhan) - TACH RIENG khoi tin hieu NOI DUNG (xem
-// isKnownBalanceSheetLevel1Label) vi 2 loai tin hieu nay duoc TIN CAY o 2 MUC
-// KHAC NHAU trong isLikelySubtotalRow (xem comment o do ve ly do khong the
-// dung chung 1 fallback cho ca 2).
-function hasStructuralSubtotalSignal(table: StatementTable, labelIndex: number): boolean {
-  // QUAN TRONG: chi vi CO cot dat ten "STT" khong co nghia gia tri BEN TRONG
-  // no dung duoc - da xac nhan qua PXA Q1/2026 (2026-07-12): cot "STT" that,
-  // nhung chi danh so THUONG (1,2,3...19), khong bao gio la chu La Ma/chu hoa
-  // (GROUP_STT_PATTERN). Truoc day chi kiem tra CO cot ten "STT" la tra ve
-  // true ngay, khien isLikelySubtotalRow test "1".match(GROUP_STT_PATTERN)
-  // LUON false cho MOI dong (khong dong nao khop mau La Ma) - khong dong nao
-  // bi loai khoi "thanh vien", cac dong tong long nhau (vd "Loi nhuan gop"
-  // rồi "Loi nhuan thuan tu HDKD") bi cong CA vao tong ben ngoai ("Tong loi
-  // nhuan ke toan truoc thue"), sai gap nhieu lan. Phai kiem tra THEM: gia tri
-  // TRONG cot STT (hoac cot fallback truoc nhan) co THAT SU chua it nhat 1
-  // gia tri khop GROUP_STT_PATTERN o dau do trong bang hay khong, khong chi
-  // dua vao TEN cot.
-  const sttNamedIndex = table.columns.findIndex((col) => normalizeLabelText(col).includes('STT'));
-  if (sttNamedIndex !== -1 && columnHasGroupSttValue(table, sttNamedIndex, labelIndex)) return true;
-  if (labelIndex > 0 && !isMetadataColumnName(table.columns[labelIndex - 1]) && columnHasGroupSttValue(table, labelIndex - 1, labelIndex)) {
-    return true;
-  }
-  return table.rows.some((r) => looksLikeArabicItemPrefix(String(r[labelIndex] ?? '').trim()));
-}
-
+// SUA 2026-07-13 (theo yeu cau nguoi dung, bo HOAN TOAN tin hieu so thu tu/
+// cot STT/tien to khoi phan loai cap-do): truoc day co ca 1 tang "tin hieu
+// CAU TRUC" (cot STT gia tri La Ma, tien to so A-rap trong nhan) dung LAM
+// FALLBACK moi khi ten khong khop danh sach da biet - day chinh la nguon goc
+// loi lap lai nhieu lan (vd BOT that: dong "Vốn góp của chủ sở hữu" bi OCR in
+// nham tien to La Ma "I." thay vi "1.", fallback cau truc tin theo tien to
+// SAI nay va tinh nham dong do la dong tong, trong khi dong em "Lợi nhuận sau
+// thuế chưa phân phối" bi loai vi khop tin hieu NOI DUNG khac - 2 tang tin
+// hieu MAU THUAN nhau tren cung 1 nhom, sai tong). Toan bo cac ham
+// `columnHasGroupSttValue`/`findBalanceSheetBodyEndIndex`/
+// `hasStructuralSubtotalSignal` va cac hang so `BALANCE_SHEET_BODY_END_MARKERS`/
+// `GROUP_STT_PATTERN` DA BI XOA - `hasReliableSubtotalSignal`/`isLikelySubtotalRow`
+// gio CHI con 1 tang tin hieu DUY NHAT: TEN chi tieu co khop danh sach chuan
+// (Thong tu) hay khong. Neu can xem lai code cu, tim cac ten ham/hang so tren
+// trong lich su git truoc commit sua doi nay.
 export function hasReliableSubtotalSignal(table: StatementTable, labelIndex: number): boolean {
-  if (hasStructuralSubtotalSignal(table, labelIndex)) return true;
-  // Tin hieu NOI DUNG (ten CHUAN nhu "Tien va cac khoan tuong duong tien"/
-  // "Hang ton kho"...) - doc THANG nhan thay vi doan qua cau truc/STT xung
-  // quanh (yeu cau nguoi dung 2026-07-12), dang tin cay HON ca cac tin hieu
-  // cau truc o tren nhung van kiem tra SAU CUNG o day vi chi can 1 trong tat
-  // ca cac tin hieu la du (ham nay chi tra loi CO/KHONG co tin hieu nao, xem
-  // isLikelySubtotalRow de biet thu tu uu tien THAT SU giua cac tin hieu).
   return table.rows.some((r) => isKnownBalanceSheetLevel1Label(String(r[labelIndex] ?? '').trim()));
 }
 
 export function isLikelySubtotalRow(table: StatementTable, row: (string | number | null)[], labelIndex: number): boolean {
   const label = String(row[labelIndex] ?? '').trim();
-  // Doc NOI DUNG nhan TRUOC TIEN (dang tin cay hon cau truc/STT xung quanh -
-  // yeu cau nguoi dung 2026-07-12: "đọc tiêu đề của từng chỉ tiêu... không
-  // dựa vào số thứ tự", ap dung cho ca BCDKT sau khi da sua tuong tu cho
-  // KQKD). Ten nhom "cap 1" (Tien, Hang ton kho, No ngan han...) la thuat
-  // ngu CHUAN khong doi giua cac cong ty, dang tin cay hon nhieu so voi
-  // doan qua STT La Ma/so thu tu (da gay hoi quy qua lai TCB/HCM/PXA).
-  if (isKnownBalanceSheetLevel1Label(label)) return true;
-  // Nhan rong KHONG bao gio la dong tong nhom that (dong tong/cap 1 luon co
-  // ten trong BCTC that) - da xac nhan qua doi chieu that (2026-07-12, hang
-  // loat bao cao DIC/DCS/PXA/HVA/PAP/KSQ): truoc day nhan rong (thuong do
-  // bang bi lech cot o noi khac, xem comment findBalanceSheetLevel2Mismatches)
-  // roi vao nhanh cuoi `!ARABIC_ITEM_PREFIX.test('')` = true (chuoi rong
-  // khong khop prefix so A-rap nao ca) nen bi tinh NHAM la dong tong, tao ra
-  // cac canh bao vo nghia dang "dong X khong khop dong X" (X la STT/index,
-  // khong phai gia tri that). Chan som o day tranh ca lop loi nay, khong chi
-  // sua thong bao hien thi.
-  if (label === '') return false;
-  if (isTableHeaderEchoLabel(label)) return false;
-  if (NON_SUBTOTAL_DETAIL_PREFIX.test(label) || isKnownCap4Label(label) || isKnownAlwaysChildLabel(label)) return false;
-
-  // Cac fallback CAU TRUC ben duoi (cot STT, tien to so A-rap) CHI dang tin
-  // cay khi BANG THAT SU co tin hieu cau truc (xem hasStructuralSubtotalSignal)
-  // - neu KHONG (vd bang "sach", nhan khong nhung so/khong co cot STT dung
-  // duoc, CHI duoc nhan dien qua tin hieu NOI DUNG o tren), KHONG duoc quay ve
-  // cac fallback nay: da xac nhan qua doi chieu that (2026-07-12, hang loat
-  // bao cao IDV/DIC/PXA/RYG/PAP/HVA/MBS/LLM/PHS/VCK) - fallback "sttValue==''
-  // => true" (dong 438 ben duoi) tra ve true BUA BAI cho MOI dong con KHAC
-  // (vi ca bang khong he co cot STT dung duoc), khien tong "cac muc cap 1" >
-  // gia tri that o rat nhieu bao cao ngay khi 1 marker NOI DUNG (vd "Tai san
-  // co dinh") lam hasReliableSubtotalSignal chuyen tu false sang true. Dong
-  // KHONG khop noi dung, trong 1 bang khong co tin hieu cau truc, PHAI la
-  // dong con (false), khong phai "khong biet nen mac dinh true".
-  if (!hasStructuralSubtotalSignal(table, labelIndex)) return false;
-
-  let sttIndex = table.columns.findIndex((col) => normalizeLabelText(col).includes('STT'));
-  // Neu KHONG co cot dat ten "STT" ro rang, thu cot NGAY TRUOC cot nhan (neu
-  // co va khong phai 1 cot metadata dat ten khac) - da gap that MBS Q2/2026
-  // (2026-07-11): cot STT rieng nhung KHONG dat ten (chi la "" trong header),
-  // truoc day khong tim ra duoc, fallback ve ARABIC_ITEM_PREFIX tren NHAN -
-  // nhung nhan da duoc tach SACH (khong con tien to so nhu "1." nua, vi so
-  // do nam rieng trong cot STT) nen ARABIC_ITEM_PREFIX luon test la false,
-  // khien MOI dong (tru dong bat dau "-"/"a)") bi coi nham la dong tong, in
-  // dam BUA BAI ca bang.
-  if (sttIndex === -1 && labelIndex > 0 && !isMetadataColumnName(table.columns[labelIndex - 1])) {
-    sttIndex = labelIndex - 1;
-  }
-  // Chi TIN cot STT ung vien (dat ten ro rang HOAC cot ngay truoc nhan) neu no
-  // THAT SU chua it nhat 1 gia tri La Ma/chu hoa that o dau do trong bang (cung
-  // dieu kien da dung trong hasStructuralSubtotalSignal/columnHasGroupSttValue
-  // o tren) - da xac nhan qua CT6 that (2026-07-13): cot "TT" ton tai nhung
-  // LUON LUON rong (so thu tu nam ngay trong TEN chi tieu, vd "1. Chi phi cho
-  // phan bo dai han", khong o cot rieng) - truoc day sttValue==='' cho MOI
-  // dong (ca dong tong LAN dong con, vi ca cot deu rong nhu nhau) bi tra ve
-  // true BUA BAI, khien 1 dong con (vd "1. Chi phi cho phan bo dai han", con
-  // DUY NHAT cua "VII. Tai san dai han khac") bi dem THEM 1 lan nua nhu the no
-  // la 1 muc cap-1 doc lap - dung 1 LOI Y HET dang da sua cho ma so/tien
-  // to/STT khac trong session nay (tin vao 1 TIN HIEU VI TRI/CAU TRUC ma
-  // KHONG kiem tra tin hieu do co THAT SU dang tin cay o bang nay hay khong).
-  // Neu cot rong toan bo (khong dang tin cay), bo qua nhanh nay, roi ve doc
-  // THANG tien to trong TEN chi tieu (nhanh cuoi ham, `!looksLikeArabicItemPrefix`).
-  if (sttIndex !== -1 && columnHasGroupSttValue(table, sttIndex, labelIndex)) {
-    const sttValue = String(row[sttIndex] ?? '').trim();
-    if (sttValue === '') return true; // mot so dong tong khong co STT rieng - khong du du lieu de bac bo, giu nguyen hanh vi cu (chap nhan)
-    return GROUP_STT_PATTERN.test(sttValue);
-  }
-  // GHI CHU 2026-07-12: da thu them 1 nhanh o day ("neu KHONG co dong nao
-  // trong ca bang khop ARABIC_ITEM_PREFIX thi tra ve false") de sua truong
-  // hop HCM/CT6/BVH/PRE/PHS/VCK (cot "Ma so" rieng, nhan sach khong nhung so)
-  // - nhung REVERT NGAY sau khi do that: tuy giam canh bao cho nhom bao cao
-  // do, lai lam TANG canh bao o nhom khac (TCB tu 0 len 8, HCM/BVH cung tang)
-  // vi nhieu bang THAT SU dung nhan sach (khong nhung so) NHUNG van dung
-  // dung isLikelySubtotalRow=true lam mac dinh (vd KQKD Ngan hang). Net effect
-  // am (272 > 254 tong canh bao tren 28 bao cao that) - chua tim ra tieu chi
-  // phan biet 2 truong hop nay an toan, de nguyen hanh vi cu (mac dinh true)
-  // o day, CAN quay lai dieu tra rieng cho tung mau bieu neu gap lai.
-  return !looksLikeArabicItemPrefix(label);
+  // Ten nhom "cap 1" (Tien, Hang ton kho, No ngan han...) la thuat ngu CHUAN
+  // (Thong tu ke toan) khong doi giua cac cong ty - day la TIN HIEU DUY NHAT
+  // duoc dung (khong con fallback qua STT/tien to/vi tri). Moi dong KHONG
+  // khop mot ten chuan nao mac dinh la KHONG PHAI dong tong (an toan hon:
+  // khong bao gio doan bua, chi tra ve "khong du tin hieu" o lop goi ben
+  // ngoai neu dieu nay khien khong tim thay du muc con - xem hasReliableSubtotalSignal).
+  return isKnownBalanceSheetLevel1Label(label);
 }
 
 // Tim dong theo TEN CHI TIEU (khong phai ma so) - dung cho lib/analysis.ts,
@@ -815,7 +760,6 @@ export function findIncomeStatementGroupMismatches(table: StatementTable): Group
   // yeu cau tin hieu CAU TRUC that su (hasReliableSubtotalSignal) truoc khi
   // chay kiem tra nay, dung nguyen tac "giam do sau" da chot voi nguoi dung.
   if (!hasReliableSubtotalSignal(table, labelIndex)) return [];
-  const maSoIndex = findMaSoColumnIndex(table) ?? -1;
   const valueColIndexes = valueColumnIndexes(table);
   const mismatches: GroupSumMismatch[] = [];
   let groupStart = 0;
@@ -827,22 +771,20 @@ export function findIncomeStatementGroupMismatches(table: StatementTable): Group
 
     const memberRowIndexes: number[] = [];
     for (let j = groupStart; j < i; j++) {
-      const maSo = maSoIndex === -1 ? null : table.rows[j][maSoIndex];
-      // Muc con long trong 1 chi tieu khac (ma so co dau cham, vd "01.1") - DA
-      // duoc gop vao gia tri dong cha ("01"), khong tinh lai o day (tranh dem
-      // 2 lan).
-      if (typeof maSo === 'string' && maSo.includes('.')) continue;
       const memberLabel = String(table.rows[j][labelIndex] ?? '').trim();
       // Doc NOI DUNG nhan TRUOC (dang tin cay hon, xem comment o tren) - chi
       // fallback ve tin hieu cau truc (isLikelySubtotalRow) neu ten khong
       // khop bat ky mau CHUAN nao da biet.
       if (isKnownIncomeStatementSubtotalLabel(memberLabel) || isLikelySubtotalRow(table, table.rows[j], labelIndex)) continue;
-      // Muc con CAP 4 (tien to "-"/"*"/"a)"... hoac noi dung chuan "Nguyen
-      // gia"/"Gia tri hao mon luy ke") - da GOP SAN vao gia tri dong cha cap 3
-      // ngay truoc no, cong THEM o day se dem 2 lan (xem NON_SUBTOTAL_DETAIL_PREFIX/
-      // isKnownCap4Label - isLikelySubtotalRow da tra ve false cho dong nay
-      // nen KHONG bi loai boi dieu kien tren, phai kiem tra rieng).
-      if (NON_SUBTOTAL_DETAIL_PREFIX.test(memberLabel) || isKnownCap4Label(memberLabel)) continue;
+      // Muc con CAP 4 (noi dung chuan "Nguyen gia"/"Gia tri hao mon luy ke"...)
+      // - da GOP SAN vao gia tri dong cha cap 3 ngay truoc no, cong THEM o day
+      // se dem 2 lan (xem isKnownCap4Label). 2026-07-13: bo tin hieu tien to
+      // dau cau ("-"/"*"/"a)") VA tin hieu ma-so-co-dau-cham (theo yeu cau
+      // nguoi dung, khong con dua vao so thu tu duoi bat ky hinh thuc nao) -
+      // dong chi tiet khong khop ten chuan nao gio se tu dong bi loai vi
+      // isLikelySubtotalRow/isKnownIncomeStatementSubtotalLabel o tren deu
+      // false cho no, khong can kiem tra rieng dinh dang ma so nua.
+      if (isKnownCap4Label(memberLabel)) continue;
       memberRowIndexes.push(j);
     }
 
@@ -1335,126 +1277,23 @@ export function findIncomeStatementFormulaMismatches(table: StatementTable, busi
   return [];
 }
 
-const DECIMAL_CHILD_CODE_PATTERN = /^(\d+)\.\d+$/;
-
-// Hau het nhom ma so thap phan la PHEP CONG thuan (X = X.1 + X.2 + ...), NHUNG
-// mot dong con co TEN "Tang du phong..." (tang du phong/tang trich lap) LUON
-// mang Y NGHIA KE TOAN la khoan GIAM TRU (du phong tang len lam giam doanh
-// thu/phi thuan con lai duoc ghi nhan) - BAT KE cong ty luu gia tri do o dang
-// SO DUONG (can TRU, vd PRE that 2026-07-13: "02.2 Tang du phong phi nhuong
-// tai bao hiem" = so duong, cong thuc "02=02.1-02.2") hay da tu mang dau AM
-// san (cong truc tiep, vd BVH). Doc THEO TEN chi tieu (ban chat ke toan, ap
-// dung duoc moi cong ty/mau bieu) thay vi doc mã số hay cong thuc in san
-// trong nhan (co the bi OCR doc sai) - luon TRU GIA TRI TUYET DOI cua dong
-// "Tang du phong", giong het ky thuat Math.abs() da dung cho "Chi phi thue
-// TNDN" (validateIncomeStatementTax) de xu ly ca 2 quy uoc dau cung luc.
-function decimalChildSign(childLabel: string): 1 | -1 {
-  return normalizeLabelText(childLabel).includes('TANG DU PHONG') ? -1 : 1;
-}
-
-
-// "Doanh thu hoa hong chua duoc huong" (hoa hong tai bao hiem chua ghi nhan)
-// LUON la 1 khoan doanh thu/thu nhap hoan lai DOC LAP ve ban chat ke toan,
-// KHONG BAO GIO la 1 phan chia nho cua "Phai tra ngan han khac"/"Doanh thu
-// chua thuc hien..." (2 khai niem hoan toan khac nhau: 1 ben la cong no phai
-// tra "khac" gop chung, 1 ben la doanh thu hoan lai) - da xac nhan qua CA
-// BVH LAN PRE that (2026-07-13, cung 1 dang: cong ty bao hiem gan ma so lien
-// tiep "319.1" ngay sau ma "319" chi de xen vao bang ke toan noi bo, khong
-// phai 1 phep chia nho ke toan). Nhan dien qua CHINH TEN chi tieu nay (khong
-// doi giua cac cong ty), khong dua vao so thu tu/tien to in san.
-const NEVER_DECIMAL_CHILD_CONTENT = ['DOANH THU HOA HONG CHUA DUOC HUONG'];
-
-function isNeverDecimalChildLabel(label: string): boolean {
-  const normalized = normalizeLabelText(label);
-  return NEVER_DECIMAL_CHILD_CONTENT.some((marker) => normalized.includes(marker));
-}
-
-// Kiem tra "cac dong con co ma so dang THAP PHAN THUAN (X.Y, vd '111.1' la
-// con cua '111') co tong khop voi CHINH dong cha (ma so X) hay khong" - khac
-// findIncomeStatementGroupMismatches (dua vao TEN "Cong.../Tong..." de nhan
-// dien dong tong), o day dua HOAN TOAN vao CAU TRUC MA SO (khong phu thuoc
-// ten tieng Viet/cach viet tat cua tung cong ty) nen AP DUNG DUOC CHUNG cho
-// CA balanceSheet LAN incomeStatement (2026-07-12, yeu cau nguoi dung mo
-// rong kiem tra cheo "sau hon" sau khi xac nhan nhom phang KQKD hoat dong
-// tot). Da xac nhan qua doi chieu that MBS Q2/2026: BCDKT "111.1"+"111.2" =
-// "111"; "417.1"+"417.2" = "417"; KQKD "01.1"+"01.2"+"01.3"+"01.4" = "01" -
-// khop tuyet doi voi du lieu that ca 2 bang.
-//
-// CHI nhan ma so dang "X.Y" THUAN so (khong ke hau to chu nhu "411.1a") -
-// truong hop nay hiem VA neu ep coi "411.1a" la con cua "411" (thay vi con
-// cua "411.1") se gom SAI nhom (411.1a thuc ra la con CUA 411.1, khong phai
-// con truc tiep cua 411) - uu tien AN TOAN (bo qua, khong kiem tra duoc con
-// nay o ca 2 tang) hon la kiem tra SAI.
-//
-// BAT BUOC phai co dong ".1" (X.1) thi moi kiem tra nhom cua "X" - da gap
-// that MBS Q2/2026 (2026-07-12): "117.2"/"117.3"/"117.4" (khong co "117.1")
-// nhin GIONG 3 con truc tiep cua "117", nhung thuc ra "117.3"/"117.4" la
-// con CUA "117.2" (chi la cong ty ghi phang "117.3"/"117.4" thay vi dung ky
-// hieu 3 cap "117.2.1"/"117.2.2") - sum ra gan dung GAP DOI gia tri that (vi
-// 117.3+117.4 = 117.2, cong them ca 117.2 la dem 2 lan). Theo dung quy uoc
-// VAS, 1 nhom da chia nho LUON bat dau tu ".1" - neu thieu ".1" la dau hieu
-// dang tin cay cho thay danh sach ".2"/".3".. tim duoc co the LONG SAU HON 1
-// cap (khong phai anh xa phang don gian), uu tien AN TOAN bo qua ca nhom.
-export function findDecimalCodeGroupMismatches(table: StatementTable): GroupSumMismatch[] {
-  const labelIndex = findLabelColumnIndex(table.columns, table.rows);
-  const maSoIndex = findMaSoColumnIndex(table);
-  if (maSoIndex === null) return [];
-  const valueColIndexes = valueColumnIndexes(table);
-  const mismatches: GroupSumMismatch[] = [];
-
-  const childrenByParentCode = new Map<string, number[]>();
-  table.rows.forEach((row, i) => {
-    const code = row[maSoIndex];
-    if (typeof code !== 'string') return;
-    const match = DECIMAL_CHILD_CODE_PATTERN.exec(code.trim());
-    if (!match) return;
-    const parentCode = match[1];
-    const existing = childrenByParentCode.get(parentCode);
-    if (existing) existing.push(i);
-    else childrenByParentCode.set(parentCode, [i]);
-  });
-
-  for (const [parentCode, memberRowIndexes] of childrenByParentCode) {
-    const hasFirstChild = memberRowIndexes.some((j) => String(table.rows[j][maSoIndex] ?? '').trim() === `${parentCode}.1`);
-    if (!hasFirstChild) continue;
-    const parentRowIndex = table.rows.findIndex((row) => String(row[maSoIndex] ?? '').trim() === parentCode);
-    if (parentRowIndex === -1) continue; // chi co dong .1/.2... ma khong co dong goc - khong du du lieu de so sanh
-    const parentRow = table.rows[parentRowIndex];
-    // "?? " khong bat duoc nhan la CHUOI RONG (chi bat null/undefined) - dong
-    // that su co the co nhan rong (bang phan tich hong o cho khac lam lech
-    // cot, da gap that qua doi chieu that DCS/PAP/DIC Q1/2026, 2026-07-12) -
-    // luon co MA SO trong thong bao de nguoi xem con dinh vi duoc dong nao,
-    // thay vi thong bao rong vo dung "" khong khop "".
-    const rawLabel = String(parentRow[labelIndex] ?? '').trim();
-    const groupLabel = rawLabel || `ma so ${parentCode}`;
-
-    for (const col of valueColIndexes) {
-      let sum = 0;
-      let sawDetail = false;
-      for (const j of memberRowIndexes) {
-        const cell = table.rows[j][col];
-        const value = typeof cell === 'number' ? cell : cell === '-' || cell === null ? 0 : null;
-        if (value === null) continue;
-        const childLabel = String(table.rows[j][labelIndex] ?? '').trim();
-        if (isNeverDecimalChildLabel(childLabel)) continue;
-        const sign = decimalChildSign(childLabel);
-        sum += sign === -1 ? -Math.abs(value) : value;
-        sawDetail = true;
-      }
-      if (!sawDetail) continue;
-
-      const parentCell = parentRow[col];
-      const reported = typeof parentCell === 'number' ? parentCell : parentCell === '-' || parentCell === null ? 0 : null;
-      if (reported === null) continue;
-
-      if (Math.abs(sum - reported) > Math.max(GROUP_SUM_TOLERANCE_ABSOLUTE, Math.abs(reported) * GROUP_SUM_TOLERANCE_RATIO)) {
-        mismatches.push({ groupLabel, columnName: table.columns[col] ?? `cot ${col}`, columnIndex: col, subtotalRowIndex: parentRowIndex, memberRowIndexes, sum, reported });
-      }
-    }
-  }
-
-  return mismatches;
-}
+// GHI CHU 2026-07-13 (theo yeu cau nguoi dung, bo HOAN TOAN tin hieu so thu
+// tu): ham `findDecimalCodeGroupMismatches` (kiem tra "cac dong con co ma so
+// dang thap phan X.Y co tong khop voi dong cha ma so X hay khong") DA BI XOA
+// khoi day, cung cac ham chi phuc vu no (`decimalChildSign`,
+// `isNeverDecimalChildLabel`, hang so `DECIMAL_CHILD_CODE_PATTERN`/
+// `NEVER_DECIMAL_CHILD_CONTENT`). Ham nay da bi rut khoi nhanh canh bao HIEN
+// THI tu phien truoc (2026-07-13 som hon, xem comment o
+// lib/export/validate-statements.ts), nhung van con duoc goi trong
+// findAllGroupSumMismatches (statement-shared.ts, duoi) cho co che retry OCR/
+// gan co "khong dang tin cay" - gio rut NOT khoi CA nhanh do, vi toan bo tien
+// de cua ham la CAU TRUC MA SO THAP PHAN tu phat cua tung cong ty, khong co
+// ten chuan (Thong tu) nao de thay the: day dung nguyen tac da chot voi nguoi
+// dung cho truong hop khong the phan loai duoc: "nếu cty tự lập ra không theo
+// chuẩn kế toán thì tức là ở mức độ chi tiết sâu, mày cross-check làm gì?" -
+// RUT hoan toan thay vi tiep tuc tim tin hieu so thu tu tinh vi hon. Neu can
+// xem lai code cu, tim "findDecimalCodeGroupMismatches" trong lich su git
+// truoc commit sua doi nay.
 
 // Tong quat hoa 1 buoc kiem tra da co (validateBalanceSheetSubtotals,
 // lib/export/validate-statements.ts) tu "1 tang" (dong tong cap-0 vd "TS
@@ -1504,18 +1343,26 @@ export function findBalanceSheetLevel2Mismatches(table: StatementTable, groupSta
 
     const memberRowIndexes: number[] = [];
     for (let j = startIdx + 1; j < endIdx; j++) {
-      // Dong ma so dang thap phan (X.Y) da duoc kiem tra rieng qua
-      // findDecimalCodeGroupMismatches (gop vao gia tri dong cha X) - bo qua
-      // o day de tranh dem 2 lan.
-      const maSo = maSoIndex === null ? null : table.rows[j][maSoIndex];
-      if (typeof maSo === 'string' && maSo.includes('.')) continue;
-      // Muc con CAP 4 (tien to "-"/"*"/"a)"... hoac noi dung chuan "Nguyen
-      // gia"/"Gia tri hao mon luy ke") - da GOP SAN vao gia tri dong cha cap 3
-      // ngay truoc no (vd "- LNST chua phan phoi ky nay" da nam trong "11./
-      // Loi nhuan sau thue chua phan phoi") - cong THEM o day se dem 2 lan
-      // (da xac nhan qua doi chieu that TIX/DIC, 2026-07-12).
+      // Muc con CAP 4 (noi dung chuan "Nguyen gia"/"Gia tri hao mon luy
+      // ke"/"LNST chua phan phoi ky nay"...) - da GOP SAN vao gia tri dong
+      // cha cap 3 ngay truoc no, cong THEM o day se dem 2 lan (xem
+      // isKnownCap4Label - mo rong 2026-07-13). 2026-07-13: bo tin hieu tien
+      // to dau cau VA tin hieu ma-so-co-dau-cham (theo yeu cau nguoi dung,
+      // khong con dua vao so thu tu duoi bat ky hinh thuc nao) - dong khong
+      // khop mot ten chuan nao (isLikelySubtotalRow o tren, isKnownCap4Label o
+      // duoi) gio tu dong bi loai/giu dung, khong can kiem tra rieng dinh dang
+      // ma so nua. DANH DOI CHAP NHAN (ham nay CHI dung cho retry/unreliable-
+      // cell, KHONG hien thi truc tiep): neu 1 cong ty tu chia nho 1 dong chi
+      // tiet thanh ma so thap phan RIENG cua ho (vd "131.1"/"131.2" duoi
+      // "131. Phai thu ngan han cua khach hang", khong theo ten chuan nao),
+      // ham nay se cong CA dong cha LAN cac dong con thap phan do (dem 2 lan)
+      // - khong con cach nao phan biet ma khong dua vao cau truc ma so (day
+      // chinh la ly do findDecimalCodeGroupMismatches - kiem tra rieng cho
+      // truong hop nay - bi RUT HOAN TOAN khoi pipeline, xem comment o do).
+      // Chap nhan duoc vi ket qua toi da la 1 lan retry OCR thua/1 o bi gan
+      // "khong dang tin cay" oan, khong lam sai so lieu HIEN THI cho nguoi dung.
       const memberLabel = String(table.rows[j][labelIndex] ?? '').trim();
-      if (NON_SUBTOTAL_DETAIL_PREFIX.test(memberLabel) || isKnownCap4Label(memberLabel)) continue;
+      if (isKnownCap4Label(memberLabel)) continue;
       memberRowIndexes.push(j);
     }
     if (memberRowIndexes.length === 0) continue;
