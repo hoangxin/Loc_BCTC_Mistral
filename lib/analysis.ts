@@ -645,14 +645,37 @@ const BANK_THRESHOLDS_C: Thresholds = { level1: 30, level2: 40 };
 // BALANCE_SHEET_CONTENT_MARKERS (markdown-tables.ts) de nua B khong bi rot
 // nham vao offBalanceSheet do trung chu "Tien gui cua khach hang" voi bang
 // ngoai BCTC cua CTCK.
+// BID that (2026-07-14): dong tong GOP CHUNG cua BID ("III. Tien, vang gui
+// tai VA cho vay TCTD khac") khong co chu "cac" truoc "TCTD khac" (khac HDB/
+// VCB/MBB deu dung "cho vay CAC TCTD khac") nen 2 bien the cu khong khop -
+// them bien the thieu "cac" nay. Dong tong nay CON DA TRU SAN "Du phong rui
+// ro cho vay cac TCTD khac" (am) trong gia tri cua no - QUAN TRONG: KHONG tu
+// dung lai bang cach cong rieng 2 dong con (Tien gui tai + Cho vay), vi lam
+// vay se BO SOT phan Du phong am do (tung thu, sai ~15.58% thanh 14.67%, vi
+// dong "III" da chua san Cho vay ben trong, cong rieng dong Cho vay THEM 1
+// lan nua se dem trung) - LUON uu tien dung dong TONG THAT bao cao da co san
+// (chinh xac hon, gom du ca 3 thanh phan) thay vi tu ghep lai tu cac dong con.
+function findTienGuiChoVayTctdKhac(table: StatementTable): Row | null {
+  return byLabelAnyOf([
+    ['TIEN GUI TAI', 'CHO VAY CAC TCTD KHAC'],
+    ['TIEN GUI TAI', 'CHO VAY CAC TO CHUC TIN DUNG KHAC'],
+    // BID chen them "vang" giua "Tien," va "gui tai" ("Tien, vang gui tai va
+    // cho vay TCTD khac") - "TIEN GUI TAI" lien tuc khong con khop, dung rieng
+    // "GUI TAI" (van du dac trung khi di kem "CHO VAY TCTD KHAC").
+    ['GUI TAI', 'CHO VAY TCTD KHAC'],
+    ['GUI TAI', 'CHO VAY TO CHUC TIN DUNG KHAC'],
+  ])(table);
+}
+
 const BANK_METRICS: MetricDef[] = [
   {
     label: 'Tiền Gửi & Cho Vay TCTD Khác',
     statement: 'balanceSheet',
     // "TCTD" (viet tat) hay "to chuc tin dung" (viet day du) tuy ngan hang -
     // da xac nhan HDB/MBB dung "TCTD" nhung VCB viet day du khong viet tat,
-    // can 2 bien the (giong cach xu ly "L/C"/"thu tin dung" o duoi).
-    finders: [byLabelAnyOf([['TIEN GUI TAI', 'CHO VAY CAC TCTD KHAC'], ['TIEN GUI TAI', 'CHO VAY CAC TO CHUC TIN DUNG KHAC']])],
+    // can 2 bien the (giong cach xu ly "L/C"/"thu tin dung" o duoi). BID tach
+    // rieng 2 dong (xem findTienGuiChoVayTctdKhac).
+    finders: [findTienGuiChoVayTctdKhac],
     thresholds: null,
   },
   {
