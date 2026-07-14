@@ -40,17 +40,16 @@ import { findLabelColumnIndex, normalizeLabelText, type FinancialStatements, typ
 // lib/export/full-document.ts, goi ham nay tren markdown KHONG gioi han trang,
 // khac voi lib/pipeline.ts Buoc 2 van chi truyen pham vi truoc Thuyet minh nhu
 // cu). Neu khong chan, cac bang phu trong Thuyet minh (hang chuc bang) se lot
-// vao vi cung co the trung tu khoa noi dung (xem classifyTableByContent).
-// Test that: dong chan trang lap "Cac thuyet minh la MOT BO PHAN KHONG TACH
-// ROI cua Bao cao tai chinh nay" KHONG khop chuoi lien tiep "THUYET MINH BAO
-// CAO TAI CHINH" (co chen them tu o giua) nen khong bi nham voi tieu de
-// chuong that.
+// vao vi cung co the trung tu khoa noi dung (xem classifyTableByContent). Cong
+// ty CHUNG KHOAN (CTCK, Mau B04a-CTCK) co THEM 1 bao cao "Bao cao tinh hinh
+// bien dong von chu so huu" nam GIUA cashFlow va Thuyet minh - bang nay KHONG
+// thuoc 3 bang app dang xuat nen cung phai chan dung TRUOC no.
 //
-// Cong ty CHUNG KHOAN (CTCK, Mau B04a-CTCK) co THEM 1 bao cao "Bao cao tinh
-// hinh bien dong von chu so huu" nam GIUA cashFlow va Thuyet minh - bang nay
-// KHONG thuoc 3 bang app dang xuat (balanceSheet/incomeStatement/cashFlow) nen
-// phai chan dung TRUOC no, khong thi no bi lan vao ket qua.
-const NOTES_SECTION_MARKERS = ['THUYET MINH BAO CAO TAI CHINH', 'THUYET MINH BCTC', 'BIEN DONG VON CHU SO HUU'];
+// SUA 2026-07-14 (theo de nghi nguoi dung, xem ly do chi tiet + lich su cac
+// phuong an da thu ngay duoi ham containsCashFlowEndingSequence): thay vi tim
+// diem BAT DAU "Thuyet minh" bang tu khoa (NOTES_SECTION_MARKERS, da GIU LAI
+// duoi dang comment ngay canh containsHeadingMarkerNearStart, khong xoa), tim
+// diem KET THUC cua CHINH LCTT qua 1 CHU KY 3 DONG bat buoc theo luat ke toan.
 
 // Tieu de muc that su LUON la 1 dong NGAN (chi ten muc, vd "# **BẢNG CÂN ĐỐI
 // KẾ TOÁN**", ~30 ky tu) - da gap that (2026-07-06, xuat toan van BCTC SJ1):
@@ -69,59 +68,33 @@ function looksLikeHeadingLine(rawLine: string): boolean {
   return trimmed.length > 0 && trimmed.length <= MAX_HEADING_LINE_LENGTH && !trimmed.startsWith('|');
 }
 
-// CHI dung cho diem cat "Thuyet minh"/"Bien dong von chu so huu"
-// (NOTES_SECTION_MARKERS) - KHAC voi looksLikeHeadingLine() o tren (van giu
-// nguyen cho cac cho khac). Tieu de that cua bang "Bao cao tinh hinh bien
-// dong von chu so huu" (CTCK, Mau B04a-CTCK) hay bi Mistral noi LIEN vao doan
-// ngay thang phia sau, DOI KHI khong co ca khoang trang (da gap that SSI/MBS
-// 2026-07-11: "...NAM 2026cho ky ke toan ket thuc ngay...", dai 85-115 ky tu)
-// - neu doi hoi CA DONG (ke ca doan ngay noi them) phai ngan nhu
-// looksLikeHeadingLine se BO SOT tieu de that, khong chan dung bang nay truoc
-// Thuyet minh, lam no ro ri vao BCDKT (nhieu dong chi tieu Von CSH trung ten
-// voi phan Von CSH cua BCDKT that, gay sai lech nghiem trong - vd tat ca chi
-// tieu BCDKT tra ve null vi bi gop nham cot voi bang 9-10 cot nay). Chi doi
-// hoi tu khoa xuat hien XONG (ket thuc) trong MAX_HEADING_LINE_LENGTH ky tu
-// DAU dong, khong doi hoi toan bo dong phai ngan - van du chat de loai cau
-// van xuoi dai trong Thuyet minh (tu khoa thuong nam GIUA cau, xa vi tri dau).
-// Dong "tham chieu cheo" (footer boilerplate LAP LAI o CUOI MOI TRANG, vd "...
-// phải được đọc cùng với Bản thuyết minh Báo cáo tài chính...") nhac lai
-// NGUYEN VAN cum trong NOTES_SECTION_MARKERS nhung KHONG PHAI tieu de muc that
-// - da gap that PTI that 2026-07-14, VOI IT NHAT 2 BIEN THE CAU CHU KHAC NHAU
-// TRONG CUNG 1 TAI LIEU ("...phải được đọc cùng với Bản thuyết minh...", VA
-// rieng biet "Tài liệu này phải được xác nhận với [Bưu] thuyết minh..." o 1
-// trang khac) - lan dau chi loai rieng cum "PHAI DUOC DOC" (vet 1 bien the),
-// nhung bien the thu 2 dung "PHAI DUOC XAC NHAN" nen lot qua, van gay dung 1
-// loi cat y het (mat toan bo KQKD/LCTT du BCDKT da het cat sai). Liet ke tung
-// cau dan chieu cu the la KHONG BEN VUNG (con nhieu bien the khac chua gap).
-// Doi sang dieu kien CAU TRUC thay vi TU NGU: MOI tieu de muc THAT trong tai
-// lieu (da xac nhan qua toan bo cac mau doc duoc: "# **BÁO CÁO TÀI CHÍNH HỢP
-// NHẤT**", "### BẢNG CÂN ĐỐI KẾ TOÁN...", "# **KẾT QUẢ HOẠT ĐỘNG KINH DOANH
-// HỢP NHẤT**"...) LUON duoc Mistral OCR ra dang dong HEADING MARKDOWN (bat dau
-// bang "#"), trong khi cau dan chieu/chu thich chan trang LUON la van xuoi
-// thuong (khong bao gio co "#") - doi hoi THEM dieu kien nay loai duoc CA LOP
-// cau dan chieu, bat ke dung tu ngu cu the nao.
+// LICH SU diem CAT truoc "Thuyet minh" (2026-07-14, PTI) - 3 phuong an DA THU,
+// GIU LAI CA 2 phuong an truoc DUOI DANG COMMENT (khong xoa, phong khi can
+// dung lai/ket hop them - yeu cau nguoi dung) truoc khi chot phuong an cuoi
+// (CASH_FLOW_ENDING_SEQUENCE, xem duoi):
 //
-// Phuong an DAU TIEN (2026-07-14, SAU DO BI THAY vi qua hep - giu lai de tham
-// khao, phong khi can loai them 1 bien the cau dan chieu cu the nao khac ma
-// dieu kien "#" o duoi van chua du chat, du hien tai chua gap truong hop do):
-// const REFERENCE_FOOTER_PATTERN = 'PHAI DUOC DOC';
-// ...trong containsHeadingMarkerNearStart, truoc buoc so khop marker:
-// if (normalized.includes(REFERENCE_FOOTER_PATTERN)) return false;
-// -> chi loai duoc bien the "...phai duoc DOC cung voi...", lot bien the khac
-// "...phai duoc XAC NHAN voi..." (xac nhan qua PTI, 2 bien the cau chu KHAC
-// NHAU trong CUNG 1 tai lieu) - vi vay khong dung nua, nhung logic o day (chan
-// 1 cum tu dac trung cua cau dan chieu) van co the huu ich lam lop phong ngua
-// THEM (bo sung, khong thay the) neu sau nay gap bien the KHONG bat dau bang
-// "#" ma Mistral OCR dinh nham vao 1 dong heading that (chua gap, gia thuyet).
-function containsHeadingMarkerNearStart(rawLine: string, markers: string[]): boolean {
-  const trimmed = rawLine.trim();
-  if (trimmed.length === 0 || trimmed.startsWith('|') || !trimmed.startsWith('#')) return false;
-  const normalized = normalizeLabelText(trimmed);
-  return markers.some((m) => {
-    const index = normalized.indexOf(m);
-    return index !== -1 && index + m.length <= MAX_HEADING_LINE_LENGTH;
-  });
-}
+// (a) loai cau dan chieu theo TU NGU cu the ("PHAI DUOC DOC") - lot bien the
+// khac ("PHAI DUOC XAC NHAN") ngay trong CUNG 1 tai lieu PTI.
+// (b) doi diem cat sang dong "Tien va tuong duong tien cuoi ky" DON LE - va
+// cham that voi dong "...cuoi ky CUA KHACH HANG" (CTCK, VND/BVS, bang ngoai
+// BCTC), phai them dieu kien loai tru rieng.
+// (c) dieu kien CAU TRUC: dong phai bat dau bang "#" (heading markdown that)
+// moi duoc coi la tieu de muc - loai duoc CA 2 bien the cau dan chieu ma
+// khong can biet truoc chung viet gi (moi tieu de muc THAT deu ra dang "#",
+// cau van xuoi thi khong bao gio). Hoat dong dung, nhung van la 1 lop RIENG
+// (thay vi noi tro thang vao tin hieu ket thuc LCTT that su) nen bi thay
+// tiep boi phuong an (d) ben duoi theo de nghi nguoi dung 2026-07-14.
+//
+// const NOTES_SECTION_MARKERS = ['THUYET MINH BAO CAO TAI CHINH', 'THUYET MINH BCTC', 'BIEN DONG VON CHU SO HUU'];
+// function containsHeadingMarkerNearStart(rawLine: string, markers: string[]): boolean {
+//   const trimmed = rawLine.trim();
+//   if (trimmed.length === 0 || trimmed.startsWith('|') || !trimmed.startsWith('#')) return false;
+//   const normalized = normalizeLabelText(trimmed);
+//   return markers.some((m) => {
+//     const index = normalized.indexOf(m);
+//     return index !== -1 && index + m.length <= MAX_HEADING_LINE_LENGTH;
+//   });
+// }
 
 function splitMarkdownRow(line: string): string[] | null {
   const trimmed = line.trim();
@@ -418,53 +391,76 @@ const CASH_FLOW_CONTENT_MARKERS = [
   'TIEN CHI NOP THUE THU NHAP DOANH NGHIEP',
 ];
 
-// SUA 2026-07-14 (theo yeu cau nguoi dung, sau khi gap that PTI): diem CAT
-// truoc day dua vao tim diem BAT DAU cua "Thuyet minh" (NOTES_SECTION_MARKERS)
-// - phuong an nay YEU vi tu "thuyet minh" xuat hien RAT NHIEU noi khap tai
-// lieu (ten cot "Thuyet minh" o MOI bang, tham chieu chi so "IV.1"/"V.2"...,
-// va dac biet la dong chu thich cheo LAP LAI o CUOI MOI TRANG kieu "...phai
-// duoc doc cung voi Ban thuyet minh Bao cao tai chinh..." - da xac nhan PTI
-// that bi khop nham ngay dong dau tien, cat mat toan bo phan con lai cua tai
-// lieu du BCDKT/KQKD/LCTT deu con dai).
+// SUA 2026-07-14 (theo yeu cau nguoi dung, sau khi gap that PTI - xem lich su
+// day du 3 phuong an DA THU trong comment ngay canh containsHeadingMarkerNearStart
+// o tren, gom ca 1 bien the trung gian dung DUY NHAT dong "Tien va tuong duong
+// tien cuoi ky" - lan luot bi loai vi deu dua vao so khop 1 CUM TU/1 DONG DON
+// LE, luon co nguy co trung tinh co voi 1 dong khac o noi khac trong tai lieu
+// (da xac nhan that: dong "...cuoi ky CUA KHACH HANG" trong bang ngoai BCTC
+// cua CTCK, VND/BVS).
 //
-// THU 2 PHUONG AN, CA 2 DEU DUA VAO SO KHOP CHUOI CU THE (2026-07-14, nguoi
-// dung phan hoi ca 2 deu de sinh loi khi gap bao cao khac):
-// (a) loai rieng cau dan chieu theo TU NGU ("PHAI DUOC DOC") - lot bien the
-// khac ("PHAI DUOC XAC NHAN") ngay tren cung 1 tai lieu PTI.
-// (b) doi diem cat sang dong KET THUC LCTT ("Tien va tuong duong tien cuoi
-// ky") thay vi dong BAT DAU Thuyet minh - van dinh chuoi cu the, va va cham
-// that voi dong "...cuoi ky CUA KHACH HANG" (CTCK, VND/BVS) trong khi dong
-// ket thuc LCTT THAT cua chinh BVS lai dung chung cach dien dat "cac khoan"
-// voi dong va cham do, buoc phai them dieu kien loai tru rieng - moi vong sua
-// deu chi vet duoc bien the DA BIET, khong giai quyet tan goc rui ro.
-//
-// PHUONG AN CUOI CUNG (khong con dua vao BAT KY chuoi tu ngu cu the nao cho
-// VIEC PHAN BIET tieu de that/cau van xuoi): CHI dieu kien CAU TRUC trong
-// containsHeadingMarkerNearStart duoi day (dong phai bat dau bang "#") la du
-// - moi tieu de muc THAT trong tai lieu (da xac nhan qua toan bo mau doc
-// duoc) LUON duoc Mistral OCR ra dang heading markdown, con cau dan chieu/chu
-// thich chan trang thi KHONG BAO GIO, bat ke viet the nao. Dieu kien nay loai
-// duoc CA 2 bien the cau dan chieu da gap MA KHONG CAN biet truoc chinh xac
-// chung viet gi - khac han (a)/(b) o tren, day la tin hieu CAU TRUC (co "#"
-// hay khong) chu khong phai tin hieu TU NGU (chuoi X co xuat hien hay khong).
-//
-// CODE CU CUA PHUONG AN (b), GIU LAI THAM KHAO (khong dung nua, xem ly do o
-// tren) - phong khi sau nay can 1 diem neo THEM (bo sung cho dieu kien "#",
-// khong thay the) cho 1 tinh huong rieng biet nao do:
-// const CASH_FLOW_START_MARKER = 'LUU CHUYEN TIEN TU HOAT DONG KINH DOANH';
-// const CASH_FLOW_END_MARKER_CORE = 'TUONG DUONG TIEN CUOI KY';
-// const CASH_FLOW_END_EXCLUDE_MARKER = 'CUA KHACH HANG';
-// function containsCashFlowEndRow(rawLine: string): boolean {
-//   const trimmed = rawLine.trim();
-//   if (!trimmed.startsWith('|')) return false;
-//   const normalized = normalizeLabelText(trimmed);
-//   return normalized.includes(CASH_FLOW_END_MARKER_CORE) && !normalized.includes(CASH_FLOW_END_EXCLUDE_MARKER);
-// }
-// function findCashFlowEndLineIndex(lines: string[], searchFromIndex: number): number {
-//   const startIndex = lines.findIndex((line, i) => i >= searchFromIndex && normalizeLabelText(line).includes(CASH_FLOW_START_MARKER));
-//   if (startIndex === -1) return -1;
-//   return lines.findIndex((line, i) => i > startIndex && containsCashFlowEndRow(line));
-// }
+// PHUONG AN CUOI CUNG (theo de nghi nguoi dung 2026-07-14): thay vi khop 1
+// DONG DON LE, doi hoi CA MOT CHU KY 3 DONG LIEN TIEP DUNG THEO TRINH TU BAT
+// BUOC theo luat ke toan VN (ma so 50 -> 60 -> [61 tuy chon] -> 70, Mau
+// B03-DN va tuong duong cho NH/CTCK/bao hiem - LUON co ca 3 buoc nay, khong
+// phu thuoc loai hinh DN): "Luu chuyen tien thuan trong ky" -> "Tien va tuong
+// duong tien DAU ky" -> "Tien va tuong duong tien CUOI ky". Da xac nhan qua 2
+// bao cao that KHAC LOAI HINH (DRI "other", BID "bank") deu ra DUNG chu ky 3
+// dong nay theo dung thu tu; con dong va cham da biet (VND/BVS, "...cuoi ky
+// CUA KHACH HANG") KHONG co cap dong "thuan trong ky"/"dau ky" di truoc no -
+// no chi giong o DUNG 1 dong don le, khong giong ca chu ky 3 buoc. Doi hoi ca
+// 3 dong dung thu tu giam manh rui ro khop nham so voi 1 dong rieng le (van
+// KHONG the chung minh dung 100% - suy luan tren van ban OCR, khong phai cau
+// truc PDF that - nhung xac suat trung ngau nhien ca 1 CHU KY 3 BUOC bat buoc
+// theo luat o 1 noi khac la rat thap). KHONG con dua vao containsHeadingMarkerNearStart
+// ("#") nua theo de nghi nguoi dung - ham do van giu nguyen o tren, chua xoa,
+// de dung lai/ket hop them neu can.
+const CASH_FLOW_NET_ROW_MARKER = 'TIEN THUAN TRONG KY';
+const CASH_FLOW_BALANCE_ROW_CORE_MARKER = 'TUONG DUONG TIEN';
+const CASH_FLOW_BEGIN_ROW_SUFFIX_MARKER = 'DAU KY';
+const CASH_FLOW_END_ROW_SUFFIX_MARKER = 'CUOI KY';
+// So dong toi da cho phep xen giua 2 moc trong chu ky (vd dong tuy chon "Anh
+// huong thay doi ty gia hoi doai" xen giua "dau ky" va "cuoi ky" - xac nhan
+// qua DRI that).
+const CASH_FLOW_ENDING_ROW_GAP = 2;
+
+function isMarkdownDataRow(rawLine: string): boolean {
+  return rawLine.trim().startsWith('|');
+}
+
+function matchesCashFlowNetRow(rawLine: string): boolean {
+  return isMarkdownDataRow(rawLine) && normalizeLabelText(rawLine).includes(CASH_FLOW_NET_ROW_MARKER);
+}
+
+function matchesCashFlowBalanceRow(rawLine: string, suffixMarker: string): boolean {
+  if (!isMarkdownDataRow(rawLine)) return false;
+  const normalized = normalizeLabelText(rawLine);
+  return normalized.includes(CASH_FLOW_BALANCE_ROW_CORE_MARKER) && normalized.includes(suffixMarker);
+}
+
+// Tim vi tri dong "Tien va tuong duong tien cuoi ky" THAT SU - CHI tinh khi no
+// la dong THU 3 (hoac thu 4 neu co dong ty gia xen giua) trong dung 1 chu ky 3
+// buoc (xem comment o tren), khong phai chi can khop 1 dong don le. -1 neu
+// khong tim thay du ca chu ky trong pham vi.
+function findCashFlowEndingSequenceIndex(lines: string[], searchFromIndex: number): number {
+  for (let i = searchFromIndex; i < lines.length; i++) {
+    if (!matchesCashFlowNetRow(lines[i])) continue;
+    let beginIndex = -1;
+    for (let j = i + 1; j <= i + 1 + CASH_FLOW_ENDING_ROW_GAP && j < lines.length; j++) {
+      if (matchesCashFlowBalanceRow(lines[j], CASH_FLOW_BEGIN_ROW_SUFFIX_MARKER)) {
+        beginIndex = j;
+        break;
+      }
+    }
+    if (beginIndex === -1) continue;
+    for (let k = beginIndex + 1; k <= beginIndex + 1 + CASH_FLOW_ENDING_ROW_GAP && k < lines.length; k++) {
+      if (matchesCashFlowBalanceRow(lines[k], CASH_FLOW_END_ROW_SUFFIX_MARKER)) {
+        return k;
+      }
+    }
+  }
+  return -1;
+}
 
 // Rieng CTCK (Mau B01-CTCK): "Cac chi tieu ngoai bao cao tinh hinh tai chinh"
 // - tai san/tien/no CTCK QUAN LY HO nha dau tu (KHONG thuoc BCDKT chinh cua
@@ -737,7 +733,7 @@ function parseAllTablesInRange(lines: string[]): ParsedTable[] {
 // khop chuoi thang la du).
 export function containsNotesSectionMarker(markdown: string): boolean {
   const lines = markdown.split(/\r?\n/);
-  return lines.some((line) => containsHeadingMarkerNearStart(line, NOTES_SECTION_MARKERS));
+  return findCashFlowEndingSequenceIndex(lines, 0) !== -1;
 }
 
 export function parseStatementsFromMarkdown(markdown: string): FinancialStatements {
@@ -777,9 +773,8 @@ export function parseStatementsFromMarkdown(markdown: string): FinancialStatemen
   const firstContentLine = lines.findIndex(
     (line, i) => splitMarkdownRow(line) !== null && allContentMarkers.some((m) => normalizedLines[i].includes(m))
   );
-  const notesLine = lines.findIndex(
-    (line, i) => (firstContentLine === -1 || i > firstContentLine) && containsHeadingMarkerNearStart(line, NOTES_SECTION_MARKERS)
-  );
+  const cashFlowEndingIndex = findCashFlowEndingSequenceIndex(lines, firstContentLine === -1 ? 0 : firstContentLine);
+  const notesLine = cashFlowEndingIndex !== -1 ? cashFlowEndingIndex + 1 : -1;
   const relevantLines = notesLine !== -1 ? lines.slice(0, notesLine) : lines;
 
   // Tim TAT CA bang markdown trong pham vi, roi gan MOI bang vao 1 trong 3
