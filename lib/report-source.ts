@@ -35,39 +35,26 @@ const SUPPORTED_EXTRACT_EXTENSIONS = new Set(['.pdf', '.docx', '.doc']);
 // lai zip that cua MBS/KTS/SLS/CAP): MOI zip deu kem theo ban dich tieng Anh
 // CUA CHINH BCTC do, va nhieu cong ty (VD SLS: 4/6 file, CAP: 2/4 file) con kem
 // them "cong van giai trinh bien dong loi nhuan"/"cong van cong bo thong tin"
-// (KHONG phai BCTC, chi la van ban giai trinh ngan 1-2 trang) - truoc day
-// KHONG loc gi, tao ra 3-6 dong "bao cao" ao cho MOI cong ty (vd MBS ra 6 dong
-// thay vi 1, dung nhu Vietstock hien thi that). Loc 2 buoc:
-// 1) Bo cac van ban PHU (khong phai BCTC) qua tu khoa ten file.
-// 2) Neu con ca ban tieng Viet lan tieng Anh cua CUNG 1 tai lieu, chi giu ban
-//    tieng Viet (toan bo logic doc hieu phia sau - SECTION_MARKERS, tu khoa
-//    fuzzy-match... - deu dua tren thuat ngu TIENG VIET).
-const ANCILLARY_DOCUMENT_PATTERNS: RegExp[] = [
-  /giai.{0,3}trinh/i, // "cong van giai trinh..." (bien dong loi nhuan...) - ca ban co loi chinh ta "giaittrinh" cua MBS
-  /explanation/i, // ban tieng Anh cua "giai trinh"
-  /disclosure/i, // "information disclosure" (tieng Anh cua cong bo thong tin)
-  /cbtt/i, // viet tat "cong bo thong tin" (vd MBS: "cvcbtt")
-  /nghi.?quyet/i, // nghi quyet HDQT/DHDCD dinh kem, khong phai BCTC
-  /bien.?ban/i, // bien ban hop dinh kem
-  // "cong van so [N]" viet tat thanh "cv_[N]" trong ten file (thay vi viet ro
-  // "giai trinh") - da gap that LLM Q1/2026 (2026-07-12): zip co 2 file, file
-  // BCTC that ten "..._bctc_rieng_qi_2026_tv.pdf", file con lai ten
-  // "..._cv_280__gt_cllnst_rieng_q1_26_tv.pdf" ("cv 280" = cong van so 280,
-  // "gt" = giai trinh viet tat, "cllnst" = chenh lech LNST) - khong khop
-  // /giai.{0,3}trinh/ vi viet tat "gt" chu khong danh van day du, lot qua bo
-  // loc, tao ra 1 dong "bao cao" ao (0 dong ca 3 bang, vi day la van ban
-  // giai trinh ngan, khong phai BCTC that). Yeu cau "cv" di lien 1-4 chu so
-  // (so cong van, vd "cv_280"/"cv280") de tranh khop nham cac ma khac tinh co
-  // chua "cv". Dung (?!\d) thay vi \b sau chu so - "_" (dau lien sau trong
-  // ten file that, vd "cv_280__gt...") LA ky tu \w trong regex nen \b KHONG
-  // coi la ranh gioi giua so va "_", se khong khop neu dung \b thay vi
-  // (?!\d) (da tu kiem tra that truoc khi chot, xem git history neu can).
-  /cv[_-]?\d{1,4}(?!\d)/i,
-];
-
-function isAncillaryDocumentEntry(entryName: string): boolean {
-  return ANCILLARY_DOCUMENT_PATTERNS.some((pattern) => pattern.test(entryName));
-}
+// (KHONG phai BCTC, chi la van ban giai trinh ngan 1-2 trang).
+//
+// XOA HOAN TOAN loc theo TU KHOA TEN FILE cho van ban phu (2026-07-15, theo
+// phan hoi nguoi dung sau bug CTS Q1/2026): danh sach tu khoa (giai trinh/
+// explanation/disclosure/nghi quyet/bien ban/cv_NNN/... va truoc do la "cbtt")
+// da nhieu lan khop NHAM chinh file BCTC that (cbtt la vi du moi nhat - "cbtt"
+// chi la tien to Vietstock/cong ty dung de dat ten CHO CHINH file BCTC duoc
+// cong bo, khong phai dau hieu day la van ban phu) - day la 1 LOP LOI CO CAU
+// TRUC se con tai dien voi tu khoa khac trong tuong lai (moi cong ty dat ten
+// file 1 kieu, khong co danh sach tu khoa nao du de bao quat het VA khong bao
+// gio khop NHAM), dung tinh than "uu tien tin hieu CAU TRUC hon la doan qua tu
+// ngu" da chot truoc do cho cac truong hop tuong tu. Da co SAN 1 lop loc CAU
+// TRUC DOC LAP, DANG TIN CAY hon nhieu: dropShortAncillaryPdfs o duoi (van ban
+// phu luon <=3 trang, BCTC that luon dai hon han vi luon co it nhat 3 bang +
+// thuyet minh) - khong con can lop tu khoa nay nua, de dropShortAncillaryPdfs
+// lam TOAN BO viec loc van ban phu.
+//
+// Neu con ca ban tieng Viet lan tieng Anh cua CUNG 1 tai lieu, chi giu ban
+// tieng Viet (toan bo logic doc hieu phia sau - SECTION_MARKERS, tu khoa
+// fuzzy-match... - deu dua tren thuat ngu TIENG VIET).
 
 // BAT BUOC "en" phai la 1 TOKEN rieng (bao quanh boi "_"/"-"/dau cham/dau
 // dau-cuoi chuoi), khong phai chi la 2 ky tu con trong 1 tu dai hon (vd
@@ -77,32 +64,57 @@ function isAncillaryDocumentEntry(entryName: string): boolean {
 // sau "en") - KHONG khop, khien ban tieng Anh LOT qua bo loc, van bi OCR va
 // dua vao phan tich % nhu 1 bao cao rieng (trung lap voi ban tieng Viet,
 // LUON that bai moi kiem tra vi tu khoa doi chieu deu la tieng Viet).
+//
+// THEM 2026-07-15 (theo yeu cau nguoi dung, sau bug CTS Q1/2026): mot so ban
+// dich tieng Anh KHONG dung quy uoc dat ten "_en" nao ca - ten file THUC TE la
+// cong cu tu dong sinh ra hoan toan bang TU TIENG ANH (vd CTS: "m88_..._cts_
+// __financial_statements_in_quarter_1_of_2026...pdf", khong co token "en"
+// rieng biet nao). Muc tieu nguoi dung: BO LOC PHAI tu quyet dinh duoc 1 file
+// DUY NHAT truoc khi OCR (khong dua vao thu-tuan-tu-roi-loai-sau) - vi so
+// trang KHONG the phan biet duoc 2 ban dich (LUON dai bang nhau) nen day PHAI
+// la lop quyet dinh. Nhan dien qua CUM TU tieng Anh DAC TRUNG rieng cua BCTC
+// (khong bao gio xuat hien trong ten file tieng Viet, du co dau hay khong dau)
+// - "financial_statement(s)" la thuat ngu CO DINH cong cu dich dung cho "bao
+// cao tai chinh", cung cac thuat ngu tuong duong cho tung bang/loai bao cao.
+const ENGLISH_FINANCIAL_TERM_PATTERNS: RegExp[] = [
+  /financial[_-]?statements?/i,
+  /annual[_-]?report/i,
+  /balance[_-]?sheet/i,
+  /income[_-]?statement/i,
+  /cash[_-]?flow[_-]?statement/i,
+  /audited[_-]?report/i,
+  /reviewed[_-]?report/i,
+];
+
 function isEnglishVariantEntry(entryName: string): boolean {
-  return /(^|[_-])en([_.\-]|$)/i.test(entryName);
+  return /(^|[_-])en([_.\-]|$)/i.test(entryName) || ENGLISH_FINANCIAL_TERM_PATTERNS.some((p) => p.test(entryName));
 }
 
-// Loc danh sach entry TRONG 1 zip/rar: bo van ban phu, roi neu con ca ban Viet
-// lan Anh thi chi giu ban Viet - LUON fallback ve danh sach truoc do neu loc
-// xong rong (vd zip chi toan van ban phu, hoac chi co ban tieng Anh) de tranh
-// mat trang hoan toan con hon giu du lieu sai ngon ngu/thua. Nhan them
-// `getName` vi AdmZip (entry.entryName) va node-unrar-js (header.name) dung 2
-// ten thuoc tinh khac nhau cho cung 1 khai niem.
+// Loc danh sach entry TRONG 1 zip/rar: neu co ca ban tieng Viet lan tieng Anh
+// thi chi giu ban tieng Viet - LUON fallback ve danh sach truoc do neu loc
+// xong rong (vd zip chi co ban tieng Anh) de tranh mat trang hoan toan con hon
+// giu du lieu sai ngon ngu. Van ban phu (cong van/giai trinh...) KHONG con loc
+// o day (xem comment o tren) - de dropShortAncillaryPdfs (loc theo SO TRANG,
+// sau khi giai nen) lam viec do. Nhan them `getName` vi AdmZip (entry.entryName)
+// va node-unrar-js (header.name) dung 2 ten thuoc tinh khac nhau cho cung 1 khai niem.
 function pickPrimaryReportEntries<T>(entries: T[], getName: (entry: T) => string): T[] {
-  const nonAncillary = entries.filter((e) => !isAncillaryDocumentEntry(getName(e)));
-  const candidates = nonAncillary.length > 0 ? nonAncillary : entries;
-  const vietnameseOnly = candidates.filter((e) => !isEnglishVariantEntry(getName(e)));
-  return vietnameseOnly.length > 0 ? vietnameseOnly : candidates;
+  const vietnameseOnly = entries.filter((e) => !isEnglishVariantEntry(getName(e)));
+  return vietnameseOnly.length > 0 ? vietnameseOnly : entries;
 }
 
 // So trang toi da de coi 1 PDF la "van ban ngan" (cong van/giai trinh, KHONG
 // phai BCTC that - BCTC luon co it nhat 3 bang + thuyet minh, khong bao gio
-// gon duoi nguong nay). Lop phong ngua THU 2, DOC LAP voi loc theo TEN FILE
-// (isAncillaryDocumentEntry/isEnglishVariantEntry o tren) - yeu cau nguoi
-// dung 2026-07-12 sau bug LLM Q1/2026 (cong van "cv_280" lot qua loc ten vi
-// viet tat, khong khop tu khoa nao): loc theo TEN chi bat duoc CAC BIEN THE
-// DA BIET truoc, cong ty khac dat ten khac se lai lot qua - loc theo SO TRANG
-// khong phu thuoc cach dat ten, ben hon nhieu.
-const SHORT_DOCUMENT_MAX_PAGES = 3;
+// gon duoi nguong nay - mau THAT nho nhat da xac nhan van >=20 trang). DUY
+// NHAT lop loc van ban phu con lai (2026-07-15, xem comment o dau file - da bo
+// han loc theo TU KHOA TEN FILE, tung khop nham ca file BCTC that nhieu lan) -
+// loc theo SO TRANG khong phu thuoc cach dat ten, ben hon nhieu.
+//
+// NANG tu 3 len 10 (2026-07-15, theo yeu cau nguoi dung: "3 trang qua ngan,
+// se de lot") - van ban phu THAT (giai trinh/cong van...) da xac nhan qua
+// nhieu bao cao chi 1-2 trang, nen 10 van con RAT NHIEU khoang cach an toan
+// voi ca 2 phia (khong nham loai BCTC that - luon >=20 trang; khong de lot van
+// ban phu dai hon 1 chut so voi cac mau da gap).
+const SHORT_DOCUMENT_MAX_PAGES = 10;
 
 async function getPdfPageCount(filePath: string): Promise<number | null> {
   try {

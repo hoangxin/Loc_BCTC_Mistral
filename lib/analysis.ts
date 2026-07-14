@@ -107,6 +107,81 @@ function byLabelAnyOf(variants: string[][], exclude: string[] = []): RowFinder {
   };
 }
 
+// SUA 2026-07-15 (theo phan hoi nguoi dung, sau bug MCH Q1/2026): cac chi
+// tieu BCDKT "gop ngan+dai han" TRUOC DAY tim theo TEN CO hau to "ngan
+// han"/"dai han" trong CHINH nhan dong (vd "PHAI TRA NGUOI BAN NGAN HAN") -
+// SAI nguyen tac: MCH ghi "Phải trả người bán" (KHONG lap lai chu "ngan han")
+// nhung dong nay VAN LA ngan han, vi no NAM O DOAN "A. Tài sản ngắn hạn"/"Nợ
+// ngắn hạn" cua bang - giong het cach 1 nguoi doc BCTC THAT phan biet (doc VI
+// TRI trong bang, khong doi hoi nhan phai nhac lai tu "ngan han"). Sua dung
+// nguyen tac nay: tim theo TEN CHI TIEU GOC (khong hau to) nhung KHOANH VUNG
+// tim kiem theo VI TRI - giua 2 moc TEN da biet (vd "Tài sản ngắn hạn" ->
+// "Tài sản dài hạn" cho phia tai san, "Nợ ngắn hạn" -> "Nợ dài hạn" cho phia
+// no phai tra) - CHINH DOAN chua dong do (khong phai nhan cua no) quyet dinh
+// no la ngan han hay dai han. Day KHONG PHAI dua vao ma so/STT (van cam theo
+// CLAUDE.md) - la vi tri TUONG DOI so voi 2 moc duoc xac dinh boi TEN, giong
+// y het co che childrenBetween da dung o validate-statements.ts.
+function findSectionBoundaryIndex(table: StatementTable, marker: string, exclude: string[] = []): number {
+  const labelIndex = findLabelColumnIndex(table.columns, table.rows);
+  return table.rows.findIndex((row) => {
+    const label = row[labelIndex];
+    if (typeof label !== 'string') return false;
+    const normalized = normalizeLabelText(label);
+    return normalized.includes(marker) && !exclude.some((m) => normalized.includes(m));
+  });
+}
+
+// `markers`: TAT CA phai co mat trong nhan (nhu byLabel), KHONG doi hoi lien
+// tiep - can thiet vi tinh tu bo sung ("ngan han"/"dai han") co the CHEN VAO
+// GIUA cum tu chinh o 1 so cong ty thay vi noi them o cuoi (xac nhan qua PNJ/
+// PVP that 2026-07-15, sau khi sua nham "Phai thu ngan han khach hang" thanh
+// 1 cum lien tiep "PHAI THU CUA KHACH HANG" - PNJ/PVP ghi "Phải thu NGẮN HẠN
+// của khách hàng", "ngan han" nam GIUA "phai thu" va "cua khach hang" nen 1
+// cum lien tiep khong con la substring nua, lam ca 2 bao cao nay bi null oan,
+// mac du truoc do dang chay dung).
+function byLabelInRange(markers: string[], startIdx: number, endIdx: number): RowFinder {
+  return (table) => {
+    if (startIdx === -1 || endIdx === -1 || endIdx <= startIdx) return null;
+    const labelIndex = findLabelColumnIndex(table.columns, table.rows);
+    for (let i = startIdx + 1; i < endIdx; i++) {
+      const label = table.rows[i][labelIndex];
+      if (typeof label !== 'string') continue;
+      const normalized = normalizeLabelText(label);
+      if (markers.every((m) => normalized.includes(m))) return table.rows[i];
+    }
+    return null;
+  };
+}
+
+// Doan "Tai san ngan han"/"Tai san dai han" - khoanh vung boi 3 moc TEN (khong
+// "KHAC", tranh khop nham dong "Tai san ngan han khac"/"Tai san dai han khac"
+// lam moc): "Tài sản ngắn hạn" -> "Tài sản dài hạn" -> "Tổng cộng tài sản".
+function byLabelInAssetSection(markers: string[], section: 'short' | 'long'): RowFinder {
+  return (table) => {
+    const shortStart = findSectionBoundaryIndex(table, 'TAI SAN NGAN HAN', ['KHAC']);
+    const longStart = findSectionBoundaryIndex(table, 'TAI SAN DAI HAN', ['KHAC']);
+    const totalIdx = findSectionBoundaryIndex(table, 'TONG CONG TAI SAN');
+    const endIdx = totalIdx === -1 ? table.rows.length : totalIdx;
+    return section === 'short' ? byLabelInRange(markers, shortStart, longStart)(table) : byLabelInRange(markers, longStart, endIdx)(table);
+  };
+}
+
+// Doan "No ngan han"/"No dai han" - tuong tu byLabelInAssetSection. Fallback
+// moc cuoi ve "Von chu so huu" khi cong ty KHONG co doan "No dai han" rieng
+// (No phai tra chi gom toan bo No ngan han, khong co no dai han nao) - khi do
+// startIdx===endIdx cho phia "long", byLabelInRange tu tra null (dung, vi
+// khong co gi trong doan rong).
+function byLabelInLiabilitySection(markers: string[], section: 'short' | 'long'): RowFinder {
+  return (table) => {
+    const shortStart = findSectionBoundaryIndex(table, 'NO NGAN HAN', ['KHAC']);
+    const equityStart = findSectionBoundaryIndex(table, 'VON CHU SO HUU');
+    const endIdx = equityStart === -1 ? table.rows.length : equityStart;
+    const longStartRaw = findSectionBoundaryIndex(table, 'NO DAI HAN', ['KHAC']);
+    const longStart = longStartRaw === -1 ? endIdx : longStartRaw;
+    return section === 'short' ? byLabelInRange(markers, shortStart, longStart)(table) : byLabelInRange(markers, longStart, endIdx)(table);
+  };
+}
+
 // "- Nguyen gia" la dong CON, nhan lap lai GIONG HET nhau duoi MOI nhom TSCD
 // (huu hinh/vo hinh/thue tai chinh) va BDS dau tu - khong the tim rieng bang
 // ten (nhan qua chung chung). Tim dong cha "Tai san co dinh huu hinh" (nhan
@@ -144,16 +219,23 @@ const OTHER_METRICS: MetricDef[] = [
     finders: [byLabel(['TIEN VA CAC KHOAN TUONG DUONG TIEN']), byLabel(['DAU TU TAI CHINH NGAN HAN'])],
     thresholds: BCDKT_THRESHOLDS,
   },
+  // SUA 2026-07-15 (theo yeu cau nguoi dung - dinh nghia truoc do "chi ngan
+  // han" la NHAM, chinh xac phai la TONG phai thu khach hang ngan+dai han):
+  // doi ten bo het "ngan han" khoi nhan, cong ca 2 doan (giong cach "Tra truoc
+  // nguoi ban" da lam) - doan "dai han" tra ve null neu cong ty khong co dong
+  // "Phai thu dai han cua khach hang" (hiem gap), sum tu dong chi tinh phan
+  // ngan han, khong sai khac gi so voi truoc doi voi cac bao cao da xac nhan
+  // (PNJ/PVP/MCH deu khong co phai thu dai han khach hang).
   {
-    label: 'Phải thu ngắn hạn khách hàng',
+    label: 'Phải thu khách hàng',
     statement: 'balanceSheet',
-    finders: [byLabel(['PHAI THU NGAN HAN CUA KHACH HANG'])],
+    finders: [byLabelInAssetSection(['PHAI THU', 'KHACH HANG'], 'short'), byLabelInAssetSection(['PHAI THU', 'KHACH HANG'], 'long')],
     thresholds: BCDKT_THRESHOLDS,
   },
   {
     label: 'Trả trước người bán',
     statement: 'balanceSheet',
-    finders: [byLabel(['TRA TRUOC CHO NGUOI BAN NGAN HAN']), byLabel(['TRA TRUOC CHO NGUOI BAN DAI HAN'])],
+    finders: [byLabelInAssetSection(['TRA TRUOC CHO NGUOI BAN'], 'short'), byLabelInAssetSection(['TRA TRUOC CHO NGUOI BAN'], 'long')],
     thresholds: BCDKT_THRESHOLDS,
   },
   {
@@ -195,19 +277,19 @@ const OTHER_METRICS: MetricDef[] = [
   {
     label: 'Phải trả người bán',
     statement: 'balanceSheet',
-    finders: [byLabel(['PHAI TRA NGUOI BAN NGAN HAN']), byLabel(['PHAI TRA NGUOI BAN DAI HAN'])],
+    finders: [byLabelInLiabilitySection(['PHAI TRA NGUOI BAN'], 'short'), byLabelInLiabilitySection(['PHAI TRA NGUOI BAN'], 'long')],
     thresholds: BCDKT_THRESHOLDS,
   },
   {
     label: 'Người mua trả trước',
     statement: 'balanceSheet',
-    finders: [byLabel(['NGUOI MUA TRA TIEN TRUOC NGAN HAN']), byLabel(['NGUOI MUA TRA TIEN TRUOC DAI HAN'])],
+    finders: [byLabelInLiabilitySection(['NGUOI MUA TRA TIEN TRUOC'], 'short'), byLabelInLiabilitySection(['NGUOI MUA TRA TIEN TRUOC'], 'long')],
     thresholds: BCDKT_THRESHOLDS,
   },
   {
     label: 'Chi phí phải trả',
     statement: 'balanceSheet',
-    finders: [byLabel(['CHI PHI PHAI TRA NGAN HAN']), byLabel(['CHI PHI PHAI TRA DAI HAN'])],
+    finders: [byLabelInLiabilitySection(['CHI PHI PHAI TRA'], 'short'), byLabelInLiabilitySection(['CHI PHI PHAI TRA'], 'long')],
     thresholds: BCDKT_THRESHOLDS,
   },
   {
@@ -222,10 +304,15 @@ const OTHER_METRICS: MetricDef[] = [
     finders: [byLabel(['DU PHONG PHAI TRA NGAN HAN']), byLabel(['DU PHONG PHAI TRA DAI HAN'])],
     thresholds: BCDKT_THRESHOLDS,
   },
+  // byLabelInLiabilitySection (khong phai byLabel voi tu khoa day du) - xac
+  // nhan qua MCH that (2026-07-15): MCH ghi gon "Vay ngắn hạn"/"Vay dài hạn",
+  // KHONG co cum "và nợ thuê tài chính" nhu marker cu gia dinh - marker goc
+  // "VAY" + khoanh vung theo doan (giong 5 chi tieu tren) khop dung ca 2 cach
+  // dien dat ma khong can liet ke tung bien the tu ngu.
   {
     label: 'Vay',
     statement: 'balanceSheet',
-    finders: [byLabel(['VAY VA NO THUE TAI CHINH NGAN HAN']), byLabel(['VAY VA NO THUE TAI CHINH DAI HAN'])],
+    finders: [byLabelInLiabilitySection(['VAY'], 'short'), byLabelInLiabilitySection(['VAY'], 'long')],
     thresholds: BCDKT_THRESHOLDS,
   },
   {

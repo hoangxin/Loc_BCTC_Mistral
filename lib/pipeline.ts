@@ -6,7 +6,8 @@ import { periodDisplayLabel, periodFolderSlug } from './period-label';
 import { filterReports } from './filter';
 import { downloadOne } from './download';
 import { resolveReportSourceFiles, cleanupDownloadedFile, type ResolvedReportFile } from './report-source';
-import { extractReportContent } from './report-extract';
+import { extractReportContent, type ReportContentResult } from './report-extract';
+import { isEmptyParse } from './export/financial-statements';
 import { computeAnalysisRows } from './analysis';
 import { classifyStatementScope } from './statement-scope';
 import type { FetchStatus, DownloadedReport, FailedReport } from './status';
@@ -231,7 +232,28 @@ export async function runFetchPipeline(options: RunFetchPipelineOptions = {}): P
         // Trich 3 bang cho tung file da chuan hoa - dung lam dau vao cho buoc
         // phan tich % (lib/analysis.ts). KHONG con buoc "chep toan van"/"ghi
         // .xlsx/.clean.pdf" o day nua (xem comment ham runFetchPipeline).
+        //
+        // SUA 2026-07-15 (theo yeu cau nguoi dung: "lọc trước khi chuyển cho
+        // OCR", KHONG duoc OCR het roi moi loc - ton tien that): xu ly TUAN
+        // TU tung file trong `resolved`, DUNG NGAY khi gap 1 file cho ra du
+        // lieu THAT (Vietnamese + >=1 dong o it nhat 1 trong 3 bang) - KHONG
+        // OCR tiep cac file con lai trong nhom nay nua. Van ban phu (cong
+        // van/giai trinh...) da bi loai TRUOC KHI toi day qua SO TRANG (lib/
+        // report-source.ts dropShortAncillaryPdfs, mien phi, khong OCR) trong
+        // da so truong hop - vong lap tuan tu o day CHI la luoi an toan cho
+        // truong hop hiem van ban phu dai bat thuong lot qua loc so trang,
+        // hoac ban dich tieng Anh co ten file khong khop isEnglishVariantEntry
+        // (vd CTS "m88_...financial_statements...", cung kich thuoc voi ban
+        // that nen khong bi loc boi so trang) - resolved.length van > 1 trong
+        // 2 truong hop nay. Neu file DAU TIEN da tot, cac file sau KHONG BAO
+        // GIO duoc goi OCR (khong ton tien); chi thu file tiep theo neu file
+        // truoc do that bai (null = sai ngon ngu, phat hien MIEN PHI/re qua
+        // text layer hoac dung sau 12 trang dau - xem NonVietnameseContentError -
+        // hoac rong hoan toan).
+        const extracted: { resolvedFile: ResolvedReportFile; content: ReportContentResult }[] = [];
+        let foundUsable = false;
         for (const resolvedFile of resolved) {
+          if (foundUsable) break; // da co du lieu THAT tu 1 file truoc do trong nhom nay - KHONG OCR them file nao nua
           try {
             const content = await extractReportContent(resolvedFile);
             // null = file bi loai co chu dich (vd ban dich tieng Anh cua
@@ -241,32 +263,8 @@ export async function runFetchPipeline(options: RunFetchPipelineOptions = {}): P
               console.log('bo qua file khong phai tieng Viet', resolvedFile.filePath);
               continue;
             }
-            if (content.warnings.length > 0) {
-              console.warn('bang so lieu con lech sau khi cau truc hoa', resolvedFile.filePath, content.warnings);
-            }
-            reportEntries.push({
-              idx: index,
-              report: {
-                source: 'vietstock',
-                stockCode: resolvedFile.report.stockCode,
-                exchange: resolvedFile.report.exchange,
-                companyName: resolvedFile.report.companyName,
-                title: resolvedFile.report.title,
-                lastUpdate: resolvedFile.report.lastUpdate.toISOString(),
-                statementScope: classifyStatementScope(buildStatementScopeInput(resolvedFile, content.fullText ?? undefined)),
-                businessType: content.businessType,
-                analysis: computeAnalysisRows(content.statements, content.businessType, content.unreliableCells),
-                statements: content.statements,
-                financeUrl: resolvedFile.report.financeUrl,
-                fileUrl: resolvedFile.report.fileUrl,
-                filePath: resolvedFile.filePath,
-                format: resolvedFile.format,
-                entryName: resolvedFile.entryName ?? null,
-                periodYear: term.yearPeriod,
-                periodSlug,
-                warnings: content.warnings,
-              },
-            });
+            extracted.push({ resolvedFile, content });
+            if (!isEmptyParse(content.statements)) foundUsable = true;
           } catch (error) {
             console.error('extract report content error', resolvedFile.filePath, error);
             failedEntries.push({
@@ -278,6 +276,50 @@ export async function runFetchPipeline(options: RunFetchPipelineOptions = {}): P
               },
             });
           }
+        }
+
+        // Neu da tim duoc du lieu THAT, chi giu (cac) file do - loai am tham
+        // (khong can bao "xem tay") (cac) file rong da lo OCR TRUOC no trong
+        // CHINH vong lap nay (vd file dau la van ban phu rong, file thu 2 moi
+        // la BCTC that). Neu KHONG file nao cho du lieu that (foundUsable van
+        // false sau khi thu HET resolved) - GIU NGUYEN tat ca ket qua rong da
+        // co, de canh bao "CANH BAO: ca 3 bang...rong" (financial-statements.ts)
+        // tu nhien noi len, vi day co the la loi OCR/scan that tren chinh
+        // BCTC, khong phai van ban phu - khong the tu dong ket luan an toan.
+        const usable = foundUsable ? extracted.filter(({ content }) => !isEmptyParse(content.statements)) : extracted;
+        if (foundUsable) {
+          for (const { resolvedFile, content } of extracted) {
+            if (isEmptyParse(content.statements)) console.log('bo qua file rong (van ban phu, da co nguon khac cho du lieu that)', resolvedFile.filePath);
+          }
+        }
+
+        for (const { resolvedFile, content } of usable) {
+          if (content.warnings.length > 0) {
+            console.warn('bang so lieu con lech sau khi cau truc hoa', resolvedFile.filePath, content.warnings);
+          }
+          reportEntries.push({
+            idx: index,
+            report: {
+              source: 'vietstock',
+              stockCode: resolvedFile.report.stockCode,
+              exchange: resolvedFile.report.exchange,
+              companyName: resolvedFile.report.companyName,
+              title: resolvedFile.report.title,
+              lastUpdate: resolvedFile.report.lastUpdate.toISOString(),
+              statementScope: classifyStatementScope(buildStatementScopeInput(resolvedFile, content.fullText ?? undefined)),
+              businessType: content.businessType,
+              analysis: computeAnalysisRows(content.statements, content.businessType, content.unreliableCells),
+              statements: content.statements,
+              financeUrl: resolvedFile.report.financeUrl,
+              fileUrl: resolvedFile.report.fileUrl,
+              filePath: resolvedFile.filePath,
+              format: resolvedFile.format,
+              entryName: resolvedFile.entryName ?? null,
+              periodYear: term.yearPeriod,
+              periodSlug,
+              warnings: content.warnings,
+            },
+          });
         }
 
         // Da OCR xong (thanh cong hay that bai deu vay) - file goc khong con

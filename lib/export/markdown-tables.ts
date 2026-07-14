@@ -494,12 +494,42 @@ const CONTENT_MARKERS_BY_KEY: { key: keyof FinancialStatements; markers: string[
   { key: 'offBalanceSheet', markers: OFF_BALANCE_SHEET_CONTENT_MARKERS },
 ];
 
+// "Bao cao tinh hinh bien dong von chu so huu" (mau B03-DN va tuong duong cho
+// NH/CTCK/bao hiem) - mau bieu BAT BUOC dung dung 3 cum tu cot nay theo luat
+// ke toan (KHONG doi ten giua cac loai hinh doanh nghiep, khac han cach dat
+// ten linh hoat cua BCDKT/KQKD/LCTT). Phat hien qua CỘT (table.columns), KHONG
+// phai qua nhan dong nhu classifyTableByContent - day la tin hieu CAU TRUC on
+// dinh hon nhieu so voi dua vao 1 nhan dong don le nhu "VON CHU SO HUU" (xem
+// bug FTS 2026-07-15 duoi).
+const EQUITY_CHANGES_COLUMN_MARKERS = ['SO DU DAU NAM', 'SO DU DAU KY', 'TANG GIAM TRONG KY', 'SO DU CUOI KY', 'SO DU CUOI NAM'];
+
+// SUA 2026-07-15 (theo phan hoi nguoi dung, xac nhan qua FTS Q1/2026 that):
+// "Bao cao bien dong von chu so huu" nam GIUA BCDKT that va KQKD/LCTT (khac
+// vi tri da ghi nhan truoc do o comment containsNotesSectionMarker - vi tri co
+// the khac nhau tuy cong ty) - bang nay co 1 dong TONG tieu de "Von chu so
+// huu" NEN khop marker 'VON CHU SO HUU' cua BALANCE_SHEET_CONTENT_MARKERS,
+// VA khong khop du markers nao cua 3 key con lai de bi loai qua "hoa diem" ->
+// classifyTableByContent gan NHAM ca bang nay vao 'balanceSheet', bang GOP LAN
+// voi BCDKT that (mostCommonColumns) khien columns cuoi cung la CUA BANG SAI
+// (vd "So du dau nam"/"So tang/giam trong ky"/"So du cuoi ky" thay vi "Ma
+// so"/"Thuyet minh"/"So cuoi ky"/"So dau nam" cua BCDKT that) - toan bo BCDKT
+// xuat ra Excel bi hong (cot rac, KQKD an theo cung bi anh huong vi cung
+// nguyen nhan can pham vi). Chan bang nay TRUOC KHI cham diem theo nhan dong -
+// dung CAU TRUC COT (bat bien theo luat) thay vi co gang liet ke them tru
+// (dung tinh than "uu tien tin hieu cau truc" da chot truoc do).
+function isEquityChangesStatementTable(table: ParsedTable): boolean {
+  const columnText = table.columns.map((c) => normalizeLabelText(String(c ?? ''))).join(' | ');
+  const matches = EQUITY_CHANGES_COLUMN_MARKERS.reduce((count, marker) => count + (columnText.includes(marker) ? 1 : 0), 0);
+  return matches >= 2;
+}
+
 // Dem so tu khoa dac trung cua tung bang xuat hien trong NHAN cac dong cua 1
 // bang markdown da parse - gan bang do vao key co diem cao nhat, CHI khi diem
 // do RO RANG vuot troi (khong hoa voi key khac) va > 0. Khong ep gan bua khi
 // khong ro rang (tra ve null - bang bi bo qua, an toan hon la gan sai vao 1
 // bang khong lien quan, vd bang phu "Co cau von dieu le" o trang bia).
 function classifyTableByContent(table: ParsedTable): keyof FinancialStatements | null {
+  if (isEquityChangesStatementTable(table)) return null;
   // Dung labelIndex DA TINH SAN cua bang (parseAllTablesInRange, co xet noi
   // dong mau) - KHONG tinh lai chi qua ten cot o day: da gap that MBS Q2/2026
   // (2026-07-11), bang "Nợ phải trả"/"Vốn chủ sở hữu" co CA 2 cot dau deu

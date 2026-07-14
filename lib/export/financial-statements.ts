@@ -86,7 +86,13 @@ interface OcrAttemptResult {
 // tra thu muc nay truoc khi doan mo hinh nguyen nhan tu dau.
 const EMPTY_PARSE_DEBUG_DIR = join(process.cwd(), 'data', 'debug-empty-parse');
 
-function isEmptyParse(statements: FinancialStatements): boolean {
+// Export (khong con la ham noi bo) - dung o lib/pipeline.ts (2026-07-15, theo
+// yeu cau nguoi dung) de TU DONG loai van ban phu khoi ket qua khi 1 zip cho
+// ra NHIEU file va CO IT NHAT 1 file khac trong cung nhom da cho ra du lieu
+// THAT - day la tin hieu NOI DUNG (khong phai gioi han so trang, vo tinh sai
+// voi van ban phu dai bat thuong) nen khong con can "xem tay" cho truong hop
+// nay nua, xem comment day du o lib/pipeline.ts.
+export function isEmptyParse(statements: FinancialStatements): boolean {
   return (
     statements.balanceSheet.rows.length === 0 &&
     statements.incomeStatement.rows.length === 0 &&
@@ -206,9 +212,20 @@ export async function extractFinancialStatementsWithOcrProbe(filePath: string, t
       // Chi kiem tra 1 lan, ngay sau lo DAU TIEN - du du lieu de ket luan
       // (xem VIETNAMESE_DIACRITIC_RATIO_THRESHOLD) VA dung som truoc khi ton
       // them cac lo mo rong tiep theo cho 1 tai lieu khong phai tieng Viet.
+      //
+      // Kiem tra TUNG TRANG rieng (khong gop chung thanh 1 khoi roi tinh 1 ty
+      // le duy nhat) - da gap that CTS Q1/2026 (2026-07-15): ban dich tieng
+      // Anh cua ca 1 BCTC 56 trang van lot qua kiem tra gop vi trang bia co 1
+      // bang tom tat song ngu Viet-Anh (vd "Tong doanh thu.../Total
+      // Revenue..."), du tieng Viet o CAC TRANG SAU (bang BCDKT/KQKD chi tiet)
+      // hoan toan la tieng Anh - ty le gop ca tai lieu van vuot nguong nho vao
+      // trang bia. Doi sang bo phieu da so THEO TRANG: tai lieu chi duoc coi
+      // la tieng Viet neu QUA NUA so trang trong lo da OCR that su la tieng
+      // Viet - 1-2 trang bia song ngu khong con du de "keo" ca tai lieu qua nguong.
       if (!checkedLanguage) {
         checkedLanguage = true;
-        if (!looksLikeVietnameseText(markdownSoFar)) {
+        const nonVietnamesePageCount = collected.filter((p) => !looksLikeVietnameseText(p.markdown)).length;
+        if (nonVietnamesePageCount > collected.length / 2) {
           throw new NonVietnameseContentError('Noi dung khong phai tieng Viet (phat hien sau lo OCR dau tien)');
         }
       }

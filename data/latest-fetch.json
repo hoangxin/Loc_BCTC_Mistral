@@ -3317,22 +3317,6 @@
       "periodYear": 2026,
       "periodSlug": "Q1",
       "warnings": [
-        "\"Quý I Năm nay\": Tong cac dong con cua \"Thu nhap lai thuan\" (63959891) khong khop chinh dong \"Thu nhap lai thuan\" (19385153) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Quý I Năm trước\": Tong cac dong con cua \"Thu nhap lai thuan\" (49893209) khong khop chinh dong \"Thu nhap lai thuan\" (15475215) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Lũy kế từ đầu năm tới cuối quý này Năm nay\": Tong cac dong con cua \"Thu nhap lai thuan\" (63959891) khong khop chinh dong \"Thu nhap lai thuan\" (19385153) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Lũy kế từ đầu năm tới cuối quý này Năm trước\": Tong cac dong con cua \"Thu nhap lai thuan\" (49893209) khong khop chinh dong \"Thu nhap lai thuan\" (15475215) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Quý I Năm nay\": Tong cac dong con cua \"Lai thuan tu hoat dong dich vu\" (5077562) khong khop chinh dong \"Lai thuan tu hoat dong dich vu\" (1847044) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Quý I Năm trước\": Tong cac dong con cua \"Lai thuan tu hoat dong dich vu\" (4139259) khong khop chinh dong \"Lai thuan tu hoat dong dich vu\" (1610539) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Lũy kế từ đầu năm tới cuối quý này Năm nay\": Tong cac dong con cua \"Lai thuan tu hoat dong dich vu\" (5077562) khong khop chinh dong \"Lai thuan tu hoat dong dich vu\" (1847044) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Lũy kế từ đầu năm tới cuối quý này Năm trước\": Tong cac dong con cua \"Lai thuan tu hoat dong dich vu\" (4139259) khong khop chinh dong \"Lai thuan tu hoat dong dich vu\" (1610539) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Quý I Năm nay\": Tong cac dong con cua \"Lai thuan tu hoat dong khac\" (3094243) khong khop chinh dong \"Lai thuan tu hoat dong khac\" (2264525) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Quý I Năm trước\": Tong cac dong con cua \"Lai thuan tu hoat dong khac\" (2480165) khong khop chinh dong \"Lai thuan tu hoat dong khac\" (2002321) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Lũy kế từ đầu năm tới cuối quý này Năm nay\": Tong cac dong con cua \"Lai thuan tu hoat dong khac\" (3094243) khong khop chinh dong \"Lai thuan tu hoat dong khac\" (2264525) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Lũy kế từ đầu năm tới cuối quý này Năm trước\": Tong cac dong con cua \"Lai thuan tu hoat dong khac\" (2480165) khong khop chinh dong \"Lai thuan tu hoat dong khac\" (2002321) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Quý I Năm nay\": Tong cac dong con cua \"Tong loi nhuan truoc thue\" (26541222) khong khop chinh dong \"Tong loi nhuan truoc thue\" (11139360) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Quý I Năm trước\": Tong cac dong con cua \"Tong loi nhuan truoc thue\" (23045122) khong khop chinh dong \"Tong loi nhuan truoc thue\" (6823198) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Lũy kế từ đầu năm tới cuối quý này Năm nay\": Tong cac dong con cua \"Tong loi nhuan truoc thue\" (26541222) khong khop chinh dong \"Tong loi nhuan truoc thue\" (11139360) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Lũy kế từ đầu năm tới cuối quý này Năm trước\": Tong cac dong con cua \"Tong loi nhuan truoc thue\" (23045122) khong khop chinh dong \"Tong loi nhuan truoc thue\" (6823198) - co the do OCR gop/bia dong, can xem tay.",
         "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 1 muc trong KQKD (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
       ]
     },
@@ -3384,13 +3368,13 @@
         },
         {
           "label": "Phải thu ngắn hạn khách hàng",
-          "percentChange": null,
+          "percentChange": 19.502803699268796,
           "tier": null,
           "unreliable": false
         },
         {
           "label": "Trả trước người bán",
-          "percentChange": null,
+          "percentChange": -12.692738305436658,
           "tier": null,
           "unreliable": false
         },
@@ -3432,19 +3416,19 @@
         },
         {
           "label": "Phải trả người bán",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 32.09388049462191,
+          "tier": "level1",
           "unreliable": false
         },
         {
           "label": "Người mua trả trước",
-          "percentChange": null,
+          "percentChange": 17.759837808732932,
           "tier": null,
           "unreliable": false
         },
         {
           "label": "Chi phí phải trả",
-          "percentChange": null,
+          "percentChange": 10.127475374959987,
           "tier": null,
           "unreliable": false
         },
@@ -3462,7 +3446,7 @@
         },
         {
           "label": "Vay",
-          "percentChange": null,
+          "percentChange": -0.1054827785899405,
           "tier": null,
           "unreliable": false
         },
@@ -5453,27 +5437,7 @@
       "periodSlug": "Q1",
       "warnings": [
         "\"Ngày 31 tháng 03 năm 2026 VND\": Tong cac muc trong TS dai han (894593024982) khong khop dong TS dai han (543629863885)",
-        "\"Ngày 31 tháng 12 năm 2025 VND\": Tong cac muc trong TS dai han (906392694900) khong khop dong TS dai han (555458733803)",
-        "\"Quý I năm 2026 VND\": Tong cac dong con cua \"Doanh thu phi bao hiem thuan\" (2082781692347) khong khop chinh dong \"Doanh thu phi bao hiem thuan\" (736150857813) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Quý I năm 2025 VND\": Tong cac dong con cua \"Doanh thu phi bao hiem thuan\" (1947522898575) khong khop chinh dong \"Doanh thu phi bao hiem thuan\" (679610122809) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Lũy kế từ đầu năm 2026 VND\": Tong cac dong con cua \"Doanh thu phi bao hiem thuan\" (2082781692347) khong khop chinh dong \"Doanh thu phi bao hiem thuan\" (736150857813) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Lũy kế từ đầu năm 2025 VND\": Tong cac dong con cua \"Doanh thu phi bao hiem thuan\" (1947522898575) khong khop chinh dong \"Doanh thu phi bao hiem thuan\" (679610122809) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Quý I năm 2026 VND\": Tong cac dong con cua \"Chi boi thuong\" (-55073370269) khong khop chinh dong \"Chi boi thuong\" (-364069903866) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Quý I năm 2025 VND\": Tong cac dong con cua \"Chi boi thuong\" (-31127317022) khong khop chinh dong \"Chi boi thuong\" (-404863891277) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Lũy kế từ đầu năm 2026 VND\": Tong cac dong con cua \"Chi boi thuong\" (-55073370269) khong khop chinh dong \"Chi boi thuong\" (-364069903866) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Lũy kế từ đầu năm 2025 VND\": Tong cac dong con cua \"Chi boi thuong\" (-31127317022) khong khop chinh dong \"Chi boi thuong\" (-404863891277) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Quý I năm 2026 VND\": Tong cac dong con cua \"Chi phi khac hoat dong kinh doanh bao hiem\" (-912423693813) khong khop chinh dong \"Chi phi khac hoat dong kinh doanh bao hiem\" (-652288361284) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Quý I năm 2025 VND\": Tong cac dong con cua \"Chi phi khac hoat dong kinh doanh bao hiem\" (-880169549918) khong khop chinh dong \"Chi phi khac hoat dong kinh doanh bao hiem\" (-602649019359) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Lũy kế từ đầu năm 2026 VND\": Tong cac dong con cua \"Chi phi khac hoat dong kinh doanh bao hiem\" (-912423693813) khong khop chinh dong \"Chi phi khac hoat dong kinh doanh bao hiem\" (-652288361284) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Lũy kế từ đầu năm 2025 VND\": Tong cac dong con cua \"Chi phi khac hoat dong kinh doanh bao hiem\" (-880169549918) khong khop chinh dong \"Chi phi khac hoat dong kinh doanh bao hiem\" (-602649019359) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Quý I năm 2026 VND\": Tong cac dong con cua \"Loi nhuan gop hoat dong kinh doanh bao hiem\" (1827294159562) khong khop chinh dong \"Loi nhuan gop hoat dong kinh doanh bao hiem\" (208926163074) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Quý I năm 2025 VND\": Tong cac dong con cua \"Loi nhuan gop hoat dong kinh doanh bao hiem\" (1776855726899) khong khop chinh dong \"Loi nhuan gop hoat dong kinh doanh bao hiem\" (207195200033) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Lũy kế từ đầu năm 2026 VND\": Tong cac dong con cua \"Loi nhuan gop hoat dong kinh doanh bao hiem\" (1827294159562) khong khop chinh dong \"Loi nhuan gop hoat dong kinh doanh bao hiem\" (208926163074) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Lũy kế từ đầu năm 2025 VND\": Tong cac dong con cua \"Loi nhuan gop hoat dong kinh doanh bao hiem\" (1776855726899) khong khop chinh dong \"Loi nhuan gop hoat dong kinh doanh bao hiem\" (207195200033) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Quý I năm 2026 VND\": Tong cac dong con cua \"Tong loi nhuan ke toan truoc thue\" (208284548144) khong khop chinh dong \"Tong loi nhuan ke toan truoc thue\" (127788471851) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Quý I năm 2025 VND\": Tong cac dong con cua \"Tong loi nhuan ke toan truoc thue\" (207403736132) khong khop chinh dong \"Tong loi nhuan ke toan truoc thue\" (125571536796) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Lũy kế từ đầu năm 2026 VND\": Tong cac dong con cua \"Tong loi nhuan ke toan truoc thue\" (208284548144) khong khop chinh dong \"Tong loi nhuan ke toan truoc thue\" (127788471851) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Lũy kế từ đầu năm 2025 VND\": Tong cac dong con cua \"Tong loi nhuan ke toan truoc thue\" (207403736132) khong khop chinh dong \"Tong loi nhuan ke toan truoc thue\" (125571536796) - co the do OCR gop/bia dong, can xem tay."
+        "\"Ngày 31 tháng 12 năm 2025 VND\": Tong cac muc trong TS dai han (906392694900) khong khop dong TS dai han (555458733803)"
       ]
     },
     {
@@ -12537,24 +12501,7 @@
       "entryName": "phpbbdkfl-bctc-rl-q1-2026-69e18d88eace3.pdf",
       "periodYear": 2026,
       "periodSlug": "Q1",
-      "warnings": [
-        "\"Quý 1 Năm nay\": Tong cac dong con cua \"Thu nhap lai thuan\" (6948187) khong khop chinh dong \"Thu nhap lai thuan\" (978091) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Quý 1 Năm trước\": Tong cac dong con cua \"Thu nhap lai thuan\" (4462032) khong khop chinh dong \"Thu nhap lai thuan\" (822882) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Lũy kế từ đầu năm nay đến cuối quý này Năm nay\": Tong cac dong con cua \"Thu nhap lai thuan\" (6948187) khong khop chinh dong \"Thu nhap lai thuan\" (978091) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Lũy kế từ đầu năm nay đến cuối quý này Năm trước\": Tong cac dong con cua \"Thu nhap lai thuan\" (4462032) khong khop chinh dong \"Thu nhap lai thuan\" (822882) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Quý 1 Năm nay\": Tong cac dong con cua \"Lai thuan tu hoat dong dich vu\" (811889) khong khop chinh dong \"Lai thuan tu hoat dong dich vu\" (413073) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Quý 1 Năm trước\": Tong cac dong con cua \"Lai thuan tu hoat dong dich vu\" (256262) khong khop chinh dong \"Lai thuan tu hoat dong dich vu\" (169282) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Lũy kế từ đầu năm nay đến cuối quý này Năm nay\": Tong cac dong con cua \"Lai thuan tu hoat dong dich vu\" (811889) khong khop chinh dong \"Lai thuan tu hoat dong dich vu\" (413073) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Lũy kế từ đầu năm nay đến cuối quý này Năm trước\": Tong cac dong con cua \"Lai thuan tu hoat dong dich vu\" (256262) khong khop chinh dong \"Lai thuan tu hoat dong dich vu\" (169282) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Quý 1 Năm nay\": Tong cac dong con cua \"Lai thuan tu hoat dong khac\" (1370478) khong khop chinh dong \"Lai thuan tu hoat dong khac\" (1354612) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Quý 1 Năm trước\": Tong cac dong con cua \"Lai thuan tu hoat dong khac\" (301162) khong khop chinh dong \"Lai thuan tu hoat dong khac\" (172050) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Lũy kế từ đầu năm nay đến cuối quý này Năm nay\": Tong cac dong con cua \"Lai thuan tu hoat dong khac\" (1370478) khong khop chinh dong \"Lai thuan tu hoat dong khac\" (1354612) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Lũy kế từ đầu năm nay đến cuối quý này Năm trước\": Tong cac dong con cua \"Lai thuan tu hoat dong khac\" (301162) khong khop chinh dong \"Lai thuan tu hoat dong khac\" (172050) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Quý 1 Năm nay\": Tong cac dong con cua \"Tong loi nhuan truoc thue\" (3210819) khong khop chinh dong \"Tong loi nhuan truoc thue\" (1500347) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Quý 1 Năm trước\": Tong cac dong con cua \"Tong loi nhuan truoc thue\" (1087170) khong khop chinh dong \"Tong loi nhuan truoc thue\" (406920) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Lũy kế từ đầu năm nay đến cuối quý này Năm nay\": Tong cac dong con cua \"Tong loi nhuan truoc thue\" (3210819) khong khop chinh dong \"Tong loi nhuan truoc thue\" (1500347) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Lũy kế từ đầu năm nay đến cuối quý này Năm trước\": Tong cac dong con cua \"Tong loi nhuan truoc thue\" (1087170) khong khop chinh dong \"Tong loi nhuan truoc thue\" (406920) - co the do OCR gop/bia dong, can xem tay."
-      ]
+      "warnings": []
     }
   ],
   "lastCustomSourceCheck": null

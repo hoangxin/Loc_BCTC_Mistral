@@ -450,6 +450,21 @@ const KNOWN_BALANCE_SHEET_LEVEL1_CONTENT = [
 // cach.
 const LEADING_GROUP_MARKER_PREFIX = /^([IVXLCDM]+|[A-Z]|\d+)\s*[.\/)-]+\s*/;
 
+// Dong "chi tiet" cua 1 nhom hay dung dau "-" TRAN (khong co chu/so dung
+// truoc) lam bullet thay vi so thu tu (vd MIG "- Tổng chi bồi thường", "- Chi
+// phí khác hoạt động kinh doanh bảo hiểm") - LEADING_GROUP_MARKER_PREFIX o
+// tren KHONG bat duoc truong hop nay (co chu y doi hoi 1 chu/so DUNG TRUOC dau
+// phan cach, xem comment ngay tren no) nen dong bi bo sot dau "-" khi so khop
+// EXACT, roi ROT xuong tang SUBSTRING (kem chinh xac hon) - da xac nhan qua
+// MIG that (2026-07-15): marker "TONG CHI BOI THUONG" khong exact-khop duoc
+// "- TONG CHI BOI THUONG" (con dau "-"), ROT xuong substring va bi 1 dong
+// KHAC hoan toan ("TONG CHI BOI THUONG BAO HIEM", cung chua "TONG CHI BOI
+// THUONG" lam tien to) danh cuop mat luot khop (substring tier uu tien dong
+// XUAT HIEN SAU). Strip RIENG dau "-" TRAN o dau dong (danh cho tang exact) -
+// khong gop vao LEADING_GROUP_MARKER_PREFIX de khong lam yeu di dieu kien
+// "phai co chu/so truoc dau phan cach" da co chu y thiet ke o do.
+const LEADING_BARE_DASH_BULLET = /^-\s*/;
+
 // Dong tieu de nhom THUONG co cong thuc ma so o CUOI cau (vd "II. Tai san
 // ngan han khac (130 = 131 -> 139)", "Cong ket qua hoat dong khac (80= 71-72)")
 // - trong khi dong CON trung ten ngau nhien (vd "7. Tai san ngan han khac",
@@ -485,7 +500,11 @@ const GROUP_LABEL_SYNONYM_CANONICAL: Record<string, string> = {
 };
 
 function normalizeGroupLabelForContentMatch(label: string): string {
-  const normalized = normalizeLabelText(label).replace(LEADING_GROUP_MARKER_PREFIX, '').replace(TRAILING_FORMULA_SUFFIX, '').trim();
+  const normalized = normalizeLabelText(label)
+    .replace(LEADING_GROUP_MARKER_PREFIX, '')
+    .replace(LEADING_BARE_DASH_BULLET, '')
+    .replace(TRAILING_FORMULA_SUFFIX, '')
+    .trim();
   return GROUP_LABEL_SYNONYM_CANONICAL[normalized] ?? normalized;
 }
 
@@ -1457,45 +1476,105 @@ const INSURANCE_BVH_INCOME_FORMULAS: FormulaDef[] = [
   { groupLabel: 'Loi nhuan sau thue thu nhap doanh nghiep', target: ['LOI NHUAN SAU THUE THU NHAP DOANH NGHIEP'], terms: [req(['TONG LOI NHUAN KE TOAN TRUOC THUE']), req(['CHI PHI THUE THU NHAP DOANH NGHIEP HIEN HANH']), req(['THU NHAP THUE THU NHAP DOANH NGHIEP HOAN LAI'])] },
 ];
 
-// Bien the PRE (bao hiem phi nhan tho thuan, Thong tu 232/2012) - xac nhan
-// qua so lieu that Q1/2026. Mau bieu on dinh, khong co dong tuy chon (tru
-// "Loi nhuan khac" - PRE thuc te co the KHONG phat sinh HD nao khac trong ky,
-// bo han dong nay khoi bao cao).
+// Bien the PRE (bao hiem phi nhan tho thuan, Thong tu 232/2012). Mau bieu on
+// dinh, khong co dong tuy chon (tru "Loi nhuan khac" - PRE thuc te co the
+// KHONG phat sinh HD nao khac trong ky, bo han dong nay khoi bao cao).
+//
+// SUA 2026-07-15 (theo phan hoi nguoi dung, xac nhan qua MIG Q1/2026 that -
+// bao cao PRE-style THAT DAU TIEN doi chieu tung dong, phat hien 22 canh bao
+// SAI): 5 cong thuc duoi day (danh dau rieng tung cho) co 2 loai loi - (a) sai
+// dau (gia dinh chi phi luu duong, MIG luu am san - dung y het loi
+// BANK_INCOME_FORMULAS) va (b) marker thieu chu (vd thieu "PHI"/"CHI") nen
+// khop nham qua tang fuzzy sang dong hoan toan khac. Cac cong thuc KHONG doi
+// (Doanh thu phi bao hiem/Phi nhuong tai bao hiem/Tong chi boi thuong bao
+// hiem/Tong chi phi hoat dong kinh doanh bao hiem/Loi nhuan sau thue TNDN) da
+// tung am tham bi bo qua voi MIG (thieu tin hieu khop) CA TRUOC VA SAU lan sua
+// nay - CHUA co du lieu that de xac nhan sua dung, de nguyen tranh doan bua.
 const INSURANCE_PRE_INCOME_FORMULAS: FormulaDef[] = [
   { groupLabel: 'Doanh thu phi bao hiem', target: ['DOANH THU PHI BAO HIEM'], terms: [req(['PHI NHAN TAI BAO HIEM']), req(['TANG DU PHONG PHI NHAN TAI BAO HIEM'], -1)] },
   { groupLabel: 'Phi nhuong tai bao hiem', target: ['PHI NHUONG TAI BAO HIEM'], terms: [req(['TONG PHI NHUONG TAI BAO HIEM']), req(['TANG DU PHONG PHI NHUONG TAI BAO HIEM'], -1)] },
-  { groupLabel: 'Doanh thu phi bao hiem thuan', target: ['DOANH THU PHI BAO HIEM THUAN'], terms: [req(['DOANH THU PHI BAO HIEM']), req(['PHI NHUONG TAI BAO HIEM'], -1)] },
+  // reqExpense (khong phai req sign=-1) - xac nhan qua MIG that (2026-07-15):
+  // "Phí nhượng tái bảo hiểm" MIG luu SO AM SAN (-673.315.417.267), sign=-1
+  // cu lai CONG THEM 1 lan nua thay vi tru (dung y het loi da sua o
+  // BANK_INCOME_FORMULAS cung ngay) - Math.abs roi tru xu ly dung ca 2 quy uoc dau.
+  { groupLabel: 'Doanh thu phi bao hiem thuan', target: ['DOANH THU PHI BAO HIEM THUAN'], terms: [req(['DOANH THU PHI BAO HIEM']), reqExpense(['PHI NHUONG TAI BAO HIEM'])] },
   { groupLabel: 'Hoa hong nhuong tai bao hiem va doanh thu khac hoat dong kinh doanh bao hiem', target: ['HOA HONG NHUONG TAI BAO HIEM VA DOANH THU KHAC HOAT DONG KINH DOANH BAO HIEM'], terms: [req(['HOA HONG NHUONG TAI BAO HIEM']), req(['DOANH THU KHAC HOAT DONG KINH DOANH BAO HIEM'])] },
   { groupLabel: 'Doanh thu thuan hoat dong kinh doanh bao hiem', target: ['DOANH THU THUAN HOAT DONG KINH DOANH BAO HIEM'], terms: [req(['DOANH THU PHI BAO HIEM THUAN']), req(['HOA HONG NHUONG TAI BAO HIEM VA DOANH THU KHAC HOAT DONG KINH DOANH BAO HIEM'])] },
-  { groupLabel: 'Chi boi thuong', target: ['CHI BOI THUONG'], terms: [req(['TONG BOI THUONG'])] },
+  // Marker doi "TONG BOI THUONG" -> "TONG CHI BOI THUONG" - xac nhan qua MIG
+  // that (2026-07-15): ten That la "Tổng CHI bồi thường", marker cu thieu chu
+  // "CHI" nen khong khop tang exact/substring, ROT xuong tang fuzzy (nguong
+  // 92%) va khop NHAM sang 1 dong hoan toan khac o vi tri khac trong bang
+  // ("Tăng/(giảm) dự phòng bồi thường nhượng tái bảo hiểm"). Them tuy chon
+  // "CAC KHOAN GIAM TRU" dung theo dang thuc (11=11.1+11.2) MIG tu ghi ro,
+  // MIG khong phat sinh dong nay ky nay (= 0) nen chua kiem chung duoc dau.
+  { groupLabel: 'Chi boi thuong', target: ['CHI BOI THUONG'], terms: [req(['TONG CHI BOI THUONG']), opt(['CAC KHOAN GIAM TRU'])] },
   {
     groupLabel: 'Tong chi boi thuong bao hiem',
     target: ['TONG CHI BOI THUONG BAO HIEM'],
     terms: [req(['CHI BOI THUONG']), req(['THU BOI THUONG NHUONG TAI BAO HIEM'], -1), req(['GIAM DU PHONG BOI THUONG NHAN TAI BAO HIEM']), req(['GIAM DU PHONG BOI THUONG NHUONG TAI BAO HIEM'], -1)],
   },
-  { groupLabel: 'Chi phi khac hoat dong kinh doanh bao hiem', target: ['CHI PHI KHAC HOAT DONG KINH DOANH BAO HIEM'], terms: [req(['CHI HOA HONG BAO HIEM']), req(['CHI KHAC HOAT DONG KINH DOANH BAO HIEM'])] },
+  // Marker doi "CHI KHAC HOAT DONG KINH DOANH BAO HIEM" -> "CHI PHI KHAC HOAT
+  // DONG KINH DOANH BAO HIEM" - xac nhan qua MIG that (2026-07-15): ten That la
+  // "Chi PHÍ khác...", marker cu thieu chu "PHI" nen khong khop exact/substring,
+  // ROT xuong fuzzy va khop NHAM sang dong tong "Tong chi phi hoat dong kinh
+  // doanh bao hiem" (dong lon hon nhieu, hoan toan khac y nghia).
+  { groupLabel: 'Chi phi khac hoat dong kinh doanh bao hiem', target: ['CHI PHI KHAC HOAT DONG KINH DOANH BAO HIEM'], terms: [req(['CHI HOA HONG BAO HIEM']), req(['CHI PHI KHAC HOAT DONG KINH DOANH BAO HIEM'])] },
   {
     groupLabel: 'Tong chi phi hoat dong kinh doanh bao hiem',
     target: ['TONG CHI PHI HOAT DONG KINH DOANH BAO HIEM'],
     terms: [req(['TONG CHI BOI THUONG BAO HIEM']), req(['TANG DU PHONG DAO DONG LON VA DAM BAO CAN DOI']), req(['CHI PHI KHAC HOAT DONG KINH DOANH BAO HIEM'])],
   },
-  { groupLabel: 'Loi nhuan gop hoat dong kinh doanh bao hiem', target: ['LOI NHUAN GOP HOAT DONG KINH DOANH BAO HIEM'], terms: [req(['DOANH THU THUAN HOAT DONG KINH DOANH BAO HIEM']), req(['TONG CHI PHI HOAT DONG KINH DOANH BAO HIEM'], -1)] },
-  { groupLabel: 'Loi nhuan gop hoat dong tai chinh', target: ['LOI NHUAN GOP HOAT DONG TAI CHINH'], terms: [req(['DOANH THU HOAT DONG TAI CHINH']), req(['CHI PHI TAI CHINH'], -1)] },
-  { groupLabel: 'Loi nhuan gop hoat dong kinh doanh', target: ['LOI NHUAN GOP HOAT DONG KINH DOANH'], terms: [req(['LOI NHUAN GOP HOAT DONG KINH DOANH BAO HIEM']), req(['LOI NHUAN GOP HOAT DONG TAI CHINH']), req(['CHI PHI QUAN LY DOANH NGHIEP'], -1)] },
-  { groupLabel: 'Tong loi nhuan ke toan truoc thue', target: ['TONG LOI NHUAN KE TOAN TRUOC THUE'], terms: [req(['LOI NHUAN GOP HOAT DONG KINH DOANH']), opt(['LOI NHUAN KHAC'])] },
+  // reqExpense (khong phai req sign=-1) - xac nhan qua MIG that: "Tong chi phi
+  // hoat dong kinh doanh bao hiem" luu SO AM SAN, dung y het ly do o
+  // "Doanh thu phi bao hiem thuan" phia tren.
+  { groupLabel: 'Loi nhuan gop hoat dong kinh doanh bao hiem', target: ['LOI NHUAN GOP HOAT DONG KINH DOANH BAO HIEM'], terms: [req(['DOANH THU THUAN HOAT DONG KINH DOANH BAO HIEM']), reqExpense(['TONG CHI PHI HOAT DONG KINH DOANH BAO HIEM'])] },
+  // Them bien the ten "LOI NHUAN HOAT DONG TAI CHINH" (khong "GOP") - MIG
+  // that dung ten nay ("17. Lợi nhuận hoạt động tài chính"), khac ten "GOP"
+  // ma danh sach nay gia dinh truoc do (khong khop bat ky dong nao cua MIG,
+  // khien ca cong thuc bi am tham bo qua). reqExpense cho Chi phi tai chinh
+  // (marker cu thieu "HOAT DONG" nen khong khop MIG "Chi phí HOAT DONG tài
+  // chính" o tang exact/substring - them ca 2 bien the).
+  { groupLabel: 'Loi nhuan hoat dong tai chinh', target: ['LOI NHUAN GOP HOAT DONG TAI CHINH', 'LOI NHUAN HOAT DONG TAI CHINH'], terms: [req(['DOANH THU HOAT DONG TAI CHINH']), reqExpense(['CHI PHI HOAT DONG TAI CHINH', 'CHI PHI TAI CHINH'])] },
+  // Doi ten "Loi nhuan GOP hoat dong kinh doanh" -> "Loi nhuan THUAN tu hoat
+  // dong kinh doanh" (giu ca 2 bien the) - xac nhan qua MIG that: MIG dung
+  // dung chu "Lợi nhuận THUẦN từ hoạt động kinh doanh (30 = 19 + 25 + 26)",
+  // khong phai "gop" nhu danh sach cu gia dinh (khong khop dong nao cua MIG,
+  // ca cong thuc nay LAN "Tong loi nhuan ke toan truoc thue" duoi day - dung
+  // ten nay lam term - deu bi am tham bo qua truoc khi sua). reqExpense cho
+  // Chi phi quan ly doanh nghiep cung ly do sign o tren.
+  {
+    groupLabel: 'Loi nhuan thuan tu hoat dong kinh doanh',
+    target: ['LOI NHUAN THUAN TU HOAT DONG KINH DOANH', 'LOI NHUAN GOP HOAT DONG KINH DOANH'],
+    terms: [req(['LOI NHUAN GOP HOAT DONG KINH DOANH BAO HIEM']), req(['LOI NHUAN GOP HOAT DONG TAI CHINH', 'LOI NHUAN HOAT DONG TAI CHINH']), reqExpense(['CHI PHI QUAN LY DOANH NGHIEP'])],
+  },
+  { groupLabel: 'Tong loi nhuan ke toan truoc thue', target: ['TONG LOI NHUAN KE TOAN TRUOC THUE'], terms: [req(['LOI NHUAN THUAN TU HOAT DONG KINH DOANH', 'LOI NHUAN GOP HOAT DONG KINH DOANH']), opt(['LOI NHUAN KHAC'])] },
   { groupLabel: 'Loi nhuan sau thue TNDN', target: ['LOI NHUAN SAU THUE TNDN', 'LOI NHUAN SAU THUE'], terms: [req(['TONG LOI NHUAN KE TOAN TRUOC THUE']), req(['CHI PHI THUE THU NHAP DOANH NGHIEP'], -1)] },
 ];
 
 // Ngan hang (Thong tu 49/2014-NHNN) - khong co cot Ma so dang tin cay trong
-// du lieu that TCB/TPB, da hoan toan theo TEN CHI TIEU tu truoc. LUU Y DAU:
-// cac dong "chi phi" o day la SO AM SAN (vd "Chi phí lãi và các chi phí
-// tương tự" = -10174952) - cong truc tiep (sign=+1) la dung, KHONG duoc tru
-// them 1 lan nua (sign=-1 se lam tru so am = cong 2 lan, sai hoan toan) - da
-// xac nhan qua TCB that (2026-07-13).
+// du lieu that TCB/TPB, da hoan toan theo TEN CHI TIEU tu truoc.
+//
+// SUA 2026-07-15 (theo phan hoi nguoi dung, xac nhan qua CTG/ABB Q1/2026
+// that): comment cu o day tung khang dinh cac dong "chi phi" LUON la SO AM SAN
+// (vd TCB "Chi phí lãi và các chi phí tương tự" = -10174952) nen cong truc
+// tiep (req, sign=+1) la dung - NHUNG CTG/ABB lai luu CHINH CAC DONG DO o dang
+// SO DUONG (vd CTG "Chi phí lãi và các chi phí tương tự" = 22287369, DUONG) -
+// dung y het kieu "quy uoc dau khac nhau tuy cong ty" da gap voi DN_THUONG
+// (xem reqExpense o tren). Cong truc tiep (sign=+1) voi CTG se CONG DON thay
+// vi TRU, gay sai lech gap ~1.2-3.4 lan tren MOI dong co chi phi (da xac nhan
+// tay: CTG "Lai thuan tu HDDV" Quy nay = Thu nhap HDDV (3.462.303) - Chi phi
+// HDDV (1.615.259) = 1.847.044 KHOP dung dong bao cao san, nhung code cu cong
+// thanh 5.077.562 - sai; tuong tu "Tong loi nhuan truoc thue" code cu cong ra
+// 26.541.222 thay vi tru ra dung 11.139.360). Doi CA 5 dong chi phi duoi day
+// (Chi phi lai, Chi phi HDDV, Chi phi HD khac, Chi phi hoat dong, Chi phi du
+// phong rui ro tin dung) sang reqExpense (Math.abs roi tru) - day la cac dong
+// CHI PHI THUAN TUY cua ngan hang (khong bao gio la khoan lai/gain that), nen
+// dung reqExpense (nhu DN_THUONG) chu khong can reqNetAmbiguous - Math.abs
+// truoc khi tru xu ly dung CA 2 quy uoc dau (TCB am san, CTG/ABB duong san).
 const BANK_INCOME_FORMULAS: FormulaDef[] = [
-  { groupLabel: 'Thu nhap lai thuan', target: ['THU NHAP LAI THUAN'], terms: [req(['THU NHAP LAI VA CAC KHOAN THU NHAP TUONG TU']), req(['CHI PHI LAI VA CAC CHI PHI TUONG TU'])] },
-  { groupLabel: 'Lai thuan tu hoat dong dich vu', target: ['LAI THUAN TU HOAT DONG DICH VU'], terms: [req(['THU NHAP TU HOAT DONG DICH VU']), req(['CHI PHI HOAT DONG DICH VU'])] },
-  { groupLabel: 'Lai thuan tu hoat dong khac', target: ['LAI THUAN TU HOAT DONG KHAC'], terms: [req(['THU NHAP TU HOAT DONG KHAC']), req(['CHI PHI HOAT DONG KHAC'])] },
+  { groupLabel: 'Thu nhap lai thuan', target: ['THU NHAP LAI THUAN'], terms: [req(['THU NHAP LAI VA CAC KHOAN THU NHAP TUONG TU']), reqExpense(['CHI PHI LAI VA CAC CHI PHI TUONG TU'])] },
+  { groupLabel: 'Lai thuan tu hoat dong dich vu', target: ['LAI THUAN TU HOAT DONG DICH VU'], terms: [req(['THU NHAP TU HOAT DONG DICH VU']), reqExpense(['CHI PHI HOAT DONG DICH VU'])] },
+  { groupLabel: 'Lai thuan tu hoat dong khac', target: ['LAI THUAN TU HOAT DONG KHAC'], terms: [req(['THU NHAP TU HOAT DONG KHAC']), reqExpense(['CHI PHI HOAT DONG KHAC'])] },
   {
     groupLabel: 'Tong thu nhap hoat dong',
     target: ['TONG THU NHAP HOAT DONG'],
@@ -1509,8 +1588,8 @@ const BANK_INCOME_FORMULAS: FormulaDef[] = [
       req(['GOP VON, MUA CO PHAN']),
     ],
   },
-  { groupLabel: 'Loi nhuan thuan truoc chi phi du phong', target: ['TRUOC CHI PHI DU PHONG RUI RO TIN DUNG'], terms: [req(['TONG THU NHAP HOAT DONG']), req(['CHI PHI HOAT DONG'])] },
-  { groupLabel: 'Tong loi nhuan truoc thue', target: ['TONG LOI NHUAN TRUOC THUE'], terms: [req(['TRUOC CHI PHI DU PHONG RUI RO TIN DUNG']), req(['CHI PHI DU PHONG RUI RO TIN DUNG'])] },
+  { groupLabel: 'Loi nhuan thuan truoc chi phi du phong', target: ['TRUOC CHI PHI DU PHONG RUI RO TIN DUNG'], terms: [req(['TONG THU NHAP HOAT DONG']), reqExpense(['CHI PHI HOAT DONG'])] },
+  { groupLabel: 'Tong loi nhuan truoc thue', target: ['TONG LOI NHUAN TRUOC THUE'], terms: [req(['TRUOC CHI PHI DU PHONG RUI RO TIN DUNG']), reqExpense(['CHI PHI DU PHONG RUI RO TIN DUNG'])] },
 ];
 
 // Nhan dien bien the bao hiem QUA NOI DUNG (tim TREN TOAN BANG theo TEN, khong
