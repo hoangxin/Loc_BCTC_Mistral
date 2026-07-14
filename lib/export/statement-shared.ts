@@ -584,6 +584,64 @@ function isKnownContainerClosingLabel(label: string): boolean {
   return CONTAINER_CLOSING_MARKERS.includes(normalized);
 }
 
+// Ten CHUAN (Thong tu 210/2014/TT-BTC + sua doi 334/2016, mau B01-CTCK) cua
+// CAC MUC CON TRUC TIEP cua 2 container o tren - dung de SIET lai pham vi
+// "thanh vien" khi cong tong kiem tra cheo mot container (xem
+// findBalanceSheetLevel2Mismatches). LY DO RIENG cho container (khac cac
+// nhom binh thuong khac, KHONG ap dung whitelist nay): container la noi
+// CTCK hay TU CHIA NHO 1 muc con thanh nhieu ma so thap phan RIENG cua ho
+// (vd "6." Cac khoan phai thu -> "6.1"/"6.2"/"6.2.1"/"6.2.2" - xem doi chieu
+// that VND/BVS 2026-07-14 duoi day), va CAC DONG TU CHIA NHO DO khong phai 1
+// chi tieu Thong tu doc lap - chi la CHI TIET BO SUNG cua chinh dong cha
+// ngay truoc no, cong THEM se dem 2 lan. Voi cac nhom BINH THUONG (khong
+// phai container), van GIU NGUYEN cach lam cu (chap nhan het moi dong giua 2
+// moc, tru cap4) vi da 2026-07-13 nguoi dung yeu cau bo tin hieu so thu tu
+// KHOI CA nhanh retry nay - whitelist nay KHONG dung numbering, chi so
+// khop CHINH XAC ten chi tieu voi danh sach ten CHUAN theo Thong tu (dung
+// tinh than "chi quan tam dong CHINH THUC theo quy dinh ke toan, khong quan
+// tam dong cong ty tu chia nho them" - theo dung y nguoi dung 2026-07-14).
+// Doi chieu qua CA 2 bao cao that VND (Hop nhat) va BVS (Hop nhat) - gom du
+// 2 bien the ten khac nhau cho cung 1 khai niem (vd VND "...lãi/lỗ", BVS
+// "...lãi lỗ"; VND "Phải thu các dịch vụ công ty chứng khoán cung cấp", BVS
+// viet tat "...CTCK cung cấp") va cac dong CHI CO O 1 trong 2 bao cao (vd
+// AFS/Phải thu nội bộ/Phải thu về lỗi giao dịch chỉ co o BVS - CHAP NHAN
+// DUOC, dong nao khong khop whitelist bi loai khoi tong, KHONG lam sai gia
+// tri HIEN THI cho nguoi dung, toi da van chi la 1 lan retry OCR thua/gan
+// nham "khong dang tin cay" cho 1 container it gap hon).
+const CONTAINER_CHILDREN_CANONICAL: Record<string, string[]> = {
+  'TAI SAN TAI CHINH': [
+    'TIEN VA CAC KHOAN TUONG DUONG TIEN',
+    'CAC TAI SAN TAI CHINH GHI NHAN THONG QUA LAI/LO (FVTPL)',
+    'CAC TAI SAN TAI CHINH GHI NHAN THONG QUA LAI LO (FVTPL)',
+    'CAC KHOAN DAU TU NAM GIU DEN NGAY DAO HAN (HTM)',
+    'CAC KHOAN CHO VAY',
+    'CAC TAI SAN TAI CHINH SAN SANG DE BAN (AFS)',
+    'DU PHONG SUY GIAM GIA TRI CAC TAI SAN TAI CHINH VA TAI SAN THE CHAP',
+    'CAC KHOAN PHAI THU',
+    'TRA TRUOC CHO NGUOI BAN',
+    'PHAI THU CAC DICH VU CONG TY CHUNG KHOAN CUNG CAP',
+    'PHAI THU CAC DICH VU CTCK CUNG CAP',
+    'PHAI THU NOI BO',
+    'PHAI THU VE LOI GIAO DICH CHUNG KHOAN',
+    'CAC KHOAN PHAI THU KHAC',
+    'DU PHONG SUY GIAM GIA TRI CAC KHOAN PHAI THU',
+    'DU PHONG SUY GIAM GIA TRI CAC KHOAN PHAI THU (*)',
+  ],
+  'TAI SAN TAI CHINH DAI HAN': [
+    'CAC KHOAN PHAI THU DAI HAN',
+    'CAC KHOAN DAU TU DAI HAN',
+    'CAC KHOAN DAU TU',
+    'DU PHONG SUY GIAM TAI SAN TAI CHINH DAI HAN',
+  ],
+};
+
+function isKnownContainerChildLabel(containerLabel: string, memberLabel: string): boolean {
+  const containerKey = normalizeGroupLabelForContentMatch(containerLabel);
+  const whitelist = CONTAINER_CHILDREN_CANONICAL[containerKey];
+  if (!whitelist) return true;
+  return whitelist.includes(normalizeGroupLabelForContentMatch(memberLabel));
+}
+
 // Tim SU KIEN GAN NHAT (mo container hay dong container) truoc rowIdx trong
 // pham vi - neu su kien gan nhat la "mo" (chua dong lai), rowIdx dang o BEN
 // TRONG container do (loai khoi ket qua). CHINH dong dong container (vd "Tai
@@ -1020,7 +1078,12 @@ function findRowIndexByContentMarkers(table: StatementTable, labelIndex: number,
 // Mac dinh (khong danh dau) = BAT BUOC - khong tim thay = BO QUA AN TOAN ca
 // cong thuc (khong du du lieu de ket luan, giu dung nguyen tac "khong doan
 // khi thieu tin hieu" da chot tu truoc).
-interface FormulaTerm { markers: string[]; sign: 1 | -1; optional?: boolean; }
+// `magnitude: true` = dong CHI PHI THUAN TUY (Gia von hang ban, Chi phi ban
+// hang, Chi phi quan ly doanh nghiep, Chi phi tai chinh...) - noi dau am/duong
+// in tren bao cao CHI la quy uoc HIEN THI cua tung cong ty, khong mang y
+// nghia lai/lo (xem comment o evaluateNamedFormulas). KHONG dung cho cac dong
+// "Lai/(Lo)..." (dau am o do la thong tin that ve khoan LO).
+interface FormulaTerm { markers: string[]; sign: 1 | -1; optional?: boolean; magnitude?: boolean; }
 interface FormulaDef { groupLabel: string; target: string[]; terms: FormulaTerm[]; }
 
 function req(markers: string[], sign: 1 | -1 = 1): FormulaTerm {
@@ -1028,6 +1091,11 @@ function req(markers: string[], sign: 1 | -1 = 1): FormulaTerm {
 }
 function opt(markers: string[], sign: 1 | -1 = 1): FormulaTerm {
   return { markers, sign, optional: true };
+}
+// Dong CHI PHI THUAN TUY (khong bao gio la khoan lai/gain) - xem comment
+// "magnitude" o tren.
+function reqExpense(markers: string[], sign: 1 | -1 = -1): FormulaTerm {
+  return { markers, sign, magnitude: true };
 }
 
 function evaluateNamedFormulas(table: StatementTable, formulas: FormulaDef[]): GroupSumMismatch[] {
@@ -1063,7 +1131,19 @@ function evaluateNamedFormulas(table: StatementTable, formulas: FormulaDef[]): G
       for (const { t, idx } of usableTerms) {
         const v = formulaCellValue(table.rows[idx][col]);
         if (v === null) { ok = false; break; }
-        sum += v * t.sign;
+        // "magnitude": true (xem reqExpense duoi) - CHI danh cho cac dong CHI
+        // PHI THUAN TUY (Gia von hang ban, Chi phi ban hang...) - noi dau (+/-)
+        // in tren bao cao CHI la quy uoc HIEN THI rieng cua tung cong ty (xac
+        // nhan qua ACG that 2026-07-14: "Gia von hang ban" in AM
+        // -789.337.103.242), khong mang y nghia lai/lo - lay Math.abs() truoc
+        // khi nhan t.sign de CONG THUC luon TRU dung, bat ke cong ty in am hay
+        // duong. KHONG ap dung cho cac dong "Lai/(Lo)..." (vd "Lai/Lo tu mua
+        // ban CK kinh doanh") - o do dau am la THONG TIN THAT (dang LO, khong
+        // phai quy uoc hien thi), Math.abs se xoa mat thong tin lai/lo that -
+        // da gap regression that BID/VND/BVS khi tung ap dung Math.abs vo dieu
+        // kien cho MOI term (2026-07-14), phai gioi han lai chi cho tap term
+        // co danh dau "magnitude".
+        sum += (t.magnitude ? Math.abs(v) : v) * t.sign;
         memberRowIndexes.push(idx);
       }
       if (!ok) continue;
@@ -1094,9 +1174,16 @@ function evaluateNamedFormulas(table: StatementTable, formulas: FormulaDef[]): G
 // dong SAU dich khac nhau tuy to hop) tu dong xu ly dung ca 3 truong hop, 2
 // dong tuy chon nay KHONG dong gop gi khi khong ton tai (dung, vi khong co
 // giao dich that).
+// CAC dong "Chi phi..."/"Cac khoan giam tru..." trong danh sach cong thuc
+// duoi day dung reqExpense (khong phai req thuong) - xac nhan qua ACG that
+// (2026-07-14): DN thuong co the in cac dong nay AM (ACG: "Gia von hang ban"
+// -789.337.103.242) hoac DUONG (cong ty khac) tuy quy uoc rieng, khac han
+// BANK_INCOME_FORMULAS/CTCK_INCOME_FORMULAS o duoi (da viet tu truoc, GIA DINH
+// dong chi phi LUON am san nen dung req thuong sign=+1 - KHONG doi 2 danh sach
+// do, chi doi rieng DN_THUONG_INCOME_FORMULAS vi day la noi phat hien loi that).
 const DN_THUONG_INCOME_FORMULAS: FormulaDef[] = [
-  { groupLabel: 'Doanh thu thuan', target: ['DOANH THU THUAN VE BAN HANG VA CUNG CAP DICH VU', 'DOANH THU THUAN'], terms: [req(['DOANH THU BAN HANG VA CUNG CAP DICH VU']), req(['CAC KHOAN GIAM TRU DOANH THU'], -1)] },
-  { groupLabel: 'Loi nhuan gop', target: ['LOI NHUAN GOP VE BAN HANG VA CUNG CAP DICH VU', 'LOI NHUAN GOP'], terms: [req(['DOANH THU THUAN VE BAN HANG VA CUNG CAP DICH VU', 'DOANH THU THUAN']), req(['GIA VON HANG BAN'], -1)] },
+  { groupLabel: 'Doanh thu thuan', target: ['DOANH THU THUAN VE BAN HANG VA CUNG CAP DICH VU', 'DOANH THU THUAN'], terms: [req(['DOANH THU BAN HANG VA CUNG CAP DICH VU']), reqExpense(['CAC KHOAN GIAM TRU DOANH THU'])] },
+  { groupLabel: 'Loi nhuan gop', target: ['LOI NHUAN GOP VE BAN HANG VA CUNG CAP DICH VU', 'LOI NHUAN GOP'], terms: [req(['DOANH THU THUAN VE BAN HANG VA CUNG CAP DICH VU', 'DOANH THU THUAN']), reqExpense(['GIA VON HANG BAN'])] },
   {
     groupLabel: 'Loi nhuan thuan tu hoat dong kinh doanh',
     target: ['LOI NHUAN THUAN TU HOAT DONG KINH DOANH'],
@@ -1104,13 +1191,13 @@ const DN_THUONG_INCOME_FORMULAS: FormulaDef[] = [
       req(['LOI NHUAN GOP VE BAN HANG VA CUNG CAP DICH VU', 'LOI NHUAN GOP']),
       opt(['BAN, THANH LY BAT DONG SAN DAU TU']),
       req(['DOANH THU HOAT DONG TAI CHINH']),
-      req(['CHI PHI TAI CHINH', 'CHI PHI HOAT DONG TAI CHINH'], -1),
+      reqExpense(['CHI PHI TAI CHINH', 'CHI PHI HOAT DONG TAI CHINH']),
       opt(['CONG TY LIEN DOANH, LIEN KET']),
-      req(['CHI PHI BAN HANG'], -1),
-      req(['CHI PHI QUAN LY DOANH NGHIEP'], -1), // fuzzy match xu ly bien the chinh ta (vd "quan li")
+      reqExpense(['CHI PHI BAN HANG']),
+      reqExpense(['CHI PHI QUAN LY DOANH NGHIEP']), // fuzzy match xu ly bien the chinh ta (vd "quan li")
     ],
   },
-  { groupLabel: 'Loi nhuan khac', target: ['LOI NHUAN KHAC'], terms: [req(['THU NHAP KHAC']), req(['CHI PHI KHAC'], -1)] },
+  { groupLabel: 'Loi nhuan khac', target: ['LOI NHUAN KHAC'], terms: [req(['THU NHAP KHAC']), reqExpense(['CHI PHI KHAC'])] },
   { groupLabel: 'Tong loi nhuan ke toan truoc thue', target: ['TONG LOI NHUAN KE TOAN TRUOC THUE'], terms: [req(['LOI NHUAN THUAN TU HOAT DONG KINH DOANH']), req(['LOI NHUAN KHAC'])] },
   // KHONG dung marker "LOI NHUAN SAU THUE" tran lan (khong hau to) lam target
   // - da phat hien qua DIC that (2026-07-13): bao cao co CA 3 dong "Loi nhuan
@@ -1120,7 +1207,7 @@ const DN_THUONG_INCOME_FORMULAS: FormulaDef[] = [
   // thieu so), khong phai dong TONG that su. Can markers CU THE, du de tang
   // "chinh xac" (sau khi bo hau to cong thuc) tim dung dong TRUOC KHI roi vao
   // tang substring mo hon.
-  { groupLabel: 'Loi nhuan sau thue thu nhap doanh nghiep', target: ['LOI NHUAN SAU THUE THU NHAP DOANH NGHIEP', 'LOI NHUAN SAU THUE TNDN'], terms: [req(['TONG LOI NHUAN KE TOAN TRUOC THUE']), req(['CHI PHI THUE THU NHAP DOANH NGHIEP HIEN HANH'], -1), req(['CHI PHI THUE THU NHAP DOANH NGHIEP HOAN LAI'], -1)] },
+  { groupLabel: 'Loi nhuan sau thue thu nhap doanh nghiep', target: ['LOI NHUAN SAU THUE THU NHAP DOANH NGHIEP', 'LOI NHUAN SAU THUE TNDN'], terms: [req(['TONG LOI NHUAN KE TOAN TRUOC THUE']), reqExpense(['CHI PHI THUE THU NHAP DOANH NGHIEP HIEN HANH']), reqExpense(['CHI PHI THUE THU NHAP DOANH NGHIEP HOAN LAI'])] },
 ];
 
 // CTCK (Thong tu 210/2014 + 334/2016) - xac nhan qua VCK/PHS/MBS Q1/2026 that
@@ -1403,6 +1490,21 @@ export function findBalanceSheetLevel2Mismatches(table: StatementTable, groupSta
   for (let i = groupStartIdx + 1; i < groupEndIdx; i++) {
     if (!isLikelySubtotalRow(table, table.rows[i], labelIndex)) continue;
     if (isDuplicateKnownBalanceSheetLevel1Row(table, labelIndex, groupStartIdx + 1, i)) continue;
+    // SUA 2026-07-14 (bao cao nguoi dung, xac nhan qua VND/BVS that): dong CON
+    // cua 1 "container" (vd CTCK "I. Tai san tai chinh") nhu "1. Tien va cac
+    // khoan tuong duong tien" DUNG TEN CHUAN y het dong cap-1 THAT SU cua DN
+    // thuong (noi "I. Tien va cac khoan tuong duong tien" la 1 nhom doc lap,
+    // khong nam trong container nao) - isLikelySubtotalRow (chi doc TEN, dung
+    // yeu cau nguoi dung, khong con dua vao STT/vi tri) khong phan biet duoc 2
+    // ngu canh nay, nham coi dong con CTCK la 1 "level 1" DOC LAP moi, cat sai
+    // ranh gioi nhom (vd chia nho container "Tai san tai chinh" thanh nhieu
+    // doan sai, cong nham hang chuc dong khong lien quan vao 1 dong con don
+    // le), gay mismatch GIA (khong phai loi OCR that) roi bi gan nham "khong
+    // dang tin cay". validateBalanceSheetSubtotals (childrenBetween, kiem tra
+    // cap0->cap1) da co loai nay qua isInsideKnownContainer - ham nay (kiem
+    // tra cap1->cap2) truoc day THIEU cung 1 dieu kien, gio them vao cho dong
+    // bo.
+    if (isInsideKnownContainer(table, labelIndex, groupStartIdx + 1, i)) continue;
     level1Indexes.push(i);
   }
 
@@ -1439,6 +1541,9 @@ export function findBalanceSheetLevel2Mismatches(table: StatementTable, groupSta
       // "khong dang tin cay" oan, khong lam sai so lieu HIEN THI cho nguoi dung.
       const memberLabel = String(table.rows[j][labelIndex] ?? '').trim();
       if (isKnownCap4Label(memberLabel)) continue;
+      // Container (xem CONTAINER_CHILDREN_CANONICAL o tren): CHI nhan dong con
+      // khop dung 1 ten chuan Thong tu, loai dong cong ty tu chia nho them.
+      if (!isKnownContainerChildLabel(rawLabel, memberLabel)) continue;
       memberRowIndexes.push(j);
     }
     if (memberRowIndexes.length === 0) continue;

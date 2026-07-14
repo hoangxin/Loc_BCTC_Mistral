@@ -2007,8 +2007,8 @@
         },
         {
           "label": "DT thuần",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 42.89121509104055,
+          "tier": "level2",
           "unreliable": false
         },
         {
@@ -2019,13 +2019,13 @@
         },
         {
           "label": "CPBH",
-          "percentChange": null,
+          "percentChange": -33.95540068815482,
           "tier": null,
           "unreliable": false
         },
         {
           "label": "CPQLDN",
-          "percentChange": null,
+          "percentChange": -117.70935271220853,
           "tier": null,
           "unreliable": false
         },
@@ -2518,7 +2518,7 @@
             [
               "411",
               "Vốn góp của chủ sở hữu",
-              "22, 23",
+              22,
               1507879460000,
               1507879460000
             ],
@@ -2602,13 +2602,13 @@
             [
               "10",
               "Doanh thu thuần về bán hàng và cung cấp dịch vụ",
-              "26 1.083.291.850.442",
+              1083291850442,
               758123478586
             ],
             [
               "11",
               "Giá vốn hàng bán và cung cấp dịch vụ",
-              "27 (789.337.103.242)",
+              -789337103242,
               -577701388438
             ],
             [
@@ -2620,13 +2620,13 @@
             [
               "22",
               "Doanh thu hoạt động tài chính",
-              "28 51.107.898.231",
+              51107898231,
               49857410990
             ],
             [
               "23",
               "Chi phí tài chính",
-              "29 (12.419.800.076)",
+              -12419800076,
               -6746789391
             ],
             [
@@ -2638,13 +2638,13 @@
             [
               "25",
               "Chi phí bán hàng",
-              "30 (126.666.607.745)",
+              -126666607745,
               -94558791280
             ],
             [
               "26",
               "Chi phí quản lý doanh nghiệp",
-              "31 (50.800.455.630)",
+              -50800455630,
               -23334071319
             ],
             [
@@ -2680,13 +2680,13 @@
             [
               "51",
               "Chi phí thuế TNDN hiện hành",
-              "32 (30.725.460.877)",
+              -30725460877,
               -16764923519
             ],
             [
               "52",
               "Chi phí thuế TNDN hoãn lại",
-              "32 (3.019.863.797)",
+              -3019863797,
               -1803677413
             ],
             [
@@ -2732,7 +2732,7 @@
             [
               "02",
               "Khấu hao tài sản cố định (\"TSCĐ\") và BĐSĐT",
-              "33 21.659.218.174",
+              21659218174,
               11783169129
             ],
             [
@@ -2906,7 +2906,7 @@
             [
               "60",
               "Tiền và tương đương tiền đầu kỳ",
-              "3 316.811.111.897",
+              316811111897,
               59443470909
             ],
             [
@@ -2918,7 +2918,7 @@
             [
               "70",
               "Tiền và tương đương tiền cuối kỳ",
-              "3 160.404.203.231",
+              160404203231,
               121760656687
             ]
           ]
@@ -2936,11 +2936,7 @@
       "periodYear": 2026,
       "periodSlug": "Q1",
       "warnings": [
-        "\"\": Loi nhuan gop (180422090148) khong khop Doanh thu thuan - Gia von (1335824867024)",
-        "\"Kỳ 3 tháng kết thúc ngày 31 tháng 3 năm\": Loi nhuan sau thue (123502049896) khong khop Loi nhuan truoc thue - Chi phi thue TNDN (157247374570)",
-        "\"\": Tong cac dong con cua \"Loi nhuan gop\" (1335824867024) khong khop chinh dong \"Loi nhuan gop\" (180422090148) - co the do OCR gop/bia dong, can xem tay.",
-        "\"\": Tong cac dong con cua \"Loi nhuan thuan tu hoat dong kinh doanh\" (354919153128) khong khop chinh dong \"Loi nhuan thuan tu hoat dong kinh doanh\" (105639849148) - co the do OCR gop/bia dong, can xem tay.",
-        "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 3 muc trong BCDKT, 1 muc trong KQKD (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
+        "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 3 muc trong BCDKT (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
       ]
     },
     {
@@ -3003,7 +2999,7 @@
         },
         {
           "label": "Vốn CSH",
-          "percentChange": null,
+          "percentChange": 9.83576638781874,
           "tier": null,
           "unreliable": false
         },
@@ -3906,21 +3902,21 @@
       "analysis": [
         {
           "label": "Tiền",
-          "percentChange": null,
+          "percentChange": -12.086811423866589,
           "tier": null,
-          "unreliable": true
+          "unreliable": false
         },
         {
           "label": "FVTPL",
-          "percentChange": null,
+          "percentChange": -17.238740567296944,
           "tier": null,
-          "unreliable": true
+          "unreliable": false
         },
         {
           "label": "HTM",
-          "percentChange": null,
+          "percentChange": 17.05158498228496,
           "tier": null,
-          "unreliable": true
+          "unreliable": false
         },
         {
           "label": "AFS",
@@ -3930,9 +3926,9 @@
         },
         {
           "label": "Cho Vay",
-          "percentChange": null,
+          "percentChange": -11.424257356524668,
           "tier": null,
-          "unreliable": true
+          "unreliable": false
         },
         {
           "label": "TS Ngắn Hạn",
@@ -6855,33 +6851,33 @@
       "analysis": [
         {
           "label": "Tiền",
-          "percentChange": null,
+          "percentChange": -16.81566273229505,
           "tier": null,
-          "unreliable": true
+          "unreliable": false
         },
         {
           "label": "FVTPL",
-          "percentChange": null,
+          "percentChange": -20.114537391563015,
           "tier": null,
-          "unreliable": true
+          "unreliable": false
         },
         {
           "label": "HTM",
-          "percentChange": null,
+          "percentChange": -9.693966835743993,
           "tier": null,
-          "unreliable": true
+          "unreliable": false
         },
         {
           "label": "AFS",
-          "percentChange": null,
+          "percentChange": -2.8139160655555595,
           "tier": null,
-          "unreliable": true
+          "unreliable": false
         },
         {
           "label": "Cho Vay",
-          "percentChange": null,
+          "percentChange": 5.535717158529458,
           "tier": null,
-          "unreliable": true
+          "unreliable": false
         },
         {
           "label": "TS Ngắn Hạn",

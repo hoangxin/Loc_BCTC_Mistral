@@ -96,10 +96,10 @@ function byLabelLast(include: string[], exclude: string[] = []): RowFinder {
 // include theo THU TU, tra ve dong KHOP DAU TIEN cua BO DAU TIEN CO KHOP -
 // khong tron cac bo include lai voi nhau (tranh 1 bo qua long leo vo tinh
 // khop nham dong khac).
-function byLabelAnyOf(variants: string[][]): RowFinder {
+function byLabelAnyOf(variants: string[][], exclude: string[] = []): RowFinder {
   return (table) => {
     for (const include of variants) {
-      const row = findRowByLabel(table, (label) => include.every((m) => label.includes(m)));
+      const row = findRowByLabel(table, (label) => include.every((m) => label.includes(m)) && !exclude.some((m) => label.includes(m)));
       if (row) return row;
     }
     return null;
@@ -722,7 +722,16 @@ const BANK_METRICS: MetricDef[] = [
     // truoc, tra ve toan gia tri null). VCB con dung ten khac han "Von va cac
     // quy" cho dong nhom, chi co dong TONG moi ghi "TONG VON CHU SO HUU" - loai
     // "NO PHAI TRA" van an toan cho ca 2 kieu bao cao.
-    finders: [byLabel(['VON CHU SO HUU'], ['NO PHAI TRA'])],
+    //
+    // SUA 2026-07-14 (bao cao nguoi dung): 1 ngan hang khac KHONG co dong TONG
+    // rieng ghi "TONG VON CHU SO HUU" - dong nhom "Von va cac quy" chinh la
+    // dong mang gia tri tong duoc dung, nen finder cu (chi khop "VON CHU SO
+    // HUU") tra ve null hoan toan cho bao cao nay du Excel/PDF goc deu co so
+    // lieu. Them bien the "VON VA CAC QUY" lam phuong an du phong (CHI dung khi
+    // khong tim thay dong nao khop "VON CHU SO HUU" - vd bi header "B. No phai
+    // tra va Von chu so huu" loai het), cung loai tru "NO PHAI TRA" nhu bien
+    // the chinh.
+    finders: [byLabelAnyOf([['VON CHU SO HUU'], ['VON VA CAC QUY']], ['NO PHAI TRA'])],
     thresholds: BANK_THRESHOLDS_B,
   },
   {

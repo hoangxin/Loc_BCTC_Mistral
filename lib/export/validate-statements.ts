@@ -530,10 +530,14 @@ function validateIncomeStatement(table: StatementTable): ValidationIssue[] {
     const grossProfit = grossProfitRow![i] ?? null;
     const columnName = table.columns[i] ?? `cot ${i}`;
     if (typeof revenue === 'number' && typeof cost === 'number' && typeof grossProfit === 'number') {
-      if (!numbersClose(revenue - cost, grossProfit)) {
+      // Math.abs(cost) - xac nhan qua ACG that (2026-07-14): "Gia von hang ban"
+      // co the in AM (ACG: -789.337.103.242) hoac DUONG tuy cong ty, dung y het
+      // ly do Math.abs(tax) o validateIncomeStatementTax duoi.
+      const costMagnitude = Math.abs(cost);
+      if (!numbersClose(revenue - costMagnitude, grossProfit)) {
         issues.push({
           table: 'incomeStatement',
-          message: `"${columnName}": Loi nhuan gop (${grossProfit}) khong khop Doanh thu thuan - Gia von (${revenue - cost})`,
+          message: `"${columnName}": Loi nhuan gop (${grossProfit}) khong khop Doanh thu thuan - Gia von (${revenue - costMagnitude})`,
         });
       }
     } else {
