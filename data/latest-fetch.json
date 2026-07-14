@@ -32,14 +32,14 @@
         },
         {
           "label": "Trả trước người bán",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 199.77351279432912,
+          "tier": "level2",
           "unreliable": false
         },
         {
           "label": "Phải thu khác",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 28.85720403495773,
+          "tier": "level1",
           "unreliable": false
         },
         {
@@ -1507,12 +1507,7 @@
       "entryName": "2.VI_BaoCaoTaiChinh_Q1_2026_HopNhat.pdf",
       "periodYear": 2026,
       "periodSlug": "Q1",
-      "warnings": [
-        "\"Quý 1-2026\": Loi nhuan sau thue (78324524029) khong khop Loi nhuan truoc thue - Chi phi thue TNDN (98242408395)",
-        "\"Quý 1-2025\": Loi nhuan sau thue (55854321600) khong khop Loi nhuan truoc thue - Chi phi thue TNDN (66927598983)",
-        "\"Lũy kế 01/01/2026 đến 31/03/2026\": Loi nhuan sau thue (78324524029) khong khop Loi nhuan truoc thue - Chi phi thue TNDN (98242408395)",
-        "\"Lũy kế 01/01/2025 đến 31/03/2025\": Loi nhuan sau thue (55854321600) khong khop Loi nhuan truoc thue - Chi phi thue TNDN (66927598983)"
-      ]
+      "warnings": []
     },
     {
       "source": "vietstock",
@@ -1928,8 +1923,8 @@
         },
         {
           "label": "Trả trước người bán",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 23.681003796701077,
+          "tier": "level1",
           "unreliable": false
         },
         {
@@ -1970,32 +1965,32 @@
         },
         {
           "label": "Phải trả người bán",
-          "percentChange": null,
+          "percentChange": -28.35731630103508,
           "tier": null,
           "unreliable": false
         },
         {
           "label": "Người mua trả trước",
-          "percentChange": null,
+          "percentChange": -2.132247171642137,
           "tier": null,
           "unreliable": false
         },
         {
           "label": "Chi phí phải trả",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 54.20383429372462,
+          "tier": "level2",
           "unreliable": false
         },
         {
           "label": "Phải trả khác",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 21.947427537092853,
+          "tier": "level1",
           "unreliable": false
         },
         {
           "label": "Dự phòng phải trả",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 38.83381275909941,
+          "tier": "level1",
           "unreliable": false
         },
         {
@@ -3026,7 +3021,7 @@
         },
         {
           "label": "Tổng TN Hoạt Động",
-          "percentChange": null,
+          "percentChange": 13.254286335840696,
           "tier": null,
           "unreliable": false
         },
@@ -3953,7 +3948,7 @@
         },
         {
           "label": "Vay",
-          "percentChange": null,
+          "percentChange": -16.15042265483127,
           "tier": null,
           "unreliable": false
         },
@@ -5855,10 +5850,6 @@
       "periodYear": 2026,
       "periodSlug": "Q1",
       "warnings": [
-        "\"Quý 1 Năm nay\": Tong cac dong con cua \"Cong chi phi hoat dong\" (834392956486) khong khop chinh dong \"Cong chi phi hoat dong\" (681187365289) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Quý 1 Năm trước\": Tong cac dong con cua \"Cong chi phi hoat dong\" (530109250090) khong khop chinh dong \"Cong chi phi hoat dong\" (451232354926) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Lũy kế từ đầu năm đến cuối quý này Năm nay\": Tong cac dong con cua \"Cong chi phi hoat dong\" (834392956486) khong khop chinh dong \"Cong chi phi hoat dong\" (681187365289) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Lũy kế từ đầu năm đến cuối quý này Năm trước\": Tong cac dong con cua \"Cong chi phi hoat dong\" (530109250090) khong khop chinh dong \"Cong chi phi hoat dong\" (451232354926) - co the do OCR gop/bia dong, can xem tay.",
         "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 3 muc trong BCDKT, 1 muc trong KQKD (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
       ]
     },
@@ -5886,8 +5877,8 @@
         },
         {
           "label": "Trả trước người bán",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 360.9560912413097,
+          "tier": "level2",
           "unreliable": false
         },
         {
@@ -5928,14 +5919,14 @@
         },
         {
           "label": "Phải trả người bán",
-          "percentChange": null,
+          "percentChange": -29.956942169909667,
           "tier": null,
           "unreliable": false
         },
         {
           "label": "Người mua trả trước",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 3728.173039381658,
+          "tier": "level2",
           "unreliable": false
         },
         {
@@ -5958,7 +5949,7 @@
         },
         {
           "label": "Vay",
-          "percentChange": null,
+          "percentChange": -50,
           "tier": null,
           "unreliable": false
         },
@@ -9519,10 +9510,6 @@
       "periodYear": 2026,
       "periodSlug": "Q1",
       "warnings": [
-        "\"Năm nay\": Tong cac dong con cua \"Cong doanh thu hoat dong\" (240859763234) khong khop chinh dong \"Cong doanh thu hoat dong\" (282495459116) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Năm trước\": Tong cac dong con cua \"Cong doanh thu hoat dong\" (162674440480) khong khop chinh dong \"Cong doanh thu hoat dong\" (178580309653) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Năm nay\": Tong cac dong con cua \"Cong chi phi hoat dong\" (147367169282) khong khop chinh dong \"Cong chi phi hoat dong\" (159898244278) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Năm trước\": Tong cac dong con cua \"Cong chi phi hoat dong\" (58979663080) khong khop chinh dong \"Cong chi phi hoat dong\" (61302890377) - co the do OCR gop/bia dong, can xem tay.",
         "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 3 muc trong BCDKT, 1 muc trong KQKD (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
       ]
     }
