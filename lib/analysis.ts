@@ -5,6 +5,7 @@ import {
   valueColumnIndexes,
   findLabelColumnIndex,
   findRowByLabel,
+  findArithmeticTotalRow,
   type FinancialStatements,
   type StatementTable,
   type UnreliableCells,
@@ -645,35 +646,26 @@ const BANK_THRESHOLDS_C: Thresholds = { level1: 30, level2: 40 };
 // BALANCE_SHEET_CONTENT_MARKERS (markdown-tables.ts) de nua B khong bi rot
 // nham vao offBalanceSheet do trung chu "Tien gui cua khach hang" voi bang
 // ngoai BCTC cua CTCK.
-// So sanh "gan bang nhau" cho phep sai so nho (lam tron/OCR) - cung nguong
-// dung o findAllGroupSumMismatches (statement-shared.ts), dung rieng o day vi
-// khong import duoc ham noi bo cua file do.
-function numbersWithinTolerance(a: number, b: number): boolean {
-  return Math.abs(a - b) <= Math.max(1000, Math.abs(b) * 0.005);
-}
-
 // SUA 2026-07-14 (theo yeu cau nguoi dung, sau khi BID lo ra 1 bien the ten
 // moi "Tien, VANG gui tai va cho vay TCTD khac" - thieu chu "cac", chen them
 // "vang" - lam 2 bien the du lieu cu (byLabelAnyOf) khong khop): THAY VI liet
 // ke tung bien the chinh ta tung ngan hang (de vo lai moi khi gap ten moi),
 // gom TAT CA dong CO THE LIEN QUAN (goi la "ung vien" - qua CAU TRUC, khong
 // phai tu ngu chinh xac: co "GUI TAI" HOAC "CHO VAY", di kem "TCTD KHAC"/"TO
-// CHUC TIN DUNG KHAC") roi XAC MINH BANG PHEP CONG xem co ung vien nao CHINH
-// LA TONG cua cac ung vien con lai hay khong (o tat ca cot gia tri):
+// CHUC TIN DUNG KHAC") roi dung CHUNG findArithmeticTotalRow (statement-shared.ts,
+// tong quat hoa tu chinh fix nay - xem comment o do) de xac minh BANG PHEP
+// CONG xem co ung vien nao CHINH LA tong cac ung vien con lai hay khong:
 // - Neu CO (vd BID: dong "III" = dong "Tien gui tai" + dong "Cho vay" + dong
 //   "Du phong" am) -> DUNG THANG dong tong do, KHONG tu cong lai thu cong (an
 //   toan hon, gom du moi khoan dieu chinh nhu du phong ma khi tu cong co the
 //   bo sot).
 // - Neu KHONG (ngan hang chi in cac dong thanh phan, khong co dong tong rieng)
-//   -> cong TAT CA ung vien lai.
-// Cach nay TU DONG dung voi moi bien the ten (them/bot "vang", co/khong "cac",
-// viet tat/khong viet tat...) ma khong can liet ke tay tung truong hop, vi
-// khong con dua vao KHOP CHINH XAC cum tu nua - chi dua vao CAU TRUC (co mat
-// "GUI TAI"/"CHO VAY" + "TCTD KHAC") VA PHEP CONG THAT (nguyen tac ke toan),
-// dung tinh than "khong doan bua tu ten, xac minh bang so lieu that".
+//   -> cong TAT CA ung vien lai (findArithmeticTotalRow khong lam buoc nay,
+//   rieng metric nay MOI can "cong het" khi khong co dong tong - cac finder
+//   khac dung findRowByLabel/preferSubtotal thuong KHONG muon tu dong cong
+//   moi dong khop, nen buoc nay giu rieng o day, khong dua vao ham dung chung).
 function findTienGuiChoVayTctdKhac(table: StatementTable): Row | null {
   const labelIndex = findLabelColumnIndex(table.columns, table.rows);
-  const cols = valueColumnIndexes(table);
 
   const candidates = table.rows.filter((row) => {
     const label = row[labelIndex];
@@ -687,18 +679,7 @@ function findTienGuiChoVayTctdKhac(table: StatementTable): Row | null {
   if (candidates.length === 0) return null;
   if (candidates.length === 1) return candidates[0];
 
-  const totalRow = candidates.find((candidate) =>
-    cols.every((col) => {
-      const value = candidate[col];
-      if (typeof value !== 'number') return false;
-      const othersSum = candidates.reduce((sum, row) => {
-        if (row === candidate) return sum;
-        const v = row[col];
-        return typeof v === 'number' ? sum + v : sum;
-      }, 0);
-      return numbersWithinTolerance(value, othersSum);
-    })
-  );
+  const totalRow = findArithmeticTotalRow(table, candidates);
   if (totalRow) return totalRow;
 
   return table.columns.map((_, i) => {

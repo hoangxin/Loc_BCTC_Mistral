@@ -717,6 +717,57 @@ export function isLikelySubtotalRow(table: StatementTable, row: (string | number
 // CON DUY NHAT cua no (vd "Hang ton kho" - ca dong tong "IV. Hang ton kho" lan
 // dong con "1. Hang ton kho" deu chua dung cum nay) - uu tien dong tong (xem
 // isLikelySubtotalRow) thay vi dong khop DAU TIEN theo thu tu bang.
+// So sanh "gan bang nhau" cho phep sai so nho (lam tron/OCR) - cung nguong
+// dung o findAllGroupSumMismatches duoi day.
+function numbersWithinTolerance(a: number, b: number): boolean {
+  return Math.abs(a - b) <= Math.max(GROUP_SUM_TOLERANCE_ABSOLUTE, Math.abs(b) * GROUP_SUM_TOLERANCE_RATIO);
+}
+
+// SUA 2026-07-14 (theo yeu cau nguoi dung, tong quat hoa tu 1 fix rieng cho
+// bank "Tien Gui & Cho Vay TCTD Khac" cua BID): AP DUNG CHO MOI truong hop 1
+// marker/ten khop NHIEU HON 1 dong trong bang (khong chi rieng 1 metric) - vi
+// du KINH DIEN: 1 khai niem duoc bao cao GOP CHUNG thanh 1 dong o cong ty nay
+// nhung TACH RIENG thanh nhieu dong thanh phan (+ co the them dong dieu chinh
+// nhu du phong) o cong ty khac, khien CUNG 1 bo marker khop CA dong tong LAN
+// cac dong thanh phan cua no. Thay vi doan dong nao la "tong" qua tu ngu/vi
+// tri (de vo lai moi khi gap 1 cach dat ten moi), XAC MINH BANG PHEP CONG: o
+// TAT CA cot gia tri cung luc, neu 1 trong cac dong khop CHINH LA tong cac
+// dong khop CON LAI (trong sai so nho), dong do CHINH LA dong tong - dung no
+// TRUC TIEP (chinh xac hon tu cong lai, vi dong tong bao cao san co the da
+// gom cac khoan dieu chinh ma neu tu cong thu cong se bo sot). Doi hoi khop O
+// TAT CA cot gia tri (khong chi 1 cot) VA khong duoc la truong hop ca 2 ben
+// deu = 0 (tranh khop "gia" khi du lieu don gian con trong/chua phat sinh).
+// Xuat rieng (khong chi dung noi bo o findRowByLabel) - danh cho cac finder
+// can gom ung vien qua 1 dieu kien RONG hon "1 marker AND-toan bo trong 1
+// dong" (vd findTienGuiChoVayTctdKhac o lib/analysis.ts, gom ung vien qua
+// dieu kien OR cau truc) nhung van muon dung CHUNG 1 logic xac minh "dong nao
+// la tong" thay vi viet lai.
+export function findArithmeticTotalRow(
+  table: StatementTable,
+  matches: (string | number | null)[][]
+): (string | number | null)[] | null {
+  if (matches.length < 2) return null;
+  const cols = valueColumnIndexes(table);
+  if (cols.length === 0) return null;
+  return (
+    matches.find((candidate) => {
+      let sawNonZero = false;
+      const isTotal = cols.every((col) => {
+        const value = candidate[col];
+        if (typeof value !== 'number') return false;
+        const othersSum = matches.reduce((sum, row) => {
+          if (row === candidate) return sum;
+          const v = row[col];
+          return typeof v === 'number' ? sum + v : sum;
+        }, 0);
+        if (value !== 0 || othersSum !== 0) sawNonZero = true;
+        return numbersWithinTolerance(value, othersSum);
+      });
+      return isTotal && sawNonZero;
+    }) ?? null
+  );
+}
+
 export function findRowByLabel(
   table: StatementTable,
   matcher: (normalizedLabel: string) => boolean,
@@ -728,6 +779,8 @@ export function findRowByLabel(
     return typeof label === 'string' && matcher(normalizeLabelText(label));
   });
   if (matches.length === 0) return null;
+  const arithmeticTotal = findArithmeticTotalRow(table, matches);
+  if (arithmeticTotal) return arithmeticTotal;
   if (options?.preferSubtotal) {
     const subtotal = matches.find((row) => isLikelySubtotalRow(table, row, labelIndex));
     if (subtotal) return subtotal;
