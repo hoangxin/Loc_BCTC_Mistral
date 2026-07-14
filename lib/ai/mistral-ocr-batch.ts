@@ -2,12 +2,21 @@ import { readFile } from 'fs/promises';
 import type { MistralOcrPage, MistralOcrResult } from './mistral-ocr';
 import { slicePdfPages } from './pdf-slice';
 
-// CHUA DUOC DUNG O DAU TRONG PIPELINE CHINH - viet theo yeu cau nguoi dung
-// 2026-07-12 de san sang doi qua khi bat billing tren tai khoan Mistral (xem
-// memory/reference_mistral_batch_api.md). Cung interface (filePath, options)
-// => Promise<MistralOcrResult> nhu callMistralOcr (./mistral-ocr.ts) de co
-// the doi TRUC TIEP o lib/export/financial-statements.ts sau nay (chi doi 1
-// dong import callMistralOcr -> callMistralOcrBatch), khong can sua gi them.
+// DA DUOC DUNG THAT trong pipeline chinh tu sau khi bat billing (xem
+// lib/export/financial-statements.ts - import callMistralOcrBatch, ban dong
+// bo callMistralOcr chi con la fallback DA COMMENT LAI). Dong comment nay
+// TUNG ghi "chua dung o dau" luc file moi viet (2026-07-12, truoc khi doi
+// qua that) - GIU LAI SAI qua nhieu lan sua sau do, khien 1 phien debug rieng
+// (2026-07-14) doc nham la batch van chi la du phong chua active, di sua
+// nham sang goi callMistralOcr (sync) thay vi tim dung nguyen nhan that (loi
+// tai output_file /v1/files/{id}/content tra ve 404 - xem downloadFileContent
+// duoi day). BAI HOC: LUON grep toan bo codebase tim noi THAT SU import ham
+// (khong chi doc 1 comment o dau file) truoc khi ket luan 1 duong code
+// dang/khong dang duoc dung.
+//
+// Cung interface (filePath, options) => Promise<MistralOcrResult> nhu
+// callMistralOcr (./mistral-ocr.ts) - giup doi qua lai bang 1 dong import
+// khi can (xem memory/reference_mistral_batch_api.md).
 //
 // THIET KE "1 batch job = 1 bao cao" (KHONG gop nhieu bao cao vao 1 job lon)
 // - da thao luan voi nguoi dung 2026-07-12: Batch API giam gia 50% FLAT theo
@@ -119,16 +128,28 @@ async function uploadBatchFile(jsonlContent: string, apiKey: string): Promise<st
   return uploaded.id;
 }
 
+// Duong dan tai noi dung file (/v1/files/{id}/content) - da XAC NHAN dung
+// dinh dang qua test that (2026-07-14). NHUNG: job vua chuyen status=SUCCESS
+// (output_file da co id) KHONG dam bao noi dung file do da san sang tai NGAY
+// - gap that 1 lan HTTP 404 ngay sau khi poll thay SUCCESS, roi thu lai
+// (khong tao job moi, chi goi lai endpoint nay) vai giay sau thi tai duoc
+// binh thuong (co ve la do tre lan truyen giua 2 he thong noi bo cua Mistral).
+// Retry NGAN o day (khong tao job moi - chi lap lai chinh request GET nay,
+// khong ton them phi) de tranh nem loi oan cho 1 job THAT SU da OCR xong.
+const DOWNLOAD_RETRY_ATTEMPTS = 4;
+const DOWNLOAD_RETRY_DELAY_MS = 3000;
+
 async function downloadFileContent(fileId: string, apiKey: string): Promise<string> {
-  // Duong dan tai noi dung file (/v1/files/{id}/content) suy theo quy uoc
-  // REST chuan cua Mistral (giong /v1/files/{id} de lay metadata) - cung
-  // CHUA duoc xac nhan qua test that (cung ly do 402 o tren), kiem tra lai
-  // cung luc voi parseResultLine() neu gap loi 404 luc test that.
-  const response = await fetch(`https://api.mistral.ai/v1/files/${fileId}/content`, {
-    headers: { Authorization: `Bearer ${apiKey}` },
-  });
-  if (!response.ok) throw new Error(`Tai output_file that bai (HTTP ${response.status})`);
-  return response.text();
+  let lastStatus = 0;
+  for (let attempt = 0; attempt < DOWNLOAD_RETRY_ATTEMPTS; attempt++) {
+    const response = await fetch(`https://api.mistral.ai/v1/files/${fileId}/content`, {
+      headers: { Authorization: `Bearer ${apiKey}` },
+    });
+    if (response.ok) return response.text();
+    lastStatus = response.status;
+    if (attempt < DOWNLOAD_RETRY_ATTEMPTS - 1) await sleep(DOWNLOAD_RETRY_DELAY_MS);
+  }
+  throw new Error(`Tai output_file that bai (HTTP ${lastStatus}) sau ${DOWNLOAD_RETRY_ATTEMPTS} lan thu`);
 }
 
 // Xem CANH BAO QUAN TRONG o dau file - thu ca 2 kha nang hinh dang pho bien
