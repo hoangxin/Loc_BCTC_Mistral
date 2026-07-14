@@ -155,18 +155,24 @@ async function fetchAllReportFiles(session: Session, term: ReportTerm): Promise<
   return files;
 }
 
+// KHONG con noi nao goi (xac nhan qua grep toan repo) - da tach thanh 2 buoc
+// rieng resolveQuarterTerm() + fetchReportFilesForTerm() duoi day (cho phep
+// lay lai ReportTerm da resolve ma khong can goi lai findReportTerm). Giu lai
+// comment (khong xoa ham) phong khi can 1 ham gop lai tien dung:
+// export async function fetchQuarterReports(quarter: number, year: number): Promise<ReportFile[]> {
+//   const session = await getSession();
+//   const term = await findReportTerm(session, quarter, year);
+//   if (!term) {
+//     throw new Error(`vietstock: khong tim thay ky bao cao "Quý ${quarter}" nam ${year}`);
+//   }
+//   return fetchAllReportFiles(session, term);
+// }
+//
 // Luu y: bao cao quy trickle in dan trong nhieu tuan sau khi quy ket thuc
 // (han nop BCTC quy thuong ~20-30 ngay sau khi quy dong), nen chay lai vao
 // cac thoi diem khac nhau trong cung 1 quy se ra so luong bao cao khac nhau -
-// day la hanh vi dung, khong phai loi.
-export async function fetchQuarterReports(quarter: number, year: number): Promise<ReportFile[]> {
-  const session = await getSession();
-  const term = await findReportTerm(session, quarter, year);
-  if (!term) {
-    throw new Error(`vietstock: khong tim thay ky bao cao "Quý ${quarter}" nam ${year}`);
-  }
-  return fetchAllReportFiles(session, term);
-}
+// day la hanh vi dung, khong phai loi (van dung cho ca resolveQuarterTerm +
+// fetchReportFilesForTerm duoi day).
 
 // Danh sach TAT CA ky bao cao Vietstock thuc su dang co (goi thang
 // /data/getrptterm, KHONG loc theo "Quy N") - dung cho dropdown chon ky tren
@@ -185,9 +191,8 @@ export async function fetchReportTerms(top = 24): Promise<ReportTerm[]> {
   return terms.map((term) => ({ yearPeriod: term.YearPeriod, reportTermID: term.ReportTermID, description: term.Description }));
 }
 
-// Tra ve dung 1 ReportTerm khop "Quy N nam YYYY" (session rieng, KHONG dung
-// chung voi fetchQuarterReports) - dung khi CLI (scripts/run-fetch.ts) truyen
-// FETCH_QUARTER/FETCH_YEAR, can quy doi ve ReportTerm truoc khi goi
+// Tra ve dung 1 ReportTerm khop "Quy N nam YYYY" - dung khi CLI
+// (scripts/run-fetch.ts) truyen FETCH_QUARTER/FETCH_YEAR, can quy doi ve ReportTerm truoc khi goi
 // runFetchPipeline({term}) (pipeline gio chi lam viec voi ReportTerm, khong
 // con nhan quarter/year rieng - xem lib/pipeline.ts).
 export async function resolveQuarterTerm(quarter: number, year: number): Promise<ReportTerm | null> {

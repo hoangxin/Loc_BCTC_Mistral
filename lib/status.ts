@@ -33,15 +33,14 @@ export interface DownloadedReport {
   // de tach tab UI (app/ReportsSummaryTable.tsx) vi moi nhom BCTC theo mau
   // bieu phap ly khac nhau.
   businessType: BusinessType;
-  // Ket qua ap tieu chi doc BCTC (lib/analysis.ts, hien TODO cho tieu chi that
-  // - tra rong) - dung de dung cot % dong tren bang tong hop UI.
+  // Ket qua ap tieu chi doc BCTC (lib/analysis.ts) - dung de dung cot % dong
+  // tren bang tong hop UI.
   analysis: AnalysisRow[] | null;
   // 3 bang DA OCR luc "Tai BCTC" (lib/report-extract.ts, pham vi truoc "Thuyet
   // minh") - luu lai de "Xuat Excel" (app/api/report-file) DUNG THANG, KHONG
-  // can tai lai file goc/OCR lai (Excel khong co toan van nen khong co rui ro
-  // "ghep 2 lan OCR" nhu PDF - quyet dinh user 2026-07-06: chi "Xuat PDF" moi
-  // can OCR lai toan van tu dau, vi PDF can CA bang lan toan van phai ra tu
-  // CUNG 1 lan OCR, "Xuat Excel" thi khong).
+  // can tai lai file goc/OCR lai. Nut "Xuat PDF" (yeu cau user 2026-07-07)
+  // khong con OCR toan van nua - gio mo THANG file goc tren Vietstock o tab
+  // moi (xem lib/original-file-url.ts), khong dung truong nay.
   statements: FinancialStatements;
   financeUrl: string;
   fileUrl: string;
@@ -61,9 +60,9 @@ export interface DownloadedReport {
   periodYear: number;
   periodSlug: string;
   // Canh bao tu validateFinancialStatements cho lan OCR 3 bang luc "Tai BCTC"
-  // (KHONG lien quan gi toi file xuat luc "Xuat Excel/PDF" - luc do OCR lai
-  // toan bo tu dau, xem lib/export/full-document.ts) - chi de hien thi canh
-  // bao tren UI, khong tu "sua".
+  // - chi de hien thi canh bao tren UI, khong tu "sua". (lib/export/full-document.ts
+  // co OCR toan van rieng cho huong "Xuat PDF" cu, nhung route do da DU PHONG,
+  // khong con goi toi tu 2026-07-07 - xem app/api/report-file/route.ts).
   warnings: string[];
 }
 

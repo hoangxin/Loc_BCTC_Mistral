@@ -19,7 +19,7 @@ import { findLabelColumnIndex, normalizeLabelText, type FinancialStatements, typ
 // incomeStatement can 2 bien the tieu de (da gap that 2026-07-06, OCR toan
 // van BCTC SJ1: tieu de that su la "BÁO CÁO KẾT QUẢ KINH DOANH", KHONG co
 // "HOAT DONG" - truoc day chi co 1 bien the nen bo sot, phai them bien the
-// ngan hon nay, giong cach lib/pdf-text.ts isStatementSectionMarker da lam).
+// ngan hon nay).
 //
 // KHONG con nhan dien theo TIEU DE truoc bang (da bo, xem classifyTableByContent
 // duoi) - chot 2026-07-08 sau khi gap that voi IDV: tu Thong tu 99/2025/TT-BTC
@@ -725,8 +725,8 @@ function parseAllTablesInRange(lines: string[]): ParsedTable[] {
 // cac bang qua ngan (<3 dong, thuong la bang phu nhu "Co cau von dieu le" o
 // trang bia, khong phai bang chinh).
 // Dung boi lib/export/financial-statements.ts (OCR THEO LO qua Mistral cho
-// bao cao scan dai, xem lib/pdf-text.ts needsOcrProbe) de biet KHI NAO dung
-// gui them lo trang tiep theo - da thay tieu de "Thuyet minh" tuc la 3 bang
+// bao cao scan dai) de biet KHI NAO dung gui them lo trang tiep theo - da thay
+// tieu de "Thuyet minh" tuc la 3 bang
 // chinh da nam TRON trong markdown gom duoc, khong can OCR them trang nao
 // nua. Dung chung 1 logic voi diem chan cashFlow trong parseStatementsFromMarkdown
 // duoi (khong dinh nghia lai fuzzy-match rieng - Mistral OCR do chinh xac cao,

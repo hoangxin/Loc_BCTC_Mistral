@@ -7,8 +7,8 @@ chính xác cao hơn, rẻ hơn, xem chi tiết lý do trong lịch sử trao đ
 Tải báo cáo tài chính theo kỳ (Quý/6 tháng/9 tháng/Cả năm) từ Vietstock
 (`finance.vietstock.vn/tai-lieu/bao-cao-tai-chinh.htm`) **hoặc từ 1 link web công ty tự paste vào (AI
 duyệt trang tự tìm)**, chấp nhận cả PDF/DOCX/DOC/ZIP/RAR, tính % thay đổi theo tiêu chí riêng ra 1 bảng
-kết quả, rồi cho xuất Excel/PDF ĐẦY ĐỦ (3 bảng BCTC + toàn văn) cho TỪNG báo cáo cụ thể. Chạy bằng giao
-diện web hoặc bằng lệnh `npm run fetch`.
+kết quả, rồi cho xuất Excel (3 bảng BCTC đã trích) hoặc mở file PDF gốc trên Vietstock cho TỪNG báo cáo
+cụ thể. Chạy bằng giao diện web hoặc bằng lệnh `npm run fetch`.
 
 ## Cấu trúc
 
@@ -21,10 +21,12 @@ diện web hoặc bằng lệnh `npm run fetch`.
   lấy danh mục báo cáo thật của 1 kỳ (dùng cho xem trước lẫn tải thật).
 - `lib/period-label.ts` - suy ra nhãn hiển thị ("Quý 2/2026", "6 tháng đầu năm 2026"...) và tên thư mục
   từ 1 `ReportTerm`.
-- `lib/quarter.ts` - chỉ còn tính "quý vừa qua" theo giờ Việt Nam (`getPreviousQuarter`/`isSameQuarter`) -
-  dùng để xác định mặc định dropdown + bật lựa chọn "Từ lần tải cuối" đúng lúc.
-- `lib/filter.ts` - lọc sơ bộ theo **metadata** (mã CK, tên công ty, tiêu đề...) trước khi tải - hiện
-  đang pass-through (giữ nguyên toàn bộ), chờ chốt tiêu chí thật.
+- `lib/quarter.ts` (`getPreviousQuarter`) - chỉ còn tính "quý vừa qua" theo giờ Việt Nam, dùng để xác
+  định mặc định dropdown. Lựa chọn "Từ lần tải cuối" tự tính qua `termLastFetch`/`sinceLastHoursForTerm`
+  (`app/FetchControls.tsx`) theo `ReportTerm`, không còn dùng `QuarterPeriod` để so sánh.
+- `lib/filter.ts` (`filterReports`) - lọc theo **sàn giao dịch** (yêu cầu người dùng 2026-07-12: bỏ
+  "OTC"/"Khác", không thuộc phạm vi phân tích) trước khi tải - lọc AI theo nội dung/tiêu chí khác vẫn
+  chưa wire vào (xem `lib/ai/qwen.ts`), chờ chốt tiêu chí thật.
 - `lib/download.ts` - tải file báo cáo về `data/reports/<năm>-Q<quý>/` (bất kể định dạng gì - việc nhận
   diện/giải nén là của `lib/report-source.ts`).
 - `lib/report-source.ts` (`resolveReportSourceFiles`) - chuẩn hoá MỌI định dạng tải về thành 1 hoặc
@@ -33,11 +35,13 @@ diện web hoặc bằng lệnh `npm run fetch`.
   **1 lần tải có thể ra NHIỀU dòng** nếu zip/rar chứa nhiều file (vd vừa có bản Hợp nhất vừa Riêng lẻ).
   Trước đây các file `.zip` (VD `CAP_...zip`, `KTS_...zip` ở Q2/2026) bị bỏ qua hoàn toàn - đã test lại
   bằng zip thật, ra đúng các PDF bên trong.
-- `lib/report-extract.ts` (`extractReportContentForResolvedFiles`) - điểm nối DUY NHẤT rẽ nhánh theo
+- `lib/report-extract.ts` (`extractReportContent`) - điểm nối DUY NHẤT rẽ nhánh theo
   định dạng để trích 3 bảng (CHỈ 3 bảng - KHÔNG còn toàn văn ở bước này nữa, xem `lib/export/full-document.ts`
-  dưới): PDF qua `determineStatementPageScope` + Mistral OCR (`extractFinancialStatements`, chỉ phạm vi
-  trước "Thuyết minh", rẻ); DOCX qua `lib/export/docx-statements.ts` (mammoth, đọc bảng HTML thật, chuyển
-  sang cú pháp markdown của Mistral rồi tái dùng `parseStatementsFromMarkdown`); DOC (Word 97-2003 nhị
+  dưới): PDF qua `determineStatementPageScope` (xác định tổng số trang) rồi
+  `extractFinancialStatementsWithOcrProbe` (`lib/export/financial-statements.ts`, OCR theo lô qua Batch
+  API, chỉ phạm vi trước "Thuyết minh", rẻ); DOCX qua `lib/export/docx-statements.ts`
+  (mammoth, đọc bảng HTML thật, chuyển sang cú pháp markdown của Mistral rồi tái dùng
+  `parseStatementsFromMarkdown`); DOC (Word 97-2003 nhị
   phân cũ) qua `lib/export/doc-statements.ts` (`word-extractor` lấy text thuần, tự dò ranh giới cột bằng
   `lib/text-columnarize.ts` - độ tin cậy thấp hơn docx/pdf vì không có ranh giới cột gốc). DOCX/DOC
   **KHÔNG gọi AI/OCR nào** (đọc trực tiếp), khác PDF phải OCR.
@@ -56,33 +60,39 @@ diện web hoặc bằng lệnh `npm run fetch`.
   `app/CustomSourceForm.tsx` (polling) phân biệt được "chưa xong" với "xong nhưng không thấy".
 - `lib/summary-row.ts`, `lib/export/summary-excel.ts`/`summary-pdf.ts`, `app/api/export-summary` - bảng
   tổng hợp % nhiều công ty (build buffer, không ghi đĩa) từ đợt làm trước - vẫn giữ code, nhưng **hiện
-  không còn nút nào trên UI gọi tới** (nút "Excel"/"PDF" mỗi dòng giờ trỏ vào `app/api/report-file`, xem
-  dưới) - để đó chờ quyết định lại cách dùng khi có tiêu chí % thật.
-- `lib/pdf-text.ts` (`determineStatementPageScope`) - dùng Tesseract.js (local, không tốn token) **CHỈ
-  để xác định phạm vi trang** trước điểm "Thuyết minh báo cáo tài chính" (fuzzy match, chịu được lỗi
-  OCR) - không dùng để đọc nội dung số liệu, việc đó do Mistral OCR đảm nhiệm (xem dưới).
-- `lib/ai/mistral-ocr.ts` (`callMistralOcr`) - gọi Mistral OCR API (`api.mistral.ai/v1/ocr`, model
-  `MISTRAL_OCR_MODEL`, mặc định `mistral-ocr-latest`) trên chính file PDF gốc, trả về markdown từng
-  trang. Tự động retry khi gặp lỗi mạng/tạm thời (429, 5xx, kết nối bị cắt giữa chừng) - tối đa 3 lần,
-  cách nhau 2s, không retry lỗi request/key sai (4xx khác).
+  không còn nút nào trên UI gọi tới** (nút "Excel" mỗi dòng trỏ vào `app/api/report-file`, xem dưới; nút
+  "PDF" mở thẳng file gốc trên Vietstock, không qua route nào của app) - để đó chờ quyết định lại cách
+  dùng khi có tiêu chí % thật.
+- `lib/pdf-text.ts` (`determineStatementPageScope`) - **KHÔNG còn dùng Tesseract** (bỏ từ 2026-07-12 sau
+  bug PVS - watermark eoffice làm sai điểm cắt "Thuyết minh" đoán từ text layer). Giờ chỉ dùng
+  `pdf-parse` (đọc text layer thật, miễn phí) để đếm tổng số trang + kiểm tra ngôn ngữ (tiếng Việt hay
+  bản dịch tiếng Anh) - KHÔNG còn cố đoán phạm vi trang trước "Thuyết minh" từ text layer nữa, việc đó
+  giao thẳng cho `extractFinancialStatementsWithOcrProbe` (OCR theo lô tăng dần, xem dưới).
+- `lib/ai/mistral-ocr-batch.ts` (`callMistralOcrBatch`) - gọi Mistral OCR qua Batch API (`/v1/files` upload
+  + `/v1/batch/jobs`, model `MISTRAL_OCR_MODEL`, mặc định `mistral-ocr-latest`) trên phạm vi trang đã cắt
+  sẵn (`lib/ai/pdf-slice.ts`), trả về markdown từng trang - đây là đường THẬT đang dùng trong pipeline
+  chính (rẻ hơn 50% so với `lib/ai/mistral-ocr.ts` (`callMistralOcr`, endpoint đồng bộ `/v1/ocr`), hàm
+  đó giờ chỉ còn dùng cho `lib/export/full-document.ts` đã dự phòng). Không tự retry lỗi mạng/tạm thời ở
+  tầng này (mỗi bước tạo job/poll/tải file là 1 request riêng, lỗi ở bước nào ném lỗi ngay) - tầng gọi cao
+  hơn (`extractWithGroupCheckRetry` trong `financial-statements.ts`) xử lý retry khi cần.
 - `lib/export/markdown-tables.ts` (`parseStatementsFromMarkdown`) - parse markdown Mistral trả về
   thành 3 bảng (`FinancialStatements`) **hoàn toàn local, không gọi AI thêm**: nhận diện 3 mục theo tiêu
   đề (bỏ qua mục lục trang bìa liệt kê cả 4 tên bảng cùng lúc), gộp các bảng con trong 1 mục (VD bảng
   cân đối kế toán thường tách "Tài sản" + "Nguồn vốn" thành 2 bảng markdown riêng), và canh lại các dòng
   bị lệch cột (theo nội dung - tìm ô nhãn/mã số/giá trị bằng hình dạng, không theo vị trí cố định).
-- `lib/export/financial-statements.ts` (`extractFinancialStatements`) - gọi `callMistralOcr` cho phạm
-  vi trang đã xác định, parse qua `markdown-tables.ts`, rồi kiểm tra chéo (`validate-statements.ts`).
+- `lib/export/financial-statements.ts` (`extractFinancialStatementsWithOcrProbe`) - gọi `callMistralOcrBatch`
+  theo lô tăng dần (12 trang đầu + mở rộng 2 trang/lần tới khi thấy "Thuyết minh"), parse qua
+  `markdown-tables.ts`, rồi kiểm tra chéo (`validate-statements.ts`).
   Không còn vòng lặp "gọi lại AI sửa lỗi" như bản Qwen vision cũ (khái niệm đó dựa trên việc yêu cầu
   model đọc lại ảnh kỹ hơn, không áp dụng được với OCR thuần) - nếu kiểm tra chéo phát hiện lệch, báo
   qua `warnings`, không tự "sửa".
-- `lib/export/full-document.ts` (`extractFullReportFromPdf`) - OCR TOÀN VĂN CẢ tài liệu (kể cả Thuyết
-  minh) trong 1 LẦN GỌI DUY NHẤT, rồi tách CẢ 3 bảng lẫn toàn văn TỪ CÙNG 1 kết quả đó - CHỈ dùng lúc
-  user bấm "Xuất Excel/PDF" cho 1 báo cáo cụ thể (`app/api/report-file`), KHÔNG BAO GIỜ ghép với kết quả
-  OCR 3 bảng (rẻ hơn, phạm vi hẹp hơn) đã tính lúc "Tải BCTC" - quyết định của user (2026-07-06): ghép 2
-  lần OCR độc lập trên cùng 1 file dễ sai lệch ngầm, thà tính lại từ đầu. Để làm được điều này,
-  `lib/export/markdown-tables.ts` (`parseStatementsFromMarkdown`) được sửa thêm 1 mốc chặn ở "Thuyết
-  minh" cho mục "Lưu chuyển tiền tệ" (mục cuối, trước đây mặc định chạy tới hết văn bản - đúng khi đầu
-  vào chỉ có phạm vi trước Thuyết minh, nhưng SAI khi đầu vào là toàn văn).
+- `lib/export/full-document.ts` (`extractFullReportFromPdf`) - **DỰ PHÒNG, không còn nơi nào gọi** (từ
+  2026-07-07, xem `app/api/report-file/route.ts`): trước đây OCR TOÀN VĂN CẢ tài liệu (kể cả Thuyết
+  minh) trong 1 lần gọi duy nhất cho nút "Xuất PDF"; nút đó giờ chỉ mở thẳng file gốc trên Vietstock,
+  không OCR gì thêm. Giữ lại file này phòng khi cần dùng lại hướng "xuất PDF riêng của app". Nhân tiện,
+  `lib/export/markdown-tables.ts` (`parseStatementsFromMarkdown`) vẫn có mốc chặn ở "Thuyết minh" cho
+  mục "Lưu chuyển tiền tệ" (trước đây mặc định chạy tới hết văn bản - đúng khi đầu vào chỉ có phạm vi
+  trước Thuyết minh, nhưng SAI khi đầu vào là toàn văn) - dùng chung cho cả nhánh OCR-theo-lô hiện tại.
 - `lib/export/validate-statements.ts` - kiểm tra cục bộ (không gọi AI) trên bảng đã cấu trúc hoá, theo
   nguyên tắc **fail-closed**: không kiểm tra được thì báo là lỗi, không được im lặng bỏ qua.
   - Tổng cộng tài sản = Tổng cộng nguồn vốn (theo mã số 100/200/270, 300/400/440).
@@ -107,9 +117,9 @@ diện web hoặc bằng lệnh `npm run fetch`.
 - `lib/ai/mistral-chat.ts` - client Mistral chat completions (khác `mistral-ocr.ts` - dùng để "suy luận"
   trên text, không phải OCR) - cho bước duyệt trang tìm nguồn riêng (`lib/custom-source.ts`).
 - `lib/ai/qwen.ts` - client Qwen (qua OpenRouter) - **KHÔNG còn dùng cho bước trích 3 bảng nữa** (đã
-  chuyển sang Mistral OCR). Giữ lại dự phòng cho bước lọc theo tiêu chí (`lib/content-filter.ts`) sau
-  này nếu cần AI đọc/đánh giá nội dung - `OPENROUTER_API_KEY` đang bị comment trong `.env`, bỏ comment +
-  điền lại key thật khi cần dùng.
+  chuyển sang Mistral OCR). Giữ lại dự phòng cho bước lọc theo tiêu chí (`lib/filter.ts` hiện chỉ lọc
+  theo sàn giao dịch, chưa wire AI vào) sau này nếu cần AI đọc/đánh giá nội dung - `OPENROUTER_API_KEY`
+  đang bị comment trong `.env`, bỏ comment + điền lại key thật khi cần dùng.
 - `lib/ai/claude.ts` - client Claude, viết sẵn nhưng chưa dùng ở đâu (dự phòng).
 - `lib/pipeline.ts` - orchestrator dùng chung cho cả CLI (`scripts/run-fetch.ts`) và GitHub Actions
   (`.github/workflows/fetch-bctc.yml`); `runFetchPipeline(options)` nhận `{term|quarter+year, hoursWindow,
@@ -135,17 +145,16 @@ diện web hoặc bằng lệnh `npm run fetch`.
   quả ngay nữa) -> polling `app/api/fetch-status`, đối chiếu `lastCustomSourceCheck.requestId` (tự sinh
   lúc gửi) để phân biệt "chưa xong" với "xong nhưng không thấy" (hiện "Chưa có").
 - `app/ReportsSummaryTable.tsx` - bảng STT/Mã CK/Sàn giao dịch/Tên tài liệu/Ngày cập nhật/Tên công
-  ty/Loại BCTC/cột % động (rỗng cho tới khi `lib/analysis.ts` có tiêu chí thật) + 2 nút Excel/PDF mỗi
-  dòng, LUÔN bật (không còn kiểm tra file có sẵn hay không - xem `app/api/report-file` dưới).
-- `app/api/report-file` - viết lại hoàn toàn, xuất theo tên `lib/export/output-filename.ts`, 2 nhánh
-  KHÁC NHAU tuỳ `kind` (chốt lại 2026-07-06 sau khi user chỉnh):
-  - `kind=excel` - dùng THẲNG `report.statements` đã OCR sẵn lúc "Tải BCTC" (`lib/pipeline.ts`) - KHÔNG
-    tải lại file gốc, KHÔNG gọi AI gì thêm (Excel không có toàn văn nên không có rủi ro "ghép 2 lần OCR").
-  - `kind=pdf` - CẦN cả bảng lẫn toàn văn ra từ CÙNG 1 nguồn nên **tải LẠI file gốc** từ `report.fileUrl`
-    (Vietstock/nguồn riêng đều host lâu dài) rồi OCR TOÀN VĂN TỪ ĐẦU (`lib/export/full-document.ts` cho
-    PDF, đọc lại qua mammoth/word-extractor cho DOCX/DOC - vẫn không AI) - KHÔNG dùng `report.statements`
-    cũ, tránh ghép 2 kết quả OCR độc lập làm 1.
-  - Cả 2 đều lưu thêm 1 bản vào đĩa server (`EXPORT_SAVE_DIR`, mặc định `data/exports/`) TRƯỚC khi trả
+  ty/Loại BCTC/cột % động (theo tiêu chí thật từ `lib/analysis.ts`, số cột tự theo UNION nhãn xuất
+  hiện - xem `lib/summary-row.ts`) + 2 nút Excel/PDF mỗi dòng, LUÔN bật (không còn kiểm tra file có sẵn
+  hay không - xem `app/api/report-file` dưới).
+- `app/api/report-file` - CHỈ còn 1 nhánh `kind=excel` (từ 2026-07-07, khi nút "PDF" đổi sang mở thẳng
+  file gốc trên Vietstock - xem `lib/original-file-url.ts` - không qua route này nữa; route trả 400 nếu
+  `kind` khác `excel`). Nhánh `kind=excel` dùng THẲNG `report.statements` đã OCR sẵn lúc "Tải BCTC"
+  (`lib/pipeline.ts`) - KHÔNG tải lại file gốc, KHÔNG gọi AI gì thêm. Nhánh `kind=pdf` cũ (tải lại file
+  gốc, OCR toàn văn qua `lib/export/full-document.ts`, ghép PDF bằng `lib/export/pdf.ts`) vẫn còn trong
+  file dưới dạng comment (không xoá, phòng khi cần dùng lại hướng "xuất PDF riêng của app").
+  - Vẫn lưu thêm 1 bản vào đĩa server (`EXPORT_SAVE_DIR`, mặc định `data/exports/`) TRƯỚC khi trả
     response - **lưu ý quan trọng**: đây KHÔNG PHẢI cách đưa file "vào máy người dùng" trên Vercel - máy
     chạy server (Vercel) và máy người dùng là 2 máy KHÁC NHAU, web app không có cách nào ghi file thẳng
     vào 1 thư mục tuỳ ý trên máy người dùng (giới hạn bảo mật trình duyệt, không phải hạn chế của code).
@@ -167,9 +176,10 @@ npm run fetch       # chạy thẳng từ terminal, không cần mở web (luôn
 
 Biến môi trường (`.env` cho local; xem mục dispatch dưới để biết biến nào cần set ở đâu khi deploy):
 
-- `MISTRAL_API_KEY` - key riêng của Mistral (KHÔNG qua OpenRouter) - bắt buộc cho bước trích 3 bảng PDF,
-  OCR toàn văn lúc xuất (`lib/export/full-document.ts`), và duyệt trang tìm nguồn riêng
-  (`lib/ai/mistral-chat.ts`).
+- `MISTRAL_API_KEY` - key riêng của Mistral (KHÔNG qua OpenRouter) - bắt buộc cho bước trích 3 bảng PDF
+  (`lib/export/financial-statements.ts`, qua Batch API) và duyệt trang tìm nguồn riêng
+  (`lib/ai/mistral-chat.ts`). KHÔNG cần cho `app/api/report-file` (Excel dùng lại kết quả OCR sẵn có,
+  PDF không còn OCR gì - xem mục "Xuất Excel" ở trên).
 - `MISTRAL_OCR_MODEL` - mặc định `mistral-ocr-latest`.
 - `MISTRAL_CHAT_MODEL` - mặc định `mistral-large-latest` (dùng cho `lib/custom-source.ts`).
 - `GITHUB_DISPATCH_TOKEN` - PAT GitHub (scope `Actions: Read and write` + `Contents: Read and write`,
@@ -204,18 +214,19 @@ cùng tác giả (`loc_tin`, `Loc_Tin_Mistral`, `loc_tin_qwen`) đã dùng thậ
    không giới hạn vài giây như serverless), rồi commit `data/latest-fetch.json` lại `main` - cú push đó
    tự khiến Vercel deploy lại. Web polling `generatedAt`/`lastCustomSourceCheck` rồi reload. **KHÔNG cần
    Vercel Blob/S3** - chỉ 1 file JSON nhẹ được commit, không phải file PDF/Excel.
-2. **"Xuất Excel/PDF"** (nhẹ, xử lý ĐÚNG 1 báo cáo) - chạy THẲNG trong 1 API route Vercel bình thường
-   (`app/api/report-file`), KHÔNG cần dispatch - tải lại file gốc từ `fileUrl` + OCR toàn văn ngay lúc đó
-   (Mistral đủ nhanh cho serverless, đúng "hướng 3" đã bàn trước đây, nhưng áp dụng cho xuất-từng-báo-cáo
-   thay vì cho cả pipeline hàng loạt).
+2. **"Xuất Excel"** (nhẹ, xử lý ĐÚNG 1 báo cáo) - chạy THẲNG trong 1 API route Vercel bình thường
+   (`app/api/report-file`), KHÔNG cần dispatch, KHÔNG OCR lại - dùng thẳng `report.statements` đã OCR
+   sẵn lúc "Tải BCTC" (lưu trong `data/latest-fetch.json`). **"Xuất PDF"** (từ 2026-07-07) không còn
+   qua route này nữa - chỉ mở thẳng file gốc trên Vietstock ở tab mới (xem `lib/original-file-url.ts`),
+   không tốn OCR/token gì thêm.
 
 Việc cần làm 1 lần (không tự động hoá được, cần đăng nhập tài khoản/tạo token):
 - Tạo GitHub PAT (fine-grained, scope `Actions: Read and write` + `Contents: Read and write`, giới hạn
   đúng repo) → set làm biến môi trường **Vercel** `GITHUB_DISPATCH_TOKEN`.
 - Set secret **GitHub repo** (Settings → Secrets and variables → Actions): `MISTRAL_API_KEY` (bắt buộc,
   workflow cần để OCR 3 bảng), `MISTRAL_OCR_MODEL`/`MISTRAL_CHAT_MODEL` (tuỳ chọn).
-- `MISTRAL_API_KEY` set trên **Vercel** (mục biến môi trường ở trên) vẫn cần riêng - dùng cho
-  `app/api/report-file` (OCR toàn văn lúc xuất, chạy trên Vercel) - 2 nơi set KHÁC NHAU, cùng 1 giá trị.
+- `MISTRAL_API_KEY` set trên **Vercel** hiện KHÔNG cần cho `app/api/report-file` nữa (route này không
+  còn OCR gì cả, xem mục 2 ở trên) - chỉ cần set trên **GitHub repo secret** cho workflow batch ở trên.
 
 `lib/report-source.ts` giải nén RAR qua `node-unrar-js` (WASM) bằng đường dẫn `process.cwd()` tới
 `node_modules` (tránh webpack/`@vercel/nft` cố bundle file `.wasm`) - chạy trên GitHub Actions runner

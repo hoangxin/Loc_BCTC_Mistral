@@ -136,7 +136,7 @@ export interface RunFetchPipelineOptions {
 // dinh dang (pdf/docx/doc, giai nen zip/rar neu can - lib/report-source.ts) ->
 // trich 3 bang (Mistral OCR pham vi truoc "Thuyet minh" cho pdf, doc truc
 // tiep cho docx/doc - lib/report-extract.ts) -> ap tieu chi doc BCTC
-// (lib/analysis.ts, hien TODO) -> phan loai Hop nhat/Rieng le/Chung
+// (lib/analysis.ts) -> phan loai Hop nhat/Rieng le/Chung
 // (lib/statement-scope.ts) cho TAT CA bao cao trich thanh cong -> ghi
 // data/latest-fetch.json (CHI file nay, KHONG con ghi .xlsx/.clean.pdf o day
 // nua - buoc do dua sang luc user bam "Xuat", tai lai file goc tu fileUrl).

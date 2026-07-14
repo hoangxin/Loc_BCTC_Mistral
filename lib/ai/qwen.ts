@@ -3,7 +3,7 @@
 const DEFAULT_MAX_TOKENS = 4096;
 
 // Tu dong thu lai khi gap loi mang/tam thoi - xem giai thich chi tiet o
-// lib/ai/qwen-vision.ts (cung 1 ly do, dung chung nguong/thoi gian cho).
+// lib/ai/mistral-ocr.ts (cung 1 ly do, dung chung nguong/thoi gian cho).
 const MAX_NETWORK_RETRIES = 3;
 const RETRY_DELAY_MS = 2000;
 

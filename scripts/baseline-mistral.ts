@@ -1,3 +1,13 @@
+// !!! DA CU/NGUY HIEM - KHONG CHAY LAI NHU HIEN TRANG !!!
+// Viet 2026-07-08, TRUOC khi chuyen sang Batch API (2026-07-12). Tu dung lai
+// vong lap probe theo trang va goi thang callMistralOcr (sync, gia gap doi,
+// da bi thay bang callMistralOcrBatch trong pipeline chinh) - day CHINH LA
+// anti-pattern ma CLAUDE.md muc "Sự cố 2026-07-14" cam: KHONG tu viet lai
+// vong lap goi OCR trong 1 script roi, luon tai dung
+// extractFinancialStatementsWithOcrProbe (lib/export/financial-statements.ts)
+// hoac extractReportContent (lib/report-extract.ts). Giu lai file nay chi de
+// tham khao lich su, KHONG chay truc tiep - neu can baseline lai, viet script
+// moi goi ham production o tren.
 import { existsSync } from 'fs';
 import { join } from 'path';
 import { writeFile } from 'fs/promises';

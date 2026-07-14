@@ -2,18 +2,16 @@ import { readFile } from 'fs/promises';
 import { slicePdfPages } from './pdf-slice';
 
 // Client Mistral OCR (API rieng cua Mistral, endpoint /v1/ocr - KHONG qua
-// OpenRouter) - thay the hoan toan Qwen vision (lib/ai/qwen-vision.ts, van con
-// giu file nhung khong con noi nao goi) tu 2026-07-05, sau khi test that cho
-// thay ket qua chinh xac hon nhieu (0 loi kiem tra cheo tren 2/2 bao cao that
-// da test, xem README/memory) va re hon.
+// OpenRouter) - thay the hoan toan Qwen vision tu 2026-07-05, sau khi test
+// that cho thay ket qua chinh xac hon nhieu (0 loi kiem tra cheo tren 2/2 bao
+// cao that da test, xem README/memory) va re hon.
 
 // Tu dong thu lai khi gap loi MANG/TAM THOI (mat ket noi giua chung, response
-// bi cat cut khong con la JSON hop le, rate limit, loi server 5xx) - GIONG HET
-// pattern da dung cho Qwen vision (lib/ai/qwen-vision.ts), ap dung lai o day
-// theo yeu cau user 2026-07-05 khi clone project nay: chay hang loat khong
-// giam sat thi mat mang tam thoi khong duoc lam mat ca 1 bao cao. KHONG retry
-// loi 4xx khac (vd sai API key, request sai dinh dang) vi thu lai cung se loi
-// y het, chi ton thoi gian - fail ngay cho cac loi do.
+// bi cat cut khong con la JSON hop le, rate limit, loi server 5xx) - theo yeu
+// cau user 2026-07-05 khi clone project nay: chay hang loat khong giam sat
+// thi mat mang tam thoi khong duoc lam mat ca 1 bao cao. KHONG retry loi 4xx
+// khac (vd sai API key, request sai dinh dang) vi thu lai cung se loi y het,
+// chi ton thoi gian - fail ngay cho cac loi do.
 const MAX_NETWORK_RETRIES = 3;
 const RETRY_DELAY_MS = 2000;
 

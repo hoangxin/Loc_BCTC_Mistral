@@ -26,10 +26,10 @@ export interface FullReportResult {
 // ve tu ham nay la 1 PHEP TINH DOC LAP, KHONG lien quan gi den `analysis`/
 // `statements` da hien tren bang ket qua luc "Tai BCTC".
 //
-// parseStatementsFromMarkdown da duoc sua (xem NOTES_SECTION_MARKERS trong
-// markdown-tables.ts) de tu chan muc "Luu chuyen tien te" truoc "Thuyet minh"
-// ke ca khi dau vao la TOAN VAN (khac han cach goi cu chi truyen dung pham vi
-// truoc Thuyet minh) - khong can Tesseract do diem cat nhu buoc "Tai BCTC".
+// parseStatementsFromMarkdown tu chan muc "Luu chuyen tien te" truoc "Thuyet
+// minh" (xem findCashFlowEndingSequenceIndex trong markdown-tables.ts) ke ca
+// khi dau vao la TOAN VAN (khac han cach goi cu chi truyen dung pham vi truoc
+// Thuyet minh) - khong can Tesseract do diem cat nhu buoc "Tai BCTC".
 export async function extractFullReportFromPdf(filePath: string): Promise<FullReportResult> {
   const { pages } = await callMistralOcr(filePath);
   const markdown = pages.map((p) => p.markdown).join('\n\n');

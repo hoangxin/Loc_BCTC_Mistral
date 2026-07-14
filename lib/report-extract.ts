@@ -58,7 +58,7 @@ export async function extractReportContent(resolved: ResolvedReportFile): Promis
   // 1 lan goi OCR nao ca (mien phi, xem lib/pdf-text.ts).
   if (scope?.isLikelyNonVietnamese) return null;
 
-  const ocrLabel = `[perf] extractFinancialStatements (Mistral) ${resolved.filePath}`;
+  const ocrLabel = `[perf] extractFinancialStatementsWithOcrProbe (Mistral) ${resolved.filePath}`;
   console.time(ocrLabel);
   try {
     // LUON OCR THEO LO tang dan qua Mistral (12 trang dau + mo rong 2

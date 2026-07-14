@@ -179,9 +179,9 @@ export interface CallMistralOcrBatchOptions {
 }
 
 // Drop-in thay callMistralOcr (./mistral-ocr.ts) khi da bat billing tren tai
-// khoan Mistral - hien CHUA duoc goi o dau trong pipeline chinh
-// (lib/export/financial-statements.ts van dung callMistralOcr dong bo nhu
-// cu), chi ton tai san sang de doi 1 dong import sau nay.
+// khoan Mistral - DA DUOC DUNG THAT trong pipeline chinh tu 2026-07-12 (xem
+// canh bao dau file file nay va lib/export/financial-statements.ts, noi
+// callMistralOcr dong bo chi con la fallback comment lai).
 //
 // KHAC callMistralOcr: khong can "paced()" (gioi han 1 request/giay cua free
 // tier, xem mistral-ocr.ts) - tai khoan da bat billing co gioi han rate cao

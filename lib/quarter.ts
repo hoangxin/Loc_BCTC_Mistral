@@ -20,9 +20,14 @@ export function getPreviousQuarter(now = new Date()): QuarterPeriod {
   return { quarter: currentQuarter - 1, year };
 }
 
-export function isSameQuarter(a: QuarterPeriod, b: QuarterPeriod): boolean {
-  return a.quarter === b.quarter && a.year === b.year;
-}
+// KHONG con noi nao goi (xac nhan qua grep toan repo) - so sanh ky "tu lan tai
+// cuoi" tren UI gio lam qua ReportTerm.termId (xem termLastFetch/sinceLastHoursForTerm,
+// app/page.tsx), khong con dung QuarterPeriod nua vi Vietstock co ca ky "6T"/"9T"/
+// "Nam" ngoai Quy 1-4 (xem fetchReportTerms). Giu lai comment (khong xoa ham)
+// phong khi can so sanh lai theo Quy/Nam don thuan:
+// export function isSameQuarter(a: QuarterPeriod, b: QuarterPeriod): boolean {
+//   return a.quarter === b.quarter && a.year === b.year;
+// }
 
 // Truoc day co listRecentQuarters() sinh san 8 quy gan nhat bang tinh toan
 // lich thuan tuy - da BO (2026-07-05): Vietstock khong chi co Quy 1-4 (con co

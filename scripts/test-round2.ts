@@ -1,3 +1,8 @@
+// Vong 2 so sanh model (2026-07-08, xem README/memory reference_mistral_batch_api)
+// - da CHOT dung Mistral, script nay chi con gia tri lich su. Can
+// `scripts/out/tix-pages-base64.json` co san TRUOC khi chay (khong co script
+// nao trong repo tu sinh file nay nua) - KHONG chay thang duoc neu chua tu
+// tao lai file input do.
 import { existsSync } from 'fs';
 import { join } from 'path';
 import { readFile, writeFile } from 'fs/promises';

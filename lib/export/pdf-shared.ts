@@ -8,15 +8,15 @@ import { normalizeLabelText } from './statement-shared';
 // khong gan gi voi noi dung BCTC cu the, de dung chung cho ca xuat 1 bao cao
 // (pdf.ts) va xuat bang tong hop nhieu cong ty (summary-pdf.ts).
 
-export const PAGE_WIDTH = 595.28; // A4, don vi pt
-export const PAGE_HEIGHT = 841.89;
+const PAGE_WIDTH = 595.28; // A4, don vi pt
+const PAGE_HEIGHT = 841.89;
 export const MARGIN = 40;
-export const CONTENT_WIDTH = PAGE_WIDTH - MARGIN * 2;
+const CONTENT_WIDTH = PAGE_WIDTH - MARGIN * 2;
 export const BODY_SIZE = 10;
-export const TABLE_SIZE = 8;
+const TABLE_SIZE = 8;
 export const HEADING_SIZE = 15;
 export const SUBHEADING_SIZE = 11;
-export const BORDER_COLOR = rgb(0.6, 0.6, 0.6);
+const BORDER_COLOR = rgb(0.6, 0.6, 0.6);
 
 // Dung font Noto Sans dong goi san trong repo (ho tro day du tieng Viet co
 // dau) thay vi font chuan cua pdf-lib (Helvetica/Times khong co dau tieng
