@@ -904,6 +904,41 @@ function fuzzyIncludes(haystack: string, needle: string, threshold = 0.92): bool
   return 1 - minDist / needle.length >= threshold;
 }
 
+// "Lai" (lai) va "Lo" (lo) chi cach nhau 1-2 ky tu edit-distance nhung mang Y
+// NGHIA DOI NHAU HOAN TOAN (lai = lai, lo = lo) - tren 1 marker/nhan dai (~40+
+// ky tu), chenh lech nay van lot qua nguong tuong dong 92% cua fuzzyIncludes,
+// khien 1 marker "Lo tu..." khop NHAM voi dong "Lai tu..." hoan toan doi
+// nghia - da xac nhan qua VND that (2026-07-14): marker rong "Lo tu cac
+// khoan dau tu nam giu den ngay dao han" (HTM, dong nay VND khong co) fuzzy-
+// khop nham dong doanh thu "Lai tu cac khoan dau tu nam giu den ngay dao han"
+// (dong hoan toan khac, thuoc muc DOANH THU chu khong phai CHI PHI), cong
+// nham hang trăm ty vao "Cong chi phi hoat dong". Chan rieng tang fuzzy (tang
+// exact/substring von da an toan vi "LO" khong phai substring cua "LAI") -
+// neu ca marker va dong deu bat dau bang 1 trong 2 tu doi nghia nay VA khac
+// nhau, coi la KHONG khop du diem tuong dong cao the nao.
+// LUU Y: dau phan cach [.\/)-] sau nhom so/so La Ma la BAT BUOC (+, khong
+// phai *) - neu de tuy chon, chu "L" dau cua chinh tu "LO" (Lo = mang nghia
+// KHAC "L" = so La Ma 50) se bi hieu NHAM la tien to so thu tu don le va bi
+// cat mat, lam "LO CAC KHOAN..." con lai "O CAC KHOAN..." - khong con nhan
+// dung la tu "LO" nua (da xac nhan qua VND that 2026-07-14).
+// Nhom lap (+) o ngoai de boc het NHIEU TANG so thu tu lien tiep (vd "1.1."
+// BVS: 2 tang "1." roi "1." nua) - 1 lan strip DON le se chi bo tang dau,
+// con lai "1. LAI TU..." van bat dau bang chu so nen khong nhan ra duoc tu
+// "LAI"/"LO" phia sau (da xac nhan qua BVS that 2026-07-14, nhan da qua 2
+// tang danh so "1.1."/"2.1.").
+const LEADING_NUMBERING_FOR_SIGN_WORD = /^(?:[\dIVXLCDM]+\s*[.\/)-]+\s*)+/;
+function leadingSignWord(normalizedText: string): 'LAI' | 'LO' | null {
+  const stripped = normalizedText.replace(LEADING_NUMBERING_FOR_SIGN_WORD, '');
+  if (/^LAI\b/.test(stripped)) return 'LAI';
+  if (/^LO\b/.test(stripped)) return 'LO';
+  return null;
+}
+function hasOppositeSignWordConflict(rowNorm: string, marker: string): boolean {
+  const rowSign = leadingSignWord(rowNorm);
+  const markerSign = leadingSignWord(marker);
+  return rowSign !== null && markerSign !== null && rowSign !== markerSign;
+}
+
 // Uu tien lan khop CUOI CUNG trong moi tang (exact roi substring roi fuzzy) -
 // cung 1 ly do voi findWholeCodeRow (dong RAC dinh o DAU bang, PAP that).
 // NHUNG: CT6 that lai gap chieu NGUOC LAI - bang co hang chuc dong "thuyet
@@ -947,9 +982,27 @@ function findRowIndexByContentMarkers(table: StatementTable, labelIndex: number,
     hasValidCode
   );
   if (exactIdx !== -1) return exactIdx;
-  const substringIdx = lastMatchingRowIndex(table.rows, labelIndex, (norm) => markers.some((m) => norm.includes(m)), hasValidCode);
+  // Guard "Lai"/"Lo" doi nghia ap dung CA tang substring, khong chi fuzzy -
+  // da xac nhan qua BVS that (2026-07-14): dong doanh thu "Lai tu...ghi nhan
+  // thong qua lai/lo (FVTPL)" va dong chi phi "Lo cac...ghi nhan thong qua
+  // lai lo (FVTPL)" CUNG chua chung cum mo ta "ghi nhan thong qua lai (lo)" -
+  // marker chi khop cum do (khong phai tien to Lai/Lo) se khop CA 2 dong, va
+  // "khop cuoi cung" chon nham dong SAU (chi phi) thay vi dong dung (doanh
+  // thu). Tang exact KHONG can guard (da doi hoi khop tuyet doi toan bo nhan,
+  // Lai/Lo khac nhau la khac nhan ngay).
+  const substringIdx = lastMatchingRowIndex(
+    table.rows,
+    labelIndex,
+    (norm) => markers.some((m) => !hasOppositeSignWordConflict(norm, m) && norm.includes(m)),
+    hasValidCode
+  );
   if (substringIdx !== -1) return substringIdx;
-  return lastMatchingRowIndex(table.rows, labelIndex, (norm) => markers.some((m) => fuzzyIncludes(norm, m)), hasValidCode);
+  return lastMatchingRowIndex(
+    table.rows,
+    labelIndex,
+    (norm) => markers.some((m) => !hasOppositeSignWordConflict(norm, m) && fuzzyIncludes(norm, m)),
+    hasValidCode
+  );
 }
 
 // He thong cong thuc HOP NHAT - TAT CA loai hinh (DN thuong/CTCK/Bao hiem/
@@ -988,7 +1041,20 @@ function evaluateNamedFormulas(table: StatementTable, formulas: FormulaDef[]): G
     // Thieu 1 dong BAT BUOC (khong phai tuy chon) - bo qua an toan, khong du
     // du lieu de ket luan. Dong tuy chon khong tim thay = 0, van tiep tuc.
     if (termLookup.some(({ t, idx }) => !t.optional && (idx === -1 || idx === targetIdx))) continue;
-    const usableTerms = termLookup.filter(({ idx }) => idx !== -1 && idx !== targetIdx);
+    // 2 term khac nhau (vd "chi phi du phong" va "chi phi di vay cua cac
+    // khoan cho vay") co the cung khop vao 1 dong VAT LY DUY NHAT khi cong ty
+    // gop chung nhieu khai niem vao 1 dong (VND that 2026-07-14: mã 24 la 1
+    // dong DUY NHAT "Chi phi du phong tai san tai chinh...VA chi phi di vay
+    // cua cac khoan cho vay", khop CA 2 marker roi). Neu khong khu trung, dong
+    // do bi cong 2 LAN vao tong - loai cac lan khop TRUNG dong (idx) sau lan
+    // dau tien, giu nguyen dau (sign) cua lan dau.
+    const seenRowIndexes = new Set<number>();
+    const usableTerms = termLookup.filter(({ idx }) => {
+      if (idx === -1 || idx === targetIdx) return false;
+      if (seenRowIndexes.has(idx)) return false;
+      seenRowIndexes.add(idx);
+      return true;
+    });
 
     for (const col of valueCols) {
       let sum = 0;
@@ -1068,7 +1134,17 @@ const CTCK_INCOME_FORMULAS: FormulaDef[] = [
     groupLabel: 'Cong doanh thu hoat dong',
     target: ['CONG DOANH THU HOAT DONG', 'TONG DOANH THU HOAT DONG'],
     terms: [
-      opt(['LAI TU CAC TAI SAN TAI CHINH']), // "...duoc ghi nhan theo gia tri hop ly thong qua lai/(lo)" hoac "...ghi nhan thong qua lai/lo" (FVTPL)
+      // BVS that (2026-07-14): marker CU "LAI TU CAC TAI SAN TAI CHINH" chi la
+      // TIEN TO CHUNG cua CA dong FVTPL ("...ghi nhan thong qua lai/lo (FVTPL)")
+      // LAN dong AFS rieng biet ("...san sang de ban (AFS)") - "khop cuoi cung"
+      // (uu tien dong xuat hien SAU trong bang) chon NHAM dong AFS thay vi dong
+      // FVTPL that, lam dong FVTPL (gia tri lon nhat trong nhom) bi LOAI HOAN
+      // TOAN khoi tong. Doan 2 nay ("ghi nhan...thong qua lai") con LAP LAI y
+      // het o CA dong CHI PHI FVTPL doi ung ("Lo cac tai san...ghi nhan thong
+      // qua lai lo (FVTPL)") - phai giu nguyen chu "LAI TU" (dung TEN CHI TIEU
+      // that, giong cach dong CHI PHI FVTPL da giu "LO TU") lam mo neo dau, chu
+      // khong chi dua vao doan mo ta chung o giua cau.
+      opt(['LAI TU CAC TAI SAN TAI CHINH GHI NHAN THEO GIA TRI HOP LY THONG QUA LAI', 'LAI TU CAC TAI SAN TAI CHINH GHI NHAN THONG QUA LAI']),
       opt(['LAI TU CAC KHOAN DAU TU NAM GIU DEN NGAY DAO HAN']),
       opt(['LAI TU CAC KHOAN CHO VAY VA PHAI THU']),
       opt(['LAI TU TAI SAN TAI CHINH SAN SANG DE BAN', 'LAI TU CAC TAI SAN TAI CHINH SAN SANG']),
@@ -1102,7 +1178,7 @@ const CTCK_INCOME_FORMULAS: FormulaDef[] = [
       opt(['CHI PHI NGHIEP VU TU VAN DAU TU CHUNG KHOAN']),
       opt(['CHI PHI NGHIEP VU LUU KY CHUNG KHOAN']),
       opt(['CHI PHI HOAT DONG TU VAN TAI CHINH', 'CHI PHI NGHIEP VU TU VAN TAI CHINH']), // HCM dung "nghiep vu" thay vi "hoat dong" (2026-07-13)
-      opt(['CHI PHI CAC DICH VU KHAC']),
+      opt(['CHI PHI CAC DICH VU KHAC', 'CHI PHI HOAT DONG KHAC']), // VND that 2026-07-14: cung dong "muc 32" nhung dat ten "Chi phi hoat dong khac" thay vi "Chi phi cac dich vu khac" (BVS/PHS)
       opt(['CHI PHI DI VAY CUA CAC KHOAN CHO VAY']), // HCM that 2026-07-13: dong chi phi rieng, khong co o VCK/PHS/MBS
     ],
   },
