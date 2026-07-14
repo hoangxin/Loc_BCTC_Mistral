@@ -980,12 +980,25 @@ const NO_UNRELIABLE_CELLS_BY_TABLE: UnreliableCells = { balanceSheet: NO_UNRELIA
 // incomeStatement - xem findAllGroupSumMismatches, lib/export/validate-statements.ts)
 // - offBalanceSheet LUON dung Set RONG (chua co kiem tra cheo rieng cho bang
 // nay) de tranh rowIndex trung ngau nhien giua cac bang khac nhau bi hieu nham.
+// Thu tu hien cot yeu cau nguoi dung 2026-07-14: KQKD (incomeStatement) truoc,
+// roi toi BCDKT (balanceSheet), cuoi cung la ngoai bang (offBalanceSheet, chi
+// CTCK/bank). Sap xep O DAY (khong doi thu tu khai bao trong tung mang
+// *_METRICS) de khong dung cham logic finder/nhan dien dong - sort on truoc
+// khi map giu nguyen thu tu tuong doi giua cac chi tieu cung 1 statement (Array.sort
+// da la stable tu ES2019).
+const STATEMENT_ORDER: Record<MetricDef['statement'], number> = {
+  incomeStatement: 0,
+  balanceSheet: 1,
+  offBalanceSheet: 2,
+};
+
 function buildAnalysisRows(statements: FinancialStatements, metrics: MetricDef[], unreliableCells: UnreliableCells): AnalysisRow[] {
   const balanceSheetPeriods = balanceSheetPeriodColumns(statements.balanceSheet);
   const incomeStatementPeriods = incomeStatementPeriodColumns(statements.incomeStatement);
   const offBalanceSheetPeriods = balanceSheetPeriodColumns(statements.offBalanceSheet);
+  const orderedMetrics = [...metrics].sort((a, b) => STATEMENT_ORDER[a.statement] - STATEMENT_ORDER[b.statement]);
 
-  return metrics.map((metric) => {
+  return orderedMetrics.map((metric) => {
     const table =
       metric.statement === 'balanceSheet'
         ? statements.balanceSheet

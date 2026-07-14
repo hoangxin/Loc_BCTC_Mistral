@@ -3,6 +3,7 @@
 import { useMemo, useState } from 'react';
 import type { DownloadedReport } from '@/lib/status';
 import { buildOriginalFileUrl } from '@/lib/original-file-url';
+import WarningBadge from './WarningBadge';
 
 function collectLabels(reports: DownloadedReport[]): string[] {
   const labels: string[] = [];
@@ -128,11 +129,7 @@ export default function ReportsSummaryTable({ reports }: { reports: DownloadedRe
                       : isOnlyUnverifiable
                         ? 'report-warning-badge-muted'
                         : '';
-                    return (
-                      <span className={`report-warning-badge ${severityClass}`} title={report.warnings.join('\n')}>
-                        ⚠ {report.warnings.length}
-                      </span>
-                    );
+                    return <WarningBadge warnings={report.warnings} severityClass={severityClass} />;
                   })()}
                 </td>
                 <td className="exchange-col">

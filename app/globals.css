@@ -19,10 +19,16 @@ body {
   margin: 0;
 }
 
+/* Truoc day gioi han 1180px + margin auto tao 2 khoang trong lon 2 ben man
+hinh rong (yeu cau nguoi dung 2026-07-14, thay o tab "Chon bao cao loc" trong
+khi tab "Ket qua" can toi da chieu rong de hien nhieu cot % - vd bang bank co
+toi 18 cot %). Doi sang max-width lon hon + padding ngang co dinh (thay margin
+auto) de noi dung dung sat 2 canh man hinh tren man hinh rong, van co gioi han
+tren man hinh sieu rong (4K) de header/tabs khong bi keo dai qua muc doc duoc. */
 .page {
-  max-width: 1180px;
+  max-width: 1800px;
   margin: 0 auto;
-  padding: 24px 16px 64px;
+  padding: 24px 32px 64px;
 }
 
 .site-header {
@@ -248,7 +254,70 @@ body {
   border-radius: 999px;
   background: #fff3cd;
   color: #8a6500;
-  cursor: help;
+  cursor: pointer;
+}
+
+/* Popup danh sach canh bao day du (app/WarningBadge.tsx) - thay the native
+title tooltip hay bi tran man hinh khi qua nhieu dong (yeu cau nguoi dung
+2026-07-14). position: fixed nen khong bi report-table-wrapper (overflow-x:
+auto) cat mat du bam o hang dau/cuoi bang. */
+.warning-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 24px;
+}
+
+.warning-modal {
+  background: var(--surface);
+  border-radius: 10px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
+  width: 100%;
+  max-width: 560px;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.warning-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border);
+  color: var(--accent);
+}
+
+.warning-modal-close {
+  border: none;
+  background: transparent;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  color: var(--text-muted);
+  padding: 2px 6px;
+}
+
+.warning-modal-close:hover {
+  color: var(--text);
+}
+
+.warning-modal-list {
+  margin: 0;
+  padding: 14px 18px 18px 34px;
+  overflow-y: auto;
+  font-size: 13px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+
+.warning-modal-list li + li {
+  margin-top: 8px;
 }
 
 .report-warning-badge-severe {
