@@ -645,26 +645,67 @@ const BANK_THRESHOLDS_C: Thresholds = { level1: 30, level2: 40 };
 // BALANCE_SHEET_CONTENT_MARKERS (markdown-tables.ts) de nua B khong bi rot
 // nham vao offBalanceSheet do trung chu "Tien gui cua khach hang" voi bang
 // ngoai BCTC cua CTCK.
-// BID that (2026-07-14): dong tong GOP CHUNG cua BID ("III. Tien, vang gui
-// tai VA cho vay TCTD khac") khong co chu "cac" truoc "TCTD khac" (khac HDB/
-// VCB/MBB deu dung "cho vay CAC TCTD khac") nen 2 bien the cu khong khop -
-// them bien the thieu "cac" nay. Dong tong nay CON DA TRU SAN "Du phong rui
-// ro cho vay cac TCTD khac" (am) trong gia tri cua no - QUAN TRONG: KHONG tu
-// dung lai bang cach cong rieng 2 dong con (Tien gui tai + Cho vay), vi lam
-// vay se BO SOT phan Du phong am do (tung thu, sai ~15.58% thanh 14.67%, vi
-// dong "III" da chua san Cho vay ben trong, cong rieng dong Cho vay THEM 1
-// lan nua se dem trung) - LUON uu tien dung dong TONG THAT bao cao da co san
-// (chinh xac hon, gom du ca 3 thanh phan) thay vi tu ghep lai tu cac dong con.
+// So sanh "gan bang nhau" cho phep sai so nho (lam tron/OCR) - cung nguong
+// dung o findAllGroupSumMismatches (statement-shared.ts), dung rieng o day vi
+// khong import duoc ham noi bo cua file do.
+function numbersWithinTolerance(a: number, b: number): boolean {
+  return Math.abs(a - b) <= Math.max(1000, Math.abs(b) * 0.005);
+}
+
+// SUA 2026-07-14 (theo yeu cau nguoi dung, sau khi BID lo ra 1 bien the ten
+// moi "Tien, VANG gui tai va cho vay TCTD khac" - thieu chu "cac", chen them
+// "vang" - lam 2 bien the du lieu cu (byLabelAnyOf) khong khop): THAY VI liet
+// ke tung bien the chinh ta tung ngan hang (de vo lai moi khi gap ten moi),
+// gom TAT CA dong CO THE LIEN QUAN (goi la "ung vien" - qua CAU TRUC, khong
+// phai tu ngu chinh xac: co "GUI TAI" HOAC "CHO VAY", di kem "TCTD KHAC"/"TO
+// CHUC TIN DUNG KHAC") roi XAC MINH BANG PHEP CONG xem co ung vien nao CHINH
+// LA TONG cua cac ung vien con lai hay khong (o tat ca cot gia tri):
+// - Neu CO (vd BID: dong "III" = dong "Tien gui tai" + dong "Cho vay" + dong
+//   "Du phong" am) -> DUNG THANG dong tong do, KHONG tu cong lai thu cong (an
+//   toan hon, gom du moi khoan dieu chinh nhu du phong ma khi tu cong co the
+//   bo sot).
+// - Neu KHONG (ngan hang chi in cac dong thanh phan, khong co dong tong rieng)
+//   -> cong TAT CA ung vien lai.
+// Cach nay TU DONG dung voi moi bien the ten (them/bot "vang", co/khong "cac",
+// viet tat/khong viet tat...) ma khong can liet ke tay tung truong hop, vi
+// khong con dua vao KHOP CHINH XAC cum tu nua - chi dua vao CAU TRUC (co mat
+// "GUI TAI"/"CHO VAY" + "TCTD KHAC") VA PHEP CONG THAT (nguyen tac ke toan),
+// dung tinh than "khong doan bua tu ten, xac minh bang so lieu that".
 function findTienGuiChoVayTctdKhac(table: StatementTable): Row | null {
-  return byLabelAnyOf([
-    ['TIEN GUI TAI', 'CHO VAY CAC TCTD KHAC'],
-    ['TIEN GUI TAI', 'CHO VAY CAC TO CHUC TIN DUNG KHAC'],
-    // BID chen them "vang" giua "Tien," va "gui tai" ("Tien, vang gui tai va
-    // cho vay TCTD khac") - "TIEN GUI TAI" lien tuc khong con khop, dung rieng
-    // "GUI TAI" (van du dac trung khi di kem "CHO VAY TCTD KHAC").
-    ['GUI TAI', 'CHO VAY TCTD KHAC'],
-    ['GUI TAI', 'CHO VAY TO CHUC TIN DUNG KHAC'],
-  ])(table);
+  const labelIndex = findLabelColumnIndex(table.columns, table.rows);
+  const cols = valueColumnIndexes(table);
+
+  const candidates = table.rows.filter((row) => {
+    const label = row[labelIndex];
+    if (typeof label !== 'string') return false;
+    const l = normalizeLabelText(label);
+    // Phia No phai tra dung "GUI ... VA VAY" (khong phai "GUI TAI"/"CHO VAY")
+    // nen tu dong bi loai qua cau truc, khong can loai tru rieng.
+    const isTctdKhac = l.includes('TCTD KHAC') || l.includes('TO CHUC TIN DUNG KHAC');
+    return isTctdKhac && (l.includes('GUI TAI') || l.includes('CHO VAY'));
+  });
+  if (candidates.length === 0) return null;
+  if (candidates.length === 1) return candidates[0];
+
+  const totalRow = candidates.find((candidate) =>
+    cols.every((col) => {
+      const value = candidate[col];
+      if (typeof value !== 'number') return false;
+      const othersSum = candidates.reduce((sum, row) => {
+        if (row === candidate) return sum;
+        const v = row[col];
+        return typeof v === 'number' ? sum + v : sum;
+      }, 0);
+      return numbersWithinTolerance(value, othersSum);
+    })
+  );
+  if (totalRow) return totalRow;
+
+  return table.columns.map((_, i) => {
+    if (i === labelIndex) return 'Tien gui & cho vay TCTD khac (gop tu cac dong thanh phan)';
+    const values = candidates.map((row) => row[i]).filter((v): v is number => typeof v === 'number');
+    return values.length > 0 ? values.reduce((sum, v) => sum + v, 0) : null;
+  });
 }
 
 const BANK_METRICS: MetricDef[] = [
