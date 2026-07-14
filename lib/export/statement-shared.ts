@@ -1131,12 +1131,32 @@ function findRowIndexByContentMarkers(table: StatementTable, labelIndex: number,
 // Mac dinh (khong danh dau) = BAT BUOC - khong tim thay = BO QUA AN TOAN ca
 // cong thuc (khong du du lieu de ket luan, giu dung nguyen tac "khong doan
 // khi thieu tin hieu" da chot tu truoc).
-// `magnitude: true` = dong CHI PHI THUAN TUY (Gia von hang ban, Chi phi ban
-// hang, Chi phi quan ly doanh nghiep, Chi phi tai chinh...) - noi dau am/duong
-// in tren bao cao CHI la quy uoc HIEN THI cua tung cong ty, khong mang y
-// nghia lai/lo (xem comment o evaluateNamedFormulas). KHONG dung cho cac dong
-// "Lai/(Lo)..." (dau am o do la thong tin that ve khoan LO).
-interface FormulaTerm { markers: string[]; sign: 1 | -1; optional?: boolean; magnitude?: boolean; }
+// `magnitude: true` = dong CHI PHI THUAN TUY THEO BAN CHAT (Gia von hang ban,
+// Chi phi ban hang, Chi phi quan ly doanh nghiep, cac khoan giam tru doanh
+// thu, thue TNDN...) - KHONG THE nao la 1 khoan lai/gain du trong hoan canh
+// nao (vd "gia von hang ban am" la vo nghia ve ke toan) nen dau am/duong in
+// tren bao cao CHAC CHAN chi la quy uoc HIEN THI cua tung cong ty - lay
+// Math.abs() truoc khi nhan dau LUON AN TOAN cho nhom nay.
+//
+// `netAmbiguous: true` = dong CO THE la khoan lai/gain THAT trong 1 so ky (vd
+// "Chi phi tai chinh" thuong la CHI PHI nhung 1 vai cong ty/ky co the la
+// khoan LAI RONG neu doanh thu tai chinh gop chung vao dong nay hoac co hoan
+// nhap du phong/lai ty gia lon; "Chi phi khac" tuong tu, doi khi la hoan nhap/
+// thu nhap rong) - KHAC han nhom "magnitude" o tren, KHONG THE ket luan chac
+// chan dau am chi la quy uoc hien thi hay la thong tin LO/LAI that (da xac
+// nhan qua doi chieu that 2026-07-14: ACG can Math.abs de dung - "Chi phi tai
+// chinh" luon am, thuan tuy chi phi - trong khi IDV lai can GIU NGUYEN dau -
+// "Chi phi tai chinh" CHUYEN dau giua 2 ky trong CUNG 1 bao cao, chung to no
+// la 1 dong lai/lo THAT chu khong phai quy uoc hien thi co dinh; ap Math.abs
+// vo dieu kien cho IDV se sai hoan toan "Loi nhuan thuan"/"Loi nhuan khac").
+// Vi KHONG THE phan biet 2 truong hop nay tu TEN dong (cung 1 ten "Chi phi
+// tai chinh"/"Chi phi khac" cho ca 2 kieu cong ty), evaluateNamedFormulas THU
+// CA 2 CACH tinh (giu nguyen dau LAN Math.abs) cho rieng cac term danh dau
+// nay, chap nhan khop neu BAT KY cach nao dung - an toan hon ep 1 chieu duy
+// nhat (se sai voi 1 trong 2 nhom cong ty), dung tinh than "khong doan bua
+// khi khong the xac dinh chac chan, uu tien tranh bao sai hon la bat het moi
+// loi co the".
+interface FormulaTerm { markers: string[]; sign: 1 | -1; optional?: boolean; magnitude?: boolean; netAmbiguous?: boolean; }
 interface FormulaDef { groupLabel: string; target: string[]; terms: FormulaTerm[]; }
 
 function req(markers: string[], sign: 1 | -1 = 1): FormulaTerm {
@@ -1149,6 +1169,11 @@ function opt(markers: string[], sign: 1 | -1 = 1): FormulaTerm {
 // "magnitude" o tren.
 function reqExpense(markers: string[], sign: 1 | -1 = -1): FormulaTerm {
   return { markers, sign, magnitude: true };
+}
+// Dong CO THE la chi phi HOAC lai/lo that tuy cong ty/ky - xem comment
+// "netAmbiguous" o tren.
+function reqNetAmbiguous(markers: string[], sign: 1 | -1 = -1): FormulaTerm {
+  return { markers, sign, netAmbiguous: true };
 }
 
 function evaluateNamedFormulas(table: StatementTable, formulas: FormulaDef[]): GroupSumMismatch[] {
@@ -1178,38 +1203,52 @@ function evaluateNamedFormulas(table: StatementTable, formulas: FormulaDef[]): G
     });
 
     for (const col of valueCols) {
-      let sum = 0;
       let ok = true;
       const memberRowIndexes: number[] = [];
+      const resolved: { t: FormulaTerm; raw: number }[] = [];
       for (const { t, idx } of usableTerms) {
         const v = formulaCellValue(table.rows[idx][col]);
         if (v === null) { ok = false; break; }
-        // "magnitude": true (xem reqExpense duoi) - CHI danh cho cac dong CHI
-        // PHI THUAN TUY (Gia von hang ban, Chi phi ban hang...) - noi dau (+/-)
-        // in tren bao cao CHI la quy uoc HIEN THI rieng cua tung cong ty (xac
-        // nhan qua ACG that 2026-07-14: "Gia von hang ban" in AM
-        // -789.337.103.242), khong mang y nghia lai/lo - lay Math.abs() truoc
-        // khi nhan t.sign de CONG THUC luon TRU dung, bat ke cong ty in am hay
-        // duong. KHONG ap dung cho cac dong "Lai/(Lo)..." (vd "Lai/Lo tu mua
-        // ban CK kinh doanh") - o do dau am la THONG TIN THAT (dang LO, khong
-        // phai quy uoc hien thi), Math.abs se xoa mat thong tin lai/lo that -
-        // da gap regression that BID/VND/BVS khi tung ap dung Math.abs vo dieu
-        // kien cho MOI term (2026-07-14), phai gioi han lai chi cho tap term
-        // co danh dau "magnitude".
-        sum += (t.magnitude ? Math.abs(v) : v) * t.sign;
+        resolved.push({ t, raw: v });
         memberRowIndexes.push(idx);
       }
       if (!ok) continue;
       const reported = formulaCellValue(table.rows[targetIdx][col]);
       if (reported === null) continue;
-      if (!withinFormulaTolerance(sum, reported)) {
+
+      // "magnitude": true (xem reqExpense o tren) - CHI danh cho cac dong CHI
+      // PHI THUAN TUY (Gia von hang ban, Chi phi ban hang...) - noi dau (+/-)
+      // in tren bao cao CHI la quy uoc HIEN THI rieng cua tung cong ty, khong
+      // mang y nghia lai/lo - lay Math.abs() truoc khi nhan dau LUON. "netAmbiguous"
+      // (Chi phi tai chinh, Chi phi khac...) THU CA 2 CACH (giu nguyen dau LAN
+      // Math.abs) - xem comment day du o dinh nghia interface FormulaTerm o
+      // tren, ly do khong the ep 1 chieu duy nhat cho nhom nay.
+      const ambiguousCount = resolved.filter((r) => r.t.netAmbiguous).length;
+      const comboCount = 1 << ambiguousCount;
+      let defaultSum = 0;
+      let matched = false;
+      for (let combo = 0; combo < comboCount && !matched; combo++) {
+        let ambiguousSeen = 0;
+        let sum = 0;
+        for (const { t, raw } of resolved) {
+          let useAbs = t.magnitude;
+          if (t.netAmbiguous) {
+            useAbs = ((combo >> ambiguousSeen) & 1) === 1;
+            ambiguousSeen++;
+          }
+          sum += (useAbs ? Math.abs(raw) : raw) * t.sign;
+        }
+        if (combo === 0) defaultSum = sum;
+        if (withinFormulaTolerance(sum, reported)) matched = true;
+      }
+      if (!matched) {
         mismatches.push({
           groupLabel: f.groupLabel,
           columnName: table.columns[col] ?? `cot ${col}`,
           columnIndex: col,
           subtotalRowIndex: targetIdx,
           memberRowIndexes,
-          sum,
+          sum: defaultSum,
           reported,
         });
       }
@@ -1244,13 +1283,23 @@ const DN_THUONG_INCOME_FORMULAS: FormulaDef[] = [
       req(['LOI NHUAN GOP VE BAN HANG VA CUNG CAP DICH VU', 'LOI NHUAN GOP']),
       opt(['BAN, THANH LY BAT DONG SAN DAU TU']),
       req(['DOANH THU HOAT DONG TAI CHINH']),
-      reqExpense(['CHI PHI TAI CHINH', 'CHI PHI HOAT DONG TAI CHINH']),
+      // reqNetAmbiguous (khong phai reqExpense) - xac nhan qua IDV that
+      // 2026-07-14: "Chi phi tai chinh" CHUYEN DAU giua 2 ky trong CUNG 1 bao
+      // cao (mot ky duong ~1.8 ty, ky khac AM ~627 trieu) - chung to day la 1
+      // dong lai/lo THAT (co ky lai rong tu hoat dong tai chinh), khong phai
+      // quy uoc hien thi co dinh nhu Gia von hang ban. Ep Math.abs vo dieu
+      // kien (nhu ACG can) se pha "Loi nhuan thuan" cua IDV - xem comment day
+      // du o dinh nghia FormulaTerm.
+      reqNetAmbiguous(['CHI PHI TAI CHINH', 'CHI PHI HOAT DONG TAI CHINH']),
       opt(['CONG TY LIEN DOANH, LIEN KET']),
       reqExpense(['CHI PHI BAN HANG']),
       reqExpense(['CHI PHI QUAN LY DOANH NGHIEP']), // fuzzy match xu ly bien the chinh ta (vd "quan li")
     ],
   },
-  { groupLabel: 'Loi nhuan khac', target: ['LOI NHUAN KHAC'], terms: [req(['THU NHAP KHAC']), reqExpense(['CHI PHI KHAC'])] },
+  // "Chi phi khac" cung reqNetAmbiguous cung ly do "Chi phi tai chinh" o tren
+  // - xac nhan qua chinh IDV: ky nay AM (hoan nhap/thu nhap rong), ky truoc
+  // DUONG (chi phi thuan), CUNG 1 bao cao.
+  { groupLabel: 'Loi nhuan khac', target: ['LOI NHUAN KHAC'], terms: [req(['THU NHAP KHAC']), reqNetAmbiguous(['CHI PHI KHAC'])] },
   { groupLabel: 'Tong loi nhuan ke toan truoc thue', target: ['TONG LOI NHUAN KE TOAN TRUOC THUE'], terms: [req(['LOI NHUAN THUAN TU HOAT DONG KINH DOANH']), req(['LOI NHUAN KHAC'])] },
   // KHONG dung marker "LOI NHUAN SAU THUE" tran lan (khong hau to) lam target
   // - da phat hien qua DIC that (2026-07-13): bao cao co CA 3 dong "Loi nhuan
