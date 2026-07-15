@@ -55,7 +55,7 @@
           "unreliable": false
         },
         {
-          "label": "Phải thu ngắn hạn khách hàng",
+          "label": "Phải thu khách hàng",
           "percentChange": 44.20949951579771,
           "tier": "level2",
           "unreliable": false
@@ -3367,7 +3367,7 @@
           "unreliable": false
         },
         {
-          "label": "Phải thu ngắn hạn khách hàng",
+          "label": "Phải thu khách hàng",
           "percentChange": 19.502803699268796,
           "tier": null,
           "unreliable": false
@@ -4233,10 +4233,7 @@
       "entryName": null,
       "periodYear": 2026,
       "periodSlug": "Q1",
-      "warnings": [
-        "\"31/3/2026 VND\": Tong cac muc trong Von chu so huu (3718097427831) khong khop dong Von chu so huu (16663032877831)",
-        "\"1/1/2026 VND Phân loại lại\": Tong cac muc trong Von chu so huu (8318868786537) khong khop dong Von chu so huu (18995076246537)"
-      ]
+      "warnings": []
     },
     {
       "source": "vietstock",
@@ -4298,7 +4295,7 @@
         },
         {
           "label": "LN Gộp Tài Chính",
-          "percentChange": null,
+          "percentChange": 16.15726065727366,
           "tier": null,
           "unreliable": false
         },
@@ -4328,15 +4325,15 @@
         },
         {
           "label": "Tổng TS",
-          "percentChange": null,
+          "percentChange": 3.5761470599609164,
           "tier": null,
           "unreliable": false
         },
         {
           "label": "Dự phòng nghiệp vụ",
-          "percentChange": null,
+          "percentChange": -0.00531185774261107,
           "tier": null,
-          "unreliable": true
+          "unreliable": false
         },
         {
           "label": "Nợ",
@@ -5436,8 +5433,7 @@
       "periodYear": 2026,
       "periodSlug": "Q1",
       "warnings": [
-        "\"Ngày 31 tháng 03 năm 2026 VND\": Tong cac muc trong TS dai han (894593024982) khong khop dong TS dai han (543629863885)",
-        "\"Ngày 31 tháng 12 năm 2025 VND\": Tong cac muc trong TS dai han (906392694900) khong khop dong TS dai han (555458733803)"
+        "\"Ngày 31 tháng 03 năm 2026 VND\": Tong cac muc trong TS dai han (548629863885) khong khop dong TS dai han (543629863885)"
       ]
     },
     {
@@ -10267,7 +10263,7 @@
           "unreliable": false
         },
         {
-          "label": "Phải thu ngắn hạn khách hàng",
+          "label": "Phải thu khách hàng",
           "percentChange": 43.715052087220684,
           "tier": "level2",
           "unreliable": false

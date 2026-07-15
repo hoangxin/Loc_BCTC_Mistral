@@ -232,7 +232,7 @@ const KNOWN_CAP4_LABEL_CONTENT = [
   'CHUA PHAN PHOI LUY KE DEN CUOI',
 ];
 
-function isKnownCap4Label(label: string): boolean {
+export function isKnownCap4Label(label: string): boolean {
   const normalized = normalizeLabelText(label);
   return KNOWN_CAP4_LABEL_CONTENT.some((marker) => normalized.includes(marker));
 }
@@ -283,6 +283,11 @@ function isKnownAlwaysChildLabel(label: string): boolean {
 // (thay the HOAN TOAN "arabicDirectChildRows" cu dua vao tien to so A-rap).
 const KNOWN_EQUITY_DIRECT_CHILD_CONTENT = [
   'VON GOP CUA CHU SO HUU',
+  // Sua 2026-07-15 (phan hoi nguoi dung, xac nhan qua MCH that): bao cao hop
+  // nhat mau MCH ghi "Vốn cổ phần" (khong phai "Vốn góp của chủ sở hữu" chuan
+  // TT200) - thieu bien the nay khien "Vốn cổ phần" (12.9 nghin ty) bi loai
+  // khoi tong, bao SAI canh bao lech Von chu so huu.
+  'VON CO PHAN',
   'THANG DU VON', // khop ca "Thặng dư vốn" (PXA that) lan "Thặng dư vốn cổ phần" (ten day du TT200)
   'QUYEN CHON CHUYEN DOI TRAI PHIEU',
   'VON KHAC CUA CHU SO HUU',
@@ -1639,6 +1644,148 @@ export function findIncomeStatementFormulaMismatches(table: StatementTable, busi
 // xem lai code cu, tim "findDecimalCodeGroupMismatches" trong lich su git
 // truoc commit sua doi nay.
 
+function rowValuesAt(table: StatementTable, idx: number, valueColIndexes: number[]): number[] | null {
+  const values: number[] = [];
+  for (const c of valueColIndexes) {
+    const cell = table.rows[idx][c];
+    if (typeof cell === 'number') values.push(cell);
+    else if (cell === '-' || cell === null) values.push(0);
+    else return null; // gia tri khong doc duoc - khong the doi chieu so hoc, bo qua an toan
+  }
+  return values;
+}
+
+function sumRowValues(table: StatementTable, indexes: number[], valueColIndexes: number[]): number[] {
+  const sums = new Array(valueColIndexes.length).fill(0);
+  for (const idx of indexes) {
+    const values = rowValuesAt(table, idx, valueColIndexes);
+    if (!values) continue;
+    values.forEach((v, i) => (sums[i] += v));
+  }
+  return sums;
+}
+
+function allColumnsWithinTolerance(a: number[], b: number[]): boolean {
+  return a.length === b.length && a.every((v, i) => numbersWithinTolerance(v, b[i]));
+}
+
+// SUA 2026-07-15 (theo phan hoi nguoi dung, xac nhan qua MIG that): danh
+// sach "cac dong con" cua 1 dong cha (vd "I. Nợ ngắn hạn") co the AN CHUA 1
+// tang long nhau NUA MA KHONG CO TEN nao de nhan dien (khac voi
+// reconcileArithmeticCandidates o tren - noi ca 2 dong deu khop 1 ten chuan
+// da biet): vd MIG "10. Dự phòng nghiệp vụ" duoc chia nho THEM thanh 3 dong
+// "329.1/329.2/329.3" ngay sau no, hay "2. Phải trả người bán ngắn hạn"
+// duoc chia thanh "312.1/312.2" - CA 2 dong con thap phan nay deu KHONG khop
+// bat ky ten chuan Thong tu nao (tu cong ty tu chia nho, dung tinh than da
+// chot 2026-07-13: "o muc do chi tiet nay thi cross-check lam gi?") nen truoc
+// day bi cong THANG vao danh sach "cac dong con" cua dong CHA CUA CHUNG (vd
+// "No ngan han"), dem ca dong cha (vd "Dự phòng nghiệp vụ") LAN cac dong con
+// cua no cung luc - sai gap doi. Quet LAI danh sach "cac dong con" (da xac
+// dinh o muc tren) 1 LAN NUA, coi no nhu 1 chuoi phang: neu 1 dong duoc theo
+// sau NGAY LAP TUC boi 1 day dong khac ma TONG cua day do khop dung gia tri
+// CHINH dong truoc, day chinh la phan chia nho AN, gop lai (giu dong truoc,
+// bo day dong sau) - lap lai (fixed-point) toi khi khong con gop duoc nua de
+// xu ly duoc nhieu tang long nhau lien tiep. Hoan toan SO HOC, khong dua vao
+// ten/ma so - ap dung duoc cho MOI cong ty tu chia nho theo BAT KY quy uoc
+// rieng nao cua ho.
+export function collapseNestedMemberRows(table: StatementTable, valueColIndexes: number[], memberIndexes: number[]): number[] {
+  let current = memberIndexes;
+  let changed = true;
+  while (changed) {
+    changed = false;
+    const next: number[] = [];
+    let i = 0;
+    while (i < current.length) {
+      const idx = current[i];
+      const reported = rowValuesAt(table, idx, valueColIndexes);
+      if (!reported) {
+        next.push(idx);
+        i++;
+        continue;
+      }
+      let absorbedThrough = -1;
+      const runSum = new Array(valueColIndexes.length).fill(0);
+      for (let j = i + 1; j < current.length; j++) {
+        const values = rowValuesAt(table, current[j], valueColIndexes);
+        if (!values) break; // gia tri khong doc duoc - khong mo rong qua no
+        values.forEach((v, c) => (runSum[c] += v));
+        if (allColumnsWithinTolerance(runSum, reported)) {
+          absorbedThrough = j;
+          break;
+        }
+      }
+      if (absorbedThrough !== -1) {
+        next.push(idx); // giu dong cha, bo het day dong da gop
+        i = absorbedThrough + 1;
+        changed = true;
+      } else {
+        next.push(idx);
+        i++;
+      }
+    }
+    current = next;
+  }
+  return current;
+}
+
+// SUA 2026-07-15 (theo phan hoi nguoi dung, xac nhan qua MIG that): 1 "ung
+// vien cap 1" tim duoc qua TEN (isLikelySubtotalRow) co the THAT RA la CON
+// cua ung vien NGAY TRUOC no, khong phai anh em ngang hang - vd "3. Chi phí
+// xây dựng cơ bản dở dang" (MIG) tinh co khop 1 ten chuan CTCK qua bang dong
+// nghia (GROUP_LABEL_SYNONYM_CANONICAL, dat ra cho 1 cong ty KHAC dung mau
+// khac), bi coi la ung vien DOC LAP thay vi con cua "II. Tài sản cố định"
+// dung truoc no, khien dong nay bi DEM 2 LAN (1 lan trong tong "Tai san co
+// dinh" bao cao san, 1 lan nua nhu 1 "cap 1" rieng). THAY VI tiep tuc liet
+// ke tung truong hop ten/container cu the (se luon co truong hop moi chua
+// biet), xac minh BANG SO HOC truoc khi chap nhan 1 ung vien la "doc lap":
+// so sanh (tong cac dong con HIEN CO cua ung vien truoc) VOI (tong do CONG
+// THEM gia tri cua ung vien sau) - neu cong them ung vien sau moi khop dung
+// gia tri BAO CAO cua ung vien truoc (ma khong cong thi khong khop), CHUNG
+// MINH qua phep cong ung vien sau chinh la con, gop lai (xoa khoi danh sach
+// "doc lap"). Ap dung LIEN TIEP (xem vong lap duoi) de xu ly duoc nhieu tang
+// long nhau (con cua con) - dam bao dung nguyen tac ke toan: 1 muc da duoc
+// gop san vao dong cha thi khong bao gio duoc cong lai o cap cao hon, bat ke
+// ten dong la gi.
+export function reconcileArithmeticCandidates(
+  table: StatementTable,
+  labelIndex: number,
+  valueColIndexes: number[],
+  candidates: number[],
+  groupEndIdx: number,
+  computeMembers: (rawLabel: string, startIdx: number, endIdx: number) => number[]
+): number[] {
+  const result = [...candidates];
+  let k = 0;
+  while (k < result.length - 1) {
+    const startIdx = result[k];
+    const nextIdx = result[k + 1];
+    const reported = rowValuesAt(table, startIdx, valueColIndexes);
+    if (!reported) {
+      k++;
+      continue;
+    }
+    const rawLabel = String(table.rows[startIdx][labelIndex] ?? '').trim();
+    const detailSum = sumRowValues(table, collapseNestedMemberRows(table, valueColIndexes, computeMembers(rawLabel, startIdx, nextIdx)), valueColIndexes);
+    if (allColumnsWithinTolerance(detailSum, reported)) {
+      k++; // da khop du, ung vien sau la anh em ngang hang THAT SU
+      continue;
+    }
+    const nextValues = rowValuesAt(table, nextIdx, valueColIndexes);
+    if (nextValues) {
+      const withNext = detailSum.map((v, i) => v + nextValues[i]);
+      if (allColumnsWithinTolerance(withNext, reported)) {
+        // Cong them ung vien sau moi khop - no la CON, gop lai (xoa khoi
+        // danh sach, thu lai voi ung vien MOI o vi tri k+1, phong truong hop
+        // long nhau sau hon nua - vd con cua con).
+        result.splice(k + 1, 1);
+        continue;
+      }
+    }
+    k++; // khong chung minh duoc la con - giu nguyen ca 2 nhu anh em ngang hang
+  }
+  return result;
+}
+
 // Tong quat hoa 1 buoc kiem tra da co (validateBalanceSheetSubtotals,
 // lib/export/validate-statements.ts) tu "1 tang" (dong tong cap-0 vd "TS
 // ngan han" = tong cac dong "cap 1" I/II/III...) len "2 tang" (2026-07-12,
@@ -1689,18 +1836,12 @@ export function findBalanceSheetLevel2Mismatches(table: StatementTable, groupSta
     level1Indexes.push(i);
   }
 
-  for (let k = 0; k < level1Indexes.length; k++) {
-    const startIdx = level1Indexes[k];
-    const endIdx = k + 1 < level1Indexes.length ? level1Indexes[k + 1] : groupEndIdx;
-    const parentRow = table.rows[startIdx];
-    // Nhan rong (bang phan tich hong o cho khac lam lech cot, khong phai loi
-    // rieng cua ham nay) van can 1 moc de nguoi xem dinh vi duoc dong nao -
-    // dung ma so (neu co) thay vi de thong bao rong vo dung "" khong khop "".
-    const rawLabel = String(parentRow[labelIndex] ?? '').trim();
-    const parentMaSo = maSoIndex === null ? null : parentRow[maSoIndex];
-    const groupLabel = rawLabel || (typeof parentMaSo === 'string' && parentMaSo ? `ma so ${parentMaSo}` : `dong ${startIdx + 1}`);
-
-    const memberRowIndexes: number[] = [];
+  // Tach rieng buoc tim "cac dong con" cua 1 candidate (startIdx, endIdx)
+  // thanh 1 ham dung lai duoc - can cho ca vong lap chinh DUOI VA buoc doi
+  // chieu so hoc reconcileArithmeticCandidates (xem duoi) truoc khi vao vong
+  // lap chinh.
+  const computeMembers = (rawLabel: string, startIdx: number, endIdx: number): number[] => {
+    const members: number[] = [];
     for (let j = startIdx + 1; j < endIdx; j++) {
       // Muc con CAP 4 (noi dung chuan "Nguyen gia"/"Gia tri hao mon luy
       // ke"/"LNST chua phan phoi ky nay"...) - da GOP SAN vao gia tri dong
@@ -1725,8 +1866,27 @@ export function findBalanceSheetLevel2Mismatches(table: StatementTable, groupSta
       // Container (xem CONTAINER_CHILDREN_CANONICAL o tren): CHI nhan dong con
       // khop dung 1 ten chuan Thong tu, loai dong cong ty tu chia nho them.
       if (!isKnownContainerChildLabel(rawLabel, memberLabel)) continue;
-      memberRowIndexes.push(j);
+      members.push(j);
     }
+    return members;
+  };
+
+  const reconciledLevel1Indexes = reconcileArithmeticCandidates(table, labelIndex, valueColIndexes, level1Indexes, groupEndIdx, computeMembers);
+
+  for (let k = 0; k < reconciledLevel1Indexes.length; k++) {
+    const startIdx = reconciledLevel1Indexes[k];
+    const endIdx = k + 1 < reconciledLevel1Indexes.length ? reconciledLevel1Indexes[k + 1] : groupEndIdx;
+    const parentRow = table.rows[startIdx];
+    // Nhan rong (bang phan tich hong o cho khac lam lech cot, khong phai loi
+    // rieng cua ham nay) van can 1 moc de nguoi xem dinh vi duoc dong nao -
+    // dung ma so (neu co) thay vi de thong bao rong vo dung "" khong khop "".
+    const rawLabel = String(parentRow[labelIndex] ?? '').trim();
+    const parentMaSo = maSoIndex === null ? null : parentRow[maSoIndex];
+    const groupLabel = rawLabel || (typeof parentMaSo === 'string' && parentMaSo ? `ma so ${parentMaSo}` : `dong ${startIdx + 1}`);
+
+    // Gom nhom cap sau AN (khong co ten) bang so hoc truoc khi cong tong -
+    // xem collapseNestedMemberRows.
+    const memberRowIndexes = collapseNestedMemberRows(table, valueColIndexes, computeMembers(rawLabel, startIdx, endIdx));
     if (memberRowIndexes.length === 0) continue;
 
     for (const col of valueColIndexes) {

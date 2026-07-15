@@ -62,6 +62,21 @@ function byLabel(include: string[], exclude: string[] = [], preferSubtotal = fal
     );
 }
 
+// Nhu byLabel, nhung nhan NHIEU CACH VIET khac nhau cho CUNG 1 chi tieu
+// (khop 1 trong cac cach viet la du - OR, khac voi finders[] cua MetricDef
+// von CONG DON nhieu chi tieu KHAC NHAU lai voi nhau). Sua 2026-07-15 (phan
+// hoi nguoi dung, xac nhan qua MIG): "Loi nhuan (gop) hoat dong tai chinh"
+// bi thieu chi vi MIG bo chu "gop" - cac cong ty KHONG luon dung dung tung
+// chu nhu ban mau Thong tu, mot tu don le (vd "gop") co the co hoac khong co
+// tuy cong ty/tuy dong trong CUNG 1 bao cao. Thay vi viet lai include[] moi
+// lan gap 1 bien the, liet ke het cac cach viet DA BIET o day - khong dung
+// fuzzy/edit-distance (de khop nham dong khac hoan toan), chi la 1 danh sach
+// tuong minh nhu cac noi khac trong file da lam (vd KNOWN_EQUITY_DIRECT_CHILD_CONTENT).
+function byLabelAny(variants: string[], exclude: string[] = []): RowFinder {
+  return (table) =>
+    findRowByLabel(table, (label) => variants.some((v) => label.includes(v)) && !exclude.some((m) => label.includes(m)));
+}
+
 // CHI dung cho 2 chi tieu bao hiem "Tong CP HDKDBH"/"CP QLDN": mau KQKD bao
 // hiem (B02a-DNPNT) co CUNG 1 dong (cung ten, cung ma so goc) xuat hien LAP
 // LAI o "Phan I - tong hop" (gia tri AM, dang khoan tru trong cong thuc) VA
@@ -382,7 +397,13 @@ const INSURANCE_METRICS: MetricDef[] = [
   {
     label: 'Tổng TS',
     statement: 'balanceSheet',
-    finders: [byLabel(['TONG TAI SAN'])],
+    // "TONG" va "TAI SAN" rieng (khong doi hoi lien tiep, giong finder cung
+    // ten o CTCK duoi) - sua 2026-07-15 (phan hoi nguoi dung, xac nhan qua
+    // MIG): truoc day doi hoi "TONG TAI SAN" lien tiep, khong khop "TỔNG CỘNG
+    // TÀI SẢN" (co chen "CỘNG" o giua, cach mau bieu Bao hiem cua MIG hay
+    // dung) - CUNG mot loi wording-variant nhu CTCK da tung gap va sua, chi
+    // chua duoc dong bo sang day.
+    finders: [byLabel(['TONG', 'TAI SAN'])],
     thresholds: INSURANCE_BCDKT_THRESHOLDS,
   },
   {
@@ -456,13 +477,16 @@ const INSURANCE_METRICS: MetricDef[] = [
   {
     label: 'LN Gộp HĐKDBH',
     statement: 'incomeStatement',
-    finders: [byLabel(['LOI NHUAN GOP HOAT DONG KINH DOANH BAO HIEM'])],
+    finders: [byLabelAny(['LOI NHUAN GOP HOAT DONG KINH DOANH BAO HIEM', 'LOI NHUAN HOAT DONG KINH DOANH BAO HIEM'])],
     thresholds: INSURANCE_KQKD_THRESHOLDS_B,
   },
   {
     label: 'LN Gộp Tài Chính',
     statement: 'incomeStatement',
-    finders: [byLabel(['LOI NHUAN GOP HOAT DONG TAI CHINH'])],
+    // Sua 2026-07-15 (phan hoi nguoi dung, xac nhan qua MIG that): MIG ghi
+    // "17. Lợi nhuận hoạt động tài chính (25 = 23 + 24)", KHONG co chu "gop"
+    // - them bien the (xem byLabelAny).
+    finders: [byLabelAny(['LOI NHUAN GOP HOAT DONG TAI CHINH', 'LOI NHUAN HOAT DONG TAI CHINH'])],
     thresholds: INSURANCE_KQKD_THRESHOLDS_B,
   },
   {
@@ -815,7 +839,10 @@ const BANK_METRICS: MetricDef[] = [
   {
     label: 'Tổng TS',
     statement: 'balanceSheet',
-    finders: [byLabel(['TONG TAI SAN'])],
+    // Dong bo voi finder cung ten o CTCK/Bao hiem (xem comment o ban Bao
+    // hiem) - "TONG"/"TAI SAN" tach roi de khop ca bien the "TỔNG CỘNG TÀI
+    // SẢN"/"TỔNG TÀI SẢN CÓ" (mau Ngan hang B02a/TCTD-HN hay dung).
+    finders: [byLabel(['TONG', 'TAI SAN'])],
     thresholds: BANK_THRESHOLDS_A,
   },
   {

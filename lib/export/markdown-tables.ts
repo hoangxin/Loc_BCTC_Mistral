@@ -378,6 +378,22 @@ const INCOME_STATEMENT_CONTENT_MARKERS = [
   // (2026-07-12, HDB KHONG co cot Luy ke nen KQKD gon hon, khong bi tach
   // trang). Them marker CHI cho trang 2 nay.
   'CHI PHI THUE TNDN',
+  // SUA 2026-07-15 (theo phan hoi nguoi dung, xac nhan qua CTG Q1/2026): CTG
+  // ngat trang MUON HON VCB 1 nhip - trang chua "Chi phi thue TNDN" (marker
+  // tren) DUNG LAI o "XII. Chi phi thue TNDN", CON doan "XIII. Loi nhuan sau
+  // thue" tro di (loi nhuan phan bo cho co dong Ngan hang me/co dong thieu
+  // so, lai co ban tren co phieu) nam trong 1 bang rieng KHONG con chua "Chi
+  // phi thue TNDN" nen khong khop marker nao o tren, bi am tham loai bo
+  // (dung nguyen nhan lam LNST/LNST Cty Me trong nhu VCB truoc khi co marker
+  // "CHI PHI THUE TNDN"). Them marker rieng cho DOAN CUOI CUNG nay - KHONG
+  // dung "LOI NHUAN SAU THUE" tran (trung voi dong BCDKT rat pho bien "Loi
+  // nhuan sau thue CHUA PHAN PHOI", co the lam mot bang phu BCDKT bi cham
+  // nham diem incomeStatement) - dung 2 cum dac trung RIENG cho doan phan bo
+  // loi nhuan hop nhat cua Ngan hang (khong xuat hien trong BCDKT/LCTT) va
+  // dong lai co ban tren co phieu.
+  'CUA CO DONG CUA NGAN HANG ME',
+  'LOI ICH CUA CO DONG THIEU SO',
+  'LAI CO BAN TREN CO PHIEU',
 ];
 
 const CASH_FLOW_CONTENT_MARKERS = [

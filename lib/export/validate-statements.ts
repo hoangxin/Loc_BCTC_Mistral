@@ -15,6 +15,8 @@ import {
   findIncomeStatementGroupMismatches,
   findIncomeStatementFormulaMismatches,
   findBalanceSheetLevel2Mismatches,
+  reconcileArithmeticCandidates,
+  isKnownCap4Label,
   type GroupSumMismatch,
 } from './statement-shared';
 
@@ -105,7 +107,7 @@ function childrenBetween(
   // "khong tim thay muc con" (that tha "khong kiem tra duoc"), an toan hon la
   // ep isLikelySubtotalRow tra loi khi khong co du du lieu.
   if (!hasReliableSubtotalSignal(table, labelIndex)) return [];
-  const result: (string | number | null)[][] = [];
+  const candidateIndexes: number[] = [];
   for (let i = startIdx + 1; i < endIdx; i++) {
     const row = table.rows[i];
     if (!isLikelySubtotalRow(table, row, labelIndex)) continue;
@@ -126,8 +128,30 @@ function childrenBetween(
     // Dong con cua 1 "container" (vd CTCK "Tai san tai chinh") du TEN KHAC
     // (khong phai lap lai) - xem isInsideKnownContainer.
     if (isInsideKnownContainer(table, labelIndex, startIdx + 1, i)) continue;
-    result.push(row);
+    candidateIndexes.push(i);
   }
+  // SUA 2026-07-15 (phan hoi nguoi dung, xac nhan qua MIG that): 1 candidate
+  // tim duoc qua ten (vd "Chi phí xây dựng cơ bản dở dang" khop dong nghia
+  // CTCK dat cho 1 cong ty KHAC) co the THAT RA la CON cua candidate truoc no
+  // (vd "Tài sản cố định"), khong phai anh em ngang hang - xac minh BANG SO
+  // HOC truoc khi chap nhan ca 2 la doc lap (xem reconcileArithmeticCandidates).
+  const reconciledIndexes = reconcileArithmeticCandidates(
+    table,
+    labelIndex,
+    valueColumnIndexes(table),
+    candidateIndexes,
+    endIdx,
+    (rawLabel, memberStartIdx, memberEndIdx) => {
+      const members: number[] = [];
+      for (let j = memberStartIdx + 1; j < memberEndIdx; j++) {
+        const memberLabel = String(table.rows[j][labelIndex] ?? '').trim();
+        if (isKnownCap4Label(memberLabel)) continue;
+        members.push(j);
+      }
+      return members;
+    }
+  );
+  const result: (string | number | null)[][] = reconciledIndexes.map((i) => table.rows[i]);
   // Khong tim thay dong nao co tin hieu "cap 2" (ten chuan da biet) - co the
   // vi nhom nay KHONG CO lop trung gian nao ca theo dung cau truc that (xem
   // equityDirectChildRows), khong phai vi bang thieu du lieu. Thu fallback
