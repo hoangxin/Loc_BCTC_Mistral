@@ -1,0 +1,909 @@
+{
+  "statements": {
+    "balanceSheet": {
+      "columns": [
+        "Mã số",
+        "TÀI SẢN",
+        "Thuyết minh",
+        "Tại ngày",
+        ""
+      ],
+      "rows": [
+        [
+          null,
+          "31.3.2026 VND",
+          null,
+          null,
+          null
+        ],
+        [
+          "100",
+          "TÀI SẢN NGẮN HẠN",
+          null,
+          4325249392047,
+          4633974934248
+        ],
+        [
+          "110",
+          "Tiền và các khoản tương đương tiền",
+          3,
+          160404203231,
+          316811111897
+        ],
+        [
+          "111",
+          "Tiền",
+          null,
+          30404203231,
+          16811111897
+        ],
+        [
+          "112",
+          "Các khoản tương đương tiền",
+          null,
+          130000000000,
+          300000000000
+        ],
+        [
+          "120",
+          "Đầu tư tài chính ngắn hạn",
+          null,
+          2129600271293,
+          2175687427462
+        ],
+        [
+          "123",
+          "Đầu tư nắm giữ đến ngày đáo hạn ngắn hạn",
+          "4(a)",
+          2324800271293,
+          2370887427462
+        ],
+        [
+          "124",
+          "Dự phòng đầu tư nắm giữ đến ngày đáo hạn ngắn hạn",
+          "4(a)",
+          -195200000000,
+          -195200000000
+        ],
+        [
+          "130",
+          "Các khoản phải thu ngắn hạn",
+          null,
+          638447643213,
+          646270646375
+        ],
+        [
+          "131",
+          "Phải thu ngắn hạn của khách hàng",
+          5,
+          644665838397,
+          672601308585
+        ],
+        [
+          "132",
+          "Trả trước cho người bán ngắn hạn",
+          6,
+          82570707620,
+          66761026419
+        ],
+        [
+          "135",
+          "Phải thu ngắn hạn khác",
+          "7(a)",
+          7038207722,
+          2695975842
+        ],
+        [
+          "136",
+          "Dự phòng phải thu ngắn hạn khó đòi",
+          8,
+          -97346857151,
+          -97413229188
+        ],
+        [
+          "137",
+          "Tài sản thiếu chờ xử lý",
+          null,
+          1519746625,
+          1625564717
+        ],
+        [
+          "140",
+          "Hàng tồn kho",
+          9,
+          1372614494351,
+          1451833786503
+        ],
+        [
+          "141",
+          "Hàng tồn kho",
+          null,
+          1416719755537,
+          1496860456457
+        ],
+        [
+          "142",
+          "Dự phòng giảm giá hàng tồn kho",
+          null,
+          -44105261186,
+          -45026669954
+        ],
+        [
+          "160",
+          "Tài sản ngắn hạn khác",
+          null,
+          24182779959,
+          43371962011
+        ],
+        [
+          "161",
+          "Chi phí chờ phân bổ ngắn hạn",
+          "10(a)",
+          21306099464,
+          13727961569
+        ],
+        [
+          "162",
+          "Thuế Giá trị Gia tăng ('GTGT') được khấu trừ",
+          "15(a)",
+          2286914728,
+          28529300594
+        ],
+        [
+          "163",
+          "Thuế và các khoản khác phải thu Nhà nước",
+          "15(a)",
+          589765767,
+          1114699848
+        ],
+        [
+          null,
+          "31.3.2026 VND",
+          null,
+          null,
+          null
+        ],
+        [
+          "200",
+          "TÀI SẢN DÀI HẠN",
+          null,
+          1751366375544,
+          1794428561368
+        ],
+        [
+          "210",
+          "Các khoản phải thu dài hạn",
+          null,
+          158521807573,
+          152615152131
+        ],
+        [
+          "211",
+          "Phải thu dài hạn của khách hàng",
+          null,
+          2196366421,
+          1528474856
+        ],
+        [
+          "215",
+          "Phải thu dài hạn khác",
+          "7(b)",
+          156325441152,
+          151086677275
+        ],
+        [
+          "220",
+          "Tài sản cố định",
+          null,
+          340601305672,
+          319019930235
+        ],
+        [
+          "221",
+          "Tài sản cố định hữu hình",
+          "11(a)",
+          287124885572,
+          285623474900
+        ],
+        [
+          "222",
+          "Nguyên giá",
+          null,
+          1063053540831,
+          1041854279832
+        ],
+        [
+          "223",
+          "Giá trị hao mòn lũy kế",
+          null,
+          -775928655259,
+          -756230804932
+        ],
+        [
+          "224",
+          "Tài sản cố định thuê tài chính",
+          "11(b)",
+          26052195928,
+          5171001632
+        ],
+        [
+          "225",
+          "Nguyên giá",
+          null,
+          26556055627,
+          5218027535
+        ],
+        [
+          "226",
+          "Giá trị hao mòn lũy kế",
+          null,
+          -503859699,
+          -47025903
+        ],
+        [
+          "227",
+          "Tài sản cố định vô hình",
+          "11(c)",
+          27424224172,
+          28225453703
+        ],
+        [
+          "228",
+          "Nguyên giá",
+          null,
+          62872922370,
+          62358947370
+        ],
+        [
+          "229",
+          "Giá trị hao mòn lũy kế",
+          null,
+          -35448698198,
+          -34133493667
+        ],
+        [
+          "240",
+          "Bất động sản đầu tư",
+          "11(d)",
+          13128846498,
+          13170985705
+        ],
+        [
+          "241",
+          "Nguyên giá",
+          null,
+          13339542536,
+          13339542536
+        ],
+        [
+          "242",
+          "Giá trị hao mòn lũy kế",
+          null,
+          -210696038,
+          -168556831
+        ],
+        [
+          "250",
+          "Tài sản dở dang dài hạn",
+          12,
+          3427883033,
+          12855063853
+        ],
+        [
+          "252",
+          "Chi phí xây dựng cơ bản dở dang",
+          null,
+          3427883033,
+          12855063853
+        ],
+        [
+          "260",
+          "Đầu tư tài chính dài hạn",
+          null,
+          1011326520000,
+          1071726520000
+        ],
+        [
+          "261",
+          "Đầu tư vào công ty con",
+          "4(b)",
+          555500000000,
+          615900000000
+        ],
+        [
+          "262",
+          "Đầu tư vào công ty liên doanh, liên kết",
+          "4(b)",
+          336626520000,
+          336626520000
+        ],
+        [
+          "263",
+          "Đầu tư góp vốn vào đơn vị khác",
+          "4(b)",
+          119200000000,
+          119200000000
+        ],
+        [
+          "270",
+          "Tài sản dài hạn khác",
+          null,
+          224360012768,
+          225040909444
+        ],
+        [
+          "271",
+          "Chi phí chờ phân bổ dài hạn",
+          "10(b)",
+          168515322448,
+          166176355327
+        ],
+        [
+          "272",
+          "Tài sản thuế thu nhập hoãn lại",
+          21,
+          55844690320,
+          58864554117
+        ],
+        [
+          "280",
+          "TỔNG TÀI SẢN",
+          null,
+          6076615767591,
+          6428403495616
+        ],
+        [
+          null,
+          "31.3.2026 VND",
+          null,
+          null,
+          null
+        ],
+        [
+          "300",
+          "NỢ PHẢI TRẢ",
+          null,
+          1667931982454,
+          2143221760375
+        ],
+        [
+          "310",
+          "Nợ ngắn hạn",
+          null,
+          1625353964362,
+          2069450881963
+        ],
+        [
+          "311",
+          "Phải trả người bán ngắn hạn",
+          13,
+          295002102075,
+          411768636857
+        ],
+        [
+          "312",
+          "Người mua trả tiền trước ngắn hạn",
+          14,
+          143294335352,
+          146416292610
+        ],
+        [
+          "313",
+          "Phải trả cổ tức, lợi nhuận",
+          24,
+          106657000,
+          122226000
+        ],
+        [
+          "314",
+          "Thuế và các khoản phải nộp Nhà nước ngắn hạn",
+          "15(b)",
+          29874094401,
+          82164975960
+        ],
+        [
+          "315",
+          "Phải trả người lao động",
+          16,
+          20383685575,
+          94377208564
+        ],
+        [
+          "316",
+          "Chi phí phải trả ngắn hạn",
+          17,
+          57027497059,
+          36981893038
+        ],
+        [
+          "319",
+          "Doanh thu chờ phân bổ ngắn hạn",
+          null,
+          1630923886,
+          1752316797
+        ],
+        [
+          "320",
+          "Phải trả ngắn hạn khác",
+          null,
+          2566037894,
+          2104216502
+        ],
+        [
+          "321",
+          "Vay và nợ thuê tài chính ngắn hạn",
+          19,
+          997316701816,
+          1209034306911
+        ],
+        [
+          "323",
+          "Quỹ khen thưởng, phúc lợi",
+          18,
+          78151929304,
+          84728808724
+        ],
+        [
+          "330",
+          "Nợ dài hạn",
+          null,
+          42578018092,
+          73770878412
+        ],
+        [
+          "337",
+          "Doanh thu chờ phân bổ dài hạn",
+          null,
+          4507440204,
+          4824126484
+        ],
+        [
+          "339",
+          "Vay và nợ thuê tài chính dài hạn",
+          19,
+          20104394879,
+          56005968518
+        ],
+        [
+          "343",
+          "Dự phòng phải trả dài hạn",
+          20,
+          17966183009,
+          12940783410
+        ],
+        [
+          "400",
+          "VỐN CHỦ SỞ HỮU",
+          null,
+          4408683785137,
+          4285181735241
+        ],
+        [
+          "411",
+          "Vốn góp của chủ sở hữu",
+          22,
+          1507879460000,
+          1507879460000
+        ],
+        [
+          "411a",
+          "- Cổ phiếu phổ thông có quyền biểu quyết",
+          null,
+          1507879460000,
+          1507879460000
+        ],
+        [
+          "412",
+          "Thặng dư vốn",
+          23,
+          1418741358556,
+          1418741358556
+        ],
+        [
+          "418",
+          "Quỹ đầu tư phát triển",
+          23,
+          20998599300,
+          20998599300
+        ],
+        [
+          "420",
+          "Lợi nhuận sau thuế ('LNST') chưa phân phối",
+          23,
+          1461064367281,
+          1337562317385
+        ],
+        [
+          "420a",
+          "- LNST chưa phân phối lũy kế đến cuối kỳ trước",
+          null,
+          1337562317385,
+          723765103247
+        ],
+        [
+          "420b",
+          "- LNST chưa phân phối kỳ này",
+          null,
+          123502049896,
+          613797214138
+        ],
+        [
+          "440",
+          "TỔNG NGUỒN VỐN",
+          null,
+          6076615767591,
+          6428403495616
+        ]
+      ]
+    },
+    "incomeStatement": {
+      "columns": [
+        "Mã số",
+        "Thuyết minh",
+        "Kỳ 3 tháng kết thúc ngày 31 tháng 3 năm",
+        ""
+      ],
+      "rows": [
+        [
+          null,
+          "2026 VND",
+          null,
+          null
+        ],
+        [
+          "01",
+          "Doanh thu bán hàng và cung cấp dịch vụ",
+          1083572646837,
+          758131308586
+        ],
+        [
+          "02",
+          "Các khoản giảm trừ doanh thu",
+          -280796395,
+          -7830000
+        ],
+        [
+          "10",
+          "Doanh thu thuần về bán hàng và cung cấp dịch vụ",
+          1083291850442,
+          758123478586
+        ],
+        [
+          "11",
+          "Giá vốn hàng bán và cung cấp dịch vụ",
+          -789337103242,
+          -577701388438
+        ],
+        [
+          "20",
+          "Lợi nhuận gộp về bán hàng và cung cấp dịch vụ",
+          293954747200,
+          180422090148
+        ],
+        [
+          "22",
+          "Doanh thu hoạt động tài chính",
+          51107898231,
+          49857410990
+        ],
+        [
+          "23",
+          "Chi phí tài chính",
+          -12419800076,
+          -6746789391
+        ],
+        [
+          "24",
+          "- Trong đó: Chi phí lãi vay",
+          -11659836717,
+          -4051592055
+        ],
+        [
+          "25",
+          "Chi phí bán hàng",
+          -126666607745,
+          -94558791280
+        ],
+        [
+          "26",
+          "Chi phí quản lý doanh nghiệp",
+          -50800455630,
+          -23334071319
+        ],
+        [
+          "30",
+          "Lợi nhuận thuần từ hoạt động kinh doanh",
+          155175781980,
+          105639849148
+        ],
+        [
+          "31",
+          "Thu nhập khác",
+          2222913732,
+          352059657
+        ],
+        [
+          "32",
+          "Chi phí khác",
+          -151321142,
+          -533608885
+        ],
+        [
+          "40",
+          "Lợi nhuận (lỗ) khác",
+          2071592590,
+          -181549228
+        ],
+        [
+          "50",
+          "Tổng lợi nhuận kế toán trước thuế",
+          157247374570,
+          105458299920
+        ],
+        [
+          "51",
+          "Chi phí thuế TNDN hiện hành",
+          -30725460877,
+          -16764923519
+        ],
+        [
+          "52",
+          "Chi phí thuế TNDN hoãn lại",
+          -3019863797,
+          -1803677413
+        ],
+        [
+          "60",
+          "Lợi nhuận sau thuế TNDN",
+          123502049896,
+          86889698988
+        ]
+      ]
+    },
+    "cashFlow": {
+      "columns": [
+        "Mã số",
+        "Thuyết minh",
+        "Năm tài chính kết thúc ngày 31 tháng 3 năm",
+        ""
+      ],
+      "rows": [
+        [
+          null,
+          "2026 VND",
+          null,
+          null
+        ],
+        [
+          null,
+          "LƯU CHUYỂN TIỀN TỪ HOẠT ĐỘNG KINH DOANH",
+          null,
+          null
+        ],
+        [
+          "01",
+          "Lợi nhuận trước thuế",
+          157247374570,
+          105458299920
+        ],
+        [
+          "",
+          "Điều chỉnh cho các khoản:",
+          null,
+          null
+        ],
+        [
+          "02",
+          "Khấu hao tài sản cố định (\"TSCĐ\") và BĐSĐT",
+          21659218174,
+          11783169129
+        ],
+        [
+          "03",
+          "Các khoản dự phòng",
+          4037618794,
+          69621937
+        ],
+        [
+          "04",
+          "Lãi chênh lệch tỷ giá hối đoái do đánh giá lại các khoản mục tiền tệ có gốc ngoại tệ",
+          879974735,
+          293731088
+        ],
+        [
+          "05",
+          "Lãi từ hoạt động đầu tư, tài chính",
+          -47243078671,
+          -45779213807
+        ],
+        [
+          "06",
+          "Chi phí đi vay",
+          11659836717,
+          4051592055
+        ],
+        [
+          "07",
+          "Các khoản điều chỉnh khác",
+          "-",
+          "-"
+        ],
+        [
+          "08",
+          "Lợi nhuận từ hoạt động kinh doanh trước những thay đổi vốn lưu động",
+          148240944319,
+          75877200322
+        ],
+        [
+          "09",
+          "Giảm/(tăng) các khoản phải thu",
+          32381858264,
+          -119814904291
+        ],
+        [
+          "10",
+          "Giảm/(tăng) hàng tồn kho",
+          80140700920,
+          -278262795383
+        ],
+        [
+          "11",
+          "(Giảm)/tăng các khoản phải trả",
+          -188827887625,
+          240847160415
+        ],
+        [
+          "12",
+          "Tăng chi phí chờ phân bổ",
+          -9917105016,
+          -4384087521
+        ],
+        [
+          "14",
+          "Chi phí đi vay đã trả",
+          -11659836717,
+          -4051592055
+        ],
+        [
+          "15",
+          "Thuế TNDN đã nộp",
+          -68367184485,
+          -33717583125
+        ],
+        [
+          "17",
+          "Tiền chi khác từ hoạt động kinh doanh",
+          -6576879420,
+          -54010000
+        ],
+        [
+          "20",
+          "Lưu chuyển tiền thuần từ hoạt động kinh doanh",
+          -24585389760,
+          -123560611638
+        ],
+        [
+          null,
+          "LƯU CHUYỂN TIỀN TỪ HOẠT ĐỘNG ĐẦU TƯ",
+          null,
+          null
+        ],
+        [
+          "21",
+          "Tiền chi để mua sắm, xây dựng TSCĐ",
+          -12513396016,
+          -21853216426
+        ],
+        [
+          "22",
+          "Tiền thu từ thanh lý, nhượng bán TSCĐ",
+          80150524,
+          "-"
+        ],
+        [
+          "23",
+          "Tiền chi cho vay, mua các công cụ nợ của đơn vị khác",
+          -825346502224,
+          -255000000000
+        ],
+        [
+          "24",
+          "Tiền thu hồi cho vay, bán lại các công cụ nợ của đơn vị khác",
+          875100178940,
+          282000000000
+        ],
+        [
+          "26",
+          "Tiền thu hồi đầu tư góp vốn vào đơn vị khác",
+          60400000000,
+          "-"
+        ],
+        [
+          "27",
+          "Tiền thu lãi cho vay, cổ tức và lợi nhuận được chia",
+          39399325247,
+          18214198154
+        ],
+        [
+          "30",
+          "Lưu chuyển tiền thuần từ hoạt động đầu tư",
+          137119756471,
+          23360981728
+        ],
+        [
+          null,
+          "LƯU CHUYỂN TIỀN TỪ HOẠT ĐỘNG TÀI CHÍNH",
+          null,
+          null
+        ],
+        [
+          "33",
+          "Tiền thu từ đi vay",
+          964726675732,
+          413807902607
+        ],
+        [
+          "34",
+          "Tiền trả nợ gốc vay",
+          -1233640041405,
+          -250676338585
+        ],
+        [
+          "36",
+          "Cổ tức, lợi nhuận đã trả cho chủ sở hữu",
+          -15569000,
+          -572315900
+        ],
+        [
+          "40",
+          "Lưu chuyển tiền thuần từ hoạt động tài chính",
+          -268928934673,
+          162559248122
+        ],
+        [
+          "50",
+          "Lưu chuyển tiền thuần trong kỳ",
+          -156394567962,
+          62359618212
+        ],
+        [
+          "60",
+          "Tiền và tương đương tiền đầu kỳ",
+          316811111897,
+          59443470909
+        ],
+        [
+          "61",
+          "Ảnh hưởng của thay đổi tỷ giá hối đoái quy đổi ngoại tệ",
+          -12340704,
+          -42432434
+        ],
+        [
+          "70",
+          "Tiền và tương đương tiền cuối kỳ",
+          160404203231,
+          121760656687
+        ]
+      ]
+    },
+    "offBalanceSheet": {
+      "columns": [],
+      "rows": []
+    }
+  },
+  "warnings": [
+    "\"Kỳ 3 tháng kết thúc ngày 31 tháng 3 năm\": Loi nhuan gop (293954747200) khong khop Doanh thu thuan - Gia von (1872628953684)",
+    "\"\": Loi nhuan gop (180422090148) khong khop Doanh thu thuan - Gia von (1335824867024)",
+    "\"Kỳ 3 tháng kết thúc ngày 31 tháng 3 năm\": Tong cac dong con cua \"Loi nhuan gop\" (1872628953684) khong khop chinh dong \"Loi nhuan gop\" (293954747200) - co the do OCR gop/bia dong, can xem tay.",
+    "\"\": Tong cac dong con cua \"Loi nhuan gop\" (1335824867024) khong khop chinh dong \"Loi nhuan gop\" (180422090148) - co the do OCR gop/bia dong, can xem tay.",
+    "\"Kỳ 3 tháng kết thúc ngày 31 tháng 3 năm\": Tong cac dong con cua \"Loi nhuan thuan tu hoat dong kinh doanh\" (534949508882) khong khop chinh dong \"Loi nhuan thuan tu hoat dong kinh doanh\" (155175781980) - co the do OCR gop/bia dong, can xem tay.",
+    "\"\": Tong cac dong con cua \"Loi nhuan thuan tu hoat dong kinh doanh\" (354919153128) khong khop chinh dong \"Loi nhuan thuan tu hoat dong kinh doanh\" (105639849148) - co the do OCR gop/bia dong, can xem tay.",
+    "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 3 muc trong BCDKT (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
+  ],
+  "businessType": "other",
+  "unreliableCells": {
+    "balanceSheet": {},
+    "incomeStatement": {}
+  },
+  "fullText": null
+}

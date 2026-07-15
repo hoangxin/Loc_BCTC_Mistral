@@ -1,0 +1,74 @@
+[
+  {
+    "stockCode": "CTG",
+    "periodLabel": "Q1/2026-HopNhat",
+    "markdownPath": "data/debug-empty-parse/ctg-11pages-1784105803521.md",
+    "pagesFetched": 11,
+    "source": "ocr-ctg-11pages (backfill)",
+    "savedAt": "2026-07-15T19:29:35.456Z"
+  },
+  {
+    "stockCode": "FTS",
+    "periodLabel": "Q1/2026-Chung",
+    "markdownPath": "data/debug-empty-parse/refetch-FTS-1784136734608.md",
+    "pagesFetched": 83,
+    "source": "refetch-one (backfill, full adaptive probe)",
+    "savedAt": "2026-07-15T19:29:35.458Z"
+  },
+  {
+    "stockCode": "CTS",
+    "periodLabel": "Q1/2026-Chung",
+    "markdownPath": "data/debug-empty-parse/CTS-capped16-D__AI_Loc_BCTC_Mistral_data_reports-tmp_CTS_Baocaotaichinh_Q1_2026.zip__extracted_m88_20260420_20260420_cts_cbtt_bao_cao_tai_chinh_quy_11776665292519tk5zlclm-1784140573477.md",
+    "pagesFetched": 16,
+    "source": "ocr-capped-probe (backfill)",
+    "savedAt": "2026-07-15T19:29:35.459Z"
+  },
+  {
+    "stockCode": "VCK",
+    "periodLabel": "Q1/2026-Chung",
+    "markdownPath": "data/debug-empty-parse/VCK-capped16-D__AI_Loc_BCTC_Mistral_data_reports-tmp_VCK_Baocaotaichinh_Q1_2026.zip__extracted_m88_20260413_vi_baocaotaichinh_q1_2026___signed1776053449448l3vklzs6-1784139725020.md",
+    "pagesFetched": 16,
+    "source": "ocr-capped-probe (backfill)",
+    "savedAt": "2026-07-15T19:29:35.460Z"
+  },
+  {
+    "stockCode": "VND",
+    "periodLabel": "Q1/2026-Chung",
+    "markdownPath": "data/debug-empty-parse/VND-capped16-D__AI_Loc_BCTC_Mistral_data_reports-tmp_VND_Baocaotaichinh_Q1_2026.zip__extracted_m88_20260420_vnd_bao_cao_tai_chinh_quy_1_nam_2026_11776682669160c6zbik8t-1784140216055.md",
+    "pagesFetched": 14,
+    "source": "ocr-capped-probe (backfill)",
+    "savedAt": "2026-07-15T19:29:35.461Z"
+  },
+  {
+    "stockCode": "TCB",
+    "periodLabel": "Q1/2026-HopNhat",
+    "markdownPath": "data/debug-empty-parse/TCB-capped16-D__AI_Loc_BCTC_Mistral_data_reports-tmp_TCB_Baocaotaichinh_Q1_2026_Hopnhat-1784140274239.md",
+    "pagesFetched": 12,
+    "source": "ocr-capped-probe (backfill)",
+    "savedAt": "2026-07-15T19:29:35.462Z"
+  },
+  {
+    "stockCode": "MIG",
+    "periodLabel": "Q1/2026-Chung",
+    "markdownPath": "data/debug-empty-parse/MIG-capped16-D__AI_Loc_BCTC_Mistral_data_reports-tmp_MIG_Baocaotaichinh_Q1_2026-1784140781134.md",
+    "pagesFetched": 16,
+    "source": "ocr-capped-probe (backfill)",
+    "savedAt": "2026-07-15T19:29:35.463Z"
+  },
+  {
+    "stockCode": "MIG",
+    "periodLabel": "Q1/2026-Chung",
+    "markdownPath": "data/debug-empty-parse/MIG-capped18-1784141272044.md",
+    "pagesFetched": 18,
+    "source": "_mig-extend (backfill, extended +2 pages)",
+    "savedAt": "2026-07-15T19:29:35.464Z"
+  },
+  {
+    "stockCode": "PTI",
+    "periodLabel": "Q1/2026-HopNhat",
+    "markdownPath": "data/debug-empty-parse/PTI-capped16-D__AI_Loc_BCTC_Mistral_data_reports-tmp_PTI_Baocaotaichinh_Q1_2026_Hopnhat.zip__extracted_VI_BaoCaoTaiChinhHopNhat_Q1_2026-1784143240084.md",
+    "pagesFetched": 14,
+    "source": "ocr-capped-probe (backfill)",
+    "savedAt": "2026-07-15T19:29:35.465Z"
+  }
+]
