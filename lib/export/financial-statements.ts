@@ -50,6 +50,17 @@ export interface ExtractFinancialStatementsResult {
   // Khac rong nghia la sau khi parse xong, so lieu van khong khop nguyen tac
   // ke toan bat buoc - can kiem tra tay lai (xem validate-statements.ts).
   warnings: string[];
+  // SUA 2026-07-15 (theo phan hoi nguoi dung, sau su co CTG - goi OCR that
+  // xong nhung KHONG luu duoc markdown tho vi ham nay truoc day CHI ghi
+  // markdown tho ra dia trong 1 TRUONG HOP LOI DUY NHAT (isEmptyParse,
+  // dumpMarkdownForEmptyParse) - MOI truong hop khac (ke ca khi parse "gan
+  // dung" nhung thieu 1 vai dong nhu CTG) khong co cach nao lay lai markdown
+  // da OCR ma khong goi OCR THAT lan nua, vi pham dung nguyen tac CLAUDE.md
+  // "luu output tho ngay sau moi lan goi OCR thanh cong". LUON tra ve
+  // markdown o day (khong ton them lan OCR nao - da co san trong tay tu vong
+  // lap ben tren) de MOI noi goi ham nay (script re-fetch rieng 1 bao cao,
+  // lib/pipeline.ts...) co the tu luu lai ngay, khong phu thuoc isEmptyParse.
+  markdown: string;
   // Ngan hang/Chung khoan/Bao hiem/Khac - suy tu MA MAU BIEU in tren chinh
   // markdown OCR duoc (xem lib/business-type.ts) - tinh LUON o day (khong ton
   // OCR/doc them lan nao) vi markdown da co san trong tay.
@@ -267,6 +278,7 @@ export async function extractFinancialStatementsWithOcrProbe(filePath: string, t
   return {
     statements,
     warnings,
+    markdown,
     businessType,
     unreliableCells: toUnreliableCells(mismatches),
   };

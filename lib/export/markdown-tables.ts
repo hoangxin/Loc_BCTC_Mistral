@@ -378,21 +378,26 @@ const INCOME_STATEMENT_CONTENT_MARKERS = [
   // (2026-07-12, HDB KHONG co cot Luy ke nen KQKD gon hon, khong bi tach
   // trang). Them marker CHI cho trang 2 nay.
   'CHI PHI THUE TNDN',
-  // SUA 2026-07-15 (theo phan hoi nguoi dung, xac nhan qua CTG Q1/2026): CTG
-  // ngat trang MUON HON VCB 1 nhip - trang chua "Chi phi thue TNDN" (marker
-  // tren) DUNG LAI o "XII. Chi phi thue TNDN", CON doan "XIII. Loi nhuan sau
-  // thue" tro di (loi nhuan phan bo cho co dong Ngan hang me/co dong thieu
-  // so, lai co ban tren co phieu) nam trong 1 bang rieng KHONG con chua "Chi
-  // phi thue TNDN" nen khong khop marker nao o tren, bi am tham loai bo
-  // (dung nguyen nhan lam LNST/LNST Cty Me trong nhu VCB truoc khi co marker
-  // "CHI PHI THUE TNDN"). Them marker rieng cho DOAN CUOI CUNG nay - KHONG
-  // dung "LOI NHUAN SAU THUE" tran (trung voi dong BCDKT rat pho bien "Loi
-  // nhuan sau thue CHUA PHAN PHOI", co the lam mot bang phu BCDKT bi cham
-  // nham diem incomeStatement) - dung 2 cum dac trung RIENG cho doan phan bo
-  // loi nhuan hop nhat cua Ngan hang (khong xuat hien trong BCDKT/LCTT) va
-  // dong lai co ban tren co phieu.
-  'CUA CO DONG CUA NGAN HANG ME',
-  'LOI ICH CUA CO DONG THIEU SO',
+  // SUA 2026-07-15 (theo phan hoi nguoi dung, xac nhan qua markdown OCR THAT
+  // cua CTG Q1/2026, sau khi OCR gioi han 11 trang de xem lai): CTG ngat
+  // trang MUON HON VCB 1 nhip - trang chua "Chi phi thue TNDN" (marker tren)
+  // DUNG LAI o "XII. Chi phi thue TNDN", doan "XIII. Loi nhuan sau thue" tro
+  // di nam trong 1 bang RIENG (dung ngay sau tieu de that "BÁO CÁO KẾT QUẢ
+  // HOẠT ĐỘNG HỢP NHẤT (Tiếp theo)") KHONG con chua "Chi phi thue TNDN" nen
+  // khong khop marker nao o tren, bi am tham loai bo. LAN DAU sua (cung ngay)
+  // da DOAN SAI ca 2 cum tu dac trung (dung "cổ đông của Ngân hàng mẹ"/"cổ
+  // đông thiểu số" - khong co that trong van ban) - markdown OCR THAT cho
+  // thay CTG viet "XIII. Lợi nhuận sau thuế TNDN" / "XIV. Lợi ích của cổ
+  // đông KHÔNG KIỂM SOÁT" (khong phai "thieu so") / "XV. Lợi nhuận thuần
+  // của cổ đông Ngân hàng" (khong co "mẹ"). KHONG dung "LOI NHUAN SAU THUE"
+  // tran (trung voi dong BCDKT rat pho bien "Loi nhuan sau thue CHUA PHAN
+  // PHOI") - dung "LOI NHUAN SAU THUE TNDN" (hau to TNDN lam no khac han
+  // dong BCDKT). "LOI ICH CUA CO DONG KHONG KIEM SOAT" giu nguyen dang OCR
+  // (co "CUA") - khac voi marker equity da co san o statement-shared.ts
+  // (KNOWN_EQUITY_DIRECT_CHILD_CONTENT, khong co "CUA") nen khong trung.
+  'LOI NHUAN SAU THUE TNDN',
+  'LOI ICH CUA CO DONG KHONG KIEM SOAT',
+  'LOI NHUAN THUAN CUA CO DONG NGAN HANG',
   'LAI CO BAN TREN CO PHIEU',
 ];
 
@@ -402,6 +407,15 @@ const CASH_FLOW_CONTENT_MARKERS = [
   'LUU CHUYEN TIEN TU HOAT DONG TAI CHINH',
   'LUU CHUYEN TIEN THUAN TRONG KY',
   'TIEN VA TUONG DUONG TIEN CUOI KY',
+  // SUA 2026-07-15 (theo phan hoi nguoi dung, xac nhan qua markdown OCR THAT
+  // CTG Q1/2026): mau Ngan hang (B04a/TCTD-HN) viet DAY DU HON "Tiền và các
+  // khoản tương đương tiền TẠI THỜI ĐIỂM cuối kỳ" (chen them "cac khoan"/"tai
+  // thoi diem") - khong con la substring lien tuc cua marker tren, nen dong
+  // "VII. ...cuoi ky" (thuong roi vao 1 bang RIENG chi 1 dong do ngat trang)
+  // khong khop marker nao, van bi loai (du filter <3 dong da duoc sua o
+  // duoi, xem parseStatementsFromMarkdown). Them bien the rieng, dac trung
+  // du de khong trung BCDKT/KQKD/offBalanceSheet.
+  'TAI THOI DIEM CUOI KY',
   'KHAU HAO TAI SAN CO DINH',
   'TIEN CHI TRA LAI VAY',
   'TIEN CHI NOP THUE THU NHAP DOANH NGHIEP',
@@ -831,8 +845,23 @@ export function parseStatementsFromMarkdown(markdown: string): FinancialStatemen
   // nhau) - moi nua van tu co du tu khoa dac trung rieng (vd nua NGUON VON co
   // "VON CHU SO HUU"/"TONG CONG NGUON VON") nen van duoc gan dung key du parse
   // rieng ra 2 bang, roi gop lai o duoi. Bo qua cac bang qua ngan (<3 dong,
-  // thuong la bang phu nhu "Co cau von dieu le" o trang bia).
-  const tables = parseAllTablesInRange(relevantLines).filter((t) => t.rows.length >= 3);
+  // thuong la bang phu nhu "Co cau von dieu le" o trang bia) - TRU KHI bang do
+  // van khop RO RANG 1 key noi dung (xem SUA 2026-07-15 duoi).
+  //
+  // SUA 2026-07-15 (theo phan hoi nguoi dung, xac nhan qua markdown OCR THAT
+  // CTG Q1/2026): dong "VII. Tiền và các khoản tương đương tiền tại thời
+  // điểm cuối kỳ" (dong ket thuc LCTT that su) nam MOT MINH trong 1 bang
+  // markdown CHI CO 1 DONG DU LIEU (Mistral tach rieng do ngat trang, dung
+  // ngay sau tieu de that "BÁO CÁO LƯU CHUYỂN TIỀN TỆ HỢP NHẤT (Tiếp theo)")
+  // - bi loai boi dieu kien "<3 dong" TRUOC CA KHI kip cham diem noi dung,
+  // du no khop chinh xac marker "TIEN VA TUONG DUONG TIEN CUOI KY" da co san.
+  // Diem so noi dung (classifyTableByContent, doi hoi diem cao nhat RO RANG
+  // vuot troi cac key khac) la tin hieu DANG TIN CAY HON so voi so dong don
+  // thuan - 1 bang du chi 1-2 dong nhung khop RO RANG 1 key van nen duoc giu,
+  // KHONG chi loai theo do dai. Dieu kien "<3 dong" gio CHI loai bang KHONG
+  // khop key nao (vd "Co cau von dieu le" o trang bia - khong chua tu khoa
+  // ke toan nao trong danh sach nen van bi loai binh thuong).
+  const tables = parseAllTablesInRange(relevantLines).filter((t) => t.rows.length >= 3 || classifyTableByContent(t) !== null);
 
   const grouped: Record<keyof FinancialStatements, ParsedTable[]> = {
     balanceSheet: [],

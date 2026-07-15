@@ -17,6 +17,15 @@ export interface ReportContentResult {
   statements: FinancialStatements;
   warnings: string[];
   fullText: string | null; // co san (khong ton them) cho docx/doc; null cho pdf (khong con OCR toan van o day)
+  // SUA 2026-07-15 (theo phan hoi nguoi dung, sau su co CTG - xem comment day
+  // du o ExtractFinancialStatementsResult, lib/export/financial-statements.ts):
+  // markdown THO da OCR duoc (pham vi probe, KHONG phai toan van) cho nhanh
+  // pdf - null cho docx/doc (dung fullText o do, khong OCR nen khong co khai
+  // niem "markdown"). Moi noi goi extractReportContent (script re-fetch rieng
+  // 1 bao cao, lib/pipeline.ts) NEN luu truong nay ra dia NGAY sau khi goi
+  // thanh cong, truoc khi lam gi tiep - khong con phai goi OCR THAT lan nua
+  // chi de xem lai markdown khi can chan doan.
+  markdown: string | null;
   // Ngan hang/Chung khoan/Bao hiem/Khac - xem lib/business-type.ts.
   businessType: BusinessType;
   // Xem ExtractFinancialStatementsResult (lib/export/financial-statements.ts)
@@ -40,12 +49,12 @@ export async function extractReportContent(resolved: ResolvedReportFile): Promis
   if (resolved.format === 'docx') {
     const { statements, fullText, warnings } = await extractFinancialStatementsFromDocx(resolved.filePath);
     if (!looksLikeVietnameseText(fullText)) return null;
-    return { statements, warnings, fullText, businessType: classifyBusinessType(fullText), unreliableCells: NO_UNRELIABLE_CELLS };
+    return { statements, warnings, fullText, markdown: null, businessType: classifyBusinessType(fullText), unreliableCells: NO_UNRELIABLE_CELLS };
   }
   if (resolved.format === 'doc') {
     const { statements, fullText, warnings } = await extractFinancialStatementsFromDoc(resolved.filePath);
     if (!looksLikeVietnameseText(fullText)) return null;
-    return { statements, warnings, fullText, businessType: classifyBusinessType(fullText), unreliableCells: NO_UNRELIABLE_CELLS };
+    return { statements, warnings, fullText, markdown: null, businessType: classifyBusinessType(fullText), unreliableCells: NO_UNRELIABLE_CELLS };
   }
 
   const scopeLabel = `[perf] determineStatementPageScope ${resolved.filePath}`;
