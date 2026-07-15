@@ -594,8 +594,27 @@ const INCOME_STATEMENT_PART_MARKERS: { part: IncomeStatementPart; test: (normali
   { part: 'summary', test: (l) => l.includes('PHAN I') && l.includes('TONG HOP') && !l.includes('PHAN II') },
 ];
 
+// SUA 2026-07-15 (theo phan hoi nguoi dung, sau vu CTG doan LNST/dong "cuoi
+// ky" LCTT bi mat vi ngat trang): thay vi tiep tuc doan tung cum tu BEN
+// TRONG bang con (se luon co rui ro sai voi cong ty/mau bieu khac - "Loi ich
+// cua co dong khong kiem soat" la thuat ngu CHUAN pho bien, khong phai chu
+// hiem can dò), dung chinh TIEU DE THAT (dong "#", mau bieu BAT BUOC lap lai
+// nguyen ten bang KEM "(Tiếp theo)" moi khi ngat trang - quy dinh chung,
+// khong doi theo cong ty) lam tin hieu phan loai cho bang con ngay sau no -
+// tin cay hon han vi khong phu thuoc bang con do viet chu gi ben trong.
+const CONTINUATION_HEADING_MARKERS: { key: keyof FinancialStatements; test: (normalizedLine: string) => boolean }[] = [
+  { key: 'balanceSheet', test: (l) => (l.includes('BANG CAN DOI KE TOAN') || l.includes('BAO CAO TINH HINH TAI CHINH')) && l.includes('TIEP THEO') },
+  { key: 'incomeStatement', test: (l) => l.includes('KET QUA HOAT DONG') && l.includes('TIEP THEO') },
+  { key: 'cashFlow', test: (l) => l.includes('LUU CHUYEN TIEN TE') && l.includes('TIEP THEO') },
+];
+
 interface ParsedTable extends StatementTable {
   incomeStatementPart?: IncomeStatementPart;
+  // Bang con nay dung NGAY SAU 1 tieu de that dang "(Tiếp theo)" khop 1
+  // trong 3 mau bieu tren - uu tien hon classifyTableByContent (xem
+  // parseStatementsFromMarkdown) vi day la tin hieu CAU TRUC on dinh, khong
+  // phu thuoc wording cua tung dong ben trong bang con.
+  continuationKey?: keyof FinancialStatements;
   // Cot nhan/Ma so CUA RIENG bang con nay (co the khac vi tri/ten giua cac
   // bang con cua CUNG 1 bang chinh - xem comment o alignRowToColumns).
   labelIndex: number;
@@ -607,6 +626,11 @@ interface ParsedTable extends StatementTable {
 function parseAllTablesInRange(lines: string[]): ParsedTable[] {
   const tables: ParsedTable[] = [];
   let currentIncomeStatementPart: IncomeStatementPart | undefined;
+  // Chi ap dung cho bang NGAY SAU tieu de "(Tiếp theo)" - reset ve undefined
+  // ngay sau khi gan cho 1 bang (khac currentIncomeStatementPart, ton tai
+  // xuyen suot nhieu bang: tieu de "(Tiếp theo)" chi mo ta CHINH bang di
+  // ngay sau no, khong phai moi bang con lai cua tai lieu).
+  let pendingContinuationKey: (keyof FinancialStatements) | undefined;
   let i = 0;
   while (i < lines.length) {
     const headerCells = splitMarkdownRow(lines[i]);
@@ -615,6 +639,8 @@ function parseAllTablesInRange(lines: string[]): ParsedTable[] {
         const normalized = normalizeLabelText(lines[i]);
         const marker = INCOME_STATEMENT_PART_MARKERS.find((m) => m.test(normalized));
         if (marker) currentIncomeStatementPart = marker.part;
+        const continuationMarker = CONTINUATION_HEADING_MARKERS.find((m) => m.test(normalized));
+        if (continuationMarker) pendingContinuationKey = continuationMarker.key;
       }
       i++;
       continue;
@@ -769,9 +795,11 @@ function parseAllTablesInRange(lines: string[]): ParsedTable[] {
       columns: effectiveHeaderCells,
       rows,
       incomeStatementPart: currentIncomeStatementPart,
+      continuationKey: pendingContinuationKey,
       labelIndex: labelIdx,
       maSoIndex: maSoIdx,
     });
+    pendingContinuationKey = undefined; // chi ap dung cho DUNG bang vua tao, khong lan sang bang tiep theo
     i = j;
   }
   return tables;
@@ -853,15 +881,19 @@ export function parseStatementsFromMarkdown(markdown: string): FinancialStatemen
   // điểm cuối kỳ" (dong ket thuc LCTT that su) nam MOT MINH trong 1 bang
   // markdown CHI CO 1 DONG DU LIEU (Mistral tach rieng do ngat trang, dung
   // ngay sau tieu de that "BÁO CÁO LƯU CHUYỂN TIỀN TỆ HỢP NHẤT (Tiếp theo)")
-  // - bi loai boi dieu kien "<3 dong" TRUOC CA KHI kip cham diem noi dung,
-  // du no khop chinh xac marker "TIEN VA TUONG DUONG TIEN CUOI KY" da co san.
-  // Diem so noi dung (classifyTableByContent, doi hoi diem cao nhat RO RANG
-  // vuot troi cac key khac) la tin hieu DANG TIN CAY HON so voi so dong don
-  // thuan - 1 bang du chi 1-2 dong nhung khop RO RANG 1 key van nen duoc giu,
-  // KHONG chi loai theo do dai. Dieu kien "<3 dong" gio CHI loai bang KHONG
-  // khop key nao (vd "Co cau von dieu le" o trang bia - khong chua tu khoa
-  // ke toan nao trong danh sach nen van bi loai binh thuong).
-  const tables = parseAllTablesInRange(relevantLines).filter((t) => t.rows.length >= 3 || classifyTableByContent(t) !== null);
+  // - bi loai boi dieu kien "<3 dong" TRUOC CA KHI kip cham diem noi dung.
+  // THU dung classifyTableByContent lam dieu kien giu lai (dua vao tu khoa
+  // BEN TRONG bang), nhung dong nay tinh co khop CA marker LCTT ("cuoi ky")
+  // LAN marker BCDKT ("Tien va cac khoan tuong duong tien" - ten 1 khoan muc
+  // tai san chuan) -> hoa diem -> van tra null -> van bi loai. Doi han sang
+  // dung continuationKey (tu tieu de that "(Tiếp theo)" ngay truoc bang, xem
+  // CONTINUATION_HEADING_MARKERS) lam dieu kien giu/gan key CHINH - tin cay
+  // hon nhieu vi KHONG phu thuoc bang con viet chu gi ben trong (mau bieu
+  // BAT BUOC lap lai dung ten + "(Tiếp theo)" khi ngat trang, khong doi theo
+  // tung cong ty/each ky viet tat khac nhau).
+  const tables = parseAllTablesInRange(relevantLines).filter(
+    (t) => t.rows.length >= 3 || t.continuationKey !== undefined || classifyTableByContent(t) !== null
+  );
 
   const grouped: Record<keyof FinancialStatements, ParsedTable[]> = {
     balanceSheet: [],
@@ -870,7 +902,7 @@ export function parseStatementsFromMarkdown(markdown: string): FinancialStatemen
     offBalanceSheet: [],
   };
   for (const table of tables) {
-    const key = classifyTableByContent(table);
+    const key = table.continuationKey ?? classifyTableByContent(table);
     if (key) grouped[key].push(table);
   }
 

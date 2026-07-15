@@ -977,9 +977,16 @@ const BANK_METRICS: MetricDef[] = [
     statement: 'incomeStatement',
     // Ten dong nay khac han giua cac ngan hang (da xac nhan HDB "Loi nhuan
     // thuan CUA CHU SO HUU" vs VCB "Loi nhuan thuan...PHAN BO cho CO DONG cua
-    // Ngan hang") - can 2 bien the, giong cach lam voi SECURITIES_METRICS
+    // Ngan hang" vs CTG "Loi nhuan thuan CUA CO DONG Ngan hang", khong co
+    // "phan bo") - can 3 bien the, giong cach lam voi SECURITIES_METRICS
     // "LNST Cong Ty Me" (xem comment byLabelAnyOf o tren).
-    finders: [byLabelAnyOf([['LOI NHUAN THUAN', 'CHU SO HUU'], ['LOI NHUAN THUAN', 'PHAN BO', 'CO DONG']])],
+    finders: [
+      byLabelAnyOf([
+        ['LOI NHUAN THUAN', 'CHU SO HUU'],
+        ['LOI NHUAN THUAN', 'PHAN BO', 'CO DONG'],
+        ['LOI NHUAN THUAN', 'CUA CO DONG', 'NGAN HANG'],
+      ]),
+    ],
     thresholds: BANK_THRESHOLDS_C,
   },
 ];
