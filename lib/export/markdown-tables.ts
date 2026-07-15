@@ -451,8 +451,17 @@ const CASH_FLOW_BEGIN_ROW_SUFFIX_MARKER = 'DAU KY';
 const CASH_FLOW_END_ROW_SUFFIX_MARKER = 'CUOI KY';
 // So dong toi da cho phep xen giua 2 moc trong chu ky (vd dong tuy chon "Anh
 // huong thay doi ty gia hoi doai" xen giua "dau ky" va "cuoi ky" - xac nhan
-// qua DRI that).
-const CASH_FLOW_ENDING_ROW_GAP = 2;
+// qua DRI that). TANG tu 2 len 3 (2026-07-16, xac nhan qua FTS/CTCK that):
+// mau CTCK con tach "dau ky"/"cuoi ky" thanh 2 dong con RIENG ("- Tien"/"-
+// Cac khoan tuong duong tien") CONG THEM dong ty gia tuy chon - tong 3 dong
+// xen giua, vuot nguong 2 truoc day. Khi khong tim thay chu ky (vd truong
+// hop nay truoc khi sua), OCR probe se quet HET toan van (khong dung lai
+// dung luc) VA pham vi tim bang mo rong het ca Thuyet minh, co the lam mot
+// bang trong Thuyet minh (vd bang khau hao tai san co dinh chi tiet theo
+// loai) bi tron nham cot voi BCDKT that qua mostCommonColumns - da xac nhan
+// qua FTS Q1/2026 that (OCR het 83 trang, header BCDKT bi ghi de thanh cot
+// cua 1 bang phu trong Thuyet minh).
+const CASH_FLOW_ENDING_ROW_GAP = 3;
 
 function isMarkdownDataRow(rawLine: string): boolean {
   return rawLine.trim().startsWith('|');
