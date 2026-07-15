@@ -501,14 +501,24 @@ function findCashFlowEndingSequenceIndex(lines: string[], searchFromIndex: numbe
   return -1;
 }
 
-const CASH_FLOW_FINANCING_SECTION_MARKER = 'LUU CHUYEN TIEN TU HOAT DONG TAI CHINH';
+// SUA 2026-07-16 (theo phan hoi nguoi dung, xac nhan qua PVP that): mau DN
+// thuong dung "Luu chuyen tien TE tu hoat dong tai chinh" cho dong TIEU DE
+// muc, VA "Luu chuyen tien THUAN tu hoat dong tai chinh" cho dong TONG -
+// CA HAI deu chen them 1 tu ("TE"/"THUAN") giua "TIEN" va "TU", khong con la
+// substring lien tuc cua 1 chuoi co dinh. Dung 2 tu khoa RIENG (khong doi
+// hoi lien tiep, giong cach da sua cho "TONG"/"TAI SAN" o lib/analysis.ts)
+// thay vi 1 chuoi cung nhac - khop duoc ca 2 bien the tren LAN dang ngan
+// "Luu chuyen tien tu hoat dong tai chinh" (Ngan hang/CTCK, khong chen tu nao).
+function isCashFlowFinancingSectionLine(normalizedLine: string): boolean {
+  return normalizedLine.includes('LUU CHUYEN TIEN') && normalizedLine.includes('HOAT DONG TAI CHINH');
+}
 
 // SUA 2026-07-16 (theo de nghi nguoi dung, sau khi gap that CTG - dong "cuoi
 // ky" that nam CACH dong "dau ky" toi 28 dong do NGAT TRANG giua chung, vuot
 // xa moi nguong CASH_FLOW_ENDING_ROW_GAP hop ly nao). Thay vi tiep tuc tang
 // nguong gap (van co gioi han, se lai vo hieu voi 1 khoang cach khac trong
 // tuong lai), dung 1 tin hieu THU TU (khong gioi han khoang cach) thay cho
-// tin hieu KHOANG CACH: "Luu chuyen tien tu hoat dong tai chinh" LUON la
+// tin hieu KHOANG CACH: "Luu chuyen tien ... hoat dong tai chinh" LUON la
 // MUC CUOI CUNG trong 3 muc chinh cua LCTT (kinh doanh/dau tu/tai chinh,
 // bat buoc theo luat ke toan, thu tu khong doi) - dong "cuoi ky" THAT SU
 // LUON nam SAU dong nay, bat ke co bao nhieu dong chi tiet/ngat trang xen
@@ -521,7 +531,7 @@ function findCashFlowEndingByFinancingSectionOrder(lines: string[], searchFromIn
   for (let i = searchFromIndex; i < lines.length; i++) {
     if (!isMarkdownDataRow(lines[i])) continue;
     const normalized = normalizeLabelText(lines[i]);
-    if (normalized.includes(CASH_FLOW_FINANCING_SECTION_MARKER)) lastFinancingIndex = i;
+    if (isCashFlowFinancingSectionLine(normalized)) lastFinancingIndex = i;
     if (lastFinancingIndex !== -1 && matchesCashFlowBalanceRow(lines[i], CASH_FLOW_END_ROW_SUFFIX_MARKER)) {
       return i;
     }
