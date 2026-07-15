@@ -404,7 +404,6 @@ const INCOME_STATEMENT_CONTENT_MARKERS = [
 const CASH_FLOW_CONTENT_MARKERS = [
   'LUU CHUYEN TIEN TU HOAT DONG KINH DOANH',
   'LUU CHUYEN TIEN TU HOAT DONG DAU TU',
-  'LUU CHUYEN TIEN TU HOAT DONG TAI CHINH',
   'LUU CHUYEN TIEN THUAN TRONG KY',
   'TIEN VA TUONG DUONG TIEN CUOI KY',
   // SUA 2026-07-15 (theo phan hoi nguoi dung, xac nhan qua markdown OCR THAT
@@ -580,10 +579,24 @@ const OFF_BALANCE_SHEET_CONTENT_MARKERS = [
   'BAO LANH VAY VON',
 ];
 
-const CONTENT_MARKERS_BY_KEY: { key: keyof FinancialStatements; markers: string[] }[] = [
+// SUA 2026-07-16 (phan hoi nguoi dung, xac nhan qua MIG that): 1 marker la
+// CHUOI CO DINH se gay ton thuong voi cac cong ty chen them tu giua (vd
+// "Lưu chuyển tiền THUẦN TỪ/ (SỬ DỤNG VÀO) hoạt động tài chính" - ca "THUAN"
+// LAN "/ (SU DUNG VAO)" chen giua "TU" va "HOAT DONG", khong con la 1 chuoi
+// lien tuc voi bat ky bien the co dinh nao). Cho phep 1 marker la MANG cac
+// tu khoa BAT BUOC (AND, khong doi hoi lien tiep) thay vi 1 chuoi don - dung
+// chung 1 tinh than voi cach da sua cho "TONG"/"TAI SAN" (lib/analysis.ts)
+// va isCashFlowFinancingSectionLine o tren.
+type ContentMarker = string | string[];
+function matchesContentMarker(labelText: string, marker: ContentMarker): boolean {
+  if (typeof marker === 'string') return labelText.includes(marker);
+  return marker.every((m) => labelText.includes(m));
+}
+
+const CONTENT_MARKERS_BY_KEY: { key: keyof FinancialStatements; markers: ContentMarker[] }[] = [
   { key: 'balanceSheet', markers: BALANCE_SHEET_CONTENT_MARKERS },
   { key: 'incomeStatement', markers: INCOME_STATEMENT_CONTENT_MARKERS },
-  { key: 'cashFlow', markers: CASH_FLOW_CONTENT_MARKERS },
+  { key: 'cashFlow', markers: [...CASH_FLOW_CONTENT_MARKERS, ['LUU CHUYEN TIEN', 'HOAT DONG TAI CHINH']] },
   { key: 'offBalanceSheet', markers: OFF_BALANCE_SHEET_CONTENT_MARKERS },
 ];
 
@@ -635,7 +648,7 @@ function classifyTableByContent(table: ParsedTable): keyof FinancialStatements |
 
   const scores = CONTENT_MARKERS_BY_KEY.map(({ key, markers }) => ({
     key,
-    score: markers.reduce((count, marker) => count + (labelText.includes(marker) ? 1 : 0), 0),
+    score: markers.reduce((count, marker) => count + (matchesContentMarker(labelText, marker) ? 1 : 0), 0),
   })).sort((a, b) => b.score - a.score);
 
   const [best, second] = scores;
@@ -682,6 +695,15 @@ interface ParsedTable extends StatementTable {
   // bang con cua CUNG 1 bang chinh - xem comment o alignRowToColumns).
   labelIndex: number;
   maSoIndex: number;
+  // SUA 2026-07-16 (phan hoi nguoi dung, xac nhan qua MIG that): pham vi
+  // DONG THO ([startLineIndex, endLineIndex)) bang nay chiem trong markdown
+  // goc - dung de gan CUNG cashFlow cho bang chua dung DONG da duoc
+  // findCashFlowEndingIndex xac dinh CHAC CHAN la dong ket thuc LCTT (xem
+  // parseStatementsFromMarkdown) - uu tien hon ca continuationKey lan diem
+  // noi dung, vi day la SUY LUAN TRUC TIEP tu chinh tin hieu da dung de tinh
+  // diem cat, khong phai do lai tu dau bang 1 bo marker khac (co the hoa diem).
+  startLineIndex: number;
+  endLineIndex: number;
 }
 
 // Tim TAT CA bang markdown ("header" + dong phan cach "---" + cac dong du
@@ -861,6 +883,8 @@ function parseAllTablesInRange(lines: string[]): ParsedTable[] {
       continuationKey: pendingContinuationKey,
       labelIndex: labelIdx,
       maSoIndex: maSoIdx,
+      startLineIndex: i,
+      endLineIndex: j,
     });
     pendingContinuationKey = undefined; // chi ap dung cho DUNG bang vua tao, khong lan sang bang tiep theo
     i = j;
@@ -922,7 +946,7 @@ export function parseStatementsFromMarkdown(markdown: string): FinancialStatemen
   // cau van xuoi dai tinh co trung tu khoa).
   const allContentMarkers = CONTENT_MARKERS_BY_KEY.flatMap(({ markers }) => markers);
   const firstContentLine = lines.findIndex(
-    (line, i) => splitMarkdownRow(line) !== null && allContentMarkers.some((m) => normalizedLines[i].includes(m))
+    (line, i) => splitMarkdownRow(line) !== null && allContentMarkers.some((m) => matchesContentMarker(normalizedLines[i], m))
   );
   const cashFlowEndingIndex = findCashFlowEndingIndex(lines, firstContentLine === -1 ? 0 : firstContentLine);
   const notesLine = cashFlowEndingIndex !== -1 ? cashFlowEndingIndex + 1 : -1;
@@ -954,8 +978,21 @@ export function parseStatementsFromMarkdown(markdown: string): FinancialStatemen
   // hon nhieu vi KHONG phu thuoc bang con viet chu gi ben trong (mau bieu
   // BAT BUOC lap lai dung ten + "(Tiếp theo)" khi ngat trang, khong doi theo
   // tung cong ty/each ky viet tat khac nhau).
+  // SUA 2026-07-16 (phan hoi nguoi dung, xac nhan qua MIG that): neu bang
+  // con nay CHUA CHINH dong da duoc findCashFlowEndingIndex xac dinh CHAC
+  // CHAN la diem ket thuc LCTT (dung de tinh notesLine o tren), no LA
+  // cashFlow - khong can (va khong nen) cham diem lai tu dau bang
+  // classifyTableByContent, vi tin hieu do co the hoa diem voi BCDKT (chinh
+  // dong "cuoi ky" luon chua ca cum "tien va cac khoan tuong duong tien",
+  // trung marker BCDKT) roi bi loai oan. Day la SUY LUAN TRUC TIEP tu chinh
+  // tin hieu da dung o tren, dang tin cay hon ca continuationKey (khong phu
+  // thuoc co tieu de "(Tiếp theo)" hay khong - MIG lap lai tieu de KHONG kem
+  // "(Tiếp theo)" nen continuationKey khong giup duoc truong hop nay).
+  const definiteCashFlowTable = (t: ParsedTable): boolean =>
+    cashFlowEndingIndex !== -1 && cashFlowEndingIndex >= t.startLineIndex && cashFlowEndingIndex < t.endLineIndex;
+
   const tables = parseAllTablesInRange(relevantLines).filter(
-    (t) => t.rows.length >= 3 || t.continuationKey !== undefined || classifyTableByContent(t) !== null
+    (t) => t.rows.length >= 3 || t.continuationKey !== undefined || definiteCashFlowTable(t) || classifyTableByContent(t) !== null
   );
 
   const grouped: Record<keyof FinancialStatements, ParsedTable[]> = {
@@ -965,7 +1002,7 @@ export function parseStatementsFromMarkdown(markdown: string): FinancialStatemen
     offBalanceSheet: [],
   };
   for (const table of tables) {
-    const key = table.continuationKey ?? classifyTableByContent(table);
+    const key = table.continuationKey ?? (definiteCashFlowTable(table) ? 'cashFlow' : classifyTableByContent(table));
     if (key) grouped[key].push(table);
   }
 

@@ -3642,21 +3642,12 @@
           "rows": [
             [
               "1",
-              "1. Doanh thu phí bảo hiểm (01 = 01.1 + 01.2 + 01.3)",
+              "1. Doanh thu phí bảo hiểm (01 = 01.1 + 01.2 + 01.3) Trong đó:",
               18,
               1409466275080,
               1313566510692,
               1409466275080,
               1313566510692
-            ],
-            [
-              "",
-              "Trong đó:",
-              null,
-              null,
-              null,
-              null,
-              null
             ],
             [
               "1.1",
@@ -3687,21 +3678,12 @@
             ],
             [
               "2",
-              "2. Phí nhượng tái bảo hiểm (02 = 02.1 + 02.2)",
+              "2. Phí nhượng tái bảo hiểm (02 = 02.1 + 02.2) Trong đó:",
               19,
               -673315417267,
               -633956387883,
               -673315417267,
               -633956387883
-            ],
-            [
-              "",
-              "Trong đó:",
-              null,
-              null,
-              null,
-              null,
-              null
             ],
             [
               "2.1",
@@ -3732,21 +3714,12 @@
             ],
             [
               "4",
-              "4. Hoa hồng nhượng tái bảo hiểm và doanh thu khác hoạt động kinh doanh bảo hiểm (04 = 04.1 + 04.2)",
+              "4. Hoa hồng nhượng tái bảo hiểm và doanh thu khác hoạt động kinh doanh bảo hiểm (04 = 04.1 + 04.2) Trong đó:",
               null,
               281959303505,
               312415340657,
               281959303505,
               312415340657
-            ],
-            [
-              "",
-              "Trong đó:",
-              null,
-              null,
-              null,
-              null,
-              null
             ],
             [
               "4.1",
@@ -4154,6 +4127,76 @@
               null,
               "-",
               "-"
+            ],
+            [
+              32,
+              "2. Tiền trả lại vốn góp cho các chủ sở hữu, mua lại cổ phiếu của doanh nghiệp đã phát hành",
+              null,
+              "-",
+              "-"
+            ],
+            [
+              33,
+              "3. Tiền thu từ đi vay",
+              null,
+              "-",
+              "-"
+            ],
+            [
+              34,
+              "4. Tiền trả nợ gốc vay",
+              null,
+              "-",
+              "-"
+            ],
+            [
+              35,
+              "5. Tiền trả nợ gốc thuê tài chính",
+              null,
+              "-",
+              "-"
+            ],
+            [
+              36,
+              "6. Cổ tức, lợi nhuận đã trả cho chủ sở hữu",
+              null,
+              -20406950,
+              -122261770
+            ],
+            [
+              40,
+              "Lưu chuyển tiền thuần từ/ (sử dụng vào) hoạt động tài chính",
+              null,
+              -20406950,
+              -122261770
+            ],
+            [
+              50,
+              "Lưu chuyển tiền thuần trong kỳ",
+              null,
+              92432295583,
+              101434833493
+            ],
+            [
+              60,
+              "Tiền và các khoản tương đương tiền đầu kỳ",
+              4,
+              227398086295,
+              329566432891
+            ],
+            [
+              61,
+              "Ảnh hưởng của thay đổi tỷ giá hối đoái quy đổi ngoại tệ",
+              null,
+              "-",
+              "-"
+            ],
+            [
+              70,
+              "Tiền và các khoản tương đương tiền cuối kỳ",
+              4,
+              319830381878,
+              431001266384
             ]
           ]
         },
