@@ -501,6 +501,44 @@ function findCashFlowEndingSequenceIndex(lines: string[], searchFromIndex: numbe
   return -1;
 }
 
+const CASH_FLOW_FINANCING_SECTION_MARKER = 'LUU CHUYEN TIEN TU HOAT DONG TAI CHINH';
+
+// SUA 2026-07-16 (theo de nghi nguoi dung, sau khi gap that CTG - dong "cuoi
+// ky" that nam CACH dong "dau ky" toi 28 dong do NGAT TRANG giua chung, vuot
+// xa moi nguong CASH_FLOW_ENDING_ROW_GAP hop ly nao). Thay vi tiep tuc tang
+// nguong gap (van co gioi han, se lai vo hieu voi 1 khoang cach khac trong
+// tuong lai), dung 1 tin hieu THU TU (khong gioi han khoang cach) thay cho
+// tin hieu KHOANG CACH: "Luu chuyen tien tu hoat dong tai chinh" LUON la
+// MUC CUOI CUNG trong 3 muc chinh cua LCTT (kinh doanh/dau tu/tai chinh,
+// bat buoc theo luat ke toan, thu tu khong doi) - dong "cuoi ky" THAT SU
+// LUON nam SAU dong nay, bat ke co bao nhieu dong chi tiet/ngat trang xen
+// giua. CHI dung ham nay lam DU PHONG (goi SAU KHI ham chinh xac hon o tren
+// da thu va khong tim thay) - it rui ro hon dua lam chinh vi khong gioi han
+// khoang cach (vd co the khop qua 1 doan van xuoi dai nhac lai ca 2 cum tu -
+// da giam rui ro nay bang isMarkdownDataRow, chi nhan HANG BANG that).
+function findCashFlowEndingByFinancingSectionOrder(lines: string[], searchFromIndex: number): number {
+  let lastFinancingIndex = -1;
+  for (let i = searchFromIndex; i < lines.length; i++) {
+    if (!isMarkdownDataRow(lines[i])) continue;
+    const normalized = normalizeLabelText(lines[i]);
+    if (normalized.includes(CASH_FLOW_FINANCING_SECTION_MARKER)) lastFinancingIndex = i;
+    if (lastFinancingIndex !== -1 && matchesCashFlowBalanceRow(lines[i], CASH_FLOW_END_ROW_SUFFIX_MARKER)) {
+      return i;
+    }
+  }
+  return -1;
+}
+
+// Diem vao DUY NHAT cho ca containsNotesSectionMarker va parseStatementsFromMarkdown
+// - thu phuong an chinh xac hon (khoang cach gioi han) TRUOC, chi fallback
+// sang phuong an thu tu (khong gioi han khoang cach, rui ro hon mot chut)
+// khi phuong an dau khong tim thay gi.
+function findCashFlowEndingIndex(lines: string[], searchFromIndex: number): number {
+  const strict = findCashFlowEndingSequenceIndex(lines, searchFromIndex);
+  if (strict !== -1) return strict;
+  return findCashFlowEndingByFinancingSectionOrder(lines, searchFromIndex);
+}
+
 // Rieng CTCK (Mau B01-CTCK): "Cac chi tieu ngoai bao cao tinh hinh tai chinh"
 // - tai san/tien/no CTCK QUAN LY HO nha dau tu (KHONG thuoc BCDKT chinh cua
 // CTCK). Nam NGAY SAU BCDKT trong tai lieu goc - da xac nhan qua 2 bao cao
@@ -830,7 +868,7 @@ function parseAllTablesInRange(lines: string[]): ParsedTable[] {
 // khop chuoi thang la du).
 export function containsNotesSectionMarker(markdown: string): boolean {
   const lines = markdown.split(/\r?\n/);
-  return findCashFlowEndingSequenceIndex(lines, 0) !== -1;
+  return findCashFlowEndingIndex(lines, 0) !== -1;
 }
 
 export function parseStatementsFromMarkdown(markdown: string): FinancialStatements {
@@ -870,7 +908,7 @@ export function parseStatementsFromMarkdown(markdown: string): FinancialStatemen
   const firstContentLine = lines.findIndex(
     (line, i) => splitMarkdownRow(line) !== null && allContentMarkers.some((m) => normalizedLines[i].includes(m))
   );
-  const cashFlowEndingIndex = findCashFlowEndingSequenceIndex(lines, firstContentLine === -1 ? 0 : firstContentLine);
+  const cashFlowEndingIndex = findCashFlowEndingIndex(lines, firstContentLine === -1 ? 0 : firstContentLine);
   const notesLine = cashFlowEndingIndex !== -1 ? cashFlowEndingIndex + 1 : -1;
   const relevantLines = notesLine !== -1 ? lines.slice(0, notesLine) : lines;
 
