@@ -447,8 +447,14 @@ const CASH_FLOW_CONTENT_MARKERS = [
 // de dung lai/ket hop them neu can.
 const CASH_FLOW_NET_ROW_MARKER = 'TIEN THUAN TRONG KY';
 const CASH_FLOW_BALANCE_ROW_CORE_MARKER = 'TUONG DUONG TIEN';
-const CASH_FLOW_BEGIN_ROW_SUFFIX_MARKER = 'DAU KY';
-const CASH_FLOW_END_ROW_SUFFIX_MARKER = 'CUOI KY';
+// SUA 2026-07-16 (phan hoi nguoi dung, xac nhan qua CTS that): CTS dung
+// "dau NAM"/"cuoi NAM" cho 2 dong so du dau/cuoi (trong khi chinh dong "Luu
+// chuyen tien thuan TRONG KY" ngay truoc do van dung "KY" nhu binh thuong -
+// khong nhat quan ngay trong CUNG 1 bao cao). Them ca "QUY" phong truoc (theo
+// de nghi nguoi dung, chua xac nhan qua bao cao that nao dung dung bien the
+// nay - de phong bao cao quy dung "dau quy"/"cuoi quy" thay vi "ky"/"nam").
+const CASH_FLOW_BEGIN_ROW_SUFFIX_MARKERS = ['DAU KY', 'DAU NAM', 'DAU QUY'];
+const CASH_FLOW_END_ROW_SUFFIX_MARKERS = ['CUOI KY', 'CUOI NAM', 'CUOI QUY'];
 // So dong toi da cho phep xen giua 2 moc trong chu ky (vd dong tuy chon "Anh
 // huong thay doi ty gia hoi doai" xen giua "dau ky" va "cuoi ky" - xac nhan
 // qua DRI that). TANG tu 2 len 3 (2026-07-16, xac nhan qua FTS/CTCK that):
@@ -471,10 +477,10 @@ function matchesCashFlowNetRow(rawLine: string): boolean {
   return isMarkdownDataRow(rawLine) && normalizeLabelText(rawLine).includes(CASH_FLOW_NET_ROW_MARKER);
 }
 
-function matchesCashFlowBalanceRow(rawLine: string, suffixMarker: string): boolean {
+function matchesCashFlowBalanceRow(rawLine: string, suffixMarkers: string[]): boolean {
   if (!isMarkdownDataRow(rawLine)) return false;
   const normalized = normalizeLabelText(rawLine);
-  return normalized.includes(CASH_FLOW_BALANCE_ROW_CORE_MARKER) && normalized.includes(suffixMarker);
+  return normalized.includes(CASH_FLOW_BALANCE_ROW_CORE_MARKER) && suffixMarkers.some((m) => normalized.includes(m));
 }
 
 // Tim vi tri dong "Tien va tuong duong tien cuoi ky" THAT SU - CHI tinh khi no
@@ -486,14 +492,14 @@ function findCashFlowEndingSequenceIndex(lines: string[], searchFromIndex: numbe
     if (!matchesCashFlowNetRow(lines[i])) continue;
     let beginIndex = -1;
     for (let j = i + 1; j <= i + 1 + CASH_FLOW_ENDING_ROW_GAP && j < lines.length; j++) {
-      if (matchesCashFlowBalanceRow(lines[j], CASH_FLOW_BEGIN_ROW_SUFFIX_MARKER)) {
+      if (matchesCashFlowBalanceRow(lines[j], CASH_FLOW_BEGIN_ROW_SUFFIX_MARKERS)) {
         beginIndex = j;
         break;
       }
     }
     if (beginIndex === -1) continue;
     for (let k = beginIndex + 1; k <= beginIndex + 1 + CASH_FLOW_ENDING_ROW_GAP && k < lines.length; k++) {
-      if (matchesCashFlowBalanceRow(lines[k], CASH_FLOW_END_ROW_SUFFIX_MARKER)) {
+      if (matchesCashFlowBalanceRow(lines[k], CASH_FLOW_END_ROW_SUFFIX_MARKERS)) {
         return k;
       }
     }
@@ -532,7 +538,7 @@ function findCashFlowEndingByFinancingSectionOrder(lines: string[], searchFromIn
     if (!isMarkdownDataRow(lines[i])) continue;
     const normalized = normalizeLabelText(lines[i]);
     if (isCashFlowFinancingSectionLine(normalized)) lastFinancingIndex = i;
-    if (lastFinancingIndex !== -1 && matchesCashFlowBalanceRow(lines[i], CASH_FLOW_END_ROW_SUFFIX_MARKER)) {
+    if (lastFinancingIndex !== -1 && matchesCashFlowBalanceRow(lines[i], CASH_FLOW_END_ROW_SUFFIX_MARKERS)) {
       return i;
     }
   }
