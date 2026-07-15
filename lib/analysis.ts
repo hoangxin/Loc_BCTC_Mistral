@@ -695,7 +695,12 @@ const SECURITIES_METRICS: MetricDef[] = [
   {
     label: 'DT Môi Giới',
     statement: 'incomeStatement',
-    finders: [byLabel(['DOANH THU NGHIEP VU MOI GIOI CHUNG KHOAN'])],
+    // Sua 2026-07-16 (phan hoi nguoi dung, xac nhan qua FTS that): FTS ghi
+    // gon "Doanh thu môi giới chứng khoán", KHONG co "nghiệp vụ" (khac voi
+    // dong Chi phi tuong ung cua chinh FTS - "Chi phí nghiệp vụ môi giới
+    // chứng khoán" - VAN co du "nghiệp vụ", nen chi rieng ben Doanh thu can
+    // them bien the).
+    finders: [byLabelAny(['DOANH THU NGHIEP VU MOI GIOI CHUNG KHOAN', 'DOANH THU MOI GIOI CHUNG KHOAN'])],
     thresholds: SECURITIES_THRESHOLDS_A,
   },
   {
