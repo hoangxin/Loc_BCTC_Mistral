@@ -559,8 +559,19 @@ function normalizeGroupLabelForContentMatch(label: string): string {
 // phan biet).
 const OPTIONAL_CONNECTIVE_WORDS = /\b(?:CAC KHOAN|CAC)\b/g;
 
+// Dau nhay/ngoac kep OCR hay CHEN quanh cac tu viet tat ("('FVTPL')",
+// "('HTM')", "'AFS'") - nhieu OCR THUAN TUY, khong mang nghia. Da xac nhan qua
+// VCK that (2026-07-16, backtest 33 bao cao): dong con "...ghi nhan thong qua
+// lai/lo ('FVTPL')" (9.3 nghin ty) va "...den ngay dao han ('HTM')" (2.3 nghin
+// ty) bi loai khoi tong container "Tai san tai chinh" chi vi ten chuan trong
+// whitelist ghi "(FVTPL)"/"(HTM)" KHONG co dau nhay - gay mismatch GIA dung
+// bang 11.6 nghin ty (tong 9 dong con that = so bao cao chinh xac). Bo o CA 2
+// phia (canonicalGroupKey ap cho ca nhan dong lan whitelist) - dong bo, an toan.
+const QUOTE_NOISE_CHARS = /['‘’"“”`´]/g;
+
 function canonicalGroupKey(label: string): string {
   return normalizeGroupLabelForContentMatch(label)
+    .replace(QUOTE_NOISE_CHARS, '')
     .replace(OPTIONAL_CONNECTIVE_WORDS, ' ')
     .replace(/\s+/g, ' ')
     .trim();
