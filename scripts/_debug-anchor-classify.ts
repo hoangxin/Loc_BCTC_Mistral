@@ -37,5 +37,27 @@ check('bien the gon "Loi nhuan gop" -> KQKD', `
 | Lợi nhuận gộp | 20 | 2000 |
 `, 'incomeStatement');
 
+// 3) REGRESSION MIG: nua TAI SAN cua BCDKT bao hiem chua "Du phong phi nhuong
+//    tai bao hiem" (soi guong cum "phi nhuong tai bao hiem" ben KQKD). Neo BS
+//    "TAI SAN TAI BAO HIEM" phai thang -> classify balanceSheet, KHONG bi lat
+//    sang incomeStatement nhu bug 2026-07-16.
+check('BCDKT bao hiem (phi nhuong) KHONG lat sang KQKD', `
+| Tài sản | Mã số | Số cuối kỳ |
+| --- | --- | --- |
+| VI. Tài sản tái bảo hiểm | 240 | 5000 |
+| 1. Dự phòng phí nhượng tái bảo hiểm | 241 | 3000 |
+| 2. Dự phòng bồi thường nhượng tái bảo hiểm | 242 | 2000 |
+| TỔNG CỘNG TÀI SẢN | 270 | 90000 |
+`, 'balanceSheet');
+
+// 4) Neo theo loai hinh: Ngan hang "Thu nhap lai thuan", CTCK "Cong doanh thu
+//    hoat dong" -> incomeStatement du co dong map mo.
+check('neo KQKD Ngan hang "Thu nhap lai thuan"', `
+| Chỉ tiêu | Mã số | Kỳ này |
+| --- | --- | --- |
+| Thu nhập lãi thuần | 3 | 1000 |
+| Lãi thuần từ hoạt động dịch vụ | 6 | 500 |
+`, 'incomeStatement');
+
 console.log(`\n${pass} pass / ${fail} fail`);
 if (fail > 0) process.exit(1);
