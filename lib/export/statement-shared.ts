@@ -538,6 +538,36 @@ function normalizeGroupLabelForContentMatch(label: string): string {
   return GROUP_LABEL_SYNONYM_CANONICAL[normalized] ?? normalized;
 }
 
+// SUA 2026-07-16 (theo yeu cau nguoi dung "xu ly ten chi tieu khac biet doi
+// chut voi quy dinh ke toan"): tu-noi RONG NGHIA - cong ty CO THE co hoac
+// khong ("CAC khoan dau tu tai chinh ngan han" == "Dau tu tai chinh ngan han",
+// "Tien va CAC KHOAN tuong duong tien" == "Tien va tuong duong tien"). Truoc
+// day phai LIET KE TAY ca 2 bien the trong tung danh sach ten chuan (vd
+// KNOWN_BALANCE_SHEET_LEVEL1_CONTENT co CA "DAU TU TAI CHINH NGAN HAN" LAN
+// "CAC KHOAN DAU TU TAI CHINH NGAN HAN"), moi cach viet moi cua 1 cong ty lai
+// phai vá them 1 dong - khong ben vung khi loc >1000 bao cao/quy.
+//
+// Bo tu-noi rong nay o CA HAI phia (nhan dong LAN danh sach ten chuan, qua
+// canonicalGroupKey) truoc khi so khop. QUAN TRONG: van la so khop CA CHUOI
+// (Set.has / ===) sau khi bo, KHONG chuyen sang substring - nen KHONG lam song
+// lai lop loi "TAI SAN CO DINH" ⊂ "TAI SAN CO DINH HUU HINH" (ca 2 deu giu
+// nguyen phan rieng cua minh sau khi bo tu-noi, van khac chuoi). Da kiem chung:
+// trong toan bo danh sach cap-1, viec bo "CAC KHOAN"/"CAC" CHI gom dung cac cap
+// bien the da liet ke tay, KHONG lam 2 khai niem KHAC NHAU nao trung khoa (xem
+// regression test scripts/_debug-level1-classification.ts). CHI gom 2 tu-noi
+// rong nghia chac chan nay (KHONG gom "VA"/"KHAC"/"CUA"... - deu mang nghia
+// phan biet).
+const OPTIONAL_CONNECTIVE_WORDS = /\b(?:CAC KHOAN|CAC)\b/g;
+
+function canonicalGroupKey(label: string): string {
+  return normalizeGroupLabelForContentMatch(label)
+    .replace(OPTIONAL_CONNECTIVE_WORDS, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+const KNOWN_BALANCE_SHEET_LEVEL1_KEYS = new Set(KNOWN_BALANCE_SHEET_LEVEL1_CONTENT.map(canonicalGroupKey));
+
 function isKnownBalanceSheetLevel1Label(label: string): boolean {
   // Mot ten CHUAN (vd "Tien va cac khoan tuong duong tien") co the la dong
   // tong CAP 1 THAT trong dinh dang DN-thuong/TT200, nhung lai la dong CON
@@ -553,8 +583,7 @@ function isKnownBalanceSheetLevel1Label(label: string): boolean {
   // (vd "Tài sản tài chính") bi loai qua `isInsideKnownContainer` - ca 2 deu
   // da duoc goi o childrenBetween (lib/export/validate-statements.ts) SAU buoc
   // nay, nen ham nay chi can khop TEN, khong can tu loai truoc theo tien to.
-  const normalized = normalizeGroupLabelForContentMatch(label);
-  return KNOWN_BALANCE_SHEET_LEVEL1_CONTENT.includes(normalized);
+  return KNOWN_BALANCE_SHEET_LEVEL1_KEYS.has(canonicalGroupKey(label));
 }
 
 // Mot so nhom "cap 1" (vd "Hang ton kho", "Bat dong san dau tu") CHI co DUNG 1
@@ -624,13 +653,14 @@ const CONTAINER_LEVEL1_MARKERS = ['TAI SAN TAI CHINH', 'TAI SAN TAI CHINH DAI HA
 // co dinh" (mot nhom hoan toan doc lap, khong phai con cua container).
 const CONTAINER_CLOSING_MARKERS = ['TAI SAN NGAN HAN KHAC', 'TAI SAN DAI HAN KHAC', 'TAI SAN CO DINH'];
 
+const CONTAINER_LEVEL1_KEYS = new Set(CONTAINER_LEVEL1_MARKERS.map(canonicalGroupKey));
+const CONTAINER_CLOSING_KEYS = new Set(CONTAINER_CLOSING_MARKERS.map(canonicalGroupKey));
+
 function isKnownContainerLabel(label: string): boolean {
-  const normalized = normalizeGroupLabelForContentMatch(label);
-  return CONTAINER_LEVEL1_MARKERS.includes(normalized);
+  return CONTAINER_LEVEL1_KEYS.has(canonicalGroupKey(label));
 }
 function isKnownContainerClosingLabel(label: string): boolean {
-  const normalized = normalizeGroupLabelForContentMatch(label);
-  return CONTAINER_CLOSING_MARKERS.includes(normalized);
+  return CONTAINER_CLOSING_KEYS.has(canonicalGroupKey(label));
 }
 
 // Ten CHUAN (Thong tu 210/2014/TT-BTC + sua doi 334/2016, mau B01-CTCK) cua
@@ -684,11 +714,21 @@ const CONTAINER_CHILDREN_CANONICAL: Record<string, string[]> = {
   ],
 };
 
+// Dung canonicalGroupKey (bo tu-noi rong "CAC KHOAN"/"CAC" o ca 2 phia) thay
+// cho normalizeGroupLabelForContentMatch - dong bo voi isKnownBalanceSheetLevel1Label
+// (nhieu ten con container VD "CAC KHOAN PHAI THU"/"CAC KHOAN CHO VAY" cung co
+// bien the co/khong "CAC KHOAN" giua cac bao cao CTCK khac nhau).
+const CONTAINER_CHILDREN_CANONICAL_KEYS = new Map<string, Set<string>>(
+  Object.entries(CONTAINER_CHILDREN_CANONICAL).map(([container, members]) => [
+    canonicalGroupKey(container),
+    new Set(members.map(canonicalGroupKey)),
+  ])
+);
+
 function isKnownContainerChildLabel(containerLabel: string, memberLabel: string): boolean {
-  const containerKey = normalizeGroupLabelForContentMatch(containerLabel);
-  const whitelist = CONTAINER_CHILDREN_CANONICAL[containerKey];
+  const whitelist = CONTAINER_CHILDREN_CANONICAL_KEYS.get(canonicalGroupKey(containerLabel));
   if (!whitelist) return true;
-  return whitelist.includes(normalizeGroupLabelForContentMatch(memberLabel));
+  return whitelist.has(canonicalGroupKey(memberLabel));
 }
 
 // Tim SU KIEN GAN NHAT (mo container hay dong container) truoc rowIdx trong
