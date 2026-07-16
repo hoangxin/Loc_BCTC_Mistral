@@ -331,7 +331,13 @@ const INCOME_STATEMENT_CONTENT_MARKERS = [
   'CAC KHOAN GIAM TRU DOANH THU',
   'DOANH THU THUAN VE BAN HANG',
   'GIA VON HANG BAN',
-  'LOI NHUAN GOP VE BAN HANG',
+  // SUA 2026-07-16 (token-AND, duoc NEO bao ve): nhieu DN ghi gon "Loi nhuan
+  // gop" (khong "ve ban hang va cung cap dich vu") - noi ve cum ngan "LOI NHUAN
+  // GOP" (van doc quyen KQKD, khong o BCDKT/LCTT; khop luon bien the bao hiem
+  // "Loi nhuan gop hoat dong kinh doanh bao hiem"). An toan de noi vi day cung
+  // la 1 NEO income (ANCHOR_MARKERS_BY_KEY) - neu tinh co khop nham 1 bang khac
+  // co neo rieng, neo bang do van thang.
+  'LOI NHUAN GOP',
   'DOANH THU HOAT DONG TAI CHINH',
   'CHI PHI BAN HANG',
   'CHI PHI QUAN LY DOANH NGHIEP',
@@ -612,6 +618,85 @@ const CONTENT_MARKERS_BY_KEY: { key: keyof FinancialStatements; markers: Content
   { key: 'offBalanceSheet', markers: OFF_BALANCE_SHEET_CONTENT_MARKERS },
 ];
 
+// SUA 2026-07-16 (theo de nghi nguoi dung): marker "NEO" = tu khoa chi xuat
+// hien o DUNG 1 trong 4 bang (khong map mo giua cac bang). classifyTableByContent
+// cham diem TUONG DOI, nen 1 marker MAP MO (vd "Tien va cac khoan tuong duong
+// tien" co o CA BCDKT lan dong ket thuc LCTT) co the cong diem GIA cho sai bang
+// va lat nham phan loai. Y tuong nguoi dung: neu bang chua 1 NEO cua LCTT (vd
+// "Luu chuyen tien tu hoat dong tai chinh") thi dong "tien va tuong duong tien"
+// trong bang do CHAC CHAN thuoc LCTT, khong the la BCDKT - NEO thang marker map
+// mo. Cho neo trong so LON (ANCHOR_WEIGHT) de 1 neo luon ap dao moi so marker
+// map mo -> co the noi long marker map mo sang token-AND (tang recall) ma KHONG
+// so lat nham bang.
+//
+// NGUYEN TAC CHON NEO: CHI gom marker CHAC CHAN doc quyen 1 bang. Neu bo sot 1
+// marker le ra doc quyen -> chi mat 1 phan tin hieu an toan, bang do roi ve cham
+// diem tho nhu cu (van dung). Neo SAI (thuc te co o bang khac) moi nguy hiem ->
+// chon BAO THU. KHONG gom cac marker da biet MAP MO: "TIEN VA... TUONG DUONG
+// TIEN" (BCDKT + LCTT), "HANG TON KHO" (BCDKT + LCTT bien dong), "VON CHU SO HUU"
+// (BCDKT + bao cao bien dong VCSH), "LOI ICH... CO DONG KHONG KIEM SOAT" (KQKD +
+// VCSH BCDKT), "NO KHO DOI DA XU LY"/"TIEN GUI CUA KHACH HANG" (offBS + BCDKT NH).
+const ANCHOR_MARKERS_BY_KEY: Partial<Record<keyof FinancialStatements, ContentMarker[]>> = {
+  balanceSheet: [
+    'TONG CONG TAI SAN',
+    'TONG CONG NGUON VON',
+    'PHAI THU NGAN HAN CUA KHACH HANG',
+    'NGUOI MUA TRA TIEN TRUOC',
+    'VAY VA NO THUE TAI CHINH',
+    // KHONG dung cac marker Ngan hang ("PHAT HANH GIAY TO CO GIA", "TIEN GUI
+    // VA VAY CAC TCTD KHAC") lam neo: chung SOI GUONG voi LCTT/dieu chinh dong
+    // tien Ngan hang (vd LCTT "Tien THU TU phat hanh giay to co gia") -> rui ro
+    // neo GIA lat nham bang. BCDKT Ngan hang van con neo tong pho quat
+    // (TONG CONG TAI SAN/NGUON VON) hoac roi ve cham diem tho - an toan.
+  ],
+  incomeStatement: [
+    'DOANH THU BAN HANG VA CUNG CAP DICH VU',
+    'CAC KHOAN GIAM TRU DOANH THU',
+    'DOANH THU THUAN VE BAN HANG',
+    'GIA VON HANG BAN',
+    'LOI NHUAN GOP',
+    'CHI PHI QUAN LY DOANH NGHIEP',
+    'LOI NHUAN THUAN TU HOAT DONG KINH DOANH',
+    'LOI NHUAN SAU THUE THU NHAP DOANH NGHIEP',
+    'DOANH THU PHI BAO HIEM',
+    // KHONG dung "PHI NHUONG TAI BAO HIEM" lam neo: no KHONG doc quyen KQKD -
+    // BCDKT phia tai san bao hiem co dong "Du phong phi nhuong tai bao hiem"
+    // (contra cua "VI. Tai san tai bao hiem"), chua nguyen cum nay -> neo GIA
+    // khien nua TAI SAN cua BCDKT MIG bi lat nham sang incomeStatement (da gap
+    // that qua parser harness 2026-07-16). "CHI BOI THUONG" van an toan (BCDKT
+    // chi co "DU PHONG BOI THUONG", khong co tien to "CHI ").
+    'CHI BOI THUONG',
+    'DOANH THU NGHIEP VU MOI GIOI CHUNG KHOAN',
+    'CHI PHI NGHIEP VU MOI GIOI CHUNG KHOAN',
+    'CONG DOANH THU HOAT DONG',
+    'CONG CHI PHI HOAT DONG',
+    'TONG LOI NHUAN KE TOAN TRUOC THUE',
+    'LOI NHUAN KE TOAN SAU THUE',
+    'CHI PHI THUE TNDN',
+    'LOI NHUAN SAU THUE TNDN',
+    'LAI CO BAN TREN CO PHIEU',
+  ],
+  cashFlow: [
+    ['LUU CHUYEN TIEN', 'HOAT DONG KINH DOANH'],
+    ['LUU CHUYEN TIEN', 'HOAT DONG DAU TU'],
+    ['LUU CHUYEN TIEN', 'HOAT DONG TAI CHINH'],
+    'LUU CHUYEN TIEN THUAN TRONG KY',
+    'KHAU HAO TAI SAN CO DINH',
+    'TIEN CHI TRA LAI VAY',
+    'TIEN CHI NOP THUE THU NHAP DOANH NGHIEP',
+  ],
+  offBalanceSheet: [
+    'TAI SAN QUAN LY THEO CAM KET',
+    'CO PHIEU DANG LUU HANH',
+    'VE TIEN GUI GIAO DICH CHUNG KHOAN',
+    'BAO LANH VAY VON',
+  ],
+};
+
+// 1 neo ap dao MOI so marker map mo (moi bang co <100 marker) - dam bao "co
+// neo cua bang X" luon thang "chi co marker map mo cua bang Y".
+const ANCHOR_WEIGHT = 100;
+
 // "Bao cao tinh hinh bien dong von chu so huu" (mau B03-DN va tuong duong cho
 // NH/CTCK/bao hiem) - mau bieu BAT BUOC dung dung 3 cum tu cot nay theo luat
 // ke toan (KHONG doi ten giua cac loai hinh doanh nghiep, khac han cach dat
@@ -658,9 +743,17 @@ function classifyTableByContent(table: ParsedTable): keyof FinancialStatements |
   const labelIndex = table.labelIndex;
   const labelText = table.rows.map((row) => normalizeLabelText(String(row[labelIndex] ?? ''))).join(' | ');
 
+  const countMatches = (markers: ContentMarker[] | undefined): number =>
+    (markers ?? []).reduce((count, marker) => count + (matchesContentMarker(labelText, marker) ? 1 : 0), 0);
+
+  // Diem = (so NEO khop) * ANCHOR_WEIGHT + (so marker khop). Neo (tu khoa doc
+  // quyen 1 bang) ap dao marker map mo, nen 1 bang chua neo cua LCTT khong the
+  // bi lat thanh BCDKT chi vi tinh co chua "tien va tuong duong tien" (xem
+  // ANCHOR_MARKERS_BY_KEY). Marker map mo van gop 1 diem le - CHI dung phan
+  // xu khi KHONG bang nao co neo (giu nguyen hanh vi tho cu cho truong hop do).
   const scores = CONTENT_MARKERS_BY_KEY.map(({ key, markers }) => ({
     key,
-    score: markers.reduce((count, marker) => count + (matchesContentMarker(labelText, marker) ? 1 : 0), 0),
+    score: countMatches(ANCHOR_MARKERS_BY_KEY[key]) * ANCHOR_WEIGHT + countMatches(markers),
   })).sort((a, b) => b.score - a.score);
 
   const [best, second] = scores;
