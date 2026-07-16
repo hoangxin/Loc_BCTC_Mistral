@@ -221,6 +221,16 @@ export function findRowByCode(
 //   KHONG chua "giai đoạn").
 // - "CHUA PHAN PHOI KY NAY"/"CHUA PHAN PHOI LUY KE DEN CUOI" - 2 dong chi
 //   tiet co dinh cua "Loi nhuan sau thue chua phan phoi" (mã 420a/420b).
+//   SUA 2026-07-16 (backtest 33 bao cao, LLM that): bao cao NAM ghi "...chua
+//   phan phoi NAM NAY" thay vi "...KY NAY" (bao cao Quy) - thieu bien the nay
+//   khien dong cap-4 mã 420b (vd LLM "*LNST chua phan phoi nam nay*" 85.6 ty)
+//   KHONG bi nhan la cap-4, cong TRUNG vao tong "I. Von chu so huu" (dung bang
+//   gia tri no) -> mismatch GIA (tong 3 dong con that = so bao cao chinh xac).
+//   "LUY KE DEN CUOI" da khop ca 2 bien the ky/nam (deu co "den cuoi ... truoc")
+//   nen chi thieu ve "ky nay" vs "nam nay". Cum "CHUA PHAN PHOI" + qualifier ky
+//   la tin hieu phan biet cap-4 voi dong CHA (chi "...chua phan phoi", khong
+//   qualifier) - liet ke qualifier, KHONG match tran "CHUA PHAN PHOI" (se an
+//   nham dong cha).
 const KNOWN_CAP4_LABEL_CONTENT = [
   'NGUYEN GIA',
   'HAO MON LUY KE',
@@ -229,6 +239,7 @@ const KNOWN_CAP4_LABEL_CONTENT = [
   'THEO GIA TRI HOP LY',
   'GIAI DOAN',
   'CHUA PHAN PHOI KY NAY',
+  'CHUA PHAN PHOI NAM NAY',
   'CHUA PHAN PHOI LUY KE DEN CUOI',
 ];
 
