@@ -703,7 +703,14 @@ const ANCHOR_MARKERS_BY_KEY: Partial<Record<keyof FinancialStatements, ContentMa
     ['CHI PHI BAN HANG'],           // ma 25
     ['CHI PHI QUAN LY'],            // ma 26 (hut "...doanh nghiep"/"...cong ty CK")
     ['LOI NHUAN THUAN', 'HOAT DONG KINH DOANH'], // ma 30
-    ['TONG LOI NHUAN', 'TRUOC THUE'], // ma 50 (hut "...ke toan truoc thue"/"...truoc thue" NH)
+    // ma 50: LCTT gian tiep MO DAU bang "Loi nhuan truoc thue" (TRAN) -> KHONG
+    // duoc noi thanh ['LOI NHUAN','TRUOC THUE'] (soi guong LCTT). Cai phan biet
+    // KQKD la "TONG" HOAC "KE TOAN" -> 2 neo rieng phu het bien the ma KHONG
+    // dung "Loi nhuan truoc thue" tran: bank ghi "Tong loi nhuan truoc thue"
+    // (bo "ke toan"); 1 so DN ghi "Loi nhuan ke toan truoc thue" (bo "Tong")
+    // - nguoi dung luu y 2026-07-16 "nhieu KQKD khong co chu Tong".
+    ['TONG LOI NHUAN', 'TRUOC THUE'],
+    ['LOI NHUAN KE TOAN', 'TRUOC THUE'],
     'LOI NHUAN SAU THUE THU NHAP DOANH NGHIEP', // ma 60 (CUM LIEN - tranh token phan tan)
     ['CHI PHI THUE', 'TNDN', 'HIEN HANH'], // ma 51
     ['CHI PHI THUE', 'TNDN', 'HOAN LAI'],  // ma 52

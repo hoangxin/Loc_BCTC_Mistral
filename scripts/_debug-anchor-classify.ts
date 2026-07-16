@@ -69,5 +69,16 @@ check('token-AND hut bien the "Tong loi nhuan truoc thue"', `
 | Tổng lợi nhuận trước thuế | 50 | 800 |
 `, 'incomeStatement');
 
+// 6) Bien the BO chu "Tong" (nguoi dung luu y 2026-07-16: nhieu KQKD ghi "Loi
+//    nhuan ke toan truoc thue" khong co "Tong") - phai co neo ['LOI NHUAN KE
+//    TOAN','TRUOC THUE'] rieng vi ['TONG LOI NHUAN','TRUOC THUE'] se truot.
+//    Van KHONG duoc nham voi LCTT (mo dau "Loi nhuan truoc thue" TRAN).
+check('token-AND hut bien the "Loi nhuan ke toan truoc thue" (bo Tong)', `
+| Chỉ tiêu | Mã số | Kỳ này |
+| --- | --- | --- |
+| Chi phí bán hàng | 25 | 300 |
+| Lợi nhuận kế toán trước thuế | 50 | 800 |
+`, 'incomeStatement');
+
 console.log(`\n${pass} pass / ${fail} fail`);
 if (fail > 0) process.exit(1);

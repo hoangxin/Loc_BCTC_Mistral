@@ -31,6 +31,7 @@ const CANDIDATES: Record<'balanceSheet'|'incomeStatement'|'cashFlow'|'offBalance
     ['QUY KHEN THUONG', 'PHUC LOI'],  // ma 353: "Quy khen thuong[,] phuc loi"
     ['LOI NHUAN SAU THUE CHUA PHAN PHOI'], // ma 421
     ['THANG DU VON CO PHAN'],         // ma 412
+    ['VON CHU SO HUU'],               // ma 400 (bang bien dong VCSH da loc rieng)
     ['PHAI TRA HOAT DONG GIAO DICH CHUNG KHOAN'], // CTCK
     ['TIEN NOP', 'QUY HO TRO THANH TOAN'],        // CTCK
     ['TAI SAN TAI BAO HIEM'],         // insurance
@@ -44,7 +45,11 @@ const CANDIDATES: Record<'balanceSheet'|'incomeStatement'|'cashFlow'|'offBalance
     ['CHI PHI BAN HANG'],             // ma 25
     ['CHI PHI QUAN LY'],              // ma 26: hut "...doanh nghiep"/"...cong ty chung khoan"
     ['LOI NHUAN THUAN', 'HOAT DONG KINH DOANH'], // ma 30
-    ['TONG LOI NHUAN', 'TRUOC THUE'], // ma 50: hut "...ke toan truoc thue"/"...truoc thue"
+    // ma 50: LCTT gian tiep MO DAU bang "Loi nhuan truoc thue" (tran) -> KHONG
+    // duoc noi thanh ['LOI NHUAN','TRUOC THUE'] (soi guong cashflow). Cai phan
+    // biet KQKD la "TONG" HOAC "KE TOAN" -> 2 neo rieng phu het bien the:
+    ['TONG LOI NHUAN', 'TRUOC THUE'],   // "Tong loi nhuan [ke toan] truoc thue" (bank bo "ke toan")
+    ['LOI NHUAN KE TOAN', 'TRUOC THUE'], // "Loi nhuan ke toan truoc thue" (bo "Tong")
     'LOI NHUAN SAU THUE THU NHAP DOANH NGHIEP', // ma 60: cum LIEN (token-AND bi phan tan: BS co "LNST chua phan phoi" + "thue TNDN hoan lai" o 2 dong)
     ['CHI PHI THUE', 'TNDN', 'HIEN HANH'], // ma 51
     ['CHI PHI THUE', 'TNDN', 'HOAN LAI'],  // ma 52
