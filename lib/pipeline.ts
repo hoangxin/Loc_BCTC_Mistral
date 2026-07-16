@@ -10,6 +10,7 @@ import { extractReportContent, type ReportContentResult } from './report-extract
 import { isEmptyParse } from './export/financial-statements';
 import { computeAnalysisRows } from './analysis';
 import { classifyStatementScope } from './statement-scope';
+import { saveProductionOcrMarkdown } from './ocr-markdown-store';
 import type { FetchStatus, DownloadedReport, FailedReport } from './status';
 
 const DATA_DIR = join(process.cwd(), 'data');
@@ -297,6 +298,17 @@ export async function runFetchPipeline(options: RunFetchPipelineOptions = {}): P
           if (content.warnings.length > 0) {
             console.warn('bang so lieu con lech sau khi cau truc hoa', resolvedFile.filePath, content.warnings);
           }
+          const statementScope = classifyStatementScope(buildStatementScopeInput(resolvedFile, content.fullText ?? undefined));
+          // Luu markdown OCR THO (2026-07-16, theo yeu cau nguoi dung sau su
+          // co MCH/ABB/TPB: LCTT rong tren live nhung khong co markdown nao
+          // de dieu tra ma khong ton OCR that lan 2) - GHI DE theo ma+ky+pham
+          // vi, cung duoc commit lai voi data/latest-fetch.json (xem
+          // .github/workflows/fetch-bctc.yml). content.markdown la null khi
+          // extractReportContent doc qua nhanh full-text (khong phai nhanh
+          // OCR probe) - khong co gi de luu trong truong hop do.
+          if (content.markdown) {
+            saveProductionOcrMarkdown(resolvedFile.report.stockCode, `${term.yearPeriod}-${periodSlug}-${statementScope}`, content.markdown);
+          }
           reportEntries.push({
             idx: index,
             report: {
@@ -306,7 +318,7 @@ export async function runFetchPipeline(options: RunFetchPipelineOptions = {}): P
               companyName: resolvedFile.report.companyName,
               title: resolvedFile.report.title,
               lastUpdate: resolvedFile.report.lastUpdate.toISOString(),
-              statementScope: classifyStatementScope(buildStatementScopeInput(resolvedFile, content.fullText ?? undefined)),
+              statementScope,
               businessType: content.businessType,
               analysis: computeAnalysisRows(content.statements, content.businessType, content.unreliableCells),
               statements: content.statements,

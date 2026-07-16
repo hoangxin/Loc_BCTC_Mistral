@@ -70,5 +70,37 @@
     "pagesFetched": 14,
     "source": "ocr-capped-probe (backfill)",
     "savedAt": "2026-07-15T19:29:35.465Z"
+  },
+  {
+    "stockCode": "MCH",
+    "periodLabel": "Q1/2026-RiengLe",
+    "markdownPath": "data\\debug-empty-parse\\MCH-range8-11-D__AI_Loc_BCTC_Mistral_data_reports-tmp_MCH_Baocaotaichinh_Q1_2026_Congtyme-1784187735966.md",
+    "pagesFetched": 4,
+    "source": "ocr-explicit-range(8-11)",
+    "savedAt": "2026-07-16T07:42:15.974Z"
+  },
+  {
+    "stockCode": "ABB",
+    "periodLabel": "Q1/2026-RiengLe",
+    "markdownPath": "data\\debug-empty-parse\\ABB-range6-9-D__AI_Loc_BCTC_Mistral_data_reports-tmp_ABB_Baocaotaichinh_Q1_2026_Congtyme.zip__extracted_phpphmpjp-bctc-rl-q1-2026-eng-69e18d8937d5b-1784187872238.md",
+    "pagesFetched": 4,
+    "source": "ocr-explicit-range(6-9)",
+    "savedAt": "2026-07-16T07:44:32.251Z"
+  },
+  {
+    "stockCode": "ABB",
+    "periodLabel": "Q1/2026-RiengLe",
+    "markdownPath": "data\\debug-empty-parse\\ABB-range6-9-D__AI_Loc_BCTC_Mistral_data_reports-tmp_ABB_Baocaotaichinh_Q1_2026_Congtyme.zip__extracted_phpbbdkfl-bctc-rl-q1-2026-69e18d88eace3-1784187901922.md",
+    "pagesFetched": 4,
+    "source": "ocr-explicit-range(6-9)",
+    "savedAt": "2026-07-16T07:45:01.937Z"
+  },
+  {
+    "stockCode": "TPB",
+    "periodLabel": "Q1/2026-HopNhat",
+    "markdownPath": "data\\debug-empty-parse\\TPB-capped12-D__AI_Loc_BCTC_Mistral_data_reports-tmp_TPB_Baocaotaichinh_Q1_2026_Hopnhat-1784189381173.md",
+    "pagesFetched": 12,
+    "source": "ocr-capped-probe",
+    "savedAt": "2026-07-16T08:09:41.180Z"
   }
 ]

@@ -453,7 +453,23 @@ const KNOWN_BALANCE_SHEET_LEVEL1_CONTENT = [
 // "Cộng..."/"Chi phí..." (PHS that) vi ky tu NGAY SAU "C" trong "Cộng" la 1
 // chu cai khac ("ộng"), khong phai khoang trang lien tiep roi den dau phan
 // cach.
-const LEADING_GROUP_MARKER_PREFIX = /^([IVXLCDM]+|[A-Z]|\d+)\s*[.\/)-]+\s*/;
+//
+// THEM nhanh "khoang trang THUAN" lam dau phan cach hop le (2026-07-16, PTI
+// that): tieu de cap-1 KHONG PHAI luon co dau cham/gach - PTI ghi "IV Hàng
+// tồn kho"/"V Tài sản ngắn hạn khác" (chi 1 khoang trang, KHONG dau cau nao)
+// - dau phan cach BAT BUOC truoc day (mandatory [.\/)-]+) khong khop duoc
+// tien to nay, khien dong tieu de THAT khong duoc nhan dien (roi mot dong
+// CON A-rap trung TEN, vd "1. Hàng tồn kho", lai bi hieu NHAM thanh dong
+// tong doc lap, cong don xuyen ca ranh gioi nhom). KHONG thay hoan toan dau
+// phan cach bang khoang trang tuy chon (se lam song lai dung loi PHS o tren -
+// "Cộng"/"Chi phí" bat dau bang chu La Ma hop le NHUNG khong co khoang trang
+// SAU no, chu tiep theo dinh lien): giu NGUYEN nhanh dau-cau-bat-buoc cu, chi
+// THEM 1 nhanh song song rieng doi hoi khoang trang THAT (\s+, it nhat 1 ky
+// tu) ngay sau ky tu STT khi KHONG co dau cau - phan biet duoc 2 truong hop vi
+// "IV" + " " (khoang trang that, tach roi 1 tu khac) khac han "C" dinh lien
+// "ộng" (khong khoang trang, khong dau cau - khong khop nhanh nao, giu
+// nguyen, van an toan nhu truoc).
+const LEADING_GROUP_MARKER_PREFIX = /^([IVXLCDM]+|[A-Z]|\d+)(?:\s+|\s*[.\/)-]+\s*)/;
 
 // Dong "chi tiet" cua 1 nhom hay dung dau "-" TRAN (khong co chu/so dung
 // truoc) lam bullet thay vi so thu tu (vd MIG "- Tổng chi bồi thường", "- Chi
@@ -502,6 +518,15 @@ const TRAILING_FORMULA_SUFFIX = /\s*\(\s*\d+\s*=[^)]*\)\s*$/;
 // loai nhu 1 dong con) - khong can logic rieng cho tung mau bieu.
 const GROUP_LABEL_SYNONYM_CANONICAL: Record<string, string> = {
   'CHI PHI XAY DUNG CO BAN DO DANG': 'TAI SAN DO DANG DAI HAN',
+  // PTI that (2026-07-16): dong tieu de cap-0 phia nguon von ghi day du
+  // "NGUỒN VỐN CHỦ SỞ HỮU" thay vi ten chuan ngan gon "VỐN CHỦ SỞ HỮU" (dong
+  // con cap-1 ngay duoi no lai dung dung ten chuan) - lam ca isKnownBalanceSheetLevel1Label
+  // (bo sot dong tieu de that) LAN findRowIndex/preferSubtotal o
+  // validate-statements.ts (chon nham dong con lam ranh gioi, day 1 dong tieu
+  // de bi lot ra ngoai, tinh nham thanh "con" cua nhom TRUOC no - vd "Nợ dài
+  // hạn" bi cong nham them ca gia tri VCSH) deu dua tren CUNG 1 ham nay - sua
+  // 1 cho la fix duoc ca 2 trieu chung.
+  'NGUON VON CHU SO HUU': 'VON CHU SO HUU',
 };
 
 function normalizeGroupLabelForContentMatch(label: string): string {
@@ -1362,10 +1387,22 @@ const CTCK_INCOME_FORMULAS: FormulaDef[] = [
       opt(['LAI TU CAC KHOAN CHO VAY VA PHAI THU']),
       opt(['LAI TU TAI SAN TAI CHINH SAN SANG DE BAN', 'LAI TU CAC TAI SAN TAI CHINH SAN SANG']),
       opt(['LAI TU CAC CONG CU PHAI SINH PHONG NGUA RUI RO', 'LAI TU CAC TAI SAN TAI CHINH PHAI SINH']),
-      opt(['DOANH THU NGHIEP VU MOI GIOI CHUNG KHOAN']),
-      opt(['DOANH THU NGHIEP VU BAO LANH']),
-      opt(['DOANH THU NGHIEP VU TU VAN DAU TU CHUNG KHOAN']),
-      opt(['DOANH THU NGHIEP VU LUU KY CHUNG KHOAN']),
+      // FTS that (2026-07-16): dong doanh thu ghi "Doanh thu môi giới chứng
+      // khoán" (KHONG co "nghiep vu"), trong khi dong CHI PHI doi ung van giu
+      // "Chi phí nghiệp vụ môi giới chứng khoán" (co) - cung 1 khoang trong da
+      // tung sua cho lib/analysis.ts (finder % chi tieu "DT Moi Gioi", cbaf441)
+      // nhung danh sach formula rieng nay (dung cho canh bao cross-check, KHAC
+      // ham voi analysis.ts) chua duoc cap nhat theo.
+      opt(['DOANH THU NGHIEP VU MOI GIOI CHUNG KHOAN', 'DOANH THU MOI GIOI CHUNG KHOAN']),
+      // Rieng 3 dong duoi (2026-07-16, ap dung DONG BO theo cung 1 khoang
+      // trong da xac nhan qua FTS/HCM o tren - "nghiep vu" la tu CO THE bi
+      // bo tuy cong ty, khong rieng gi dong moi gioi): chua gap that o dong
+      // nao trong 3 dong nay, nhung cung 1 mau cau "Doanh thu nghiep vu X
+      // chung khoan" nen phong ngua truoc thay vi doi den khi gap bao cao
+      // that moi vá tung dong rieng le.
+      opt(['DOANH THU NGHIEP VU BAO LANH', 'DOANH THU BAO LANH']),
+      opt(['DOANH THU NGHIEP VU TU VAN DAU TU CHUNG KHOAN', 'DOANH THU TU VAN DAU TU CHUNG KHOAN']),
+      opt(['DOANH THU NGHIEP VU LUU KY CHUNG KHOAN', 'DOANH THU LUU KY CHUNG KHOAN']),
       opt(['DOANH THU HOAT DONG TU VAN TAI CHINH', 'DOANH THU NGHIEP VU TU VAN TAI CHINH']), // HCM dung "nghiep vu" thay vi "hoat dong" (2026-07-13)
       opt(['THU NHAP HOAT DONG KHAC']),
     ],
@@ -1386,10 +1423,12 @@ const CTCK_INCOME_FORMULAS: FormulaDef[] = [
       opt(['CHI PHI DU PHONG TAI SAN TAI CHINH']),
       opt(['LO TU CAC TAI SAN TAI CHINH PHAI SINH', 'LO TU CONG CU PHAI SINH']),
       opt(['CHI PHI HOAT DONG TU DOANH']),
-      opt(['CHI PHI NGHIEP VU MOI GIOI CHUNG KHOAN']),
-      opt(['CHI PHI NGHIEP VU BAO LANH']),
-      opt(['CHI PHI NGHIEP VU TU VAN DAU TU CHUNG KHOAN']),
-      opt(['CHI PHI NGHIEP VU LUU KY CHUNG KHOAN']),
+      // 4 dong duoi: dong bo voi phia doanh thu o tren (cung khoang trong
+      // "nghiep vu" co the bi bo, 2026-07-16).
+      opt(['CHI PHI NGHIEP VU MOI GIOI CHUNG KHOAN', 'CHI PHI MOI GIOI CHUNG KHOAN']),
+      opt(['CHI PHI NGHIEP VU BAO LANH', 'CHI PHI BAO LANH']),
+      opt(['CHI PHI NGHIEP VU TU VAN DAU TU CHUNG KHOAN', 'CHI PHI TU VAN DAU TU CHUNG KHOAN']),
+      opt(['CHI PHI NGHIEP VU LUU KY CHUNG KHOAN', 'CHI PHI LUU KY CHUNG KHOAN']),
       opt(['CHI PHI HOAT DONG TU VAN TAI CHINH', 'CHI PHI NGHIEP VU TU VAN TAI CHINH']), // HCM dung "nghiep vu" thay vi "hoat dong" (2026-07-13)
       opt(['CHI PHI CAC DICH VU KHAC', 'CHI PHI HOAT DONG KHAC']), // VND that 2026-07-14: cung dong "muc 32" nhung dat ten "Chi phi hoat dong khac" thay vi "Chi phi cac dich vu khac" (BVS/PHS)
       opt(['CHI PHI DI VAY CUA CAC KHOAN CHO VAY']), // HCM that 2026-07-13: dong chi phi rieng, khong co o VCK/PHS/MBS

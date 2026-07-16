@@ -2955,8 +2955,236 @@
           ]
         },
         "cashFlow": {
-          "columns": [],
-          "rows": []
+          "columns": [
+            "",
+            "Mã số",
+            "Từ 1/1/2026 đến 31/3/2026 VND",
+            "Từ 1/1/2025 đến 31/3/2025 VND Phân loại lại"
+          ],
+          "rows": [
+            [
+              "LƯU CHUYỂN TIỀN TỪ CÁC HOẠT ĐỘNG KINH DOANH",
+              "",
+              null,
+              null
+            ],
+            [
+              "Lợi nhuận trước thuế",
+              "01",
+              387351836168,
+              263031178510
+            ],
+            [
+              "Điều chỉnh cho các khoản",
+              "",
+              null,
+              null
+            ],
+            [
+              "Khấu hao và phân bổ",
+              "02",
+              3485606800,
+              2547384333
+            ],
+            [
+              "Các khoản dự phòng",
+              "03",
+              24586889347,
+              6913127554
+            ],
+            [
+              "Lãi chênh lệch tỷ giá hối đoái do đánh giá lại các khoản mục tiền tệ có gốc ngoại tệ",
+              "04",
+              -118344924,
+              -152750824
+            ],
+            [
+              "Lãi từ thanh lý tài sản cố định",
+              "05",
+              -45530302,
+              -34121870
+            ],
+            [
+              "Thu nhập lãi tiền gửi, lợi nhuận phân phối và thu nhập liên quan từ các hoạt động đầu tư",
+              "05",
+              -282089153941,
+              -171106669996
+            ],
+            [
+              "Chi phí đi vay",
+              "06",
+              118772581073,
+              105806467499
+            ],
+            [
+              "Lợi nhuận từ các hoạt động kinh doanh trước những thay đổi vốn lưu động",
+              "08",
+              251943884221,
+              207004615206
+            ],
+            [
+              "Biến động các khoản phải thu và tài sản khác",
+              "09",
+              -141883280024,
+              -118812991481
+            ],
+            [
+              "Biến động hàng tồn kho",
+              "10",
+              10604637697,
+              37793664459
+            ],
+            [
+              "Biến động các khoản phải trả và nợ phải trả khác",
+              "11",
+              1253164087234,
+              192447604337
+            ],
+            [
+              "Biến động chi phí chờ phân bổ",
+              "12",
+              3260051373,
+              -4585513768
+            ],
+            [
+              "Biến động chứng khoán kinh doanh",
+              "13",
+              -34748552484,
+              "-"
+            ],
+            [
+              null,
+              null,
+              null,
+              null
+            ],
+            [
+              "Chi phí đi vay đã trả",
+              "14",
+              -103630827829,
+              -96356489502
+            ],
+            [
+              "Thuế thu nhập doanh nghiệp đã nộp",
+              "15",
+              -153860254150,
+              -196790634786
+            ],
+            [
+              "Lưu chuyển tiền thuần từ các hoạt động kinh doanh",
+              "20",
+              1084849746038,
+              20700254465
+            ],
+            [
+              "LƯU CHUYỂN TIỀN TỪ CÁC HOẠT ĐỘNG ĐẦU TƯ",
+              "",
+              null,
+              null
+            ],
+            [
+              "Tiền chi mua tài sản cố định và tài sản dài hạn khác",
+              "21",
+              -5641060926,
+              -2862373697
+            ],
+            [
+              "Tiền thu từ thanh lý tài sản cố định",
+              "22",
+              88744589,
+              1154818570
+            ],
+            [
+              "Tiền chi cho vay",
+              "23",
+              -1950000000000,
+              -800000000000
+            ],
+            [
+              "Gửi tiền gửi ngân hàng có kỳ hạn",
+              "23",
+              -96000000000,
+              -16000000000
+            ],
+            [
+              "Tiền thu đầu tư khác",
+              "24",
+              400000000000,
+              "-"
+            ],
+            [
+              "Tiền chi đầu tư góp vốn vào một công ty con",
+              "25",
+              "-",
+              -190000000000
+            ],
+            [
+              "Tiền thu lãi tiền gửi, lợi nhuận được phân phối, chứng khoán kinh doanh và hoạt động đầu tư khác",
+              "27",
+              204637271823,
+              141870330633
+            ],
+            [
+              "Lưu chuyển tiền thuần từ các hoạt động đầu tư",
+              "30",
+              -1446915044514,
+              -865837224494
+            ],
+            [
+              "Tiền thu từ phát hành cổ phiếu",
+              null,
+              "-",
+              3267515330000
+            ],
+            [
+              "Tiền thu từ các khoản vay ngân hàng",
+              null,
+              3260000000000,
+              4273600000000
+            ],
+            [
+              "Tiền chi trả nợ gốc vay cho ngân hàng",
+              null,
+              -3270000000000,
+              -5910000000000
+            ],
+            [
+              "Tiền chi trả cổ tức",
+              null,
+              -2596216945500,
+              -3970193700
+            ],
+            [
+              "Lưu chuyển tiền thuần từ các hoạt động tài chính",
+              null,
+              -2606216945500,
+              1627145136300
+            ],
+            [
+              "Lưu chuyển tiền thuần trong kỳ (50 = 20 + 30 + 40)",
+              null,
+              -2968282243976,
+              782008166271
+            ],
+            [
+              "Tiền và các khoản tương đương tiền đầu kỳ",
+              null,
+              6675560866823,
+              4277472657692
+            ],
+            [
+              "Ảnh hưởng của thay đổi tỷ giá hối đoái đối với tiền và các khoản tương đương tiền",
+              null,
+              130383504,
+              17378651
+            ],
+            [
+              "Tiền và các khoản tương đương tiền cuối kỳ (70 = 50 + 60 + 61)",
+              null,
+              3707409006351,
+              5059498202614
+            ]
+          ]
         },
         "offBalanceSheet": {
           "columns": [],
@@ -10975,8 +11203,320 @@
           ]
         },
         "cashFlow": {
-          "columns": [],
-          "rows": []
+          "columns": [
+            "STT",
+            "Chỉ tiêu",
+            "Quý 1/2026",
+            "Quý 1/2025"
+          ],
+          "rows": [
+            [
+              null,
+              "Lưu chuyển tiền từ hoạt động kinh doanh",
+              null,
+              null
+            ],
+            [
+              1,
+              "Thu nhập lãi và các khoản thu nhập tương tự nhận được",
+              3003151,
+              2116335
+            ],
+            [
+              2,
+              "Chi phí lãi và các chi phí tương tự đã trả",
+              -1794687,
+              -1364356
+            ],
+            [
+              3,
+              "Thu nhập từ hoạt động dịch vụ nhận được",
+              413073,
+              169282
+            ],
+            [
+              4,
+              "Chênh lệch số tiền thực chi/thực thu từ hoạt động kinh doanh chứng khoán, vàng bạc, ngoại tệ",
+              99978,
+              99152
+            ],
+            [
+              5,
+              "Thu nhập khác",
+              1245142,
+              43975
+            ],
+            [
+              6,
+              "Tiền thu các khoản nợ đã được xử lý xóa, bù đắp bằng nguồn dự phòng rủi ro",
+              107108,
+              128012
+            ],
+            [
+              7,
+              "Tiền chi trả cho nhân viên và hoạt động quản lý, công vụ",
+              -894045,
+              -523330
+            ],
+            [
+              8,
+              "Tiền thuế thu nhập thực nộp trong kỳ",
+              -278388,
+              65483
+            ],
+            [
+              null,
+              "Lưu chuyển tiền thuần từ hoạt động kinh doanh trước những thay đổi về tài sản và vốn lưu động",
+              1901332,
+              734553
+            ],
+            [
+              null,
+              "Những thay đổi về tài sản hoạt động",
+              null,
+              null
+            ],
+            [
+              9,
+              "(Tăng)/Giảm các khoản tiền gửi và cho vay các TCTD khác",
+              -1500000,
+              449633
+            ],
+            [
+              10,
+              "(Tăng)/Giảm các khoản về kinh doanh chứng khoán",
+              -10521871,
+              -5977875
+            ],
+            [
+              11,
+              "(Tăng)/Giảm các công cụ tài chính phái sinh và các tài sản tài chính khác",
+              "-",
+              "-"
+            ],
+            [
+              12,
+              "(Tăng)/Giảm các khoản cho vay khách hàng",
+              -1181920,
+              4626170
+            ],
+            [
+              13,
+              "Giảm nguồn dự phòng để xử lý rủi ro, xử lý, bù đắp tổn thất các khoản",
+              -435434,
+              -137718
+            ],
+            [
+              14,
+              "(Tăng)/Giảm khác về tài sản hoạt động",
+              -817409,
+              312891
+            ],
+            [
+              null,
+              "Những thay đổi về công nợ hoạt động",
+              null,
+              null
+            ],
+            [
+              15,
+              "Tăng/(Giảm) các khoản nợ Chính phủ và NHNN",
+              -808026,
+              -1268785
+            ],
+            [
+              16,
+              "Tăng/(Giảm) các khoản tiền gửi, tiền vay các TCTD",
+              12243317,
+              5547974
+            ],
+            [
+              17,
+              "Tăng/(Giảm) tiền gửi của khách hàng (bao gồm cả KBNN)",
+              13247379,
+              -972796
+            ],
+            [
+              18,
+              "Tăng/(Giảm) phát hành giấy tờ có giá (ngoại trừ giấy tờ có giá phát hành được tính vào hoạt động tài chính)",
+              -686361,
+              3080000
+            ],
+            [
+              19,
+              "Tăng/(Giảm) vốn tài trợ, uỷ thác đầu tư, cho vay mà TCTD chịu rủi ro",
+              -680,
+              -1963
+            ],
+            [
+              20,
+              "Tăng/(Giảm) các công cụ tài chính phái sinh và các khoản nợ tài chính khác",
+              64748,
+              -103489
+            ],
+            [
+              21,
+              "Tăng/(Giảm) khác về công nợ hoạt động",
+              3340844,
+              -177038
+            ],
+            [
+              22,
+              "Chi từ các quỹ của TCTD",
+              "-",
+              "-"
+            ],
+            [
+              1,
+              "Lưu chuyển tiền thuần từ hoạt động kinh doanh",
+              14845919,
+              6111557
+            ],
+            [
+              "STT",
+              "Chỉ tiêu",
+              "Quý 1/2026",
+              "Quý 1/2025"
+            ],
+            [
+              null,
+              "Lưu chuyển tiền từ hoạt động đầu tư",
+              null,
+              null
+            ],
+            [
+              1,
+              "Mua sắm tài sản cố định",
+              -28497,
+              -43775
+            ],
+            [
+              2,
+              "Tiền thu từ thanh lý, nhượng bán TSCĐ",
+              3301,
+              61
+            ],
+            [
+              3,
+              "Tiền chi từ thanh lý, nhượng bán TSCĐ",
+              "-",
+              "-"
+            ],
+            [
+              4,
+              "Mua sắm bất động sản đầu tư",
+              "-",
+              "-"
+            ],
+            [
+              5,
+              "Tiền thu từ bán, thanh lý bất động sản đầu tư",
+              "-",
+              "-"
+            ],
+            [
+              6,
+              "Tiền chi ra do bán, thanh lý bất động sản đầu tư",
+              "-",
+              "-"
+            ],
+            [
+              7,
+              "Tiền chi đầu tư, góp vốn vào các đơn vị khác (Chi đầu tư mua cty con, góp vốn liên doanh, liên kết, các khoản đầu tư dài hạn khác)",
+              "-",
+              "-"
+            ],
+            [
+              8,
+              "Tiền thu đầu tư, góp vốn vào các đơn vị khác (Thu bán, thanh lý cty con, góp vốn liên doanh, liên kết, các khoản đầu tư dài hạn khác)",
+              515000,
+              "-"
+            ],
+            [
+              9,
+              "Tiền thu cổ tức và lợi nhuận được chia từ các khoản đầu tư, góp vốn dài hạn",
+              4329,
+              "-"
+            ],
+            [
+              "II",
+              "Lưu chuyển tiền thuần từ hoạt động đầu tư",
+              494133,
+              -43714
+            ],
+            [
+              null,
+              "Lưu chuyển tiền từ hoạt động tài chính",
+              null,
+              null
+            ],
+            [
+              1,
+              "Tăng vốn cổ phần từ góp vốn và/hoặc phát hành cổ phiếu",
+              "-",
+              "-"
+            ],
+            [
+              2,
+              "Tiền thu từ phát hành giấy tờ có giá dài hạn có đủ điều kiện tính vào vốn tự có và các khoản vốn vay dài hạn khác",
+              "-",
+              "-"
+            ],
+            [
+              3,
+              "Tiền chi thanh toán giấy tờ có giá dài hạn có đủ điều kiện tính vào vốn tự có và các khoản vốn vay dài hạn khác",
+              "-",
+              "-"
+            ],
+            [
+              4,
+              "Cổ tức trả cho cổ đông, lợi nhuận đã chia",
+              "-",
+              "-"
+            ],
+            [
+              5,
+              "Tiền chi ra mua cổ phiếu ngân quỹ",
+              "-",
+              "-"
+            ],
+            [
+              6,
+              "Tiền thu được do bán cổ phiếu ngân quỹ",
+              "-",
+              "-"
+            ],
+            [
+              "III",
+              "Lưu chuyển tiền thuần từ hoạt động tài chính",
+              "-",
+              "-"
+            ],
+            [
+              null,
+              "Lưu chuyển tiền thuần trong kỳ",
+              15340052,
+              6067843
+            ],
+            [
+              null,
+              "Tiền và các khoản tương đương tiền tại thời điểm đầu kỳ",
+              47623428,
+              46862957
+            ],
+            [
+              null,
+              "Điều chỉnh ảnh hưởng của thay đổi tỷ giá",
+              "-",
+              "-"
+            ],
+            [
+              null,
+              "Tiền và các khoản tương đương tiền tại thời điểm cuối kỳ",
+              62963480,
+              52930800
+            ]
+          ]
         },
         "offBalanceSheet": {
           "columns": [
@@ -11075,6 +11615,1245 @@
       "periodYear": 2026,
       "periodSlug": "Q1",
       "warnings": []
+    },
+    {
+      "source": "vietstock",
+      "stockCode": "TPB",
+      "exchange": "HoSE",
+      "companyName": "Ngân hàng TMCP Tiên Phong",
+      "title": "BCTC Hợp nhất quý 1 năm 2026",
+      "lastUpdate": "2026-05-04T01:13:11.760Z",
+      "statementScope": "Hợp nhất",
+      "businessType": "bank",
+      "analysis": [
+        {
+          "label": "Thu Nhập Lãi Thuần",
+          "percentChange": 2.245318472711754,
+          "tier": null,
+          "unreliable": false
+        },
+        {
+          "label": "Tổng TN Hoạt Động",
+          "percentChange": 9.532513676260642,
+          "tier": null,
+          "unreliable": false
+        },
+        {
+          "label": "CP Hoạt Động",
+          "percentChange": -19.245361936670104,
+          "tier": null,
+          "unreliable": false
+        },
+        {
+          "label": "LN Thuần Trước Dự Phòng",
+          "percentChange": 2.08925022666993,
+          "tier": null,
+          "unreliable": false
+        },
+        {
+          "label": "CP Dự Phòng",
+          "percentChange": 2.08925022666993,
+          "tier": null,
+          "unreliable": false
+        },
+        {
+          "label": "LNTT",
+          "percentChange": -0.14491138640270287,
+          "tier": null,
+          "unreliable": false
+        },
+        {
+          "label": "LNST",
+          "percentChange": -0.26477878876450994,
+          "tier": null,
+          "unreliable": false
+        },
+        {
+          "label": "LNST Cty Mẹ",
+          "percentChange": null,
+          "tier": null,
+          "unreliable": false
+        },
+        {
+          "label": "Tiền Gửi & Cho Vay TCTD Khác",
+          "percentChange": 5.734201679528666,
+          "tier": null,
+          "unreliable": false
+        },
+        {
+          "label": "Cho Vay KH",
+          "percentChange": 3.2623557376702363,
+          "tier": null,
+          "unreliable": false
+        },
+        {
+          "label": "CK Đầu Tư",
+          "percentChange": 11.466152921822086,
+          "tier": null,
+          "unreliable": false
+        },
+        {
+          "label": "Lãi, Phí Phải Thu",
+          "percentChange": 22.23642259924099,
+          "tier": null,
+          "unreliable": false
+        },
+        {
+          "label": "Tổng TS",
+          "percentChange": null,
+          "tier": null,
+          "unreliable": false
+        },
+        {
+          "label": "Tiền & Vay TCTD Khác",
+          "percentChange": 19.726422427224357,
+          "tier": null,
+          "unreliable": false
+        },
+        {
+          "label": "Tiền Gửi Của KH",
+          "percentChange": -4.304635081657747,
+          "tier": null,
+          "unreliable": false
+        },
+        {
+          "label": "Giấy Tờ Có Giá",
+          "percentChange": 1.3558588634358018,
+          "tier": null,
+          "unreliable": false
+        },
+        {
+          "label": "Vốn CSH",
+          "percentChange": 4.517595978042268,
+          "tier": null,
+          "unreliable": false
+        },
+        {
+          "label": "Nợ Tiềm Ẩn Ngoại Bảng",
+          "percentChange": 2.629118725008203,
+          "tier": null,
+          "unreliable": false
+        }
+      ],
+      "statements": {
+        "balanceSheet": {
+          "columns": [
+            "STT",
+            "Chỉ tiêu",
+            "Thuyết minh",
+            "31/03/2026 Triệu VND",
+            "31/12/2025 Triệu VND (Trình bày lại)"
+          ],
+          "rows": [
+            [
+              null,
+              "A TÀI SẢN",
+              null,
+              527169377,
+              505926663
+            ],
+            [
+              "I",
+              "Tiền mặt vàng bạc đá quý",
+              7,
+              2592698,
+              1704704
+            ],
+            [
+              "II",
+              "Tiền gửi tại NHNN",
+              8,
+              10068279,
+              20459657
+            ],
+            [
+              "III",
+              "Tiền vàng gửi tại các TCTD khác và cho vay các TCTD khác",
+              9,
+              109316911,
+              103388411
+            ],
+            [
+              1,
+              "Tiền vàng gửi tại các TCTD khác",
+              null,
+              97230990,
+              94871352
+            ],
+            [
+              2,
+              "Cho vay các tổ chức tín dụng khác",
+              null,
+              12085921,
+              8517059
+            ],
+            [
+              3,
+              "Dự phòng rủi ro cho vay các TCTD khác",
+              null,
+              "-",
+              "-"
+            ],
+            [
+              "IV",
+              "Chứng khoán kinh doanh",
+              10,
+              1482130,
+              1490967
+            ],
+            [
+              1,
+              "Chứng khoán kinh doanh",
+              null,
+              1670636,
+              1491045
+            ],
+            [
+              2,
+              "Dự phòng rủi ro chứng khoán kinh doanh",
+              null,
+              -188506,
+              -78
+            ],
+            [
+              "V",
+              "Các công cụ tài chính phái sinh và các tài sản tài chính khác",
+              11,
+              171380,
+              333702
+            ],
+            [
+              "VI",
+              "Cho vay khách hàng",
+              null,
+              312044784,
+              302186389
+            ],
+            [
+              1,
+              "Cho vay khách hàng",
+              12,
+              316042203,
+              305816635
+            ],
+            [
+              2,
+              "Dự phòng rủi ro cho vay khách hàng",
+              13,
+              -3997419,
+              -3630246
+            ],
+            [
+              "VII",
+              "Hoạt động mua nợ",
+              14,
+              1089948,
+              1096937
+            ],
+            [
+              1,
+              "Mua nợ",
+              null,
+              1098184,
+              1105226
+            ],
+            [
+              2,
+              "Dự phòng rủi ro hoạt động mua nợ",
+              null,
+              -8236,
+              -8289
+            ],
+            [
+              "VIII",
+              "Chứng khoán đầu tư",
+              15,
+              57531215,
+              51613170
+            ],
+            [
+              1,
+              "Chứng khoán đầu tư sẵn sàng để bán",
+              null,
+              57897100,
+              52051025
+            ],
+            [
+              2,
+              "Chứng khoán đầu tư giữ đến ngày đáo hạn",
+              null,
+              "-",
+              "-"
+            ],
+            [
+              3,
+              "Dự phòng rủi ro chứng khoán đầu tư",
+              null,
+              -365885,
+              -437855
+            ],
+            [
+              "IX",
+              "Góp vốn, đầu tư dài hạn",
+              16,
+              13200,
+              "-"
+            ],
+            [
+              4,
+              "Đầu tư dài hạn khác",
+              null,
+              13200,
+              "-"
+            ],
+            [
+              "X",
+              "Tài sản cố định",
+              null,
+              1627109,
+              1674855
+            ],
+            [
+              1,
+              "Tài sản cố định hữu hình",
+              17,
+              724961,
+              748875
+            ],
+            [
+              "a",
+              "- Nguyên giá TSCĐ",
+              null,
+              2281386,
+              2257192
+            ],
+            [
+              "b",
+              "- Hao mòn TSCĐ",
+              null,
+              -1556425,
+              -1508317
+            ],
+            [
+              2,
+              "Tài sản cố định vô hình",
+              18,
+              902148,
+              925980
+            ],
+            [
+              "a",
+              "- Nguyên giá TSCĐ",
+              null,
+              1669839,
+              1666003
+            ],
+            [
+              "b",
+              "- Hao mòn TSCĐ",
+              null,
+              -767691,
+              -740023
+            ],
+            [
+              "XI",
+              "Tài sản Có khác",
+              19,
+              31231723,
+              21977871
+            ],
+            [
+              1,
+              "Các khoản phải thu",
+              null,
+              20435850,
+              12054708
+            ],
+            [
+              2,
+              "Các khoản lãi phí phải thu",
+              null,
+              4915151,
+              4021020
+            ],
+            [
+              3,
+              "Tài sản thuế TNDN hoãn lại",
+              null,
+              185259,
+              138678
+            ],
+            [
+              4,
+              "Tài sản Có khác",
+              null,
+              5713547,
+              5781549
+            ],
+            [
+              null,
+              "*Trong đó: Lợi thế thương mại*",
+              20,
+              189166,
+              196172
+            ],
+            [
+              5,
+              "Các khoản dự phòng rủi ro cho các tài sản Có nội bảng khác",
+              null,
+              -18084,
+              -18084
+            ],
+            [
+              "STT",
+              "Chỉ tiêu",
+              "Thuyết minh",
+              "31/03/2026 Triệu VND",
+              "31/12/2025 Triệu VND (Trình bày lại)"
+            ],
+            [
+              null,
+              "B NỢ PHẢI TRẢ VÀ VỐN CHỦ SỞ HỮU",
+              null,
+              527169377,
+              505926663
+            ],
+            [
+              "I",
+              "Các khoản nợ Chính phủ và Ngân hàng Nhà nước",
+              21,
+              8569775,
+              1641641
+            ],
+            [
+              1,
+              "Tiền gửi và vay Chính phủ, NHNN",
+              null,
+              3850850,
+              1641641
+            ],
+            [
+              2,
+              "Giao dịch bán và mua lại trái phiếu Chính phủ với Kho bạc Nhà nước",
+              null,
+              4718925,
+              "-"
+            ],
+            [
+              "II",
+              "Tiền gửi và vay các tổ chức tín dụng khác",
+              22,
+              134159815,
+              112055311
+            ],
+            [
+              1,
+              "Tiền gửi của các tổ chức tín dụng khác",
+              null,
+              103612548,
+              74215800
+            ],
+            [
+              2,
+              "Vay các tổ chức tín dụng khác",
+              null,
+              30547267,
+              37839511
+            ],
+            [
+              "III",
+              "Tiền gửi của khách hàng",
+              23,
+              267038156,
+              279050251
+            ],
+            [
+              "IV",
+              "Các công cụ tài chính phái sinh và các khoản nợ tài chính khác",
+              null,
+              "-",
+              "-"
+            ],
+            [
+              "V",
+              "Vốn tài trợ ủy thác đầu tư cho vay TCTD chịu rủi ro",
+              24,
+              150825,
+              140504
+            ],
+            [
+              "VI",
+              "Phát hành giấy tờ có giá",
+              25,
+              59646208,
+              58848308
+            ],
+            [
+              "VII",
+              "Các khoản nợ khác",
+              26,
+              9570280,
+              8232532
+            ],
+            [
+              1,
+              "Các khoản lãi, phí phải trả",
+              null,
+              6908300,
+              5113299
+            ],
+            [
+              2,
+              "Thuế thu nhập doanh nghiệp hoãn lại phải trả",
+              null,
+              96395,
+              96395
+            ],
+            [
+              3,
+              "Các khoản phải trả và công nợ khác",
+              null,
+              2565585,
+              3022838
+            ],
+            [
+              "VIII",
+              "Vốn chủ sở hữu",
+              27,
+              48034318,
+              45958116
+            ],
+            [
+              1,
+              "Vốn của tổ chức tín dụng",
+              null,
+              27740469,
+              27740469
+            ],
+            [
+              "a",
+              "Vốn điều lệ",
+              null,
+              27740469,
+              27740469
+            ],
+            [
+              2,
+              "Quỹ của tổ chức tín dụng",
+              null,
+              4936046,
+              4936046
+            ],
+            [
+              3,
+              "Chênh lệch tỷ giá hối đoái",
+              null,
+              373117,
+              "-"
+            ],
+            [
+              4,
+              "Lợi nhuận chưa phân phối",
+              null,
+              11305830,
+              9629495
+            ],
+            [
+              5,
+              "Lợi ích cổ đông không kiểm soát",
+              null,
+              3678856,
+              3652106
+            ]
+          ]
+        },
+        "incomeStatement": {
+          "columns": [
+            "STT",
+            "Chỉ tiêu",
+            "Thuyết minh",
+            "Quý I Năm nay Triệu VND",
+            "Quý I Năm trước Triệu VND",
+            "Lũy kế từ đầu năm đến cuối quý này Năm nay Triệu VND",
+            "Lũy kế từ đầu năm đến cuối quý này Năm trước Triệu VND"
+          ],
+          "rows": [
+            [
+              1,
+              "Thu nhập lãi và các khoản thu nhập tương tự",
+              28,
+              9308076,
+              6801668,
+              9308076,
+              6801668
+            ],
+            [
+              2,
+              "Chi phí lãi và các chi phí tương tự",
+              29,
+              -5848485,
+              -3418050,
+              -5848485,
+              -3418050
+            ],
+            [
+              "I.",
+              "Thu nhập lãi thuần",
+              null,
+              3459591,
+              3383618,
+              3459591,
+              3383618
+            ],
+            [
+              3,
+              "Thu nhập từ hoạt động dịch vụ",
+              null,
+              1624198,
+              1175572,
+              1624198,
+              1175572
+            ],
+            [
+              4,
+              "Chi phí hoạt động dịch vụ",
+              null,
+              -371769,
+              -265634,
+              -371769,
+              -265634
+            ],
+            [
+              "II.",
+              "Lãi thuần từ hoạt động dịch vụ",
+              30,
+              1252429,
+              909938,
+              1252429,
+              909938
+            ],
+            [
+              "III.",
+              "Lãi/ (lỗ) thuần từ hoạt động kinh doanh ngoại hối",
+              31,
+              -29374,
+              -17300,
+              -29374,
+              -17300
+            ],
+            [
+              "IV.",
+              "Lãi/ (lỗ) thuần từ mua bán chứng khoán kinh doanh",
+              32,
+              -168448,
+              -496,
+              -168448,
+              -496
+            ],
+            [
+              "V.",
+              "Lãi/ (lỗ) thuần từ mua bán chứng khoán đầu tư",
+              33,
+              115016,
+              102058,
+              115016,
+              102058
+            ],
+            [
+              5,
+              "Thu nhập từ hoạt động khác",
+              null,
+              360323,
+              227219,
+              360323,
+              227219
+            ],
+            [
+              6,
+              "Chi phí hoạt động khác",
+              null,
+              -90285,
+              -122569,
+              -90285,
+              -122569
+            ],
+            [
+              "VI.",
+              "Lãi thuần từ hoạt động khác",
+              34,
+              270038,
+              104650,
+              270038,
+              104650
+            ],
+            [
+              "VII.",
+              "Thu nhập từ góp vốn, mua cổ phần",
+              35,
+              83,
+              "-",
+              83,
+              "-"
+            ],
+            [
+              "VIII.",
+              "Chi phí hoạt động",
+              36,
+              -2246554,
+              -1883976,
+              -2246554,
+              -1883976
+            ],
+            [
+              "IX.",
+              "Lợi nhuận thuần từ hoạt động kinh doanh trước chi phí dự phòng rủi ro tín dụng",
+              null,
+              2652781,
+              2598492,
+              2652781,
+              2598492
+            ],
+            [
+              "X.",
+              "Chi phí dự phòng rủi ro tín dụng",
+              37,
+              -546962,
+              -489617,
+              -546962,
+              -489617
+            ],
+            [
+              "XI.",
+              "Tổng lợi nhuận trước thuế",
+              null,
+              2105819,
+              2108875,
+              2105819,
+              2108875
+            ],
+            [
+              "XII.",
+              "Chi phí thuế thu nhập doanh nghiệp tạm tính",
+              null,
+              -423594,
+              -422184,
+              -423594,
+              -422184
+            ],
+            [
+              7,
+              "Chi phí thuế thu nhập doanh nghiệp hiện hành",
+              null,
+              -475390,
+              -422184,
+              -475390,
+              -422184
+            ],
+            [
+              8,
+              "Thu nhập thuế thu nhập doanh nghiệp hoãn lại",
+              null,
+              51796,
+              "-",
+              51796,
+              "-"
+            ],
+            [
+              "XIII.",
+              "Lợi nhuận sau thuế",
+              null,
+              1682225,
+              1686691,
+              1682225,
+              1686691
+            ],
+            [
+              "XIV.",
+              "Lợi ích của cổ đông thiểu số",
+              null,
+              16528,
+              -1,
+              16528,
+              -1
+            ],
+            [
+              "XV.",
+              "Lãi cơ bản trên cổ phiếu (VND)",
+              41,
+              600,
+              608,
+              600,
+              608
+            ]
+          ]
+        },
+        "cashFlow": {
+          "columns": [
+            "STT",
+            "CHỈ TIÊU",
+            "Thuyết minh",
+            "Từ 01/01/2026 đến 31/03/2026 Triệu VND",
+            "Từ 01/01/2025 đến 31/03/2025 Triệu VND"
+          ],
+          "rows": [
+            [
+              null,
+              "LƯU CHUYỂN TIỀN THUẦN TỪ HOẠT ĐỘNG KINH DOANH",
+              null,
+              null,
+              null
+            ],
+            [
+              1,
+              "Thu nhập lãi và các khoản thu nhập tương tự nhận được",
+              null,
+              8471388,
+              6286794
+            ],
+            [
+              2,
+              "Chi phí lãi và các khoản chi phí tương tự đã trả",
+              null,
+              -4023642,
+              -2311646
+            ],
+            [
+              3,
+              "Thu nhập từ hoạt động dịch vụ nhận được",
+              null,
+              1252429,
+              909938
+            ],
+            [
+              4,
+              "Chênh lệch số tiền thực thu/thực chi từ hoạt động kinh doanh (ngoại tệ, vàng bạc, chứng khoán)",
+              null,
+              -55227,
+              110356
+            ],
+            [
+              5,
+              "Thu nhập khác",
+              null,
+              32556,
+              -15072
+            ],
+            [
+              6,
+              "Tiền thu các khoản nợ đã được xử lý xóa, bù đắp bằng nguồn rủi ro",
+              null,
+              237536,
+              119721
+            ],
+            [
+              7,
+              "Tiền chi trả cho nhân viên và hoạt động quản lý, công vụ",
+              null,
+              -2144747,
+              -2088043
+            ],
+            [
+              8,
+              "Tiền thuế thu nhập thực nộp trong kỳ",
+              null,
+              -1376046,
+              -1141958
+            ],
+            [
+              null,
+              "Lưu chuyển tiền thuần từ hoạt động kinh doanh trước những thay đổi về tài sản và vốn lưu động",
+              null,
+              2394247,
+              1870090
+            ],
+            [
+              null,
+              "Những thay đổi về tài sản hoạt động",
+              null,
+              null,
+              null
+            ],
+            [
+              9,
+              "Tăng các khoản tiền, vàng gửi và cho vay các tổ chức tín dụng khác",
+              null,
+              -3619016,
+              -365799
+            ],
+            [
+              10,
+              "Tăng các khoản về kinh doanh chứng khoán",
+              null,
+              -6579660,
+              -433445
+            ],
+            [
+              11,
+              "Giảm/(Tăng) các công cụ tài chính phái sinh và các tài sản tài chính khác",
+              null,
+              162322,
+              -55880
+            ],
+            [
+              12,
+              "Tăng các khoản cho vay khách hàng",
+              null,
+              -9472335,
+              -8776064
+            ],
+            [
+              13,
+              "Tăng nguồn dự phòng để xử lý rủi ro, xử lý, bù đắp tổn thất các khoản cho vay khách hàng",
+              null,
+              -179842,
+              -197735
+            ],
+            [
+              14,
+              "Tăng khác về tài sản hoạt động",
+              null,
+              -7741415,
+              -1987309
+            ],
+            [
+              null,
+              "Những thay đổi về công nợ hoạt động",
+              null,
+              null,
+              null
+            ],
+            [
+              15,
+              "Tăng các khoản nợ chính phủ và Ngân hàng Nhà nước",
+              null,
+              6928134,
+              5098631
+            ],
+            [
+              16,
+              "Tăng/(Giảm) các khoản tiền gửi, tiền vay các tổ chức tín dụng",
+              null,
+              21358313,
+              -28909678
+            ],
+            [
+              17,
+              "Giảm tiền gửi của khách hàng",
+              null,
+              -12012095,
+              -9691143
+            ],
+            [
+              18,
+              "Tăng phát hành giấy tờ có giá (ngoại trừ giấy tờ có giá phát hành được tính vào hoạt động tài chính)",
+              null,
+              990000,
+              2000000
+            ],
+            [
+              19,
+              "Tăng vốn tài trợ, ủy thác đầu tư, cho vay mà tổ chức tín dụng chịu rủi ro",
+              null,
+              10321,
+              10038
+            ],
+            [
+              20,
+              "Giảm các công cụ tài chính phái sinh và các khoản nợ tài chính khác",
+              null,
+              "-",
+              -131331
+            ],
+            [
+              21,
+              "Tăng khác về công nợ hoạt động",
+              null,
+              481010,
+              93219
+            ],
+            [
+              22,
+              "Chi từ các quỹ của tổ chức tín dụng",
+              null,
+              "-",
+              "-"
+            ],
+            [
+              "I.",
+              "Lưu chuyển tiền thuần cho hoạt động kinh doanh",
+              null,
+              -7280016,
+              -41476406
+            ],
+            [
+              "STT",
+              "CHỈ TIÊU",
+              "Thuyết minh",
+              "Từ 01/01/2026 đến 31/03/2026 Triệu VND",
+              "Từ 01/01/2025 đến 31/03/2025 Triệu VND"
+            ],
+            [
+              null,
+              "LƯU CHUYỂN TIỀN THUẦN TỪ HOẠT ĐỘNG ĐẦU TƯ",
+              null,
+              null,
+              null
+            ],
+            [
+              1,
+              "Mua sắm tài sản cố định",
+              null,
+              -81784,
+              -71757
+            ],
+            [
+              2,
+              "Tiền thu từ thanh lý, nhượng bán tài sản cố định",
+              null,
+              "-",
+              1
+            ],
+            [
+              3,
+              "Tiền chi từ thanh lý, nhượng bán tài sản cố định",
+              null,
+              "-",
+              "-"
+            ],
+            [
+              4,
+              "Mua sắm bất động sản đầu tư",
+              null,
+              "-",
+              "-"
+            ],
+            [
+              5,
+              "Tiền thu từ bán, thanh lý bất động sản đầu tư",
+              null,
+              "-",
+              "-"
+            ],
+            [
+              6,
+              "Tiền chi ra do bán, thanh lý bất động sản đầu tư",
+              null,
+              "-",
+              "-"
+            ],
+            [
+              7,
+              "Tiền chi đầu tư, góp vốn vào các đơn vị khác (Chi đầu tư mua công ty con, góp vốn liên doanh, liên kết và các khoản đầu tư dài hạn khác)",
+              null,
+              -13200,
+              "-"
+            ],
+            [
+              8,
+              "Tiền thu đầu tư, góp vốn vào các đơn vị khác (Thu bán, thanh lý công ty con, góp vốn liên doanh, liên kết, các khoản đầu tư dài hạn khác)",
+              null,
+              "-",
+              "-"
+            ],
+            [
+              9,
+              "Tiền thu cổ tức và lợi nhuận được chia từ các khoản đầu tư, góp vốn dài hạn",
+              null,
+              83,
+              "-"
+            ],
+            [
+              "II.",
+              "Lưu chuyển tiền thuần cho hoạt động đầu tư",
+              null,
+              -94901,
+              -71756
+            ],
+            [
+              null,
+              "LƯU CHUYỂN TIỀN THUẦN TỪ HOẠT ĐỘNG TÀI CHÍNH",
+              null,
+              null,
+              null
+            ],
+            [
+              1,
+              "Tăng vốn cổ phần từ góp vốn và/hoặc phát hành cổ phiếu",
+              null,
+              "-",
+              "-"
+            ],
+            [
+              2,
+              "Tiền thu từ phát hành giấy tờ có giá dài hạn có đủ điều kiện tính vào vốn tự có và các khoản vốn vay dài hạn khác",
+              null,
+              "-",
+              "-"
+            ],
+            [
+              3,
+              "Tiền chi thanh toán giấy tờ có giá dài hạn có đủ điều kiện tính vào vốn tự có và các khoản vốn vay dài hạn khác",
+              null,
+              -192100,
+              -30000
+            ],
+            [
+              4,
+              "Cổ tức trả cho cổ đông, lợi nhuận đã chia",
+              null,
+              "-",
+              "-"
+            ],
+            [
+              5,
+              "Tiền chi ra mua cổ phiếu ngân quỹ",
+              null,
+              "-",
+              "-"
+            ],
+            [
+              6,
+              "Tiền thu được do bán cổ phiếu ngân quỹ",
+              null,
+              "-",
+              "-"
+            ],
+            [
+              "III.",
+              "Lưu chuyển tiền thuần từ hoạt động tài chính",
+              null,
+              -192100,
+              -30000
+            ],
+            [
+              "IV.",
+              "Lưu chuyển tiền thuần trong kỳ",
+              null,
+              -7567017,
+              -41578162
+            ],
+            [
+              "V.",
+              "Tiền và các khoản tương đương tiền đầu kỳ",
+              null,
+              115747324,
+              86148639
+            ],
+            [
+              "VI.",
+              "Điều chỉnh ảnh hưởng của thay đổi tỷ giá",
+              null,
+              373117,
+              210436
+            ],
+            [
+              "VII.",
+              "Tiền và các khoản tương đương tiền cuối kỳ",
+              38,
+              108553424,
+              44780913
+            ]
+          ]
+        },
+        "offBalanceSheet": {
+          "columns": [
+            "STT",
+            "Chỉ tiêu",
+            "Thuyết minh",
+            "31/03/2026 Triệu VND",
+            "31/12/2025 Triệu VND"
+          ],
+          "rows": [
+            [
+              1,
+              "Bảo lãnh vay vốn",
+              null,
+              3408655,
+              3409781
+            ],
+            [
+              2,
+              "Cam kết giao dịch hối đoái",
+              null,
+              null,
+              null
+            ],
+            [
+              null,
+              "Cam kết mua với các ngoại tệ quy đổi",
+              null,
+              480185,
+              148929
+            ],
+            [
+              null,
+              "Cam kết bán với các ngoại tệ quy đổi",
+              null,
+              496567,
+              673419
+            ],
+            [
+              null,
+              "Cam kết giao dịch hoán đổi",
+              null,
+              86244435,
+              65334616
+            ],
+            [
+              3,
+              "Cam kết trong nghiệp vụ LC",
+              null,
+              16069401,
+              11630343
+            ],
+            [
+              4,
+              "Bảo lãnh khác",
+              null,
+              80590430,
+              76904679
+            ],
+            [
+              5,
+              "Các cam kết khác",
+              null,
+              13561121,
+              14746481
+            ],
+            [
+              6,
+              "Lãi cho vay và phí phải thu chưa thu được",
+              391,
+              1247281,
+              1108600
+            ],
+            [
+              7,
+              "Nợ khó đòi đã xử lý",
+              392,
+              25550982,
+              25458462
+            ],
+            [
+              8,
+              "Tài sản và chứng từ khác",
+              393,
+              36855992,
+              37274528
+            ]
+          ]
+        }
+      },
+      "financeUrl": "https://finance.vietstock.vn/TPB-ngan-hang-tmcp-tien-phong.htm",
+      "fileUrl": "https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY 1/TPB_Baocaotaichinh_Q1_2026_Hopnhat.pdf",
+      "filePath": null,
+      "format": "pdf",
+      "entryName": null,
+      "periodYear": 2026,
+      "periodSlug": "Q1",
+      "warnings": [
+        "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 1 muc trong BCDKT (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
+      ]
     }
   ],
   "lastCustomSourceCheck": null

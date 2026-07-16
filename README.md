@@ -203,7 +203,10 @@ cùng tác giả (`loc_tin`, `Loc_Tin_Mistral`, `loc_tin_qwen`) đã dùng thậ
    `.github/workflows/fetch-bctc.yml`, pipeline thật chạy trên GitHub Actions runner (tối đa 60 phút,
    không giới hạn vài giây như serverless), rồi commit `data/latest-fetch.json` lại `main` - cú push đó
    tự khiến Vercel deploy lại. Web polling `generatedAt`/`lastCustomSourceCheck` rồi reload. **KHÔNG cần
-   Vercel Blob/S3** - chỉ 1 file JSON nhẹ được commit, không phải file PDF/Excel.
+   Vercel Blob/S3** - chỉ 1 file JSON nhẹ được commit, không phải file PDF/Excel. Cùng lúc, mỗi báo cáo
+   OCR thành công cũng ghi kèm markdown thô vào `data/ocr-markdown/<MÃ>__<kỳ>.md` (`lib/ocr-markdown-store.ts`,
+   GHI ĐÈ theo mã+kỳ+phạm vi nên không phình theo lịch sử) và commit cùng bước trên - để debug/điều tra
+   sau này (vd 1 báo cáo live có bảng rỗng bất thường) không cần OCR thật lại lần 2.
 2. **"Xuất Excel/PDF"** (nhẹ, xử lý ĐÚNG 1 báo cáo) - chạy THẲNG trong 1 API route Vercel bình thường
    (`app/api/report-file`), KHÔNG cần dispatch - tải lại file gốc từ `fileUrl` + OCR toàn văn ngay lúc đó
    (Mistral đủ nhanh cho serverless, đúng "hướng 3" đã bàn trước đây, nhưng áp dụng cho xuất-từng-báo-cáo

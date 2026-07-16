@@ -267,16 +267,18 @@ function realignRowByContent(
   if (labelCellIdx !== -1) result[labelColumnIndex] = row[labelCellIdx];
 
   const remaining = row.filter((_, i) => i !== labelCellIdx);
-  // CHI lay o KHOP DAU TIEN lam "ma so" - vai dong (vd "Lãi cơ bản trên cổ
-  // phiếu") co GIA TRI THAT SU (309, 314...) nho, ngau nhien cung khop
-  // MA_SO_PATTERN (2-4 chu so) nhu chinh o ma so that - loc ca dam theo
-  // .filter() se nhan NHAM tat ca la "ma so", bo trong valueCells (0 phan tu),
-  // roi ".slice(-0)" (bug JS: tra ve CA MANG thay vi mang rong) ghi de moi cot
-  // gia tri thanh undefined - da gap that (2026-07-08, IDV mã 70 "Lãi cơ bản
-  // trên cổ phiếu (*)": 309/314/851/949 deu bi coi la ma so, xoa sach 4 cot
-  // gia tri that). Mot dong CHI co toi da 1 o la ma so that (nam ngay sau
-  // nhan) - moi o con lai, du co khop MA_SO_PATTERN hay khong, deu la gia tri.
-  const codeIdx = remaining.findIndex((c) => typeof c === 'string' && MA_SO_PATTERN.test(c.trim()));
+  // SUA 2026-07-16 (PTI that): 1 dong CHI co toi da 1 o la ma so THAT (nam
+  // NGAY SAU nhan - da neu ro trong thiet ke ban dau, xem doan duoi), nhung
+  // cach nhan dien CU dua vao HINH DANG (MA_SO_PATTERN, chi khop so tran 2-4
+  // chu so) bo sot ma so con co dau cham (vd "311.1"/"329.1" duoi "311"/"329"
+  // - CUNG loai da tung sua rieng cho looksLikeValidMaSoCell o tren, nhung
+  // chua lan toi day). Khi khong khop duoc, codeIdx=-1 khien CA mã số THAT
+  // lan STT bi gop chung vao valueCells, roi bi cat bot 1 o do thua so luong
+  // so voi valueSlots - lam mat han 1 cot gia tri that (dau nam) va lech het
+  // cac cot con lai. Vi VI TRI (ngay sau nhan) da la tin hieu DUY NHAT can
+  // thiet - khong can doan qua hinh dang con so nua - dung THANG vi tri do,
+  // dong bo voi bat ky the loai ma so nao (co dau cham hay khong).
+  const codeIdx = maSoIdx !== -1 && labelCellIdx !== -1 && labelCellIdx < row.length - 1 ? labelCellIdx : -1;
   const valueCells = remaining.filter((_, i) => i !== codeIdx);
 
   if (maSoIdx !== -1 && codeIdx !== -1) result[maSoIdx] = remaining[codeIdx];
@@ -401,11 +403,21 @@ const INCOME_STATEMENT_CONTENT_MARKERS = [
   'LAI CO BAN TREN CO PHIEU',
 ];
 
-const CASH_FLOW_CONTENT_MARKERS = [
-  'LUU CHUYEN TIEN TU HOAT DONG KINH DOANH',
-  'LUU CHUYEN TIEN TU HOAT DONG DAU TU',
+const CASH_FLOW_CONTENT_MARKERS: ContentMarker[] = [
+  // SUA 2026-07-16 (MCH that): chuyen 4 marker duoi tu chuoi CO DINH sang
+  // MANG tu khoa BAT BUOC (AND, khong doi hoi lien tiep - xem ContentMarker/
+  // matchesContentMarker) - MCH chen them "CAC"/"CAC KHOAN" giua cac cum tu
+  // ("...TU CÁC hoạt động kinh doanh", "...VÀ CÁC KHOẢN tương đương tiền cuối
+  // kỳ"), pha vo chuoi lien tuc cua ca 2 marker "TU HOAT DONG..." VA "TIEN VA
+  // TUONG DUONG TIEN CUOI KY", khien CA 2 doan LCTT (hoat dong kinh doanh LAN
+  // dau tu/tai chinh) khong khop bat ky marker cashFlow nao, bi phan loai
+  // NHAM (doan 1 hoa diem tinh co voi "HANG TON KHO" cua BCDKT qua dong
+  // "Bien dong hang ton kho", roi vao balanceSheet) hoac bi loai hoan toan
+  // (doan 2, khong hoa diem voi bang nao ca).
+  ['LUU CHUYEN TIEN', 'HOAT DONG KINH DOANH'],
+  ['LUU CHUYEN TIEN', 'HOAT DONG DAU TU'],
   'LUU CHUYEN TIEN THUAN TRONG KY',
-  'TIEN VA TUONG DUONG TIEN CUOI KY',
+  ['TIEN VA', 'TUONG DUONG TIEN CUOI KY'],
   // SUA 2026-07-15 (theo phan hoi nguoi dung, xac nhan qua markdown OCR THAT
   // CTG Q1/2026): mau Ngan hang (B04a/TCTD-HN) viet DAY DU HON "Tiền và các
   // khoản tương đương tiền TẠI THỜI ĐIỂM cuối kỳ" (chen them "cac khoan"/"tai
@@ -735,6 +747,27 @@ function parseAllTablesInRange(lines: string[]): ParsedTable[] {
       i++;
       continue;
     }
+    // SUA 2026-07-16 (FTS that): 1 dong DU LIEU THAT (vd "2. Chênh lệch đánh
+    // giá... | 412 | ...") tinh co bi 1 dong phan cach "---" gia (Mistral OCR
+    // tu chen sau khi 1 con dau/watermark bi doc thanh rac lam gian doan bang
+    // dang doc, xem vong lap ben duoi) theo ngay sau no - khop dung dieu kien
+    // "header + separator" o tren, bi hieu NHAM la tieu de 1 bang MOI, lam
+    // toan bo cac cot cua no (bao gom ca CHINH dong du lieu nay) bi dung lam
+    // TEN COT thay vi noi dung, hong het ca bang. Mot dong tieu de THAT (ten
+    // cot) khong bao gio chua 1 o la ma so TRAN (vd "412" - dung 2-4 chu so,
+    // khop MA_SO_PATTERN) - day CHI co the la du lieu.
+    //
+    // SUA TIEP 2026-07-16 (MCH that): truoc day khi phat hien truong hop nay
+    // chi bo qua (i++), gay MAT TRANG ca bang (vd doan "hoat dong tai chinh"
+    // + chuoi ket thuc LCTT 50->60->70 cua MCH - markdown goc THIEU HAN dong
+    // tieu de that, nhay thang vao du lieu, dau phan cach "---" nam SAU dong
+    // du lieu dau tien thay vi sau tieu de - cau truc bang van CO THAT, chi
+    // thieu ten cot). Thay vi bo qua, KHOI PHUC: dung CHINH dong bi tu choi
+    // nay lam DONG DU LIEU DAU TIEN (khong phai tieu de), header dung placeholder
+    // rong (cung do dai) - cac ham doc noi dung (findLabelColumnIndex,
+    // classifyTableByContent...) van hoat dong dung vi CHI dua vao NOI DUNG
+    // dong, khong dua vao ten cot that.
+    const headerLooksLikeData = headerCells.some((c) => MA_SO_PATTERN.test(c.trim()));
 
     // KQKD Quy thuong co header 2 DONG: dong 1 la nhom ky ("Quy nay"/"Luy ke
     // tu dau nam...", header markdown THAT SU), dong 2 la "Nam nay VND"/"Nam
@@ -750,11 +783,12 @@ function parseAllTablesInRange(lines: string[]): ParsedTable[] {
     // 2) gop lai moi xac dinh dung cot bat ke thu tu, xem
     // incomeStatementPeriodColumns (lib/analysis.ts). Nhan dien dong 2:
     // KHONG co nhan (o dau trong) VA MOI o con lai (neu co) deu CHI chua
-    // "Nam nay"/"Nam truoc" (khong phai so lieu/nhan chi tieu that).
-    let effectiveHeaderCells = headerCells;
+    // "Nam nay"/"Nam truoc" (khong phai so lieu/nhan chi tieu that). Bo qua
+    // toan bo buoc gop nay khi headerLooksLikeData (khong co tieu de that de gop).
+    let effectiveHeaderCells = headerLooksLikeData ? headerCells.map(() => '') : headerCells;
     const peekCells = i + 2 < lines.length ? splitMarkdownRow(lines[i + 2]) : null;
     let headerRowCount = 2;
-    if (peekCells && looksLikePeriodSubHeaderRow(peekCells)) {
+    if (!headerLooksLikeData && peekCells && looksLikePeriodSubHeaderRow(peekCells)) {
       // "Quy nay"/"Luy ke..." o dong 1 THUONG chi ghi 1 lan o O DAU TIEN cua
       // nhom (o thu 2 tro di cua CUNG nhom de trong - markdown the hien 1 o
       // gop truc quan bang nhieu o rong lien tiep) - dien tiep (forward-fill)
@@ -775,7 +809,7 @@ function parseAllTablesInRange(lines: string[]): ParsedTable[] {
       headerRowCount = 3;
     }
 
-    const rawRows: string[][] = [];
+    const rawRows: string[][] = headerLooksLikeData ? [headerCells] : [];
     let j = i + headerRowCount;
     let skipRun = 0;
     while (j < lines.length) {
@@ -798,16 +832,36 @@ function parseAllTablesInRange(lines: string[]): ParsedTable[] {
       // khoa dac trung nao de classifyTableByContent nhan dung bang). Gop
       // chung dong trong VA dong rac (khong parse duoc thanh hang bang) vao 1
       // bo dem, cho phep toi da 2 dong loai nay truoc khi ket luan bang het that.
+      //
+      // NANG NGUONG 3 -> 12 (2026-07-16, FTS that): con dau/watermark cong ty
+      // (anh de len giua bang) co the bi Mistral OCR thanh CA CHUC dong ky tu
+      // vun vat lien tiep (vd "01-"/"ỒNG"/"Ồ PH"/"NG"/"FP"/"Ồ T" - 10 dong rac
+      // giua 2 dong du lieu that "1.5. Cổ phiếu quỹ" ma 411.5 va "2. Chênh
+      // lệch đánh giá..." ma 412) - vuot xa nguong 3 dong cu, khien bang bi
+      // cat NGANG giua chung, mat han phan con lai (Loi nhuan chua phan phoi,
+      // Tong cong nguon von...). Van GIU CO GIOI HAN (khong bo han) - tranh
+      // nuot nham 1 doan van ban/thuyet minh THAT SU dai giua 2 bang khac
+      // nhau thanh 1 bang duy nhat; ket hop voi guard "tu choi dong DU LIEU
+      // gia lam header" o vong ngoai (xem MA_SO_PATTERN o tren) de dong dau
+      // tien sau doan rac van duoc nhan dung la tiep tuc CHINH bang nay, khong
+      // bi tach thanh bang moi.
       if (lines[j].trim() === '') {
         skipRun++;
-        if (skipRun > 3) break;
+        if (skipRun > 12) break;
         j++;
         continue;
       }
+      // Tieu de muc THAT (vd "# **CÁC CHỈ TIÊU NGOÀI BÁO CÁO...**", luon bat
+      // dau bang "#" trong markdown Mistral tra ve - da xac nhan qua moi tieu
+      // de muc that trong tai lieu) la ranh gioi CHAC CHAN, khac han rac
+      // watermark (khong bao gio bat dau bang "#") - dung NGAY, khong tinh
+      // vao nguong 12 dong o tren, tranh nuot nham CA 1 bang khac (vd bang
+      // ngoai BCTC ngay sau BCDKT) vao chinh bang dang doc do nguong da nang.
+      if (lines[j].trim().startsWith('#')) break;
       const rowCells = splitMarkdownRow(lines[j]);
       if (!rowCells) {
         skipRun++;
-        if (skipRun > 3) break;
+        if (skipRun > 12) break;
         j++;
         continue;
       }

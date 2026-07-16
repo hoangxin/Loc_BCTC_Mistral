@@ -706,7 +706,10 @@ const SECURITIES_METRICS: MetricDef[] = [
   {
     label: 'CP Môi Giới',
     statement: 'incomeStatement',
-    finders: [byLabel(['CHI PHI NGHIEP VU MOI GIOI CHUNG KHOAN'])],
+    // Dong bo voi CTCK_INCOME_FORMULAS (lib/export/statement-shared.ts,
+    // 2026-07-16) - cung 1 rui ro "nghiep vu" bi bo nhu ben Doanh thu Moi
+    // Gioi cua FTS, du chua gap that o phia chi phi.
+    finders: [byLabelAny(['CHI PHI NGHIEP VU MOI GIOI CHUNG KHOAN', 'CHI PHI MOI GIOI CHUNG KHOAN'])],
     thresholds: null,
   },
   {
