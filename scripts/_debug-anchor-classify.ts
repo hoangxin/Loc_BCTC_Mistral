@@ -59,5 +59,15 @@ check('neo KQKD Ngan hang "Thu nhap lai thuan"', `
 | Lãi thuần từ hoạt động dịch vụ | 6 | 500 |
 `, 'incomeStatement');
 
+// 5) LINH HOAT (token-AND): wording lech tung chu van nhan dung. Bank ghi
+//    "Tong loi nhuan truoc thue" (KHONG co "ke toan") - cum cung cu
+//    "TONG LOI NHUAN KE TOAN TRUOC THUE" se TRUOT, token-AND van bat.
+check('token-AND hut bien the "Tong loi nhuan truoc thue"', `
+| Chỉ tiêu | Mã số | Kỳ này |
+| --- | --- | --- |
+| Chi phí quản lý | 5 | 200 |
+| Tổng lợi nhuận trước thuế | 50 | 800 |
+`, 'incomeStatement');
+
 console.log(`\n${pass} pass / ${fail} fail`);
 if (fail > 0) process.exit(1);

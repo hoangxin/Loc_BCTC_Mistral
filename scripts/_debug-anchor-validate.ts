@@ -10,81 +10,70 @@ import { execSync } from 'child_process';
 import { normalizeLabelText } from '../lib/export/statement-shared';
 
 type Marker = string | string[];
+// TOKEN-AND: chi giu TU KHOA PHAN BIET COT LOI (cho phep chen tu giua/qualifier
+// "ngan han"/"dai han"/"ve ban hang..."), KHONG khop ca cum cung tung chu (de
+// hut khi cong ty viet lech - nguon goc chuoi loi m/ay hom). Van phai du DOC
+// QUYEN: mirror-check duoi day loc cai nao soi guong bang anh em.
 const CANDIDATES: Record<'balanceSheet'|'incomeStatement'|'cashFlow'|'offBalanceSheet', Marker[]> = {
   // ---- BANG CAN DOI KE TOAN / BAO CAO TINH HINH TAI CHINH ----
   balanceSheet: [
-    'TONG CONG TAI SAN',              // ma 270 (other/CTCK/insurance)
-    'TONG CONG NGUON VON',            // ma 440
-    ['TONG TAI SAN'],                 // bank (TT49 dung "Tong tai san")
-    'TONG NO PHAI TRA VA VON CHU SO HUU', // bank
-    'TAI SAN NGAN HAN',               // ma 100
-    'TAI SAN DAI HAN',                // ma 200
-    'TAI SAN CO DINH HUU HINH',       // ma 221
-    'TAI SAN CO DINH VO HINH',        // ma 227
-    'PHAI THU NGAN HAN CUA KHACH HANG', // ma 131
-    'NGUOI MUA TRA TIEN TRUOC',       // ma 132/312
-    'PHAI TRA NGUOI BAN',             // ma 311 (dung ten goc, mirror-check se loc neu can)
-    'VAY VA NO THUE TAI CHINH',       // ma 320/338
-    'CHI PHI PHAI TRA',               // ma 335
-    'QUY KHEN THUONG PHUC LOI',       // ma 353
-    'LOI NHUAN SAU THUE CHUA PHAN PHOI', // ma 421
-    'VON GOP CUA CHU SO HUU',         // ma 411
-    'THANG DU VON CO PHAN',           // ma 412
-    // CTCK
-    'PHAI TRA HOAT DONG GIAO DICH CHUNG KHOAN',
-    'TIEN NOP QUY HO TRO THANH TOAN',
-    // Insurance (TT232)
-    'TAI SAN TAI BAO HIEM',
-    'DU PHONG NGHIEP VU',
+    ['TONG CONG TAI SAN'],            // ma 270 (giu "cong" de khac bank "tong tai san")
+    ['TONG CONG NGUON VON'],          // ma 440
+    ['TONG TAI SAN'],                 // bank
+    ['TONG NO PHAI TRA', 'VON CHU SO HUU'], // bank
+    ['TAI SAN NGAN HAN'],             // ma 100
+    ['TAI SAN CO DINH HUU HINH'],     // ma 221 (cum on dinh, it bien the)
+    ['TAI SAN CO DINH VO HINH'],      // ma 227
+    ['PHAI THU', 'CUA KHACH HANG'],   // ma 131: hut "Phai thu [ngan han] cua khach hang"
+    ['NGUOI MUA TRA TIEN TRUOC'],     // ma 132/312
+    ['PHAI TRA NGUOI BAN'],           // ma 311/331
+    ['VAY VA NO THUE TAI CHINH'],     // ma 320/338
+    ['QUY KHEN THUONG', 'PHUC LOI'],  // ma 353: "Quy khen thuong[,] phuc loi"
+    ['LOI NHUAN SAU THUE CHUA PHAN PHOI'], // ma 421
+    ['THANG DU VON CO PHAN'],         // ma 412
+    ['PHAI TRA HOAT DONG GIAO DICH CHUNG KHOAN'], // CTCK
+    ['TIEN NOP', 'QUY HO TRO THANH TOAN'],        // CTCK
+    ['TAI SAN TAI BAO HIEM'],         // insurance
   ],
   // ---- KET QUA HOAT DONG KINH DOANH ----
   incomeStatement: [
-    'DOANH THU THUAN VE BAN HANG',    // ma 10 (nguoi dung: "doanh thu thuan")
-    'GIA VON HANG BAN',               // ma 11 (nguoi dung: "gia von")
-    'LOI NHUAN GOP',                  // ma 20
-    'CAC KHOAN GIAM TRU DOANH THU',   // ma 02
-    'CHI PHI BAN HANG',               // ma 25
-    'CHI PHI QUAN LY DOANH NGHIEP',   // ma 26
-    'LOI NHUAN THUAN TU HOAT DONG KINH DOANH', // ma 30
-    'TONG LOI NHUAN KE TOAN TRUOC THUE', // ma 50
-    'LOI NHUAN SAU THUE THU NHAP DOANH NGHIEP', // ma 60
-    'CHI PHI THUE TNDN HIEN HANH',    // ma 51
-    'CHI PHI THUE TNDN HOAN LAI',     // ma 52
-    'LAI CO BAN TREN CO PHIEU',       // ma 70
-    // Insurance (TT232 B02-DNPNT)
-    'DOANH THU PHI BAO HIEM',
-    'CHI BOI THUONG',
-    'DOANH THU THUAN HOAT DONG KINH DOANH BAO HIEM',
-    'LOI NHUAN GOP HOAT DONG KINH DOANH BAO HIEM',
-    // CTCK (TT210 B02-CTCK)
-    'DOANH THU NGHIEP VU MOI GIOI CHUNG KHOAN',
-    'CHI PHI NGHIEP VU MOI GIOI CHUNG KHOAN',
-    'CONG DOANH THU HOAT DONG',
-    'CONG CHI PHI HOAT DONG',
-    // Bank (TT49 B03-TCTD)
-    'THU NHAP LAI THUAN',
-    'LAI THUAN TU HOAT DONG DICH VU',
-    'CHI PHI DU PHONG RUI RO TIN DUNG',
+    ['DOANH THU THUAN'],              // ma 10: "Doanh thu thuan [ve ban hang.../ HDKD BH]"
+    ['GIA VON'],                      // ma 11: "Gia von [hang ban]"
+    ['LOI NHUAN GOP'],                // ma 20
+    ['GIAM TRU DOANH THU'],           // ma 02: "Cac khoan giam tru doanh thu"
+    ['CHI PHI BAN HANG'],             // ma 25
+    ['CHI PHI QUAN LY'],              // ma 26: hut "...doanh nghiep"/"...cong ty chung khoan"
+    ['LOI NHUAN THUAN', 'HOAT DONG KINH DOANH'], // ma 30
+    ['TONG LOI NHUAN', 'TRUOC THUE'], // ma 50: hut "...ke toan truoc thue"/"...truoc thue"
+    'LOI NHUAN SAU THUE THU NHAP DOANH NGHIEP', // ma 60: cum LIEN (token-AND bi phan tan: BS co "LNST chua phan phoi" + "thue TNDN hoan lai" o 2 dong)
+    ['CHI PHI THUE', 'TNDN', 'HIEN HANH'], // ma 51
+    ['CHI PHI THUE', 'TNDN', 'HOAN LAI'],  // ma 52
+    ['LAI CO BAN TREN CO PHIEU'],     // ma 70
+    ['DOANH THU PHI BAO HIEM'],       // insurance
+    ['CHI BOI THUONG'],               // insurance (khac "du phong boi thuong" BS)
+    ['DOANH THU THUAN', 'KINH DOANH BAO HIEM'], // insurance (trung ['DOANH THU THUAN'] o tren, vo hai)
+    ['LOI NHUAN GOP', 'KINH DOANH BAO HIEM'],   // insurance
+    ['NGHIEP VU MOI GIOI CHUNG KHOAN'], // CTCK (ca doanh thu lan chi phi)
+    ['CONG DOANH THU HOAT DONG'],     // CTCK
+    ['CONG CHI PHI HOAT DONG'],       // CTCK
+    ['THU NHAP LAI THUAN'],           // bank
+    ['LAI THUAN', 'HOAT DONG DICH VU'], // bank
+    ['DU PHONG RUI RO TIN DUNG'],     // bank
   ],
   // ---- LUU CHUYEN TIEN TE ----
   cashFlow: [
     ['LUU CHUYEN TIEN', 'HOAT DONG KINH DOANH'],
     ['LUU CHUYEN TIEN', 'HOAT DONG DAU TU'],
     ['LUU CHUYEN TIEN', 'HOAT DONG TAI CHINH'],
-    'LUU CHUYEN TIEN THUAN TRONG KY',
-    'KHAU HAO TAI SAN CO DINH',
-    'TIEN CHI TRA LAI VAY',
-    'TIEN CHI NOP THUE THU NHAP DOANH NGHIEP',
-    ['TIEN THU TU BAN HANG', 'CUNG CAP DICH VU'],
-    'TIEN THU TU PHAT HANH CO PHIEU',
-    ['TUONG DUONG TIEN CUOI KY'],
+    ['LUU CHUYEN TIEN THUAN TRONG KY'],
+    ['TIEN CHI TRA', 'LAI VAY'],
+    ['TIEN CHI NOP THUE', 'THU NHAP DOANH NGHIEP'],
+    ['TIEN THU', 'BAN HANG', 'CUNG CAP DICH VU'],
+    'TIEN THU TU PHAT HANH CO PHIEU', // cum LIEN (token-AND phan tan o BCDKT NH)
   ],
   // ---- CHI TIEU NGOAI BCTHTC (CTCK) / NGOAI BANG (bank) ----
   offBalanceSheet: [
-    'TAI SAN QUAN LY THEO CAM KET',
-    'CO PHIEU DANG LUU HANH',
-    ['TIEN GUI', 'GIAO DICH CHUNG KHOAN'],
-    'BAO LANH VAY VON',
+    ['BAO LANH VAY VON'],
   ],
 };
 

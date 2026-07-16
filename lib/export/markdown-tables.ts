@@ -655,81 +655,88 @@ const CONTENT_MARKERS_BY_KEY: { key: keyof FinancialStatements; markers: Content
 // "PHI NHUONG TAI BAO HIEM" (BCDKT "Du phong phi nhuong tai bao hiem" - bug MIG),
 // "PHAT HANH GIAY TO CO GIA" (LCTT NH), cac neo offBS CTCK (soi guong BCDKT vi
 // bang "ngoai BCTHTC" hay bi gop chung voi BCDKT).
+// TOKEN-AND cho tung neo: CHI giu tu khoa PHAN BIET COT LOI (mang = AND, khong
+// doi hoi lien tiep) de HUT bien the wording (chen "ngan han"/"ve ban hang..."/
+// "cong ty chung khoan" giua) - KHONG khop ca cum cung tung chu (nguon goc lỗi
+// gion). 2 RANG BUOC an toan (da doi chieu mirror-check corpus that,
+// scripts/_debug-anchor-validate.ts):
+//  1) Token phai du DAC TRUNG de KHONG soi guong bang anh em (vd bo "phai thu
+//     cua khach hang" vi CTCK "ngoai BCTHTC" cung co "phai thu...cua khach hang").
+//  2) TRANH token PHAN TAN: classifyTableByContent khop token tren NHAN CA
+//     BANG gop lai -> 2 token roi rac (o 2 dong khac nhau) van khop. Vd
+//     ['LOI NHUAN SAU THUE','THU NHAP DOANH NGHIEP'] khop NHAM BCDKT (co "LNST
+//     chua phan phoi" + "thue TNDN hoan lai" o 2 dong) -> dung CUM LIEN
+//     'LOI NHUAN SAU THUE THU NHAP DOANH NGHIEP'. Cac cum con lai da kiem: 2
+//     token luon di CUNG 1 dong chi tieu, khong phan tan.
 const ANCHOR_MARKERS_BY_KEY: Partial<Record<keyof FinancialStatements, ContentMarker[]>> = {
   balanceSheet: [
     // Pho quat (moi loai hinh)
-    'TONG CONG TAI SAN',            // ma 270
-    'TONG CONG NGUON VON',          // ma 440
-    'TAI SAN NGAN HAN',             // ma 100
-    'TAI SAN CO DINH HUU HINH',     // ma 221
-    'TAI SAN CO DINH VO HINH',      // ma 227
-    'PHAI THU NGAN HAN CUA KHACH HANG', // ma 131
-    'NGUOI MUA TRA TIEN TRUOC',     // ma 132/312
-    'PHAI TRA NGUOI BAN',           // ma 131/311 (LCTT chi co "tang giam phai tra" tong quat)
-    'VAY VA NO THUE TAI CHINH',     // ma 320/338
-    'QUY KHEN THUONG PHUC LOI',     // ma 353
-    'LOI NHUAN SAU THUE CHUA PHAN PHOI', // ma 421
-    'THANG DU VON CO PHAN',         // ma 412
+    ['TONG CONG TAI SAN'],          // ma 270
+    ['TONG CONG NGUON VON'],        // ma 440
+    ['TAI SAN NGAN HAN'],           // ma 100
+    ['TAI SAN CO DINH HUU HINH'],   // ma 221
+    ['TAI SAN CO DINH VO HINH'],    // ma 227
+    ['NGUOI MUA TRA TIEN TRUOC'],   // ma 132/312
+    ['PHAI TRA NGUOI BAN'],         // ma 311/331 (LCTT chi co "tang giam phai tra" tong quat)
+    ['VAY VA NO THUE TAI CHINH'],   // ma 320/338 (hut "...ngan han"/"...dai han")
+    ['QUY KHEN THUONG', 'PHUC LOI'],// ma 353 ("Quy khen thuong[,] phuc loi")
+    ['LOI NHUAN SAU THUE CHUA PHAN PHOI'], // ma 421
+    ['THANG DU VON CO PHAN'],       // ma 412
     // Ngan hang (TT49) - dung TONG rieng cua NH (mau khong co "Tong cong ...")
-    'TONG TAI SAN',
-    'TONG NO PHAI TRA VA VON CHU SO HUU',
+    ['TONG TAI SAN'],
+    ['TONG NO PHAI TRA', 'VON CHU SO HUU'],
     // Chung khoan (TT210)
-    'PHAI TRA HOAT DONG GIAO DICH CHUNG KHOAN',
-    'TIEN NOP QUY HO TRO THANH TOAN',
+    ['PHAI TRA HOAT DONG GIAO DICH CHUNG KHOAN'],
+    ['TIEN NOP', 'QUY HO TRO THANH TOAN'],
     // Bao hiem (TT232) - "Tai san tai bao hiem" doc quyen BCDKT (KHAC "phi
-    // nhuong tai bao hiem" ben KQKD - da loai o tren).
-    'TAI SAN TAI BAO HIEM',
+    // nhuong tai bao hiem" ben KQKD).
+    ['TAI SAN TAI BAO HIEM'],
+    // KHONG dung "phai thu cua khach hang" lam neo: CTCK "ngoai BCTHTC" cung co
+    // "phai thu ... cua khach hang ve giao dich CK" -> soi guong. BCDKT da du neo.
   ],
   incomeStatement: [
-    // Pho quat / DN thuong (TT200)
-    'DOANH THU THUAN VE BAN HANG',  // ma 10
-    'GIA VON HANG BAN',             // ma 11
-    'LOI NHUAN GOP',                // ma 20
-    'CAC KHOAN GIAM TRU DOANH THU', // ma 02
-    'CHI PHI BAN HANG',             // ma 25
-    'CHI PHI QUAN LY DOANH NGHIEP', // ma 26
-    'LOI NHUAN THUAN TU HOAT DONG KINH DOANH', // ma 30
-    'TONG LOI NHUAN KE TOAN TRUOC THUE',       // ma 50
-    'LOI NHUAN SAU THUE THU NHAP DOANH NGHIEP', // ma 60
-    'CHI PHI THUE TNDN HIEN HANH',  // ma 51
-    'CHI PHI THUE TNDN HOAN LAI',   // ma 52
-    'LAI CO BAN TREN CO PHIEU',     // ma 70
+    // Pho quat / DN thuong (TT200) - dung tu khoa GON, doc quyen KQKD
+    ['DOANH THU THUAN'],            // ma 10 ("...ve ban hang..."/"...HDKD bao hiem")
+    ['GIA VON'],                    // ma 11 ("Gia von [hang ban]")
+    ['LOI NHUAN GOP'],              // ma 20 (hut ca "...HDKD bao hiem")
+    ['GIAM TRU DOANH THU'],         // ma 02
+    ['CHI PHI BAN HANG'],           // ma 25
+    ['CHI PHI QUAN LY'],            // ma 26 (hut "...doanh nghiep"/"...cong ty CK")
+    ['LOI NHUAN THUAN', 'HOAT DONG KINH DOANH'], // ma 30
+    ['TONG LOI NHUAN', 'TRUOC THUE'], // ma 50 (hut "...ke toan truoc thue"/"...truoc thue" NH)
+    'LOI NHUAN SAU THUE THU NHAP DOANH NGHIEP', // ma 60 (CUM LIEN - tranh token phan tan)
+    ['CHI PHI THUE', 'TNDN', 'HIEN HANH'], // ma 51
+    ['CHI PHI THUE', 'TNDN', 'HOAN LAI'],  // ma 52
+    ['LAI CO BAN TREN CO PHIEU'],   // ma 70
     // Bao hiem (TT232 B02-DNPNT)
-    'DOANH THU PHI BAO HIEM',
-    'CHI BOI THUONG',               // KHAC "du phong boi thuong" (BCDKT)
-    'DOANH THU THUAN HOAT DONG KINH DOANH BAO HIEM',
-    'LOI NHUAN GOP HOAT DONG KINH DOANH BAO HIEM',
+    ['DOANH THU PHI BAO HIEM'],
+    ['CHI BOI THUONG'],             // KHAC "du phong boi thuong" (BCDKT)
     // Chung khoan (TT210 B02-CTCK)
-    'DOANH THU NGHIEP VU MOI GIOI CHUNG KHOAN',
-    'CHI PHI NGHIEP VU MOI GIOI CHUNG KHOAN',
-    'CONG DOANH THU HOAT DONG',
-    'CONG CHI PHI HOAT DONG',
+    ['NGHIEP VU MOI GIOI CHUNG KHOAN'], // ca doanh thu lan chi phi moi gioi
+    ['CONG DOANH THU HOAT DONG'],
+    ['CONG CHI PHI HOAT DONG'],
     // Ngan hang (TT49 B03-TCTD)
-    'THU NHAP LAI THUAN',
-    'LAI THUAN TU HOAT DONG DICH VU',
-    'CHI PHI DU PHONG RUI RO TIN DUNG',
+    ['THU NHAP LAI THUAN'],
+    ['LAI THUAN', 'HOAT DONG DICH VU'],
+    ['DU PHONG RUI RO TIN DUNG'],
   ],
   cashFlow: [
     // 3 muc chinh - "LUU CHUYEN TIEN" chi co o LCTT (moi loai hinh)
     ['LUU CHUYEN TIEN', 'HOAT DONG KINH DOANH'],
     ['LUU CHUYEN TIEN', 'HOAT DONG DAU TU'],
     ['LUU CHUYEN TIEN', 'HOAT DONG TAI CHINH'],
-    'LUU CHUYEN TIEN THUAN TRONG KY',
-    'TIEN CHI TRA LAI VAY',
-    'TIEN CHI NOP THUE THU NHAP DOANH NGHIEP',
-    ['TIEN THU TU BAN HANG', 'CUNG CAP DICH VU'], // LCTT truc tiep (KHAC "doanh thu ban hang" KQKD)
-    'TIEN THU TU PHAT HANH CO PHIEU',
-    // KHONG dung "KHAU HAO TAI SAN CO DINH" (1 so KQKD chi tiet co dong "chi
-    // phi khau hao") va "...TUONG DUONG TIEN CUOI KY" (soi guong "tien va cac
-    // khoan tuong duong tien" BCDKT) - LCTT da du neo o tren.
+    ['LUU CHUYEN TIEN THUAN TRONG KY'],
+    ['TIEN CHI TRA', 'LAI VAY'],
+    ['TIEN CHI NOP THUE', 'THU NHAP DOANH NGHIEP'],
+    ['TIEN THU', 'BAN HANG', 'CUNG CAP DICH VU'], // LCTT truc tiep (KHAC "doanh thu ban hang" KQKD)
+    'TIEN THU TU PHAT HANH CO PHIEU', // CUM LIEN (token phan tan o BCDKT NH)
+    // KHONG dung "khau hao TSCD" (1 so KQKD chi tiet co "chi phi khau hao") va
+    // "...tuong duong tien cuoi ky" (soi guong BCDKT) - LCTT da du neo.
   ],
   offBalanceSheet: [
-    // CHI giu neo Ngan hang (ngoai bang) - cac chi tieu "ngoai BCTHTC" cua CTCK
-    // ("Tai san quan ly theo cam ket", "Co phieu dang luu hanh", "Tien gui giao
-    // dich chung khoan") hay bi gop chung voi BCDKT trong 1 so bao cao -> soi
-    // guong BCDKT, khong dung lam neo. offBS van duoc phan loai qua marker
-    // thuong (OFF_BALANCE_SHEET_CONTENT_MARKERS).
-    'BAO LANH VAY VON',
+    // CHI giu neo Ngan hang (ngoai bang) - chi tieu "ngoai BCTHTC" CTCK hay bi
+    // gop chung voi BCDKT -> soi guong. offBS van phan loai qua marker thuong.
+    ['BAO LANH VAY VON'],
   ],
 };
 
