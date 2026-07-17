@@ -670,29 +670,30 @@ const CONTENT_MARKERS_BY_KEY: { key: keyof FinancialStatements; markers: Content
 //     token luon di CUNG 1 dong chi tieu, khong phan tan.
 const ANCHOR_MARKERS_BY_KEY: Partial<Record<keyof FinancialStatements, ContentMarker[]>> = {
   balanceSheet: [
-    // Pho quat (moi loai hinh)
+    // NGUYEN TAC (nguoi dung 2026-07-16): neo BCDKT phai la khoan MUC SO DU
+    // (stock) KHONG THE xuat hien duoi dang DONG TIEN/CHI PHI (flow) o LCTT/KQKD.
+    // -> chi dung TONG, TAI SAN CO DINH, VON/QUY/LNST. TRANH cac khoan von luu
+    // dong (phai thu/phai tra/nguoi mua tra truoc/vay) vi LCTT GIAN TIEP dieu
+    // chinh "tang giam" chung, va ban CHI TIET cua 1 so cong ty liet ke dich
+    // danh (vd "tra no goc VAY VA NO THUE TAI CHINH", "tang giam PHAI TRA NGUOI
+    // BAN") -> soi guong, neo GIA. Da BO: Nguoi mua tra tien truoc, Phai tra
+    // nguoi ban, Vay va no thue tai chinh, va 2 neo CTCK (Phai tra HDGD chung
+    // khoan / Tien nop Quy ho tro thanh toan - "Tien nop..." ban chat la dong
+    // tien chi o LCTT). CTCK/NH van duoc neo qua cac dong TONG.
     ['TONG CONG TAI SAN'],          // ma 270
     ['TONG CONG NGUON VON'],        // ma 440
-    ['TAI SAN NGAN HAN'],           // ma 100
+    ['TAI SAN NGAN HAN'],           // ma 100 (header muc, LCTT khong co)
     ['TAI SAN CO DINH HUU HINH'],   // ma 221
     ['TAI SAN CO DINH VO HINH'],    // ma 227
-    ['NGUOI MUA TRA TIEN TRUOC'],   // ma 132/312
-    ['PHAI TRA NGUOI BAN'],         // ma 311/331 (LCTT chi co "tang giam phai tra" tong quat)
-    ['VAY VA NO THUE TAI CHINH'],   // ma 320/338 (hut "...ngan han"/"...dai han")
-    ['QUY KHEN THUONG', 'PHUC LOI'],// ma 353 ("Quy khen thuong[,] phuc loi")
+    ['QUY KHEN THUONG', 'PHUC LOI'],// ma 353 (quy thuoc von, LCTT khong itemize)
     ['LOI NHUAN SAU THUE CHUA PHAN PHOI'], // ma 421
     ['THANG DU VON CO PHAN'],       // ma 412
     // Ngan hang (TT49) - dung TONG rieng cua NH (mau khong co "Tong cong ...")
     ['TONG TAI SAN'],
     ['TONG NO PHAI TRA', 'VON CHU SO HUU'],
-    // Chung khoan (TT210)
-    ['PHAI TRA HOAT DONG GIAO DICH CHUNG KHOAN'],
-    ['TIEN NOP', 'QUY HO TRO THANH TOAN'],
     // Bao hiem (TT232) - "Tai san tai bao hiem" doc quyen BCDKT (KHAC "phi
-    // nhuong tai bao hiem" ben KQKD).
+    // nhuong tai bao hiem" ben KQKD; la so du tai san, khong phai dong tien).
     ['TAI SAN TAI BAO HIEM'],
-    // KHONG dung "phai thu cua khach hang" lam neo: CTCK "ngoai BCTHTC" cung co
-    // "phai thu ... cua khach hang ve giao dich CK" -> soi guong. BCDKT da du neo.
   ],
   incomeStatement: [
     // Pho quat / DN thuong (TT200) - dung tu khoa GON, doc quyen KQKD
@@ -702,7 +703,14 @@ const ANCHOR_MARKERS_BY_KEY: Partial<Record<keyof FinancialStatements, ContentMa
     ['GIAM TRU DOANH THU'],         // ma 02
     ['CHI PHI BAN HANG'],           // ma 25
     ['CHI PHI QUAN LY'],            // ma 26 (hut "...doanh nghiep"/"...cong ty CK")
-    ['LOI NHUAN THUAN', 'HOAT DONG KINH DOANH'], // ma 30
+    // KHONG dung ['LOI NHUAN THUAN','HOAT DONG KINH DOANH'] (ma 30) lam neo:
+    // LCTT GIAN TIEP Ngan hang (TT49, Mau B04a/TCTD-HN) co dong CHINH THUC "Loi
+    // nhuan thuan tu hoat dong kinh doanh TRUOC NHUNG THAY DOI ve tai san va
+    // cong no hoat dong" NGAY TRONG muc "I. Luu chuyen tien tu hoat dong kinh
+    // doanh" - chua CA 2 token nay trong CUNG 1 bang LCTT that (khong phai suy
+    // doan, la dong chinh thuc theo mau bieu). Neo se soi guong that voi LCTT
+    // Ngan hang -> BO, du KHONG hien trong corpus (chi 4 bao cao bank, co the
+    // OCR chua bat het chi tiet LCTT NH).
     // ma 50: LCTT gian tiep MO DAU bang "Loi nhuan truoc thue" (TRAN) -> KHONG
     // duoc noi thanh ['LOI NHUAN','TRUOC THUE'] (soi guong LCTT). Cai phan biet
     // KQKD la "TONG" HOAC "KE TOAN" -> 2 neo rieng phu het bien the ma KHONG
@@ -725,7 +733,12 @@ const ANCHOR_MARKERS_BY_KEY: Partial<Record<keyof FinancialStatements, ContentMa
     // Ngan hang (TT49 B03-TCTD)
     ['THU NHAP LAI THUAN'],
     ['LAI THUAN', 'HOAT DONG DICH VU'],
-    ['DU PHONG RUI RO TIN DUNG'],
+    // KHONG dung ['DU PHONG RUI RO TIN DUNG'] lam neo: LCTT GIAN TIEP Ngan hang
+    // (TT49) co dong dieu chinh phi tien mat CHINH THUC "Chi phi du phong rui ro
+    // tin dung" NGAY TRONG muc "I. Luu chuyen tien tu hoat dong kinh doanh" (cong
+    // lai khoan chi phi khong bang tien tu Loi nhuan truoc thue) - chua dung
+    // token nay trong LCTT that. Cung ly do voi neo tren, BO du corpus chua bat
+    // duoc.
   ],
   cashFlow: [
     // 3 muc chinh - "LUU CHUYEN TIEN" chi co o LCTT (moi loai hinh)

@@ -80,5 +80,22 @@ check('token-AND hut bien the "Loi nhuan ke toan truoc thue" (bo Tong)', `
 | Lợi nhuận kế toán trước thuế | 50 | 800 |
 `, 'incomeStatement');
 
+// 7) REGRESSION Ngan hang (TT49 LCTT gian tiep, nguoi dung luu y 2026-07-16):
+//    muc "I. Luu chuyen tien tu hoat dong kinh doanh" cua LCTT NH CHINH THUC
+//    chua ca "Loi nhuan thuan tu hoat dong kinh doanh [truoc nhung thay doi ve
+//    tai san va cong no hoat dong]" LAN dieu chinh phi tien mat "Chi phi du
+//    phong rui ro tin dung" - 2 cum truoc day dung lam neo incomeStatement (da
+//    BO). Bang LCTT that chua CA HAI cum nay PHAI van ra cashFlow.
+check('LCTT Ngan hang (loi nhuan thuan + du phong RRTD) KHONG lat sang KQKD', `
+| Chỉ tiêu | Mã số | Kỳ này |
+| --- | --- | --- |
+| I. Lưu chuyển tiền từ hoạt động kinh doanh |  |  |
+| 1. Thu lãi và các khoản thu nhập tương tự |  | 500 |
+| 2. Trả lãi và các chi phí tương tự |  | -200 |
+| 3. Chi phí dự phòng rủi ro tín dụng |  | 50 |
+| Lợi nhuận thuần từ hoạt động kinh doanh trước những thay đổi về tài sản và công nợ hoạt động |  | 350 |
+| Lưu chuyển tiền thuần trong kỳ |  | 300 |
+`, 'cashFlow');
+
 console.log(`\n${pass} pass / ${fail} fail`);
 if (fail > 0) process.exit(1);

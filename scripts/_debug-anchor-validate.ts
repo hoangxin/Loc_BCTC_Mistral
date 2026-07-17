@@ -1,71 +1,45 @@
-// UNG VIEN NEO lay tu MAU BIEU CHUAN Thong tu (khong suy tu sample):
-//  - other: TT200/2014 + TT99/2025 (B01/B02/B03-DN)
-//  - bank:  TT49/2014/TT-NHNN + TT200 (B02/B03/B04-TCTD)
-//  - CTCK:  TT210/2014 + TT334/2016 (B01/B02/B03-CTCK + chi tieu ngoai BCTHTC)
-//  - insurance: TT232/2012/TT-BTC (B01/B02/B03-DNPNT)
-// Moi ung vien duoc CHAY MIRROR-CHECK tren corpus that: neu no (hoac ca token
-// token-AND) xuat hien o 1 bang ANH EM cua bat ky bao cao nao -> REJECT (soi
-// guong, khong the lam neo - bai hoc MIG "phi nhuong tai bao hiem").
+// Dong bo CHINH XAC voi ANCHOR_MARKERS_BY_KEY (lib/export/markdown-tables.ts)
+// tai thoi diem chay - mirror-check tren corpus that de xac nhan KHONG soi
+// guong bang anh em. Chay lai moi khi doi bo neo truoc khi commit.
 import { execSync } from 'child_process';
 import { normalizeLabelText } from '../lib/export/statement-shared';
 
 type Marker = string | string[];
-// TOKEN-AND: chi giu TU KHOA PHAN BIET COT LOI (cho phep chen tu giua/qualifier
-// "ngan han"/"dai han"/"ve ban hang..."), KHONG khop ca cum cung tung chu (de
-// hut khi cong ty viet lech - nguon goc chuoi loi m/ay hom). Van phai du DOC
-// QUYEN: mirror-check duoi day loc cai nao soi guong bang anh em.
 const CANDIDATES: Record<'balanceSheet'|'incomeStatement'|'cashFlow'|'offBalanceSheet', Marker[]> = {
-  // ---- BANG CAN DOI KE TOAN / BAO CAO TINH HINH TAI CHINH ----
   balanceSheet: [
-    ['TONG CONG TAI SAN'],            // ma 270 (giu "cong" de khac bank "tong tai san")
-    ['TONG CONG NGUON VON'],          // ma 440
-    ['TONG TAI SAN'],                 // bank
-    ['TONG NO PHAI TRA', 'VON CHU SO HUU'], // bank
-    ['TAI SAN NGAN HAN'],             // ma 100
-    ['TAI SAN CO DINH HUU HINH'],     // ma 221 (cum on dinh, it bien the)
-    ['TAI SAN CO DINH VO HINH'],      // ma 227
-    ['PHAI THU', 'CUA KHACH HANG'],   // ma 131: hut "Phai thu [ngan han] cua khach hang"
-    ['NGUOI MUA TRA TIEN TRUOC'],     // ma 132/312
-    ['PHAI TRA NGUOI BAN'],           // ma 311/331
-    ['VAY VA NO THUE TAI CHINH'],     // ma 320/338
-    ['QUY KHEN THUONG', 'PHUC LOI'],  // ma 353: "Quy khen thuong[,] phuc loi"
-    ['LOI NHUAN SAU THUE CHUA PHAN PHOI'], // ma 421
-    ['THANG DU VON CO PHAN'],         // ma 412
-    ['VON CHU SO HUU'],               // ma 400 (bang bien dong VCSH da loc rieng)
-    ['PHAI TRA HOAT DONG GIAO DICH CHUNG KHOAN'], // CTCK
-    ['TIEN NOP', 'QUY HO TRO THANH TOAN'],        // CTCK
-    ['TAI SAN TAI BAO HIEM'],         // insurance
+    ['TONG CONG TAI SAN'],
+    ['TONG CONG NGUON VON'],
+    ['TAI SAN NGAN HAN'],
+    ['TAI SAN CO DINH HUU HINH'],
+    ['TAI SAN CO DINH VO HINH'],
+    ['QUY KHEN THUONG', 'PHUC LOI'],
+    ['LOI NHUAN SAU THUE CHUA PHAN PHOI'],
+    ['THANG DU VON CO PHAN'],
+    ['TONG TAI SAN'],
+    ['TONG NO PHAI TRA', 'VON CHU SO HUU'],
+    ['TAI SAN TAI BAO HIEM'],
   ],
-  // ---- KET QUA HOAT DONG KINH DOANH ----
   incomeStatement: [
-    ['DOANH THU THUAN'],              // ma 10: "Doanh thu thuan [ve ban hang.../ HDKD BH]"
-    ['GIA VON'],                      // ma 11: "Gia von [hang ban]"
-    ['LOI NHUAN GOP'],                // ma 20
-    ['GIAM TRU DOANH THU'],           // ma 02: "Cac khoan giam tru doanh thu"
-    ['CHI PHI BAN HANG'],             // ma 25
-    ['CHI PHI QUAN LY'],              // ma 26: hut "...doanh nghiep"/"...cong ty chung khoan"
-    ['LOI NHUAN THUAN', 'HOAT DONG KINH DOANH'], // ma 30
-    // ma 50: LCTT gian tiep MO DAU bang "Loi nhuan truoc thue" (tran) -> KHONG
-    // duoc noi thanh ['LOI NHUAN','TRUOC THUE'] (soi guong cashflow). Cai phan
-    // biet KQKD la "TONG" HOAC "KE TOAN" -> 2 neo rieng phu het bien the:
-    ['TONG LOI NHUAN', 'TRUOC THUE'],   // "Tong loi nhuan [ke toan] truoc thue" (bank bo "ke toan")
-    ['LOI NHUAN KE TOAN', 'TRUOC THUE'], // "Loi nhuan ke toan truoc thue" (bo "Tong")
-    'LOI NHUAN SAU THUE THU NHAP DOANH NGHIEP', // ma 60: cum LIEN (token-AND bi phan tan: BS co "LNST chua phan phoi" + "thue TNDN hoan lai" o 2 dong)
-    ['CHI PHI THUE', 'TNDN', 'HIEN HANH'], // ma 51
-    ['CHI PHI THUE', 'TNDN', 'HOAN LAI'],  // ma 52
-    ['LAI CO BAN TREN CO PHIEU'],     // ma 70
-    ['DOANH THU PHI BAO HIEM'],       // insurance
-    ['CHI BOI THUONG'],               // insurance (khac "du phong boi thuong" BS)
-    ['DOANH THU THUAN', 'KINH DOANH BAO HIEM'], // insurance (trung ['DOANH THU THUAN'] o tren, vo hai)
-    ['LOI NHUAN GOP', 'KINH DOANH BAO HIEM'],   // insurance
-    ['NGHIEP VU MOI GIOI CHUNG KHOAN'], // CTCK (ca doanh thu lan chi phi)
-    ['CONG DOANH THU HOAT DONG'],     // CTCK
-    ['CONG CHI PHI HOAT DONG'],       // CTCK
-    ['THU NHAP LAI THUAN'],           // bank
-    ['LAI THUAN', 'HOAT DONG DICH VU'], // bank
-    ['DU PHONG RUI RO TIN DUNG'],     // bank
+    ['DOANH THU THUAN'],
+    ['GIA VON'],
+    ['LOI NHUAN GOP'],
+    ['GIAM TRU DOANH THU'],
+    ['CHI PHI BAN HANG'],
+    ['CHI PHI QUAN LY'],
+    ['TONG LOI NHUAN', 'TRUOC THUE'],
+    ['LOI NHUAN KE TOAN', 'TRUOC THUE'],
+    'LOI NHUAN SAU THUE THU NHAP DOANH NGHIEP',
+    ['CHI PHI THUE', 'TNDN', 'HIEN HANH'],
+    ['CHI PHI THUE', 'TNDN', 'HOAN LAI'],
+    ['LAI CO BAN TREN CO PHIEU'],
+    ['DOANH THU PHI BAO HIEM'],
+    ['CHI BOI THUONG'],
+    ['NGHIEP VU MOI GIOI CHUNG KHOAN'],
+    ['CONG DOANH THU HOAT DONG'],
+    ['CONG CHI PHI HOAT DONG'],
+    ['THU NHAP LAI THUAN'],
+    ['LAI THUAN', 'HOAT DONG DICH VU'],
   ],
-  // ---- LUU CHUYEN TIEN TE ----
   cashFlow: [
     ['LUU CHUYEN TIEN', 'HOAT DONG KINH DOANH'],
     ['LUU CHUYEN TIEN', 'HOAT DONG DAU TU'],
@@ -74,9 +48,8 @@ const CANDIDATES: Record<'balanceSheet'|'incomeStatement'|'cashFlow'|'offBalance
     ['TIEN CHI TRA', 'LAI VAY'],
     ['TIEN CHI NOP THUE', 'THU NHAP DOANH NGHIEP'],
     ['TIEN THU', 'BAN HANG', 'CUNG CAP DICH VU'],
-    'TIEN THU TU PHAT HANH CO PHIEU', // cum LIEN (token-AND phan tan o BCDKT NH)
+    ['TIEN THU TU PHAT HANH CO PHIEU'],
   ],
-  // ---- CHI TIEU NGOAI BCTHTC (CTCK) / NGOAI BANG (bank) ----
   offBalanceSheet: [
     ['BAO LANH VAY VON'],
   ],
@@ -93,6 +66,7 @@ for (const r of byKey.values()) for (const stmt of KEYS){ const t=r.statements?.
 
 const matches = (text:string, m:Marker) => typeof m==='string' ? text.includes(m) : m.every(x=>text.includes(x));
 
+let rejects = 0;
 for (const stmt of KEYS) {
   console.log(`\n===== ${stmt} =====`);
   for (const m of CANDIDATES[stmt]) {
@@ -101,9 +75,11 @@ for (const stmt of KEYS) {
     const ownBiz = [...new Set(own.map(r=>r.biz))].sort();
     const label = Array.isArray(m)?`[${m.join(' & ')}]`:m;
     if (mirror.length) {
+      rejects++;
       console.log(`  REJECT  ${label.padEnd(52)} <- soi guong: ${[...new Set(mirror.map(r=>r.code+':'+r.stmt))].slice(0,4).join(', ')}`);
     } else {
       console.log(`  ok  ${String(own.length).padStart(2)}x [${ownBiz.join(',')||'-'}]  ${label}`);
     }
   }
 }
+console.log(`\n${rejects} reject(s) tren corpus 33 bao cao.`);
