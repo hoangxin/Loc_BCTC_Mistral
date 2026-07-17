@@ -192,6 +192,14 @@ const INITIAL_PROBE_BATCH_SIZE = 12;
 // Sau lo dau, moi lan OCR THEM 2 trang moi (khong OCR lai cac trang cu - merge
 // vao ket qua da co) roi kiem tra lai ngay.
 const EXPAND_STEP = 2;
+// GIOI HAN TOI DA 20 trang/bao cao (yeu cau nguoi dung 2026-07-18: lo dau 12
+// trang + toi da 4 lo mo rong 2 trang = 12+4*2=20) - truoc day vong lap chi
+// dung o "totalPages" (het file) hoac tim thay "Thuyet minh", KHONG co tran
+// tren rieng, nen 1 tai lieu dai bat thuong (ma OCR mai khong ra dung tieu de
+// "Thuyet minh", vd do trang bi doc sai/thieu) co the OCR toi tan cuoi file
+// (hang chuc trang), ton kem vo ich - BCDKT/KQKD/LCTT chuan (Thong tu 200/2014,
+// 99/2025) chua bao gio can toi 20 trang cho toi ca 3 bang chinh.
+const MAX_PROBE_PAGES = 20;
 
 // Bao cao scan dai: KHONG con Tesseract do diem cat truoc (xem lich su bo
 // Tesseract 2026-07-07 - crash native "Create skia surface failed" tren tai
@@ -254,7 +262,7 @@ export async function extractFinancialStatementsWithOcrProbe(filePath: string, t
     let cursor = 0;
     let checkedLanguage = false;
 
-    while (cursor < totalPages) {
+    while (cursor < totalPages && collected.length < MAX_PROBE_PAGES) {
       const step = collected.length === 0 ? INITIAL_PROBE_BATCH_SIZE : EXPAND_STEP;
       const batchEnd = Math.min(cursor + step, totalPages);
       const pagesZeroBased = Array.from({ length: batchEnd - cursor }, (_, i) => cursor + i);
@@ -287,7 +295,8 @@ export async function extractFinancialStatementsWithOcrProbe(filePath: string, t
       if (containsNotesSectionMarker(markdownSoFar)) break;
     }
 
-    console.log(`[mistral-ocr] ${filePath}: OCR ${collected.length} trang (tong cong, qua ${collected.length === totalPages ? 'het file' : 'probe tang dan'})`);
+    const stopReason = collected.length >= MAX_PROBE_PAGES ? 'cham tran 20 trang' : collected.length === totalPages ? 'het file' : 'thay Thuyet minh';
+    console.log(`[mistral-ocr] ${filePath}: OCR ${collected.length} trang (tong cong, dung vi ${stopReason})`);
     return collected.map((p) => p.markdown).join('\n\n');
   });
   return buildResultFromMarkdown(markdown, statements, mismatches);

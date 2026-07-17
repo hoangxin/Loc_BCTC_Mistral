@@ -192,9 +192,9 @@ export async function runFetchPipeline(options: RunFetchPipelineOptions = {}): P
         .slice(0, options.reportLimit);
     }
 
-    // Loc so bo theo metadata (ma CP, ten cong ty, tieu de...) TRUOC khi tai -
-    // rieng, khong lien quan toi tieu chi loc theo noi dung so lieu. Hien dang
-    // pass-through vi tieu chi metadata chua duoc chot.
+    // Loc so bo theo metadata (san GD, "Rieng le"/Cong ty me trong title/fullName...)
+    // TRUOC khi tai - xem lib/filter.ts. Rieng, khong lien quan toi tieu chi
+    // loc theo noi dung so lieu.
     const matched = filterReports(scopedReports);
 
     const periodSlug = periodFolderSlug(term);

@@ -25,34 +25,52 @@ khi tab "Ket qua" can toi da chieu rong de hien nhieu cot % - vd bang bank co
 toi 18 cot %). Doi sang max-width lon hon + padding ngang co dinh (thay margin
 auto) de noi dung dung sat 2 canh man hinh tren man hinh rong, van co gioi han
 tren man hinh sieu rong (4K) de header/tabs khong bi keo dai qua muc doc duoc. */
+/* SUA 2026-07-18 (yeu cau nguoi dung - toi da hoa khong gian doc cho bang Ket
+   qua): .page gio la 1 flex-column cao dung 100vh - .site-header va thanh tab
+   giu chieu cao tu nhien (flex-shrink: 0 tren cac phan tu do), rieng panel
+   dang active (.flex-col-fill, xem Tabs.tsx/ResultsByPeriodTabs.tsx/
+   BusinessTypeTabs.tsx) chiem HET phan con lai va tu cuon o .report-table-wrapper
+   - khong con doan 1 con so px co dinh (max-height: calc(100vh - Npx)) de tru
+   khong gian header/tabs, con so do sai ngay khi cac dong phia tren doi chieu
+   cao (chinh nguyen nhan gay khoang trong lon nguoi dung bao cao). */
 .page {
   max-width: 1800px;
   margin: 0 auto;
-  /* Bottom padding giam tu 64px xuong 24px (yeu cau nguoi dung 2026-07-18) -
-     64px tao 1 khoang trong lon vo ich duoi thanh cuon ngang cua bang, choan
-     mat khong gian doc danh cho cac dong Ma CK. */
-  padding: 24px 32px 24px;
+  padding: 12px 32px 12px;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
+.flex-col-fill {
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+/* Thu gon toi da (yeu cau nguoi dung 2026-07-18) - truoc day 1 dong rieng cao
+   ~65px (padding 20px + border 3px + h1 28px), gio chi con 1 dong mong lam
+   "chan trang" phia tren cung. */
 .site-header {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 12px;
-  padding-bottom: 20px;
-  border-bottom: 3px solid var(--text);
-  margin-bottom: 24px;
+  flex-shrink: 0;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 10px;
 }
 
 .site-header h1 {
-  font-size: 28px;
+  font-size: 16px;
   margin: 0;
   letter-spacing: -0.02em;
 }
 
 .site-header .updated-at {
-  font-size: 13px;
+  font-size: 12px;
   color: var(--text-muted);
 }
 
@@ -102,26 +120,18 @@ tren man hinh sieu rong (4K) de header/tabs khong bi keo dai qua muc doc duoc. *
   flex-wrap: wrap;
 }
 
-.summary-bar {
-  display: flex;
-  gap: 20px;
-  flex-wrap: wrap;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 14px 18px;
-  margin-bottom: 20px;
-  font-size: 13px;
-}
-
-.summary-item strong {
-  display: block;
-  font-size: 20px;
-  color: var(--text);
-}
-
-.summary-item span {
+/* Dong thong ke "Quy 2/2026 - 75 tim thay..." (yeu cau nguoi dung 2026-07-18 -
+   dua len CHUNG dong voi 2 nut tab chinh thay vi 1 dong .summary-bar rieng
+   phia duoi) - day sat le phai cua .tabs qua margin-left: auto. */
+.tabs-stats {
+  margin-left: auto;
+  font-size: 12px;
   color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.tabs-stats strong {
+  color: var(--text);
 }
 
 .report-table-wrapper {
@@ -132,18 +142,14 @@ tren man hinh sieu rong (4K) de header/tabs khong bi keo dai qua muc doc duoc. *
      dinh) - cuon ngang thay vi cat mat cot (truoc day "overflow: hidden" lam
      mat cac cot cuoi khi bang rong hon khung, yeu cau user 2026-07-08). */
   overflow-x: auto;
-  /* SUA 2026-07-18 (yeu cau nguoi dung - dong tieu de khong dong bang duoc):
-     chi co overflow-x: auto KHONG DU de "position: sticky" tren th bam theo
-     TRANG - overflow-x non-visible tu dong keo overflow-y ve 'auto' (quy tac
-     CSS lien ket 2 truc), bien wrapper thanh 1 scroll container, nhung vi
-     wrapper KHONG co gioi han chieu cao (auto, luon vua khop noi dung) nen no
-     khong bao gio tu cuon - trang ben ngoai cuon thay, va sticky bi "khoa"
-     vao chinh khung do (khong con bam duoc theo cuon trang thuc te). Them
-     max-height + overflow-y: auto de wrapper THAT SU la khung cuon rieng (ca
-     doc lan ngang) - luc do sticky moi bam dung vao dinh khung nay khi cuon
-     ben trong no. */
-  max-height: calc(100vh - 260px);
+  /* Cuon doc RIENG ben trong wrapper (thay vi de trang ngoai cuon) - can thiet
+     de "position: sticky" tren th bam dung (xem comment o th duoi) VA de
+     wrapper chiem dung phan con lai cua man hinh qua .flex-col-fill (xem
+     Tabs.tsx) thay vi 1 con so px co dinh doan truoc, sai ngay khi cac dong
+     phia tren doi chieu cao. */
   overflow-y: auto;
+  flex: 1 1 auto;
+  min-height: 0;
 }
 
 .report-table {
@@ -634,9 +640,11 @@ auto) cat mat du bam o hang dau/cuoi bang. */
 
 .tabs {
   display: flex;
+  align-items: center;
   gap: 4px;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
 }
 
 .tab-button {

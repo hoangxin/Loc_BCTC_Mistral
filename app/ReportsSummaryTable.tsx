@@ -112,7 +112,6 @@ export default function ReportsSummaryTable({
               </th>
             )}
             <th>Xuất file</th>
-            <th>STT</th>
             <th className="stockcode-col">Mã CK</th>
             <th className="exchange-col">Sàn GD</th>
             <th>Loại BCTC</th>
@@ -124,12 +123,12 @@ export default function ReportsSummaryTable({
         <tbody>
           {filteredReports.length === 0 && (
             <tr>
-              <td colSpan={4 + labels.length + 1 + (onToggleAll ? 1 : 0)} className="empty-state">
+              <td colSpan={3 + labels.length + 1 + (onToggleAll ? 1 : 0)} className="empty-state">
                 Không tìm thấy mã CK nào khớp "{stockCodeQuery}".
               </td>
             </tr>
           )}
-          {filteredReports.map((report, index) => {
+          {filteredReports.map((report) => {
             const byLabel = new Map((report.analysis ?? []).map((item) => [item.label, item]));
             return (
               <tr key={report.filePath}>
@@ -160,7 +159,6 @@ export default function ReportsSummaryTable({
                     </a>
                   </div>
                 </td>
-                <td>{index + 1}</td>
                 <td className="stockcode-col">
                   {/* Ten cong ty hien qua tooltip hover (title) thay vi cot rieng
                   (yeu cau user 2026-07-07) - do dai ten cong ty thuong lam bang

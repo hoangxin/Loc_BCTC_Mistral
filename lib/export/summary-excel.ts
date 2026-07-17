@@ -30,13 +30,26 @@ function writeSummarySheet(sheet: ExcelJS.Worksheet, rows: SummaryRow[]): void {
       }),
     ]);
 
+    // Highlight mau THEO DUNG quy luat tab Ket qua (yeu cau nguoi dung
+    // 2026-07-18 - xem .pct-unreliable/.pct-level1/.pct-level2 o app/globals.css,
+    // cung 1 nguon du lieu item.unreliable/item.tier tu lib/analysis.ts, chi
+    // khac cach the hien mau: Excel dung fgColor thay vi CSS background, va
+    // khong the "nhap nhay" (pct-blink) nhu web nen level2 chi giu nen vang
+    // dam + chu dam de van phan biet duoc voi level1).
     labels.forEach((label, labelIdx) => {
       const item = byLabel.get(label);
-      if (!item?.unreliable) return;
       const cell = excelRow.getCell(FIXED_COLUMN_COUNT + 1 + labelIdx);
-      cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFE0E0' } };
-      cell.font = { bold: true, color: { argb: 'FFB3261E' } };
-      cell.note = 'OCR có thể đã gộp/bịa dòng dữ liệu, đã thử đọc lại (retry) nhưng vẫn sai kiểm tra chéo - cần xem tay trên PDF gốc.';
+      if (item?.unreliable) {
+        cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFE0E0' } };
+        cell.font = { bold: true, color: { argb: 'FFB3261E' } };
+        cell.note = 'OCR có thể đã gộp/bịa dòng dữ liệu, đã thử đọc lại (retry) nhưng vẫn sai kiểm tra chéo - cần xem tay trên PDF gốc.';
+      } else if (item?.tier === 'level2') {
+        cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFD400' } };
+        cell.font = { bold: true };
+      } else if (item?.tier === 'level1') {
+        cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFF3B0' } };
+        cell.font = { bold: true };
+      }
     });
   });
 

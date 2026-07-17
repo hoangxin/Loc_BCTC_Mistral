@@ -45,7 +45,7 @@ export default function BusinessTypeTabs({
   const activeReports = grouped.get(active) ?? [];
 
   return (
-    <div>
+    <div className="flex-col-fill" style={{ display: 'flex' }}>
       <div className="tabs sub-tabs" role="tablist">
         {BUSINESS_TYPE_ORDER.map((type) => {
           const count = grouped.get(type)?.length ?? 0;

@@ -1,4 +1,5 @@
 import type { ReportFile } from './vietstock-reports';
+import { classifyStatementScope } from './statement-scope';
 
 // Cho AI dung sau nay neu tieu chi loc can doc/phan loai noi dung (vd Qwen
 // dang duoc dung cho lib/digest.ts o 2 project loc_tin) - hien chua wire vao
@@ -13,6 +14,21 @@ import type { ReportFile } from './vietstock-reports';
 // tra ve dung 1 kieu viet hoa/thuong.
 const EXCLUDED_EXCHANGES = new Set(['otc', 'khac']);
 
+// Bo qua bao cao "Me (Rieng le)" - yeu cau nguoi dung 2026-07-18: cong ty co
+// cong ty con thuong nop CA "Hop nhat" (buc tranh toan nhom) LAN "Rieng le"
+// (chi rieng cong ty me, KHONG gop cong ty con) cho CUNG 1 ky - "Rieng le"
+// trung lap thong tin voi "Hop nhat" (da bao gom rieng cong ty me trong do)
+// nen bo qua tu VONG LOC nay, TRUOC KHI tai/OCR - tiet kiem ca chi phi OCR lan
+// khong lam ket qua roi rac 2 dong/ma. Dung LAI classifyStatementScope (khong
+// tu doan rieng o day) tren title/fullName - 2 truong DUY NHAT co san O DAY
+// (truoc khi tai/giai nen file, nen chua co entryName) - neu metadata KHONG
+// ro rang (vd cong ty khong co cong ty con, chi 1 ban bao cao duy nhat), ket
+// qua se la 'Chung' (khong phai 'Rieng le'), GIU LAI dung nguyen tac "khong
+// doan bua khi khong chac" cua classifyStatementScope.
+function isParentOnlyReport(r: ReportFile): boolean {
+  return classifyStatementScope({ metadataText: `${r.title} ${r.fullName}` }) === 'Riêng lẻ';
+}
+
 export function filterReports(reports: ReportFile[]): ReportFile[] {
-  return reports.filter((r) => !EXCLUDED_EXCHANGES.has(r.exchange.trim().toLowerCase()));
+  return reports.filter((r) => !EXCLUDED_EXCHANGES.has(r.exchange.trim().toLowerCase()) && !isParentOnlyReport(r));
 }

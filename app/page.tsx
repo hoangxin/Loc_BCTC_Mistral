@@ -47,6 +47,16 @@ export default function HomePage() {
       </header>
 
       <Tabs
+        statsBar={
+          status.periodLabel && (
+            <>
+              <strong>{status.periodLabel}</strong>
+              {' · '}
+              {status.totalFound} tìm thấy · {status.totalMatched} sau lọc · {status.downloaded} tải thành công
+              {status.failed.length > 0 && ` · ${status.failed.length} lỗi`}
+            </>
+          )
+        }
         fetchTab={
           <div className="controls-bar">
             <FetchControls
@@ -58,40 +68,11 @@ export default function HomePage() {
           </div>
         }
         resultsTab={
-          <>
-            {status.periodLabel && (
-              <div className="summary-bar">
-                <div className="summary-item">
-                  <strong>{status.periodLabel}</strong>
-                  <span>Kỳ báo cáo</span>
-                </div>
-                <div className="summary-item">
-                  <strong>{status.totalFound}</strong>
-                  <span>Báo cáo tìm thấy</span>
-                </div>
-                <div className="summary-item">
-                  <strong>{status.totalMatched}</strong>
-                  <span>Sau khi lọc</span>
-                </div>
-                <div className="summary-item">
-                  <strong>{status.downloaded}</strong>
-                  <span>Tải thành công</span>
-                </div>
-                {status.failed.length > 0 && (
-                  <div className="summary-item">
-                    <strong>{status.failed.length}</strong>
-                    <span>Lỗi</span>
-                  </div>
-                )}
-              </div>
-            )}
-
-            {status.reports.length === 0 ? (
-              <div className="empty-state">Chưa có báo cáo nào - chọn quý và bấm "Tải BCTC" ở tab "Chọn báo cáo lọc", hoặc thêm nguồn riêng.</div>
-            ) : (
-              <ResultsByPeriodTabs reports={status.reports} currentGeneratedAt={status.generatedAt} />
-            )}
-          </>
+          status.reports.length === 0 ? (
+            <div className="empty-state">Chưa có báo cáo nào - chọn quý và bấm "Tải BCTC" ở tab "Chọn báo cáo lọc", hoặc thêm nguồn riêng.</div>
+          ) : (
+            <ResultsByPeriodTabs reports={status.reports} currentGeneratedAt={status.generatedAt} />
+          )
         }
       />
     </main>

@@ -58,7 +58,7 @@ export default function ResultsByPeriodTabs({
   if (groups.length === 0) return null;
 
   return (
-    <div>
+    <div className="flex-col-fill" style={{ display: 'flex' }}>
       <div className="tabs" role="tablist">
         {groups.map((group) => (
           <button
