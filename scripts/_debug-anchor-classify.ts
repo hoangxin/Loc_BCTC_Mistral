@@ -15,6 +15,19 @@ function check(name: string, md: string, expect: 'balanceSheet' | 'incomeStateme
   console.log(`${ok ? 'OK  ' : 'FAIL'} ${name.padEnd(48)} ${JSON.stringify(counts)}`);
   ok ? pass++ : fail++;
 }
+// Dung khi bang KHONG duoc phan loai vao BAT KY bang nao (an toan hon nhan
+// nham) - vd bang thuyet minh nho, khong co marker KQKD/BCDKT/LCTT that.
+function checkNone(name: string, md: string) {
+  const s = parseStatementsFromMarkdown(md);
+  const counts = {
+    balanceSheet: s.balanceSheet.rows.length,
+    incomeStatement: s.incomeStatement.rows.length,
+    cashFlow: s.cashFlow.rows.length,
+  };
+  const ok = Object.values(counts).every((v) => v === 0);
+  console.log(`${ok ? 'OK  ' : 'FAIL'} ${name.padEnd(48)} ${JSON.stringify(counts)}`);
+  ok ? pass++ : fail++;
+}
 
 // 1) NEO LCTT thang 2 marker MAP MO nghieng BCDKT (ky thuat nguoi dung de nghi):
 //    khong co chuoi ket thuc 50->60->70 nen definiteCashFlowTable KHONG kich
@@ -69,18 +82,38 @@ check('token-AND hut bien the "Tong loi nhuan truoc thue"', `
 | Tổng lợi nhuận trước thuế | 50 | 800 |
 `, 'incomeStatement');
 
-// 6) Bien the BO chu "Tong" (nguoi dung luu y 2026-07-16: nhieu KQKD ghi "Loi
-//    nhuan ke toan truoc thue" khong co "Tong") - phai co neo ['LOI NHUAN KE
-//    TOAN','TRUOC THUE'] rieng vi ['TONG LOI NHUAN','TRUOC THUE'] se truot.
-//    Van KHONG duoc nham voi LCTT (mo dau "Loi nhuan truoc thue" TRAN).
-check('token-AND hut bien the "Loi nhuan ke toan truoc thue" (bo Tong)', `
+// 6) REGRESSION BSL (backtest 16 bao cao Q2/2026 that, 2026-07-17): thuyet
+//    minh "Chi phi thue TNDN hien hanh" (RAT PHO BIEN) thuong BAT DAU bang
+//    CHINH XAC dong "Loi nhuan ke toan truoc thue" (bo "Tong") de doi chieu
+//    thue suat - 1 bang NHO NHU VAY (khong co marker KQKD that nao khac) TUNG
+//    bi phan loai NHAM thanh incomeStatement (SAI THAM LANG - lib/analysis.ts:501
+//    co finder dung CHINH cum nay, co the lay NHAM gia tri doi chieu thue suat
+//    thay vi LNTT that). Da CHU DONG BO marker/neo "['LOI NHUAN KE TOAN',
+//    'TRUOC THUE']" (chap nhan mat do phu wording, xem comment
+//    INCOME_STATEMENT_CONTENT_MARKERS) - bang CHI co dong nay (khong co
+//    Doanh thu/Gia von/Loi nhuan gop... that) PHAI KHONG duoc phan loai vao bat
+//    ky bang nao (an toan hon la nhan nham).
+checkNone('thuyet minh doi chieu thue suat (chi "Loi nhuan ke toan truoc thue") KHONG duoc nhan nham', `
+| Chỉ tiêu | 30/6/2026 | 30/6/2025 |
+| --- | --- | --- |
+| Lợi nhuận kế toán trước thuế | 800 | 700 |
+| Thuế theo thuế suất Công ty | 160 | 140 |
+| Chi phí thuế thu nhập doanh nghiệp | 160 | 140 |
+`);
+
+// 7) Doi chung: bang KQKD THAT (co Doanh thu thuan/Gia von/Loi nhuan gop...)
+//    van nhan dung incomeStatement DU thieu chu "Tong" o dong Loi nhuan truoc
+//    thue - vi cac marker KHAC (khong phai rieng dong nay) da du neo bang.
+check('KQKD that (co du marker khac) van nhan dung du "Loi nhuan ke toan truoc thue" bo Tong', `
 | Chỉ tiêu | Mã số | Kỳ này |
 | --- | --- | --- |
-| Chi phí bán hàng | 25 | 300 |
+| Doanh thu thuần | 10 | 5000 |
+| Giá vốn hàng bán | 11 | 3000 |
+| Lợi nhuận gộp | 20 | 2000 |
 | Lợi nhuận kế toán trước thuế | 50 | 800 |
 `, 'incomeStatement');
 
-// 7) REGRESSION Ngan hang (TT49 LCTT gian tiep, nguoi dung luu y 2026-07-16):
+// 8) REGRESSION Ngan hang (TT49 LCTT gian tiep, nguoi dung luu y 2026-07-16):
 //    muc "I. Luu chuyen tien tu hoat dong kinh doanh" cua LCTT NH CHINH THUC
 //    chua ca "Loi nhuan thuan tu hoat dong kinh doanh [truoc nhung thay doi ve
 //    tai san va cong no hoat dong]" LAN dieu chinh phi tien mat "Chi phi du

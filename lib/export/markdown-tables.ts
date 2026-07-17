@@ -367,7 +367,25 @@ const INCOME_STATEMENT_CONTENT_MARKERS = [
   'CHI PHI NGHIEP VU MOI GIOI CHUNG KHOAN',
   'CONG DOANH THU HOAT DONG',
   'CONG CHI PHI HOAT DONG',
-  'TONG LOI NHUAN KE TOAN TRUOC THUE',
+  // SUA 2026-07-17 (backtest 16 bao cao Q2/2026 that, BSL): tach ['TONG LOI
+  // NHUAN','TRUOC THUE'] rieng (thay the "TONG LOI NHUAN KE TOAN TRUOC THUE"
+  // cung nhac) de hut bien the Ngan hang bo "ke toan" (nguoi dung luu y
+  // 2026-07-16). KHONG them bien the "bo Tong" (['LOI NHUAN KE TOAN','TRUOC
+  // THUE']) o day nua - DA THU va BO (xac nhan qua BSL that): thuyet minh "Chi
+  // phi thue TNDN hien hanh" (RAT PHO BIEN, hau het cong ty deu co) thuong BAT
+  // DAU bang CHINH XAC dong "Loi nhuan ke toan truoc thue" (khong "Tong") de
+  // doi chieu thue suat - ngay ca o tang diem THUONG (+1, khong phai neo 100),
+  // 1 bang thuyet minh NHO (4-5 dong, khong co marker nao khac) van du de
+  // "thang" (diem 1 > 0, khong hoa) va bi phan loai NHAM thanh incomeStatement -
+  // SAI THAM LANG (khong canh bao). NGHIEM TRONG HON: lib/analysis.ts:501 co
+  // finder `byLabel(['LOI NHUAN KE TOAN TRUOC THUE'])` dung CHINH cum nay tra
+  // cuu 1 chi tieu phan tich - neu dong thuyet minh lot vao bang, finder co
+  // nguy co lay NHAM gia tri doi chieu thue suat (khac han LNTT that) thay vi
+  // dong KQKD that, sai am tham 1 chi tieu hien thi cho nguoi dung. Chap nhan
+  // MAT do phu (KQKD bo "Tong" VA "ke toan" cung luc, hiem) de tranh rui ro nay -
+  // 1 bang KQKD that luon con nhieu marker KHAC (Doanh thu thuan, Gia von hang
+  // ban, Loi nhuan gop...) du nhan dung du thieu rieng dong nay.
+  ['TONG LOI NHUAN', 'TRUOC THUE'],
   'LOI NHUAN KE TOAN SAU THUE',
   // KQKD mau Ngan hang (Mau B03/TCTD-HN, Thong tu 49/2014/TT-NHNN) dung tu
   // ngu rieng, khong trung markers VAS/bao hiem/CTCK nao o tren - da xac nhan
@@ -685,9 +703,26 @@ const ANCHOR_MARKERS_BY_KEY: Partial<Record<keyof FinancialStatements, ContentMa
     ['TAI SAN NGAN HAN'],           // ma 100 (header muc, LCTT khong co)
     ['TAI SAN CO DINH HUU HINH'],   // ma 221
     ['TAI SAN CO DINH VO HINH'],    // ma 227
-    ['QUY KHEN THUONG', 'PHUC LOI'],// ma 353 (quy thuoc von, LCTT khong itemize)
-    ['LOI NHUAN SAU THUE CHUA PHAN PHOI'], // ma 421
-    ['THANG DU VON CO PHAN'],       // ma 412
+    // SUA 2026-07-17 (phat hien qua backtest 16 bao cao Q2/2026 that, BSL):
+    // BO ca 3 neo "tung quy/von rieng le" (Quy khen thuong+phuc loi, LNST chua
+    // phan phoi, Thang du von co phan) - KHAC voi cac neo TONG/TAI SAN CO DINH
+    // o tren (khong the co thuyet minh "bien dong" rieng), MOI quy/von don le
+    // trong BCDKT THUONG co 1 thuyet minh BIEN DONG RIENG (mau bang "Bao cao
+    // tinh hinh bien dong VCSH" dang CHUYEN VI - cot la TUNG quy/von, dong la
+    // moc thoi gian/su kien: "Trich quy khen thuong phuc loi", "Co tuc"...) -
+    // EQUITY_CHANGES_COLUMN_MARKERS (kiem tra qua isEquityChangesStatementTable)
+    // CHI bat duoc dang bang CHUAN (dong=quy, cot=thoi gian), KHONG bat duoc
+    // dang CHUYEN VI nay, nen bang thuyet minh nay truoc day bi loai an toan
+    // (diem = 0, khong khop marker nao) - neo token-AND ['QUY KHEN THUONG',
+    // 'PHUC LOI'] moi them lai KHOP dung dong "Trich quy khen thuong phuc loi"
+    // (mo ta bien dong, KHONG phai dong BCDKT that) trong bang thuyet minh nay,
+    // keo CA BANG THUYET MINH (con nam trong pham vi quet do notesLine chua cat
+    // het - gioi han rieng, khong sua o day) vao BCDKT that - SAI THAM LANG
+    // (khong mismatch nao duoc bao, vi khong dung cong thuc nao ca) - nguy hiem
+    // hon ca 1 mismatch co canh bao. Nguyen tac tu day: CHI neo BCDKT bang cac
+    // dong KHONG THE co thuyet minh bien dong dang nay (Tong/Tai san co dinh) -
+    // BAT KY quy/von DON LE nao (du la ten khac) deu co nguy co tuong tu, khong
+    // chi rieng 3 cai da phat hien.
     // Ngan hang (TT49) - dung TONG rieng cua NH (mau khong co "Tong cong ...")
     ['TONG TAI SAN'],
     ['TONG NO PHAI TRA', 'VON CHU SO HUU'],
@@ -698,11 +733,23 @@ const ANCHOR_MARKERS_BY_KEY: Partial<Record<keyof FinancialStatements, ContentMa
   incomeStatement: [
     // Pho quat / DN thuong (TT200) - dung tu khoa GON, doc quyen KQKD
     ['DOANH THU THUAN'],            // ma 10 ("...ve ban hang..."/"...HDKD bao hiem")
-    ['GIA VON'],                    // ma 11 ("Gia von [hang ban]")
+    // SUA 2026-07-17 (backtest 16 bao cao Q2/2026 that, BSL): siet ['GIA VON']
+    // (qua gon) thanh ['GIA VON HANG BAN'] - thuyet minh chi tiet "Gia von hang
+    // ban" thuong co dong con "Gia von KHAC" (mo ta thanh phan, KHONG phai dong
+    // KQKD that), khop nham voi tu khoa gon "GIA VON" don le. Cum day du "GIA
+    // VON HANG BAN" (giong het marker THUONG da an toan tu truoc) khong con
+    // khop dong con nay.
+    ['GIA VON HANG BAN'],           // ma 11
     ['LOI NHUAN GOP'],              // ma 20 (hut ca "...HDKD bao hiem")
     ['GIAM TRU DOANH THU'],         // ma 02
     ['CHI PHI BAN HANG'],           // ma 25
-    ['CHI PHI QUAN LY'],            // ma 26 (hut "...doanh nghiep"/"...cong ty CK")
+    // SUA 2026-07-17 (BSL that): BO ['CHI PHI QUAN LY'] khoi neo - thuyet minh
+    // chi tiet "Chi phi quan ly doanh nghiep" thuong co dong con "Chi phi quan
+    // ly KHAC", khop nham tu khoa gon nay. KQKD van du neo khac (Doanh thu
+    // thuan, Gia von hang ban, Loi nhuan gop...) nen khong can giu rieng dong nay
+    // o tang neo (100 diem) - marker THUONG 'CHI PHI QUAN LY DOANH NGHIEP' (cum
+    // day du, an toan) van con dung binh thuong o tang cham diem thap hon.
+    //
     // KHONG dung ['LOI NHUAN THUAN','HOAT DONG KINH DOANH'] (ma 30) lam neo:
     // LCTT GIAN TIEP Ngan hang (TT49, Mau B04a/TCTD-HN) co dong CHINH THUC "Loi
     // nhuan thuan tu hoat dong kinh doanh TRUOC NHUNG THAY DOI ve tai san va
@@ -711,14 +758,19 @@ const ANCHOR_MARKERS_BY_KEY: Partial<Record<keyof FinancialStatements, ContentMa
     // doan, la dong chinh thuc theo mau bieu). Neo se soi guong that voi LCTT
     // Ngan hang -> BO, du KHONG hien trong corpus (chi 4 bao cao bank, co the
     // OCR chua bat het chi tiet LCTT NH).
-    // ma 50: LCTT gian tiep MO DAU bang "Loi nhuan truoc thue" (TRAN) -> KHONG
-    // duoc noi thanh ['LOI NHUAN','TRUOC THUE'] (soi guong LCTT). Cai phan biet
-    // KQKD la "TONG" HOAC "KE TOAN" -> 2 neo rieng phu het bien the ma KHONG
-    // dung "Loi nhuan truoc thue" tran: bank ghi "Tong loi nhuan truoc thue"
-    // (bo "ke toan"); 1 so DN ghi "Loi nhuan ke toan truoc thue" (bo "Tong")
-    // - nguoi dung luu y 2026-07-16 "nhieu KQKD khong co chu Tong".
-    ['TONG LOI NHUAN', 'TRUOC THUE'],
-    ['LOI NHUAN KE TOAN', 'TRUOC THUE'],
+    //
+    // SUA 2026-07-17 (BSL that): BO CA 2 bien the "Loi nhuan [ke toan/Tong]
+    // truoc thue" khoi TANG NEO (100 diem) - thuyet minh "Chi phi thue TNDN
+    // hien hanh" (RAT PHO BIEN, hau het cong ty deu co) thuong BAT DAU bang
+    // dung dong "Loi nhuan ke toan truoc thue" de doi chieu thue suat, khop
+    // nham va lat CA bang thuyet minh do thanh incomeStatement neu no lot qua
+    // notesLine (gioi han rieng cua tung tai lieu, chua sua o day) - SAI THAM
+    // LANG (khong mismatch/canh bao nao ca, nguy hiem hon 1 mismatch co bao).
+    // Da CHUYEN CA 2 xuong tang marker THUONG (+1 diem, xem
+    // INCOME_STATEMENT_CONTENT_MARKERS o tren) - van hut duoc bien the thieu
+    // "Tong"/"ke toan" (yeu cau nguoi dung 2026-07-16) nhung o muc diem thap
+    // hon nhieu, khong du de 1 minh quyet dinh phan loai 1 bang khong co marker
+    // that nao khac.
     'LOI NHUAN SAU THUE THU NHAP DOANH NGHIEP', // ma 60 (CUM LIEN - tranh token phan tan)
     ['CHI PHI THUE', 'TNDN', 'HIEN HANH'], // ma 51
     ['CHI PHI THUE', 'TNDN', 'HOAN LAI'],  // ma 52
