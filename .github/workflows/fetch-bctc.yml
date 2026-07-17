@@ -37,6 +37,10 @@ on:
       requestId:
         type: string
         default: ''
+      clearFilePaths:
+        description: 'mode=clear: danh sach filePath can xoa rieng (phan cach dau phay). Rong = xoa toan bo.'
+        type: string
+        default: ''
 
 permissions:
   contents: write
@@ -74,6 +78,7 @@ jobs:
           FETCH_SELECTED_IDS: ${{ github.event.inputs.selectedIds }}
           FETCH_CUSTOM_URL: ${{ github.event.inputs.customUrl }}
           FETCH_REQUEST_ID: ${{ github.event.inputs.requestId }}
+          FETCH_CLEAR_FILE_PATHS: ${{ github.event.inputs.clearFilePaths }}
         run: npx tsx scripts/run-fetch.ts
       # Commit data/latest-fetch.json neu co thay doi - cu push nay tu khien
       # Vercel deploy lai (Git integration mac dinh), day la cach client

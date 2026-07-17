@@ -22,8 +22,14 @@ const mode = process.env.FETCH_MODE || 'term';
 
 async function main() {
   if (mode === 'clear') {
-    clearResults();
-    console.log('Da xoa toan bo ket qua.');
+    // FETCH_CLEAR_FILE_PATHS: danh sach filePath can xoa RIENG (nut "Xoa bao
+    // cao da chon" tren tung tab "Ket qua {ky}") - rong/khong co nghia xoa
+    // TOAN BO nhu truoc (xem clearResults, lib/pipeline.ts).
+    const filePaths = process.env.FETCH_CLEAR_FILE_PATHS
+      ? process.env.FETCH_CLEAR_FILE_PATHS.split(',').filter(Boolean)
+      : undefined;
+    clearResults(filePaths);
+    console.log(filePaths?.length ? `Da xoa ${filePaths.length} bao cao.` : 'Da xoa toan bo ket qua.');
     return;
   }
 

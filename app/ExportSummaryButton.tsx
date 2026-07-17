@@ -1,21 +1,41 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 type Status = 'idle' | 'loading' | 'error';
 
 // Nut xuat file tong hop (nhieu ma CK, 1 file .xlsx duy nhat) - goi
-// app/api/export-summary (co san tu truoc, xem lib/export/summary-excel.ts)
-// nhung truoc gio chua co nut nao tren UI goi toi (xem README) vi chua co
-// tieu chi % that. Gio da co 21 chi tieu (lib/analysis.ts) nen gan lai
-// (yeu cau user 2026-07-08). Luon xuat CA report hien co trong tab Ket qua
-// (khong phu thuoc dang o tab loai hinh DN nao), giong pham vi cua summary-bar
-// o tren.
-export default function ExportSummaryButton({ filePaths }: { filePaths: string[] }) {
+// app/api/export-summary (co san tu truoc, xem lib/export/summary-excel.ts).
+//
+// SUA 2026-07-17 (yeu cau nguoi dung - moi tab "Ket qua {ky}" can nut nay voi
+// 2 lua chon thay vi luon xuat CA ky): bam nut mo menu 2 dong "Xuat tat ca (N
+// bao cao)" / "Xuat bao cao da chon (N)" - dong sau bi vo hieu neu chua tick
+// dong nao (selectedFilePaths rong). allFilePaths = toan bo bao cao trong KY
+// dang mo (khong phai toan bo he thong - moi tab da tu loc theo ky, xem
+// PeriodResultsPanel).
+export default function ExportSummaryButton({
+  allFilePaths,
+  selectedFilePaths,
+}: {
+  allFilePaths: string[];
+  selectedFilePaths: string[];
+}) {
   const [status, setStatus] = useState<Status>('idle');
   const [message, setMessage] = useState('');
+  const [menuOpen, setMenuOpen] = useState(false);
+  const wrapperRef = useRef<HTMLDivElement>(null);
 
-  async function doExport() {
+  useEffect(() => {
+    if (!menuOpen) return;
+    function onClickOutside(e: MouseEvent) {
+      if (wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) setMenuOpen(false);
+    }
+    document.addEventListener('mousedown', onClickOutside);
+    return () => document.removeEventListener('mousedown', onClickOutside);
+  }, [menuOpen]);
+
+  async function doExport(filePaths: string[]) {
+    setMenuOpen(false);
     setStatus('loading');
     setMessage('');
     try {
@@ -50,9 +70,29 @@ export default function ExportSummaryButton({ filePaths }: { filePaths: string[]
 
   return (
     <div className="trigger-row">
-      <button className="secondary-button" onClick={doExport} disabled={busy || filePaths.length === 0}>
-        {busy ? 'Đang xuất...' : 'Xuất Excel tổng hợp'}
-      </button>
+      <div className="split-button" ref={wrapperRef}>
+        <button
+          className="secondary-button"
+          onClick={() => setMenuOpen((v) => !v)}
+          disabled={busy || allFilePaths.length === 0}
+        >
+          {busy ? 'Đang xuất...' : 'Xuất Excel tổng hợp ▾'}
+        </button>
+        {menuOpen && (
+          <div className="split-button-menu">
+            <button className="split-button-menu-item" onClick={() => doExport(allFilePaths)}>
+              Xuất tất cả ({allFilePaths.length} báo cáo)
+            </button>
+            <button
+              className="split-button-menu-item"
+              onClick={() => doExport(selectedFilePaths)}
+              disabled={selectedFilePaths.length === 0}
+            >
+              Xuất báo cáo đã chọn ({selectedFilePaths.length})
+            </button>
+          </div>
+        )}
+      </div>
       {message && <span className="trigger-message trigger-message-error">{message}</span>}
     </div>
   );
