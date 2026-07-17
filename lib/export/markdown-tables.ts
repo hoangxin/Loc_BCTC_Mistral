@@ -1292,6 +1292,112 @@ function parseAllTablesInRange(lines: string[]): ParsedTable[] {
   return tables;
 }
 
+// SUA 2026-07-18 (theo yeu cau nguoi dung, xac nhan qua BSL that): Mistral OCR
+// DOI KHI tra 1 bang KHONG PHAI markdown "| ... |" chuan, ma la 1 KHOI JSON
+// mo ta anh (dang "[{"box_2d": [...], "label": "table", "caption": "<table>
+// ...</table>"}]") - xac nhan qua OCR LAI RIENG 1 trang (BSL, trang 7, LCTT
+// "hoat dong tai chinh") CHO KET QUA GIONG HET, chung to day KHONG PHAI do
+// ngu canh cac trang xung quanh ma la Mistral nhat quan xu ly bang nay theo
+// kieu do (co the do cau truc bang goc trong PDF bat thuong - 4 cot header
+// nhung 2 cot trung ten "30/6/2025"). DU LIEU (bang HTML nhung trong "caption")
+// van con nguyen, chi khac dinh dang - chuyen doi THANH bang markdown "| ... |"
+// TUONG DUONG TRUOC KHI vao pipeline parse chinh, tai dung 100% logic parse/
+// phan loai/neo da kiem chung thay vi tao 1 duong xu ly song song rieng.
+//
+// LUU Y QUAN TRONG: khoi JSON nay co the bi Mistral CAT CUT GIUA CHUNG (xac
+// nhan qua BSL - dung ngay giua 1 the <b>, thieu han dong cuoi cung "Tien cuoi
+// ky"). Regex CHI trich CAC DONG <tr>...</tr> HOAN CHINH (doi hoi ca the dong
+// "</tr>") - dong bi cat cut se KHONG khop, tu dong bi bo qua AN TOAN (mat 1
+// phan du lieu that bi Mistral cat, khong phai loi tach dong sai).
+const JSON_CAPTION_TABLE_START = /\[\{"box_2d":\s*\[[^\]]*\],\s*"label":\s*"table",\s*"caption":\s*"((?:[^"\\]|\\.)*)/g;
+
+function unescapeJsonCaptionString(s: string): string {
+  return s.replace(/\\"/g, '"').replace(/\\\//g, '/').replace(/\\n/g, '\n').replace(/\\\\/g, '\\');
+}
+
+function stripHtmlToPlainCell(cellHtml: string): string {
+  return cellHtml
+    .replace(/<br\s*\/?>/gi, ' ')
+    .replace(/<\/?b>/gi, '')
+    .replace(/<[^>]+>/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function htmlTableToRows(html: string): string[][] {
+  const rows: string[][] = [];
+  const trRe = /<tr[^>]*>([\s\S]*?)<\/tr>/g;
+  let trMatch: RegExpExecArray | null;
+  while ((trMatch = trRe.exec(html)) !== null) {
+    const cells: string[] = [];
+    const cellRe = /<t[hd][^>]*>([\s\S]*?)<\/t[hd]>/g;
+    let cellMatch: RegExpExecArray | null;
+    while ((cellMatch = cellRe.exec(trMatch[1])) !== null) cells.push(stripHtmlToPlainCell(cellMatch[1]));
+    if (cells.length > 0) rows.push(cells);
+  }
+  return rows;
+}
+
+// SUA 2026-07-18 (theo phan hoi nguoi dung, xac nhan qua BSL that): khi tao
+// khoi JSON-caption, Mistral DOI KHI TU NHAN DOI 1 cot header (vd "Quý 2 kết
+// thúc ngày 30/6/2025 VND" xuat hien LIEN TIEP 2 LAN) trong khi PHAN CON LAI
+// cua tai lieu (cac muc LCTT khac cung bang - "hoat dong kinh doanh"/"dau tu")
+// CHI co 2 cot gia tri that (Quy 2 nam nay, Quy 2 nam truoc) - nguoi dung xac
+// nhan qua doi chieu PDF goc truc tiep. DA CHUNG MINH BANG SO HOC (khop dung
+// tong "Luu chuyen tien thuan tu hoat dong tai chinh" da biet, ca 2 cot 2026
+// VA 2025) rang trong MOI cap header GIONG HET nhau LIEN TIEP, cot GIU LAI
+// DUNG la cot SAU CUNG trong cap (cot truoc do la "ao", lap lai nham) - ap
+// dung cho TAT CA cac dong (header va du lieu), dua tren TIN HIEU CAU TRUC
+// (header trung chu lien tiep), khong phai suy doan rieng cho tung dong.
+function dropDuplicateAdjacentHeaderColumns(rows: string[][]): string[][] {
+  if (rows.length === 0) return rows;
+  const header = rows[0];
+  const keepIndexes: number[] = [];
+  for (let i = 0; i < header.length; i++) {
+    const isDuplicateOfNext = i + 1 < header.length && header[i].trim() !== '' && header[i].trim() === header[i + 1].trim();
+    if (isDuplicateOfNext) continue; // bo cot nay - giu cot SAU (i+1) o buoc lap ke tiep
+    keepIndexes.push(i);
+  }
+  if (keepIndexes.length === header.length) return rows;
+  return rows.map((row) => keepIndexes.map((idx) => row[idx] ?? ''));
+}
+
+// Chuyen 1 khoi JSON-caption-bang THANH bang markdown "| ... |" tuong duong
+// (dong dau tu <thead> lam header, chen dong phan cach, cac dong con lai lam
+// du lieu - dung quy uoc "dong dau la header" xac nhan qua cau truc BSL that:
+// <thead><tr><th>...</th></tr></thead><tr><td>...). Neu khong trich duoc dong
+// nao (khong khop regex/khong co du lieu) - GIU NGUYEN van ban goc, khong lam
+// mat du lieu.
+function convertJsonCaptionTablesToMarkdown(markdown: string): string {
+  return markdown.replace(JSON_CAPTION_TABLE_START, (fullMatch, rawCaption: string) => {
+    const html = unescapeJsonCaptionString(rawCaption);
+    const rowsRaw = htmlTableToRows(html);
+    if (rowsRaw.length === 0) return fullMatch;
+    const rows = dropDuplicateAdjacentHeaderColumns(rowsRaw);
+    const colCount = Math.max(...rows.map((r) => r.length));
+    const pad = (row: string[]) => {
+      const padded = [...row];
+      while (padded.length < colCount) padded.push('');
+      return padded;
+    };
+    const mdRows = rows.map((r) => `| ${pad(r).join(' | ')} |`);
+    const separator = `| ${new Array(colCount).fill('---').join(' | ')} |`;
+    // SUA 2026-07-18 (BSL that): THEM 1 dong tieu de "#" TRUNG LAP (khong khop
+    // bat ky content marker cu the nao - INCOME_STATEMENT_PART_MARKERS/
+    // CONTINUATION_HEADING_MARKERS) NGAY TRUOC bang moi chuyen doi. Neu khong,
+    // parseAllTablesInRange (vong lap chinh) co the coi doan van xuoi ngay
+    // TRUOC no (ten cong ty/ten mau bieu/can cu phap ly, ~8-10 dong) la "rac
+    // duoc phep xuyen qua" (nguong 12 dong, thiet ke cho watermark OCR - xem
+    // comment o do) va NOI NHAM bang moi nay vao LIEN TUC voi bang LCTT truoc
+    // do (thay vi tach thanh 2 bang con rieng biet de mostCommonColumns/
+    // alignRowToColumns xu ly dung nhu thiet ke) - gay dong tieu de phu (sub-
+    // header 2-dong cua bang TRUOC) bi lap lai nham thanh 1 dong du lieu rac
+    // giua chung. Dong "#" la ranh gioi CUNG DUY NHAT khong tinh vao nguong 12
+    // dong (xem dieu kien rieng ngay dau vong lap trong).
+    return `\n# (Bảng phục hồi từ OCR)\n\n${mdRows[0]}\n${separator}\n${mdRows.slice(1).join('\n')}\n`;
+  });
+}
+
 // Bang can doi ke toan VAS thuong bi Mistral tach thanh 2 bang markdown RIENG
 // trong cung 1 muc (1 bang "TAI SAN" mã 100-270, roi 1 bang "NGUON VON" mã
 // 300-440 o trang sau, vi 2 nua co tieu de cot dau khac nhau) - da gap that
@@ -1307,11 +1413,12 @@ function parseAllTablesInRange(lines: string[]): ParsedTable[] {
 // duoi (khong dinh nghia lai fuzzy-match rieng - Mistral OCR do chinh xac cao,
 // khop chuoi thang la du).
 export function containsNotesSectionMarker(markdown: string): boolean {
-  const lines = markdown.split(/\r?\n/);
+  const lines = convertJsonCaptionTablesToMarkdown(markdown).split(/\r?\n/);
   return findCashFlowEndingIndex(lines, 0) !== -1;
 }
 
-export function parseStatementsFromMarkdown(markdown: string): FinancialStatements {
+export function parseStatementsFromMarkdown(rawMarkdown: string): FinancialStatements {
+  const markdown = convertJsonCaptionTablesToMarkdown(rawMarkdown);
   const lines = markdown.split(/\r?\n/);
   const normalizedLines = lines.map((l) => normalizeLabelText(l));
 

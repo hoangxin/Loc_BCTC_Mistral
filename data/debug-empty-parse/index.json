@@ -102,5 +102,13 @@
     "pagesFetched": 12,
     "source": "ocr-capped-probe",
     "savedAt": "2026-07-16T08:09:41.180Z"
+  },
+  {
+    "stockCode": "BSL",
+    "periodLabel": "2026-Q2-Chung",
+    "markdownPath": "data\\debug-empty-parse\\BSL-range7-7-D__AI_Loc_BCTC_Mistral_.claude_worktrees_elated-wu-ed74e2_data_reports-tmp_BSL_Baocaotaichinh_Q2_2026.zip__extracted_1_bsl_2026_7_14_346d2b5_vi_baocaotaichinh_q2_2026-1784286231606.md",
+    "pagesFetched": 1,
+    "source": "ocr-explicit-range(7-7)",
+    "savedAt": "2026-07-17T11:03:51.610Z"
   }
 ]
