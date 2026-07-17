@@ -204,6 +204,50 @@ const EXPAND_STEP = 2;
 // lan nao), roi merge vao ket qua da co - khong bao gio OCR lai tu dau. Markdown
 // OCR duoc dung LUON lam dau vao parseStatementsFromMarkdown (ham do da tu
 // chan dung truoc "Thuyet minh" - xem NOTES_SECTION_MARKERS) - khong OCR lai lan 2.
+// Tach rieng (2026-07-17) phan hau-OCR (parse markdown -> statements/warnings/
+// businessType/unreliableCells) khoi vong lap OCR - dung LAI DUOC cho script
+// re-parse tu markdown DA CO SAN tren dia (khong OCR that lan nao) khi CHI
+// code parser/validate doi, con markdown day du van con luu duoc tu lan OCR
+// truoc (xem CLAUDE.md - khong tu hand-roll lai logic parse rieng o script khac).
+export function buildResultFromMarkdown(markdown: string, statements: FinancialStatements, mismatches: TaggedGroupSumMismatch[]): ExtractFinancialStatementsResult {
+  // Tinh businessType TRUOC (can truyen vao validateFinancialStatements de bo
+  // qua dung kiem tra khong ap dung duoc cho tung loai hinh - xem comment tai
+  // dinh nghia ham do).
+  const businessType = classifyBusinessType(markdown);
+  const issues = validateFinancialStatements(statements, businessType);
+  // Canh bao rieng, DE HIEU NGAY (khac voi 9+ dong ky thuat le te cua
+  // validateFinancialStatements) khi van con rong sau ca MAX_OCR_ATTEMPTS lan
+  // thu - yeu cau nguoi dung 2026-07-12: can noi bat ro rang truong hop nay
+  // trong UI (ReportsSummaryTable.tsx), khac han 1 vai canh bao nho le thuong
+  // gap (vd thieu 1 dong phu).
+  //
+  // 2026-07-13 (yeu cau nguoi dung, sau khi doi chieu CIG Q1/2026 - xem
+  // isCorrectionNoticeMarkdown): kiem tra TRUOC CA isEmptyParse, vi day la
+  // NGUYEN NHAN GOC neu co (khong phai loi OCR/parse) - "cong van dinh chinh"
+  // khong phai 1 BCTC day du nen KQKD/LCTT rong VA BCDKT chi vai dong LA HANH
+  // VI DUNG cua chinh nguon, khong phai loi can retry/sua. Canh bao noi bat
+  // rieng, KHAC han ca 2 loai canh bao "khong doc duoc"/"khong khop" khac -
+  // yeu cau nguoi dung tu tim ban BCTC goc (KHONG phai ban "(điều chỉnh)")
+  // thay vi dung so lieu tu file nay lam bao cao chinh.
+  const correctionNotice = isCorrectionNoticeMarkdown(markdown);
+  const warnings = correctionNotice
+    ? [
+        'CANH BAO: day co ve la CONG VAN DINH CHINH (chi sua lai vai chi tieu da cong bo truoc do), KHONG PHAI mot BCTC day du - can tu tim va doi chieu voi ban BAO CAO GOC (khong phai ban "(điều chỉnh)"), khong nen dung so lieu tu file nay lam bao cao chinh thuc.',
+        ...issues.map((issue) => issue.message),
+      ]
+    : isEmptyParse(statements)
+      ? ['CANH BAO: ca 3 bang chinh (BCDKT/KQKD/LCTT) deu khong doc duoc dong nao - can kiem tra tay.', ...issues.map((issue) => issue.message)]
+      : issues.map((issue) => issue.message);
+
+  return {
+    statements,
+    warnings,
+    markdown,
+    businessType,
+    unreliableCells: toUnreliableCells(mismatches),
+  };
+}
+
 export async function extractFinancialStatementsWithOcrProbe(filePath: string, totalPages: number): Promise<ExtractFinancialStatementsResult> {
   const { markdown, statements, mismatches } = await extractWithGroupCheckRetry(filePath, async () => {
     const collected: MistralOcrPage[] = [];
@@ -246,40 +290,5 @@ export async function extractFinancialStatementsWithOcrProbe(filePath: string, t
     console.log(`[mistral-ocr] ${filePath}: OCR ${collected.length} trang (tong cong, qua ${collected.length === totalPages ? 'het file' : 'probe tang dan'})`);
     return collected.map((p) => p.markdown).join('\n\n');
   });
-  // Tinh businessType TRUOC (can truyen vao validateFinancialStatements de bo
-  // qua dung kiem tra khong ap dung duoc cho tung loai hinh - xem comment tai
-  // dinh nghia ham do).
-  const businessType = classifyBusinessType(markdown);
-  const issues = validateFinancialStatements(statements, businessType);
-  // Canh bao rieng, DE HIEU NGAY (khac voi 9+ dong ky thuat le te cua
-  // validateFinancialStatements) khi van con rong sau ca MAX_OCR_ATTEMPTS lan
-  // thu - yeu cau nguoi dung 2026-07-12: can noi bat ro rang truong hop nay
-  // trong UI (ReportsSummaryTable.tsx), khac han 1 vai canh bao nho le thuong
-  // gap (vd thieu 1 dong phu).
-  //
-  // 2026-07-13 (yeu cau nguoi dung, sau khi doi chieu CIG Q1/2026 - xem
-  // isCorrectionNoticeMarkdown): kiem tra TRUOC CA isEmptyParse, vi day la
-  // NGUYEN NHAN GOC neu co (khong phai loi OCR/parse) - "cong van dinh chinh"
-  // khong phai 1 BCTC day du nen KQKD/LCTT rong VA BCDKT chi vai dong LA HANH
-  // VI DUNG cua chinh nguon, khong phai loi can retry/sua. Canh bao noi bat
-  // rieng, KHAC han ca 2 loai canh bao "khong doc duoc"/"khong khop" khac -
-  // yeu cau nguoi dung tu tim ban BCTC goc (KHONG phai ban "(điều chỉnh)")
-  // thay vi dung so lieu tu file nay lam bao cao chinh.
-  const correctionNotice = isCorrectionNoticeMarkdown(markdown);
-  const warnings = correctionNotice
-    ? [
-        'CANH BAO: day co ve la CONG VAN DINH CHINH (chi sua lai vai chi tieu da cong bo truoc do), KHONG PHAI mot BCTC day du - can tu tim va doi chieu voi ban BAO CAO GOC (khong phai ban "(điều chỉnh)"), khong nen dung so lieu tu file nay lam bao cao chinh thuc.',
-        ...issues.map((issue) => issue.message),
-      ]
-    : isEmptyParse(statements)
-      ? ['CANH BAO: ca 3 bang chinh (BCDKT/KQKD/LCTT) deu khong doc duoc dong nao - can kiem tra tay.', ...issues.map((issue) => issue.message)]
-      : issues.map((issue) => issue.message);
-
-  return {
-    statements,
-    warnings,
-    markdown,
-    businessType,
-    unreliableCells: toUnreliableCells(mismatches),
-  };
+  return buildResultFromMarkdown(markdown, statements, mismatches);
 }

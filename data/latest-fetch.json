@@ -6596,7 +6596,7 @@
         },
         {
           "label": "TSTC Niêm Yết Của CTCK",
-          "percentChange": null,
+          "percentChange": 99.73480406206572,
           "tier": null,
           "unreliable": false
         },
@@ -6608,13 +6608,13 @@
         },
         {
           "label": "Tiền Của KH",
-          "percentChange": null,
+          "percentChange": 18.72014755242789,
           "tier": null,
           "unreliable": false
         },
         {
           "label": "Phải Trả Của NĐT Về GDCK",
-          "percentChange": null,
+          "percentChange": 18.73752195410879,
           "tier": null,
           "unreliable": false
         }
@@ -7461,6 +7461,76 @@
               null,
               "-",
               "-"
+            ],
+            [
+              "2. Chênh lệch đánh giá tài sản theo giá trị hợp lý",
+              "412",
+              null,
+              null,
+              null
+            ],
+            [
+              "3. Chênh lệch tỷ giá hối đoái",
+              "413",
+              null,
+              null,
+              null
+            ],
+            [
+              "4. Quỹ dự trữ bổ sung vốn điều lệ",
+              "414",
+              null,
+              "-",
+              "-"
+            ],
+            [
+              "5. Quỹ dự phòng tài chính và rủi ro nghiệp vụ",
+              "415",
+              null,
+              "-",
+              "-"
+            ],
+            [
+              "6. Các Quỹ khác thuộc vốn chủ sở hữu",
+              "416",
+              null,
+              "-",
+              "-"
+            ],
+            [
+              "7. Lợi nhuận chưa phân phối",
+              "417",
+              "A.7.43",
+              1064482161596,
+              954903633124
+            ],
+            [
+              "7.1. Lợi nhuận đã thực hiện",
+              "417.1",
+              null,
+              623799204093,
+              576015898965
+            ],
+            [
+              "7.2. Lợi nhuận chưa thực hiện",
+              "417.2",
+              null,
+              440682957503,
+              378887734159
+            ],
+            [
+              "II. Nguồn kinh phí và quỹ khác",
+              "420",
+              null,
+              null,
+              null
+            ],
+            [
+              "TỔNG CỘNG NỢ PHÁI TRẢ VÀ VỐN CHỦ SỞ HỮU (440=300+400)",
+              "440",
+              null,
+              13059841984960,
+              13919681054918
             ]
           ]
         },
@@ -8597,303 +8667,170 @@
         },
         "offBalanceSheet": {
           "columns": [
-            "2. Chênh lệch đánh giá tài sản theo giá trị hợp lý",
-            "412",
-            "",
-            "",
-            ""
+            "Chỉ tiêu",
+            "Mã Số",
+            "Thuyết minh",
+            "Cuối kỳ",
+            "Đầu năm"
           ],
           "rows": [
             [
-              "3. Chênh lệch tỷ giá hối đoái",
-              413,
               null,
-              null,
-              null
-            ],
-            [
-              "4. Quỹ dự trữ bổ sung vốn điều lệ",
-              414,
-              null,
-              "-",
-              "-"
-            ],
-            [
-              "5. Quỹ dự phòng tài chính và rủi ro nghiệp vụ",
-              415,
-              null,
-              "-",
-              "-"
-            ],
-            [
-              "6. Các Quỹ khác thuộc vốn chủ sở hữu",
-              416,
-              null,
-              "-",
-              "-"
-            ],
-            [
-              "7. Lợi nhuận chưa phân phối",
-              417,
-              "A.7.43",
-              1064482161596,
-              954903633124
-            ],
-            [
-              "7.1. Lợi nhuận đã thực hiện",
-              4171,
-              null,
-              623799204093,
-              576015898965
-            ],
-            [
-              "7.2. Lợi nhuận chưa thực hiện",
-              4172,
-              null,
-              440682957503,
-              378887734159
-            ],
-            [
-              "II. Nguồn kinh phí và quỹ khác",
-              420,
-              null,
-              null,
-              null
-            ],
-            [
-              "TỔNG CỘNG NỢ PHÁI TRẢ VÀ VỐN CHỦ SỞ HỮU (440=300+400)",
-              440,
-              null,
-              13059841984960,
-              13919681054918
-            ],
-            [
-              "Chỉ tiêu",
-              "Mã Số",
-              "Thuyết minh",
-              "Cuối kỳ",
-              "Đầu năm"
-            ],
-            [
               null,
               "A",
               "B",
-              null,
-              1
+              null
             ],
             [
               "A. TÀI SẢN CỦA CTCK VÀ TÀI SẢN QUẢN LÝ THEO CAM KẾT",
-              null,
+              "",
               null,
               null,
               null
             ],
             [
               "1. Tài sản cố định thuê ngoài",
-              1,
+              "1",
               null,
               null,
               null
             ],
             [
               "2. Chứng chỉ có giá nhận giữ hộ",
-              2,
+              "2",
               null,
               "-",
               "-"
             ],
             [
               "3. Tài sản nhận thế chấp",
-              3,
+              "3",
               null,
               null,
               null
             ],
             [
               "4. Nợ khó đòi đã xử lý",
-              4,
+              "4",
               "A.7.12",
               172000000,
               172000000
             ],
             [
               "5. Ngoại tệ các loại",
-              5,
+              "5",
               null,
               null,
               null
             ],
             [
               "6. Cổ phiếu đang lưu hành (số lượng)",
-              6,
+              "6",
               null,
               346498009,
               346498009
             ],
             [
               "7. Cổ phiếu quỹ (số lượng)",
-              7,
+              "7",
               null,
               "-",
               "-"
             ],
             [
               "8. Tài sản tài chính niêm yết/đăng ký giao dịch tại VSD của CTCK",
-              8,
+              "8",
               "A.7.13",
               801060300000,
               401061950000
             ],
             [
               "9. Tài sản tài chính đã lưu ký tại VSD và chưa giao dịch của CTCK",
-              9,
+              "9",
               "A.7.14",
               "-",
               "-"
             ],
             [
               "10. Tài sản tài chính chờ về của CTCK",
-              10,
+              "10",
               "A.7.15",
               "-",
               "-"
             ],
             [
               "11. Tài sản tài chính sửa lỗi giao dịch của CTCK",
-              11,
+              "11",
               null,
               null,
               null
             ],
             [
               "12. Tài sản tài chính chưa lưu ký tại VSD của CTCK",
-              12,
+              "12",
               "A.7.17",
               2222678110000,
               1722676440000
             ],
             [
               "13. Tài sản tài chính được hưởng quyền của CTCK",
-              13,
+              "13",
               "A.7.18",
               "-",
               "-"
             ],
             [
               "14. Chứng quyền (số lượng)",
-              14,
+              "14",
               null,
               null,
               null
-            ],
-            [
-              "*Đồng Việt Nam*",
-              null,
-              null,
-              null,
-              null
-            ],
-            [
-              "1. Tài sản tài chính niêm yết/đăng ký giao dịch tại VSD của Nhà đầu tư",
-              21,
-              "A.7.20",
-              34229592371804,
-              35747373012145
-            ],
-            [
-              "a. Tài sản tài chính giao dịch tự do chuyển nhượng",
-              211,
-              null,
-              32220793658704,
-              33791343565245
-            ],
-            [
-              "b. Tài sản tài chính hạn chế chuyển nhượng",
-              212,
-              null,
-              420472660000,
-              426953920000
-            ],
-            [
-              "c. Tài sản tài chính giao dịch cầm cố",
-              213,
-              null,
-              1095821840000,
-              1122311090000
-            ],
-            [
-              "d. Tài sản tài chính phong tỏa, tạm giữ",
-              214,
-              null,
-              10482190000,
-              10482190000
-            ],
-            [
-              "e. Tài sản tài chính chờ thanh toán",
-              215,
-              null,
-              482022023100,
-              396282246900
-            ],
-            [
-              "f. Tài sản tài chính chờ cho vay",
-              216,
-              null,
-              null,
-              null
-            ],
-            [
-              "2. Tài sản tài chính đã lưu ký tại VSD và chưa giao dịch của Nhà đầu tư",
-              22,
-              "A.7.21",
-              34694890000,
-              29941320000
             ],
             [
               "b. Tài sản tài chính đã lưu ký tại VSD và chưa giao dịch, hạn chế chuyển nhượng",
-              222,
+              null,
               null,
               34390910000,
               27279920000
             ],
             [
               "c. Tài sản tài chính đã lưu ký tại VSD và chưa giao dịch, cầm cố",
-              223,
+              null,
               null,
               null,
               null
             ],
             [
               "d. Tài sản tài chính đã lưu ký tại VSD và chưa giao dịch, phong tỏa, tạm giữ",
-              224,
+              null,
               null,
               null,
               null
             ],
             [
               "3. Tài sản tài chính chờ về của Nhà đầu tư",
-              23,
+              null,
               "A.7.22",
               456563616900,
               440811306525
             ],
             [
               "4. Tài sản tài chính sửa lỗi giao dịch của Nhà đầu tư",
-              "24.a",
+              null,
               null,
               null,
               null
             ],
             [
               "5. Tài sản tài chính chưa lưu ký tại VSD của Nhà đầu tư",
-              "24.b",
+              null,
               null,
               null,
               null
             ],
             [
               "6. Tài sản tài chính được hưởng quyền của Nhà đầu tư",
-              25,
+              null,
               "A.7.24",
               16738490000,
               60760470000
@@ -8907,98 +8844,98 @@
             ],
             [
               "7. Tiền gửi của khách hàng",
-              26,
+              null,
               null,
               4019310979830,
               3385534016503
             ],
             [
               "7.1. Tiền gửi của Nhà đầu tư về giao dịch chứng khoán theo phương thức CTCK quản lý",
-              27,
+              null,
               "A.7.25",
               4017334333480,
               3383373905203
             ],
             [
               "7.2. Tiền gửi tổng hợp giao dịch chứng khoán cho khách hàng",
-              28,
+              null,
               null,
               "-",
               "-"
             ],
             [
               "7.3. Tiền gửi bù trừ và thanh toán giao dịch chứng khoán",
-              29,
+              null,
               null,
               "-",
               "-"
             ],
             [
               "a. Tiền gửi bù trừ và thanh toán giao dịch chứng khoán của Nhà đầu tư trong nước",
-              291,
+              null,
               null,
               "-",
               "-"
             ],
             [
               "b. Tiền gửi Tiền gửi bù trừ và thanh toán giao dịch chứng khoán của Nhà đầu tư nước ngoài",
-              292,
+              null,
               null,
               "-",
               "-"
             ],
             [
               "7.4. Tiền gửi của Tổ chức phát hành chứng khoán",
-              30,
+              null,
               "A.7.26",
               1976646350,
               2160111300
             ],
             [
               "8. Phải trả Nhà đầu tư về tiền gửi giao dịch chứng khoán theo phương thức CTCK quản lý",
-              31,
+              null,
               "A.7.39",
               4017334333480,
               3383373905203
             ],
             [
               "8.1. Phải trả Nhà đầu tư trong nước về tiền gửi giao dịch chứng khoán theo phương thức CTCK quản lý",
-              311,
+              null,
               null,
               3941106488494,
               3354560978096
             ],
             [
               "8.2. Phải trả Nhà đầu tư nước ngoài về tiền gửi giao dịch chứng khoán theo phương thức CTCK quản lý",
-              312,
+              null,
               null,
               76227844986,
               28812927107
             ],
             [
               "9. Phải trả Tổ chức phát hành chứng khoán",
-              32,
+              null,
               null,
               "-",
               "-"
             ],
             [
               "10. Phải thu của khách hàng về lỗi giao dịch các tài sản tài chính",
-              33,
+              null,
               null,
               "-",
               "-"
             ],
             [
               "11. Phải trả của khách hàng về lỗi giao dịch các tài sản tài chính",
-              34,
+              null,
               null,
               null,
               null
             ],
             [
               "12. Phải trả cổ tức, gốc và lãi trái phiếu",
-              35,
+              null,
               null,
               1976646350,
               2160111300
@@ -9014,10 +8951,6 @@
       "periodYear": 2026,
       "periodSlug": "Q1",
       "warnings": [
-        "\"Quý I Năm nay\": Tong cac dong con cua \"Cong doanh thu hoat dong\" (341622378218) khong khop chinh dong \"Cong doanh thu hoat dong\" (378398564136) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Quý I Năm trước\": Tong cac dong con cua \"Cong doanh thu hoat dong\" (274540018066) khong khop chinh dong \"Cong doanh thu hoat dong\" (312063617998) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Lũy kế đến cuối kỳ này Năm nay\": Tong cac dong con cua \"Cong doanh thu hoat dong\" (341622378218) khong khop chinh dong \"Cong doanh thu hoat dong\" (378398564136) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Lũy kế đến cuối kỳ này Năm trước\": Tong cac dong con cua \"Cong doanh thu hoat dong\" (274540018066) khong khop chinh dong \"Cong doanh thu hoat dong\" (312063617998) - co the do OCR gop/bia dong, can xem tay.",
         "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 3 muc trong BCDKT, 1 muc trong KQKD (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
       ]
     },
