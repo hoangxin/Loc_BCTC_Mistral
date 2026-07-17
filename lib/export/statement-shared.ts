@@ -221,6 +221,16 @@ export function findRowByCode(
 //   KHONG chua "giai đoạn").
 // - "CHUA PHAN PHOI KY NAY"/"CHUA PHAN PHOI LUY KE DEN CUOI" - 2 dong chi
 //   tiet co dinh cua "Loi nhuan sau thue chua phan phoi" (mã 420a/420b).
+//   SUA 2026-07-16 (backtest 33 bao cao, LLM that): bao cao NAM ghi "...chua
+//   phan phoi NAM NAY" thay vi "...KY NAY" (bao cao Quy) - thieu bien the nay
+//   khien dong cap-4 mã 420b (vd LLM "*LNST chua phan phoi nam nay*" 85.6 ty)
+//   KHONG bi nhan la cap-4, cong TRUNG vao tong "I. Von chu so huu" (dung bang
+//   gia tri no) -> mismatch GIA (tong 3 dong con that = so bao cao chinh xac).
+//   "LUY KE DEN CUOI" da khop ca 2 bien the ky/nam (deu co "den cuoi ... truoc")
+//   nen chi thieu ve "ky nay" vs "nam nay". Cum "CHUA PHAN PHOI" + qualifier ky
+//   la tin hieu phan biet cap-4 voi dong CHA (chi "...chua phan phoi", khong
+//   qualifier) - liet ke qualifier, KHONG match tran "CHUA PHAN PHOI" (se an
+//   nham dong cha).
 const KNOWN_CAP4_LABEL_CONTENT = [
   'NGUYEN GIA',
   'HAO MON LUY KE',
@@ -229,9 +239,19 @@ const KNOWN_CAP4_LABEL_CONTENT = [
   'THEO GIA TRI HOP LY',
   'GIAI DOAN',
   'CHUA PHAN PHOI KY NAY',
+  'CHUA PHAN PHOI NAM NAY',
   'CHUA PHAN PHOI LUY KE DEN CUOI',
 ];
 
+// SUA 2026-07-17 (theo phan hoi nguoi dung, sau backtest 16 bao cao Q2/2026):
+// TRC gap loi OCR danh may "lũy kế" -> "lấy kế" (1 ky tu, ngau nhien) khien
+// dong cap-4 mã 421a khong nhan dien duoc, cong trung Von chu so huu. DA THU
+// noi long thanh token-AND (bo yeu cau chinh ta "luy ke") nhung nguoi dung
+// yeu cau REVERT: day la LOI OCR ngau nhien (khong phai cach viet khac chuan
+// cua cong ty nao), khong nen "sua" trong code - CHAP NHAN duoc, de lai canh
+// bao (mismatch) cho nguoi xem tay, thay vi noi rong dieu kien khop (rui ro
+// bat nham thu khac o bao cao sau - dung tinh than
+// feedback_prefer_structural_over_wording_fixes). Giu NGUYEN marker cu.
 export function isKnownCap4Label(label: string): boolean {
   const normalized = normalizeLabelText(label);
   return KNOWN_CAP4_LABEL_CONTENT.some((marker) => normalized.includes(marker));
@@ -538,6 +558,47 @@ function normalizeGroupLabelForContentMatch(label: string): string {
   return GROUP_LABEL_SYNONYM_CANONICAL[normalized] ?? normalized;
 }
 
+// SUA 2026-07-16 (theo yeu cau nguoi dung "xu ly ten chi tieu khac biet doi
+// chut voi quy dinh ke toan"): tu-noi RONG NGHIA - cong ty CO THE co hoac
+// khong ("CAC khoan dau tu tai chinh ngan han" == "Dau tu tai chinh ngan han",
+// "Tien va CAC KHOAN tuong duong tien" == "Tien va tuong duong tien"). Truoc
+// day phai LIET KE TAY ca 2 bien the trong tung danh sach ten chuan (vd
+// KNOWN_BALANCE_SHEET_LEVEL1_CONTENT co CA "DAU TU TAI CHINH NGAN HAN" LAN
+// "CAC KHOAN DAU TU TAI CHINH NGAN HAN"), moi cach viet moi cua 1 cong ty lai
+// phai vá them 1 dong - khong ben vung khi loc >1000 bao cao/quy.
+//
+// Bo tu-noi rong nay o CA HAI phia (nhan dong LAN danh sach ten chuan, qua
+// canonicalGroupKey) truoc khi so khop. QUAN TRONG: van la so khop CA CHUOI
+// (Set.has / ===) sau khi bo, KHONG chuyen sang substring - nen KHONG lam song
+// lai lop loi "TAI SAN CO DINH" ⊂ "TAI SAN CO DINH HUU HINH" (ca 2 deu giu
+// nguyen phan rieng cua minh sau khi bo tu-noi, van khac chuoi). Da kiem chung:
+// trong toan bo danh sach cap-1, viec bo "CAC KHOAN"/"CAC" CHI gom dung cac cap
+// bien the da liet ke tay, KHONG lam 2 khai niem KHAC NHAU nao trung khoa (xem
+// regression test scripts/_debug-level1-classification.ts). CHI gom 2 tu-noi
+// rong nghia chac chan nay (KHONG gom "VA"/"KHAC"/"CUA"... - deu mang nghia
+// phan biet).
+const OPTIONAL_CONNECTIVE_WORDS = /\b(?:CAC KHOAN|CAC)\b/g;
+
+// Dau nhay/ngoac kep OCR hay CHEN quanh cac tu viet tat ("('FVTPL')",
+// "('HTM')", "'AFS'") - nhieu OCR THUAN TUY, khong mang nghia. Da xac nhan qua
+// VCK that (2026-07-16, backtest 33 bao cao): dong con "...ghi nhan thong qua
+// lai/lo ('FVTPL')" (9.3 nghin ty) va "...den ngay dao han ('HTM')" (2.3 nghin
+// ty) bi loai khoi tong container "Tai san tai chinh" chi vi ten chuan trong
+// whitelist ghi "(FVTPL)"/"(HTM)" KHONG co dau nhay - gay mismatch GIA dung
+// bang 11.6 nghin ty (tong 9 dong con that = so bao cao chinh xac). Bo o CA 2
+// phia (canonicalGroupKey ap cho ca nhan dong lan whitelist) - dong bo, an toan.
+const QUOTE_NOISE_CHARS = /['‘’"“”`´]/g;
+
+function canonicalGroupKey(label: string): string {
+  return normalizeGroupLabelForContentMatch(label)
+    .replace(QUOTE_NOISE_CHARS, '')
+    .replace(OPTIONAL_CONNECTIVE_WORDS, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+const KNOWN_BALANCE_SHEET_LEVEL1_KEYS = new Set(KNOWN_BALANCE_SHEET_LEVEL1_CONTENT.map(canonicalGroupKey));
+
 function isKnownBalanceSheetLevel1Label(label: string): boolean {
   // Mot ten CHUAN (vd "Tien va cac khoan tuong duong tien") co the la dong
   // tong CAP 1 THAT trong dinh dang DN-thuong/TT200, nhung lai la dong CON
@@ -553,8 +614,7 @@ function isKnownBalanceSheetLevel1Label(label: string): boolean {
   // (vd "Tài sản tài chính") bi loai qua `isInsideKnownContainer` - ca 2 deu
   // da duoc goi o childrenBetween (lib/export/validate-statements.ts) SAU buoc
   // nay, nen ham nay chi can khop TEN, khong can tu loai truoc theo tien to.
-  const normalized = normalizeGroupLabelForContentMatch(label);
-  return KNOWN_BALANCE_SHEET_LEVEL1_CONTENT.includes(normalized);
+  return KNOWN_BALANCE_SHEET_LEVEL1_KEYS.has(canonicalGroupKey(label));
 }
 
 // Mot so nhom "cap 1" (vd "Hang ton kho", "Bat dong san dau tu") CHI co DUNG 1
@@ -624,13 +684,14 @@ const CONTAINER_LEVEL1_MARKERS = ['TAI SAN TAI CHINH', 'TAI SAN TAI CHINH DAI HA
 // co dinh" (mot nhom hoan toan doc lap, khong phai con cua container).
 const CONTAINER_CLOSING_MARKERS = ['TAI SAN NGAN HAN KHAC', 'TAI SAN DAI HAN KHAC', 'TAI SAN CO DINH'];
 
+const CONTAINER_LEVEL1_KEYS = new Set(CONTAINER_LEVEL1_MARKERS.map(canonicalGroupKey));
+const CONTAINER_CLOSING_KEYS = new Set(CONTAINER_CLOSING_MARKERS.map(canonicalGroupKey));
+
 function isKnownContainerLabel(label: string): boolean {
-  const normalized = normalizeGroupLabelForContentMatch(label);
-  return CONTAINER_LEVEL1_MARKERS.includes(normalized);
+  return CONTAINER_LEVEL1_KEYS.has(canonicalGroupKey(label));
 }
 function isKnownContainerClosingLabel(label: string): boolean {
-  const normalized = normalizeGroupLabelForContentMatch(label);
-  return CONTAINER_CLOSING_MARKERS.includes(normalized);
+  return CONTAINER_CLOSING_KEYS.has(canonicalGroupKey(label));
 }
 
 // Ten CHUAN (Thong tu 210/2014/TT-BTC + sua doi 334/2016, mau B01-CTCK) cua
@@ -684,11 +745,21 @@ const CONTAINER_CHILDREN_CANONICAL: Record<string, string[]> = {
   ],
 };
 
+// Dung canonicalGroupKey (bo tu-noi rong "CAC KHOAN"/"CAC" o ca 2 phia) thay
+// cho normalizeGroupLabelForContentMatch - dong bo voi isKnownBalanceSheetLevel1Label
+// (nhieu ten con container VD "CAC KHOAN PHAI THU"/"CAC KHOAN CHO VAY" cung co
+// bien the co/khong "CAC KHOAN" giua cac bao cao CTCK khac nhau).
+const CONTAINER_CHILDREN_CANONICAL_KEYS = new Map<string, Set<string>>(
+  Object.entries(CONTAINER_CHILDREN_CANONICAL).map(([container, members]) => [
+    canonicalGroupKey(container),
+    new Set(members.map(canonicalGroupKey)),
+  ])
+);
+
 function isKnownContainerChildLabel(containerLabel: string, memberLabel: string): boolean {
-  const containerKey = normalizeGroupLabelForContentMatch(containerLabel);
-  const whitelist = CONTAINER_CHILDREN_CANONICAL[containerKey];
+  const whitelist = CONTAINER_CHILDREN_CANONICAL_KEYS.get(canonicalGroupKey(containerLabel));
   if (!whitelist) return true;
-  return whitelist.includes(normalizeGroupLabelForContentMatch(memberLabel));
+  return whitelist.has(canonicalGroupKey(memberLabel));
 }
 
 // Tim SU KIEN GAN NHAT (mo container hay dong container) truoc rowIdx trong
@@ -770,6 +841,15 @@ export function isLikelySubtotalRow(table: StatementTable, row: (string | number
 // dung o findAllGroupSumMismatches duoi day.
 function numbersWithinTolerance(a: number, b: number): boolean {
   return Math.abs(a - b) <= Math.max(GROUP_SUM_TOLERANCE_ABSOLUTE, Math.abs(b) * GROUP_SUM_TOLERANCE_RATIO);
+}
+
+function popcount(n: number): number {
+  let count = 0;
+  while (n > 0) {
+    count += n & 1;
+    n >>= 1;
+  }
+  return count;
 }
 
 // SUA 2026-07-14 (theo yeu cau nguoi dung, tong quat hoa tu 1 fix rieng cho
@@ -1727,8 +1807,26 @@ function allColumnsWithinTolerance(a: number[], b: number[]): boolean {
 // xu ly duoc nhieu tang long nhau lien tiep. Hoan toan SO HOC, khong dua vao
 // ten/ma so - ap dung duoc cho MOI cong ty tu chia nho theo BAT KY quy uoc
 // rieng nao cua ho.
-export function collapseNestedMemberRows(table: StatementTable, valueColIndexes: number[], memberIndexes: number[]): number[] {
+export interface CollapseResult {
+  memberIndexes: number[];
+  // Cac index BI GOP qua absorb 1-DOI-1 (chi 1 dong sau khop dung gia tri dong
+  // truoc, khong phai tong >=2 dong) - xem comment "SUA 2026-07-17" duoi. Day
+  // la truong hop MO HO: khong the phan biet "1 dong con DUY NHAT lap lai dung
+  // gia tri dong cha" (AN TOAN, PHO BIEN - vd LLM "Von gop"->"Co phieu pho
+  // thong", MBS 311->312) voi "2 khoan MUC DOC LAP tinh co trung gia tri"
+  // (SAI neu gop - vd ABW "Quy du tru bo sung von dieu le" va "Quy du phong
+  // tai chinh va rui ro nghiep vu", CUNG 13.199.809.009 nhung khong lien quan
+  // nhau) CHI BANG SO CUC BO. Tra ve rieng danh sach nay de CALLER (co san gia
+  // tri TONG NHOM that su, vd findBalanceSheetLevel2Mismatches) tu quyet dinh
+  // co can them lai cac dong nay hay khong dua tren doi chieu voi tong da biet -
+  // xem comment o do. Absorb >=2 dong KHONG dua vao day (kha nang 2+ dong DOC
+  // LAP tinh co cung tong 1 gia tri khac la thap hon nhieu, an toan giu nguyen).
+  ambiguousDropped: number[];
+}
+
+export function collapseNestedMemberRows(table: StatementTable, valueColIndexes: number[], memberIndexes: number[]): CollapseResult {
   let current = memberIndexes;
+  const ambiguousDropped = new Set<number>();
   let changed = true;
   while (changed) {
     changed = false;
@@ -1755,6 +1853,10 @@ export function collapseNestedMemberRows(table: StatementTable, valueColIndexes:
       }
       if (absorbedThrough !== -1) {
         next.push(idx); // giu dong cha, bo het day dong da gop
+        // SUA 2026-07-17 (backtest 16 bao cao Q2/2026 that, ABW): ghi nhan
+        // rieng truong hop absorb CHI 1 dong (j===i+1, mo ho) - xem comment
+        // CollapseResult.ambiguousDropped o tren.
+        if (absorbedThrough === i + 1) ambiguousDropped.add(current[absorbedThrough]);
         i = absorbedThrough + 1;
         changed = true;
       } else {
@@ -1764,7 +1866,7 @@ export function collapseNestedMemberRows(table: StatementTable, valueColIndexes:
     }
     current = next;
   }
-  return current;
+  return { memberIndexes: current, ambiguousDropped: [...ambiguousDropped] };
 }
 
 // SUA 2026-07-15 (theo phan hoi nguoi dung, xac nhan qua MIG that): 1 "ung
@@ -1804,7 +1906,7 @@ export function reconcileArithmeticCandidates(
       continue;
     }
     const rawLabel = String(table.rows[startIdx][labelIndex] ?? '').trim();
-    const detailSum = sumRowValues(table, collapseNestedMemberRows(table, valueColIndexes, computeMembers(rawLabel, startIdx, nextIdx)), valueColIndexes);
+    const detailSum = sumRowValues(table, collapseNestedMemberRows(table, valueColIndexes, computeMembers(rawLabel, startIdx, nextIdx)).memberIndexes, valueColIndexes);
     if (allColumnsWithinTolerance(detailSum, reported)) {
       k++; // da khop du, ung vien sau la anh em ngang hang THAT SU
       continue;
@@ -1924,42 +2026,76 @@ export function findBalanceSheetLevel2Mismatches(table: StatementTable, groupSta
     const groupLabel = rawLabel || (typeof parentMaSo === 'string' && parentMaSo ? `ma so ${parentMaSo}` : `dong ${startIdx + 1}`);
 
     // Gom nhom cap sau AN (khong co ten) bang so hoc truoc khi cong tong -
-    // xem collapseNestedMemberRows.
-    const memberRowIndexes = collapseNestedMemberRows(table, valueColIndexes, computeMembers(rawLabel, startIdx, endIdx));
-    if (memberRowIndexes.length === 0) continue;
+    // xem collapseNestedMemberRows. `ambiguousDropped` = cac dong bi gop
+    // THEO KIEU 1-DOI-1 (mo ho) - xem ly do o comment trong vong lap cot duoi.
+    const rawMemberIndexes = computeMembers(rawLabel, startIdx, endIdx);
+    const { memberIndexes: collapsedMembers, ambiguousDropped } = collapseNestedMemberRows(table, valueColIndexes, rawMemberIndexes);
+    if (collapsedMembers.length === 0) continue;
 
-    for (const col of valueColIndexes) {
+    const sumOf = (indexes: number[], col: number): { sum: number; sawDetail: boolean } => {
       let sum = 0;
       let sawDetail = false;
-      let previousValue: number | null = null;
-      for (const j of memberRowIndexes) {
+      for (const j of indexes) {
         const cell = table.rows[j][col];
         const value = typeof cell === 'number' ? cell : cell === '-' || cell === null ? 0 : null;
         if (value === null) continue;
-        // Dong TRUNG GIA TRI voi dong LIEN TRUOC (cung cot) - dau hieu day la
-        // BAN NHAC LAI CHI TIET cua chinh dong truoc (khong phai 1 khoan CONG
-        // THEM), gap khi ma so/STT KHONG theo dung quy uoc thap phan chuan.
-        // Da xac nhan qua doi chieu that MBS Q2/2026: dong "1 Vay va no thue
-        // tai chinh ngan han" (ma 311) va dong NGAY SAU "11 Vay ngan han" (ma
-        // 312, KHONG co dau cham nen khong bi loai boi kiem tra ma so o tren)
-        // co GIA TRI Y HET nhau moi cot - dong 312 chi la nhac lai chi tiet
-        // duy nhat cua 311, cong them se dem 2 lan dung 1 khoan.
-        if (previousValue !== null && value === previousValue) {
-          previousValue = value;
-          continue;
-        }
         sum += value;
         sawDetail = true;
-        previousValue = value;
       }
-      if (!sawDetail) continue;
+      return { sum, sawDetail };
+    };
+
+    for (const col of valueColIndexes) {
+      const collapsed = sumOf(collapsedMembers, col);
+      if (!collapsed.sawDetail) continue;
 
       const parentCell = parentRow[col];
       const reported = typeof parentCell === 'number' ? parentCell : parentCell === '-' || parentCell === null ? 0 : null;
       if (reported === null) continue;
 
-      if (Math.abs(sum - reported) > Math.max(GROUP_SUM_TOLERANCE_ABSOLUTE, Math.abs(reported) * GROUP_SUM_TOLERANCE_RATIO)) {
-        mismatches.push({ groupLabel, columnName: table.columns[col] ?? `cot ${col}`, columnIndex: col, subtotalRowIndex: startIdx, memberRowIndexes, sum, reported });
+      const tolerance = Math.max(GROUP_SUM_TOLERANCE_ABSOLUTE, Math.abs(reported) * GROUP_SUM_TOLERANCE_RATIO);
+      let { sum } = collapsed;
+      let usedMembers = collapsedMembers;
+      // SUA 2026-07-17 (backtest 16 bao cao Q2/2026 that, ABW): collapseNestedMemberRows
+      // gop 1-doi-1 khi 1 dong CON DON LE lap lai DUNG gia tri dong TRUOC no -
+      // AN TOAN cho da so truong hop THAT (vd LLM "Von gop cua chu so huu"->"Co
+      // phieu pho thong co quyen bieu quyet", MBS 311->312 - 1 dong CHA CHI CO
+      // 1 thanh phan, thanh phan do tu nhien lap lai dung gia tri cha), nhung
+      // KHONG PHAN BIET DUOC voi 2 khoan MUC DOC LAP tinh co trung gia tri
+      // (ABW: "Quy du tru bo sung von dieu le" va "Quy du phong tai chinh va
+      // rui ro nghiep vu", CUNG 13.199.809.009 nhung KHONG lien quan nhau) -
+      // gop nham truong hop nay lam MAT 1 dong THAT khoi tong. Khi 1 nhom co
+      // NHIEU dong mo ho cung luc (vd ABW: 67/68 la 2 lan gop AN TOAN, THAT su
+      // trung lap voi 66; 71 la lan gop SAI, 2 khoan doc lap) - KHONG the "them
+      // lai TAT CA cung luc" (se dem trung 67/68, qua tay). Thu TUNG TAP CON
+      // cac dong mo ho (toi da 2^N, N nho trong thuc te - chi vai dong mo ho
+      // 1 nhom) xem tap nao, khi them vao ket qua da gop, khop DUNG tong da
+      // biet (`reported`) - chinh la CACH DUY NHAT xac dinh dung tap con nao
+      // that su bi gop SAI ma khong doan mu. Neu KHONG tap con nao khop, giu
+      // nguyen ket qua gop mac dinh (khong doan bua khi khong xac dinh duoc).
+      if (Math.abs(sum - reported) > tolerance && ambiguousDropped.length > 0 && ambiguousDropped.length <= 12) {
+        const n = ambiguousDropped.length;
+        // Thu theo TAP CON NHO NHAT truoc (sap xep mask theo so bit 1 tang dan)
+        // - sua sai TOI THIEU (chi them lai dung nhung dong can) it kha nang la
+        // trung hop NGAU NHIEN hon nhieu so voi 1 tap con lon hon vo tinh cong
+        // du ra dung 1 gia tri khac.
+        const masks = Array.from({ length: (1 << n) - 1 }, (_, k) => k + 1).sort(
+          (a, b) => popcount(a) - popcount(b)
+        );
+        for (const mask of masks) {
+          const candidateExtra = ambiguousDropped.filter((_, bit) => (mask & (1 << bit)) !== 0);
+          const candidateMembers = [...collapsedMembers, ...candidateExtra];
+          const candidate = sumOf(candidateMembers, col);
+          if (candidate.sawDetail && Math.abs(candidate.sum - reported) <= tolerance) {
+            sum = candidate.sum;
+            usedMembers = candidateMembers.sort((a, b) => a - b);
+            break;
+          }
+        }
+      }
+
+      if (Math.abs(sum - reported) > tolerance) {
+        mismatches.push({ groupLabel, columnName: table.columns[col] ?? `cot ${col}`, columnIndex: col, subtotalRowIndex: startIdx, memberRowIndexes: usedMembers, sum, reported });
       }
     }
   }

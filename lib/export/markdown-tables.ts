@@ -209,8 +209,23 @@ function parseNumericCell(value: string): string | number | null {
 // giua chung khong doi, chi co the bi thieu 1 cot metadata o giua.
 const MA_SO_PATTERN = /^\d{2,4}[a-zA-Z]?$/;
 
+// Chuoi CHI gom ky tu La Ma (I,V,X,L,C,D,M, co the kem 1 dau phan cach don le)
+// - la STT MUC (vd "III.", "VIII", "II)"), KHONG PHAI nhan that - du co the
+// TINH CO khop pattern "3+ chu cai lien tiep" duoi day (vd "III" = 3 chu "I").
+// Da xac nhan qua CSV that (2026-07-17): dong that su la "III. | Các khoản
+// phải thu ngắn hạn | 130 | ...| gia tri |" bi hieu SAI la "da dung vi tri
+// san" (chi vi o dau tien "III." tinh co "trong nhu nhan that"), GIU NGUYEN
+// hang thay vi phan loai lai theo noi dung - lam nhan THAT ("Các khoản phải
+// thu ngắn hạn") bi ket qua o SAI cot (dinh o vi tri STT), khien dong nay
+// KHONG con duoc nhan dien la ranh gioi nhom "cap-1" ke tiep, pha tan het
+// pham vi tinh tong cho nhom truoc no. Loai truong hop nay TRUOC khi kiem tra
+// pattern chu cai chung.
+const PURE_ROMAN_NUMERAL_CELL = /^[IVXLCDM]+\s*[.\/)-]?\s*$/;
+
 function looksLikeLabel(cell: string | null): boolean {
-  return typeof cell === 'string' && /[a-zA-ZÀ-ỹ]{3,}/.test(cell);
+  if (typeof cell !== 'string') return false;
+  if (PURE_ROMAN_NUMERAL_CELL.test(cell.trim())) return false;
+  return /[a-zA-ZÀ-ỹ]{3,}/.test(cell);
 }
 
 // KHONG dung MA_SO_PATTERN o day (chi khop ma so DON gian nhu "212"/"117a") -
@@ -263,7 +278,15 @@ function realignRowByContent(
 
   const result: (string | null)[] = new Array(columns.length).fill(null);
 
-  const labelCellIdx = row.findIndex((cell) => typeof cell === 'string' && /[a-zA-ZÀ-ỹ]{3,}/.test(cell));
+  // SUA 2026-07-17 (backtest 16 bao cao Q2/2026 that, CSV): dung LAI
+  // looksLikeLabel() (da loai STT La Ma thuan tuy nhu "III.") thay vi 1 regex
+  // tho rieng o day - truoc day 2 noi nay dung 2 kiem tra KHAC NHAU (fast-path
+  // o tren da sua, nhung buoc tim "o nao la nhan" trong nhanh phan loai lai
+  // NAY van dung regex tho cu, KHONG duoc huong loi ich sua o tren) - dong
+  // "III. | Các khoản phải thu ngắn hạn | 130 | ..." van bi chon o[0]="III."
+  // lam nhan (van khop pattern "3+ chu cai" tho), day nhan THAT ("Các khoản
+  // phải thu ngắn hạn") sang vi tri SAI (cot Ma so).
+  const labelCellIdx = row.findIndex((cell) => looksLikeLabel(cell));
   if (labelCellIdx !== -1) result[labelColumnIndex] = row[labelCellIdx];
 
   const remaining = row.filter((_, i) => i !== labelCellIdx);
@@ -331,7 +354,13 @@ const INCOME_STATEMENT_CONTENT_MARKERS = [
   'CAC KHOAN GIAM TRU DOANH THU',
   'DOANH THU THUAN VE BAN HANG',
   'GIA VON HANG BAN',
-  'LOI NHUAN GOP VE BAN HANG',
+  // SUA 2026-07-16 (token-AND, duoc NEO bao ve): nhieu DN ghi gon "Loi nhuan
+  // gop" (khong "ve ban hang va cung cap dich vu") - noi ve cum ngan "LOI NHUAN
+  // GOP" (van doc quyen KQKD, khong o BCDKT/LCTT; khop luon bien the bao hiem
+  // "Loi nhuan gop hoat dong kinh doanh bao hiem"). An toan de noi vi day cung
+  // la 1 NEO income (ANCHOR_MARKERS_BY_KEY) - neu tinh co khop nham 1 bang khac
+  // co neo rieng, neo bang do van thang.
+  'LOI NHUAN GOP',
   'DOANH THU HOAT DONG TAI CHINH',
   'CHI PHI BAN HANG',
   'CHI PHI QUAN LY DOANH NGHIEP',
@@ -361,7 +390,25 @@ const INCOME_STATEMENT_CONTENT_MARKERS = [
   'CHI PHI NGHIEP VU MOI GIOI CHUNG KHOAN',
   'CONG DOANH THU HOAT DONG',
   'CONG CHI PHI HOAT DONG',
-  'TONG LOI NHUAN KE TOAN TRUOC THUE',
+  // SUA 2026-07-17 (backtest 16 bao cao Q2/2026 that, BSL): tach ['TONG LOI
+  // NHUAN','TRUOC THUE'] rieng (thay the "TONG LOI NHUAN KE TOAN TRUOC THUE"
+  // cung nhac) de hut bien the Ngan hang bo "ke toan" (nguoi dung luu y
+  // 2026-07-16). KHONG them bien the "bo Tong" (['LOI NHUAN KE TOAN','TRUOC
+  // THUE']) o day nua - DA THU va BO (xac nhan qua BSL that): thuyet minh "Chi
+  // phi thue TNDN hien hanh" (RAT PHO BIEN, hau het cong ty deu co) thuong BAT
+  // DAU bang CHINH XAC dong "Loi nhuan ke toan truoc thue" (khong "Tong") de
+  // doi chieu thue suat - ngay ca o tang diem THUONG (+1, khong phai neo 100),
+  // 1 bang thuyet minh NHO (4-5 dong, khong co marker nao khac) van du de
+  // "thang" (diem 1 > 0, khong hoa) va bi phan loai NHAM thanh incomeStatement -
+  // SAI THAM LANG (khong canh bao). NGHIEM TRONG HON: lib/analysis.ts:501 co
+  // finder `byLabel(['LOI NHUAN KE TOAN TRUOC THUE'])` dung CHINH cum nay tra
+  // cuu 1 chi tieu phan tich - neu dong thuyet minh lot vao bang, finder co
+  // nguy co lay NHAM gia tri doi chieu thue suat (khac han LNTT that) thay vi
+  // dong KQKD that, sai am tham 1 chi tieu hien thi cho nguoi dung. Chap nhan
+  // MAT do phu (KQKD bo "Tong" VA "ke toan" cung luc, hiem) de tranh rui ro nay -
+  // 1 bang KQKD that luon con nhieu marker KHAC (Doanh thu thuan, Gia von hang
+  // ban, Loi nhuan gop...) du nhan dung du thieu rieng dong nay.
+  ['TONG LOI NHUAN', 'TRUOC THUE'],
   'LOI NHUAN KE TOAN SAU THUE',
   // KQKD mau Ngan hang (Mau B03/TCTD-HN, Thong tu 49/2014/TT-NHNN) dung tu
   // ngu rieng, khong trung markers VAS/bao hiem/CTCK nao o tren - da xac nhan
@@ -556,14 +603,72 @@ function findCashFlowEndingByFinancingSectionOrder(lines: string[], searchFromIn
   return -1;
 }
 
+// SUA 2026-07-17 (theo yeu cau nguoi dung, sau khi BSL that lo ra ca lop 1 LAN
+// lop 2 o tren deu KHONG tim duoc diem ket thuc LCTT): trang LCTT "hoat dong
+// tai chinh" cua BSL bi Mistral OCR ra 1 KHOI JSON CAPTION (khong phai bang
+// markdown "| ... |" chuan) - khong co dong "Tien dau ky"/"Tien cuoi ky" nao o
+// DANG BANG THAT trong ca tai lieu de 2 lop tren bam vao, Thuyet minh lot het
+// vao pham vi quet.
+//
+// LOP DU PHONG THU 3: KHOI PHUC lai co che HEADING+TU KHOA da tung dung LAM
+// CHINH truoc day (2026-07-14, xem lich su "phuong an (c)" ngay tren comment
+// nay - da GIU LAI duoi dang comment, chua xoa - va NOTES_SECTION_MARKERS)
+// nhung bi thay boi co che CASH_FLOW_ENDING_SEQUENCE (lop 1/2 o tren) lam
+// CHINH theo de nghi nguoi dung luc do - comment cu ghi ro co che nay "Hoat
+// dong dung" (khong loi, chi bi thay vi nguoi dung muon 1 tin hieu thong nhat
+// hon lam CHINH). Dung lai y nguyen tinh than do lam DU PHONG cuoi cung.
+//
+// Muc tieu de: TEN CHINH THUC cua chinh mau bieu Thuyet minh - "Bản thuyết
+// minh báo cáo tài chính" (Mau B09-DN, Thong tu 200/2014/TT-BTC) - la ten GOI
+// PHAP LY co dinh cua ca mau bieu, khong phai 1 cach dien dat tuy chon. Ban
+// dau thu dung tieu de MUC 3 cu the ("Chuan muc va Che do ke toan ap dung")
+// nhung KIEM TRA LAI qua chinh du lieu BSL that moi phat hien BSL dung so muc/
+// ten muc KHAC (muc 3 cua BSL la "Tóm tắt những chính sách kế toán chủ yếu",
+// khong co muc rieng ten "Chuẩn mực và Chế độ kế toán ap dung" - cum do chi
+// xuat hien duoi dang VAN XUOI long trong muc 2(a) "Tuyên bố về tuân thủ") -
+// SO MUC/TEN MUC CON LAI (1,2,3,4...) bien doi qua nhieu giua cac cong ty de
+// dung an toan. NGUOC LAI, TEN CHINH cua ca mau bieu ("Bản thuyết minh báo
+// cáo tài chính"/"Thuyết minh báo cáo tài chính") xac nhan xuat hien O CA 2
+// bao cao that (BSL: "**Thuyết minh báo cáo tài chính quý 2...**" dang chu
+// dam KHONG "#"; FTS: "## BẢN THUYẾT MINH BÁO CÁO TÀI CHÍNH RIÊNG" dang "##")
+// - dung looksLikeHeadingLine (dong ngan, khong phai hang bang - KHONG doi
+// hoi "#" nhu ban goc 2026-07-14, vi BSL khong dung "#" cho dong nay) thay vi
+// yeu cau "#" nghiem ngat, de tuong thich CA 2 kieu OCR danh dau tieu de.
+//
+// AN TOAN VOI COLLISION DA BIET (trang bia liet ke ten 4 bang dang danh sach,
+// xem comment parseStatementsFromMarkdown ve firstContentLine): ham nay CHI
+// duoc goi voi `searchFromIndex` = diem DA XAC NHAN qua noi dung bang THAT (
+// firstContentLine, sau trang bia) - dong lap lai ten "Thuyet minh" o trang
+// bia (TRUOC firstContentLine) nam NGOAI pham vi tim kiem cua ham nay, khong
+// con rui ro khop nham nhu lan dau thu (2026-07-14).
+const NOTES_SECTION_TITLE_MARKERS = [['THUYET MINH', 'BAO CAO TAI CHINH']];
+
+function isNotesSectionTitleHeadingLine(normalizedLine: string): boolean {
+  return NOTES_SECTION_TITLE_MARKERS.some((tokens) => tokens.every((t) => normalizedLine.includes(t)));
+}
+
+function findNotesSectionStartIndex(lines: string[], searchFromIndex: number): number {
+  for (let i = searchFromIndex; i < lines.length; i++) {
+    if (!looksLikeHeadingLine(lines[i])) continue;
+    if (isNotesSectionTitleHeadingLine(normalizeLabelText(lines[i]))) return i;
+  }
+  return -1;
+}
+
 // Diem vao DUY NHAT cho ca containsNotesSectionMarker va parseStatementsFromMarkdown
-// - thu phuong an chinh xac hon (khoang cach gioi han) TRUOC, chi fallback
-// sang phuong an thu tu (khong gioi han khoang cach, rui ro hon mot chut)
-// khi phuong an dau khong tim thay gi.
+// - thu phuong an chinh xac hon (khoang cach gioi han) TRUOC, fallback sang
+// phuong an thu tu (khong gioi han khoang cach) khi phuong an dau khong tim
+// thay gi, CUOI CUNG fallback sang tieu de mandated cua Thuyet minh (lop 3,
+// BSL that) khi CA 2 lop tren deu that bai (vd 1 trang LCTT bi OCR hong hoan
+// toan, khong con dong bang nao de bam vao).
 function findCashFlowEndingIndex(lines: string[], searchFromIndex: number): number {
   const strict = findCashFlowEndingSequenceIndex(lines, searchFromIndex);
   if (strict !== -1) return strict;
-  return findCashFlowEndingByFinancingSectionOrder(lines, searchFromIndex);
+  const byOrder = findCashFlowEndingByFinancingSectionOrder(lines, searchFromIndex);
+  if (byOrder !== -1) return byOrder;
+  const notesStart = findNotesSectionStartIndex(lines, searchFromIndex);
+  if (notesStart !== -1) return notesStart - 1;
+  return -1;
 }
 
 // Rieng CTCK (Mau B01-CTCK): "Cac chi tieu ngoai bao cao tinh hinh tai chinh"
@@ -611,6 +716,189 @@ const CONTENT_MARKERS_BY_KEY: { key: keyof FinancialStatements; markers: Content
   { key: 'cashFlow', markers: [...CASH_FLOW_CONTENT_MARKERS, ['LUU CHUYEN TIEN', 'HOAT DONG TAI CHINH']] },
   { key: 'offBalanceSheet', markers: OFF_BALANCE_SHEET_CONTENT_MARKERS },
 ];
+
+// SUA 2026-07-16 (theo de nghi nguoi dung): marker "NEO" = tu khoa chi xuat
+// hien o DUNG 1 trong 4 bang (khong map mo giua cac bang). classifyTableByContent
+// cham diem TUONG DOI, nen 1 marker MAP MO (vd "Tien va cac khoan tuong duong
+// tien" co o CA BCDKT lan dong ket thuc LCTT) co the cong diem GIA cho sai bang
+// va lat nham phan loai. Y tuong nguoi dung: neu bang chua 1 NEO cua LCTT (vd
+// "Luu chuyen tien tu hoat dong tai chinh") thi dong "tien va tuong duong tien"
+// trong bang do CHAC CHAN thuoc LCTT, khong the la BCDKT - NEO thang marker map
+// mo. Cho neo trong so LON (ANCHOR_WEIGHT) de 1 neo luon ap dao moi so marker
+// map mo -> co the noi long marker map mo sang token-AND (tang recall) ma KHONG
+// so lat nham bang.
+//
+// NGUYEN TAC CHON NEO: CHI gom marker CHAC CHAN doc quyen 1 bang. Neu bo sot 1
+// marker le ra doc quyen -> chi mat 1 phan tin hieu an toan, bang do roi ve cham
+// diem tho nhu cu (van dung). Neo SAI (thuc te co o bang khac) moi nguy hiem ->
+// chon BAO THU. KHONG gom cac marker da biet MAP MO: "TIEN VA... TUONG DUONG
+// TIEN" (BCDKT + LCTT), "HANG TON KHO" (BCDKT + LCTT bien dong), "VON CHU SO HUU"
+// (BCDKT + bao cao bien dong VCSH), "LOI ICH... CO DONG KHONG KIEM SOAT" (KQKD +
+// VCSH BCDKT), "NO KHO DOI DA XU LY"/"TIEN GUI CUA KHACH HANG" (offBS + BCDKT NH).
+// NEO lay tu MAU BIEU CHUAN Thong tu (KHONG suy tu sample - sample it + nhieu):
+//   other: TT200/2014 + TT99/2025 (B01/B02/B03-DN)
+//   bank:  TT49/2014/TT-NHNN + TT200 (B02/B03/B04-TCTD)
+//   CTCK:  TT210/2014 + TT334/2016 (B01/B02/B03-CTCK)
+//   bao hiem: TT232/2012/TT-BTC (B01/B02/B03-DNPNT)
+// Da doi chieu tung ung vien qua mirror-check tren corpus that
+// (scripts/_debug-anchor-validate.ts) va LOAI cac dong "soi guong" THAT theo
+// chuan (xuat hien o ca 1 bang anh em). LUU Y: mirror-check tren sample co
+// NHIEU (bao cao OCR loi lam thuyet minh lot sang bang khac, hoac cache cu phan
+// loai nham) - KHONG auto-loai theo sample; chuan Thong tu la nguon chan ly,
+// mirror-check chi de canh bao ra soat. Vi du da CAN NHAC va GIU (chuan noi doc
+// quyen, mirror la nhieu): "LOI NHUAN GOP" (RYG lot thuyet minh vao BCDKT),
+// "LUU CHUYEN TIEN..." (cache cu xep nham dong LCTT vao BCDKT). Vi du da LOAI
+// (mirror THAT theo chuan): "VON GOP CUA CHU SO HUU" (LCTT "Tien thu... nhan
+// von gop cua CSH"), "TAI SAN DAI HAN" (LCTT dau tu "mua sam... tai san dai han
+// khac"), "DU PHONG NGHIEP VU" (KQKD bao hiem "chi phi du phong nghiep vu"),
+// "PHI NHUONG TAI BAO HIEM" (BCDKT "Du phong phi nhuong tai bao hiem" - bug MIG),
+// "PHAT HANH GIAY TO CO GIA" (LCTT NH), cac neo offBS CTCK (soi guong BCDKT vi
+// bang "ngoai BCTHTC" hay bi gop chung voi BCDKT).
+// TOKEN-AND cho tung neo: CHI giu tu khoa PHAN BIET COT LOI (mang = AND, khong
+// doi hoi lien tiep) de HUT bien the wording (chen "ngan han"/"ve ban hang..."/
+// "cong ty chung khoan" giua) - KHONG khop ca cum cung tung chu (nguon goc lỗi
+// gion). 2 RANG BUOC an toan (da doi chieu mirror-check corpus that,
+// scripts/_debug-anchor-validate.ts):
+//  1) Token phai du DAC TRUNG de KHONG soi guong bang anh em (vd bo "phai thu
+//     cua khach hang" vi CTCK "ngoai BCTHTC" cung co "phai thu...cua khach hang").
+//  2) TRANH token PHAN TAN: classifyTableByContent khop token tren NHAN CA
+//     BANG gop lai -> 2 token roi rac (o 2 dong khac nhau) van khop. Vd
+//     ['LOI NHUAN SAU THUE','THU NHAP DOANH NGHIEP'] khop NHAM BCDKT (co "LNST
+//     chua phan phoi" + "thue TNDN hoan lai" o 2 dong) -> dung CUM LIEN
+//     'LOI NHUAN SAU THUE THU NHAP DOANH NGHIEP'. Cac cum con lai da kiem: 2
+//     token luon di CUNG 1 dong chi tieu, khong phan tan.
+const ANCHOR_MARKERS_BY_KEY: Partial<Record<keyof FinancialStatements, ContentMarker[]>> = {
+  balanceSheet: [
+    // NGUYEN TAC (nguoi dung 2026-07-16): neo BCDKT phai la khoan MUC SO DU
+    // (stock) KHONG THE xuat hien duoi dang DONG TIEN/CHI PHI (flow) o LCTT/KQKD.
+    // -> chi dung TONG, TAI SAN CO DINH, VON/QUY/LNST. TRANH cac khoan von luu
+    // dong (phai thu/phai tra/nguoi mua tra truoc/vay) vi LCTT GIAN TIEP dieu
+    // chinh "tang giam" chung, va ban CHI TIET cua 1 so cong ty liet ke dich
+    // danh (vd "tra no goc VAY VA NO THUE TAI CHINH", "tang giam PHAI TRA NGUOI
+    // BAN") -> soi guong, neo GIA. Da BO: Nguoi mua tra tien truoc, Phai tra
+    // nguoi ban, Vay va no thue tai chinh, va 2 neo CTCK (Phai tra HDGD chung
+    // khoan / Tien nop Quy ho tro thanh toan - "Tien nop..." ban chat la dong
+    // tien chi o LCTT). CTCK/NH van duoc neo qua cac dong TONG.
+    ['TONG CONG TAI SAN'],          // ma 270
+    ['TONG CONG NGUON VON'],        // ma 440
+    ['TAI SAN NGAN HAN'],           // ma 100 (header muc, LCTT khong co)
+    ['TAI SAN CO DINH HUU HINH'],   // ma 221
+    ['TAI SAN CO DINH VO HINH'],    // ma 227
+    // SUA 2026-07-17 (phat hien qua backtest 16 bao cao Q2/2026 that, BSL):
+    // BO ca 3 neo "tung quy/von rieng le" (Quy khen thuong+phuc loi, LNST chua
+    // phan phoi, Thang du von co phan) - KHAC voi cac neo TONG/TAI SAN CO DINH
+    // o tren (khong the co thuyet minh "bien dong" rieng), MOI quy/von don le
+    // trong BCDKT THUONG co 1 thuyet minh BIEN DONG RIENG (mau bang "Bao cao
+    // tinh hinh bien dong VCSH" dang CHUYEN VI - cot la TUNG quy/von, dong la
+    // moc thoi gian/su kien: "Trich quy khen thuong phuc loi", "Co tuc"...) -
+    // EQUITY_CHANGES_COLUMN_MARKERS (kiem tra qua isEquityChangesStatementTable)
+    // CHI bat duoc dang bang CHUAN (dong=quy, cot=thoi gian), KHONG bat duoc
+    // dang CHUYEN VI nay, nen bang thuyet minh nay truoc day bi loai an toan
+    // (diem = 0, khong khop marker nao) - neo token-AND ['QUY KHEN THUONG',
+    // 'PHUC LOI'] moi them lai KHOP dung dong "Trich quy khen thuong phuc loi"
+    // (mo ta bien dong, KHONG phai dong BCDKT that) trong bang thuyet minh nay,
+    // keo CA BANG THUYET MINH (con nam trong pham vi quet do notesLine chua cat
+    // het - gioi han rieng, khong sua o day) vao BCDKT that - SAI THAM LANG
+    // (khong mismatch nao duoc bao, vi khong dung cong thuc nao ca) - nguy hiem
+    // hon ca 1 mismatch co canh bao. Nguyen tac tu day: CHI neo BCDKT bang cac
+    // dong KHONG THE co thuyet minh bien dong dang nay (Tong/Tai san co dinh) -
+    // BAT KY quy/von DON LE nao (du la ten khac) deu co nguy co tuong tu, khong
+    // chi rieng 3 cai da phat hien.
+    // Ngan hang (TT49) - dung TONG rieng cua NH (mau khong co "Tong cong ...")
+    ['TONG TAI SAN'],
+    ['TONG NO PHAI TRA', 'VON CHU SO HUU'],
+    // Bao hiem (TT232) - "Tai san tai bao hiem" doc quyen BCDKT (KHAC "phi
+    // nhuong tai bao hiem" ben KQKD; la so du tai san, khong phai dong tien).
+    ['TAI SAN TAI BAO HIEM'],
+  ],
+  incomeStatement: [
+    // Pho quat / DN thuong (TT200) - dung tu khoa GON, doc quyen KQKD
+    ['DOANH THU THUAN'],            // ma 10 ("...ve ban hang..."/"...HDKD bao hiem")
+    // SUA 2026-07-17 (theo phan hoi nguoi dung): TRUOC DAY tung siet ['GIA
+    // VON']->['GIA VON HANG BAN'] va BO han ['CHI PHI QUAN LY'] khoi neo, vi 1
+    // bao cao (BSL) co thuyet minh chi tiet "Gia von KHAC"/"Chi phi quan ly
+    // KHAC" khop nham. DA REVERT theo yeu cau nguoi dung: siet/bo mot marker
+    // TONG QUAT (dung cho MOI cong ty) chi vi 1 bao cao cu the la sai huong -
+    // rui ro BO SOT bien the that cua cac cong ty KHAC (vd "Gia von" khong co
+    // "hang ban", hay CTCK ghi "Chi phi quan ly cong ty chung khoan") lon hon
+    // nhieu so voi loi ich tranh 1 mismatch hiem. Nguyen nhan that cua BSL la
+    // O TANG DIEM CAT (notesLine khong cat het vi trang LCTT "hoat dong tai
+    // chinh" cua BSL bi Mistral OCR ra 1 khoi JSON caption thay vi bang
+    // markdown chuan, khong the tim thay chu ky ket thuc) - KHONG phai loi
+    // marker. Day la 1 loi OCR hiem, kho khai quat hoa (giong tinh than
+    // feedback_prefer_structural_over_wording_fixes) - chap nhan BSL co the
+    // con hien mismatch/canh bao do phan du (thuyet minh lot qua) thay vi
+    // noi long marker cho MOI bao cao khac de vá rieng 1 truong hop.
+    ['GIA VON'],                    // ma 11
+    ['LOI NHUAN GOP'],              // ma 20 (hut ca "...HDKD bao hiem")
+    ['GIAM TRU DOANH THU'],         // ma 02
+    ['CHI PHI BAN HANG'],           // ma 25
+    ['CHI PHI QUAN LY'],            // ma 26 (hut "...doanh nghiep"/"...cong ty CK")
+    // KHONG dung ['LOI NHUAN THUAN','HOAT DONG KINH DOANH'] (ma 30) lam neo:
+    // LCTT GIAN TIEP Ngan hang (TT49, Mau B04a/TCTD-HN) co dong CHINH THUC "Loi
+    // nhuan thuan tu hoat dong kinh doanh TRUOC NHUNG THAY DOI ve tai san va
+    // cong no hoat dong" NGAY TRONG muc "I. Luu chuyen tien tu hoat dong kinh
+    // doanh" - chua CA 2 token nay trong CUNG 1 bang LCTT that (khong phai suy
+    // doan, la dong chinh thuc theo mau bieu). Neo se soi guong that voi LCTT
+    // Ngan hang -> BO, du KHONG hien trong corpus (chi 4 bao cao bank, co the
+    // OCR chua bat het chi tiet LCTT NH).
+    //
+    // SUA 2026-07-17 (BSL that): BO CA 2 bien the "Loi nhuan [ke toan/Tong]
+    // truoc thue" khoi TANG NEO (100 diem) - thuyet minh "Chi phi thue TNDN
+    // hien hanh" (RAT PHO BIEN, hau het cong ty deu co) thuong BAT DAU bang
+    // dung dong "Loi nhuan ke toan truoc thue" de doi chieu thue suat, khop
+    // nham va lat CA bang thuyet minh do thanh incomeStatement neu no lot qua
+    // notesLine (gioi han rieng cua tung tai lieu, chua sua o day) - SAI THAM
+    // LANG (khong mismatch/canh bao nao ca, nguy hiem hon 1 mismatch co bao).
+    // Da CHUYEN CA 2 xuong tang marker THUONG (+1 diem, xem
+    // INCOME_STATEMENT_CONTENT_MARKERS o tren) - van hut duoc bien the thieu
+    // "Tong"/"ke toan" (yeu cau nguoi dung 2026-07-16) nhung o muc diem thap
+    // hon nhieu, khong du de 1 minh quyet dinh phan loai 1 bang khong co marker
+    // that nao khac.
+    'LOI NHUAN SAU THUE THU NHAP DOANH NGHIEP', // ma 60 (CUM LIEN - tranh token phan tan)
+    ['CHI PHI THUE', 'TNDN', 'HIEN HANH'], // ma 51
+    ['CHI PHI THUE', 'TNDN', 'HOAN LAI'],  // ma 52
+    ['LAI CO BAN TREN CO PHIEU'],   // ma 70
+    // Bao hiem (TT232 B02-DNPNT)
+    ['DOANH THU PHI BAO HIEM'],
+    ['CHI BOI THUONG'],             // KHAC "du phong boi thuong" (BCDKT)
+    // Chung khoan (TT210 B02-CTCK)
+    ['NGHIEP VU MOI GIOI CHUNG KHOAN'], // ca doanh thu lan chi phi moi gioi
+    ['CONG DOANH THU HOAT DONG'],
+    ['CONG CHI PHI HOAT DONG'],
+    // Ngan hang (TT49 B03-TCTD)
+    ['THU NHAP LAI THUAN'],
+    ['LAI THUAN', 'HOAT DONG DICH VU'],
+    // KHONG dung ['DU PHONG RUI RO TIN DUNG'] lam neo: LCTT GIAN TIEP Ngan hang
+    // (TT49) co dong dieu chinh phi tien mat CHINH THUC "Chi phi du phong rui ro
+    // tin dung" NGAY TRONG muc "I. Luu chuyen tien tu hoat dong kinh doanh" (cong
+    // lai khoan chi phi khong bang tien tu Loi nhuan truoc thue) - chua dung
+    // token nay trong LCTT that. Cung ly do voi neo tren, BO du corpus chua bat
+    // duoc.
+  ],
+  cashFlow: [
+    // 3 muc chinh - "LUU CHUYEN TIEN" chi co o LCTT (moi loai hinh)
+    ['LUU CHUYEN TIEN', 'HOAT DONG KINH DOANH'],
+    ['LUU CHUYEN TIEN', 'HOAT DONG DAU TU'],
+    ['LUU CHUYEN TIEN', 'HOAT DONG TAI CHINH'],
+    ['LUU CHUYEN TIEN THUAN TRONG KY'],
+    ['TIEN CHI TRA', 'LAI VAY'],
+    ['TIEN CHI NOP THUE', 'THU NHAP DOANH NGHIEP'],
+    ['TIEN THU', 'BAN HANG', 'CUNG CAP DICH VU'], // LCTT truc tiep (KHAC "doanh thu ban hang" KQKD)
+    'TIEN THU TU PHAT HANH CO PHIEU', // CUM LIEN (token phan tan o BCDKT NH)
+    // KHONG dung "khau hao TSCD" (1 so KQKD chi tiet co "chi phi khau hao") va
+    // "...tuong duong tien cuoi ky" (soi guong BCDKT) - LCTT da du neo.
+  ],
+  offBalanceSheet: [
+    // CHI giu neo Ngan hang (ngoai bang) - chi tieu "ngoai BCTHTC" CTCK hay bi
+    // gop chung voi BCDKT -> soi guong. offBS van phan loai qua marker thuong.
+    ['BAO LANH VAY VON'],
+  ],
+};
+
+// 1 neo ap dao MOI so marker map mo (moi bang co <100 marker) - dam bao "co
+// neo cua bang X" luon thang "chi co marker map mo cua bang Y".
+const ANCHOR_WEIGHT = 100;
 
 // "Bao cao tinh hinh bien dong von chu so huu" (mau B03-DN va tuong duong cho
 // NH/CTCK/bao hiem) - mau bieu BAT BUOC dung dung 3 cum tu cot nay theo luat
@@ -708,9 +996,17 @@ function classifyTableByContent(table: ParsedTable): keyof FinancialStatements |
   const labelIndex = table.labelIndex;
   const labelText = table.rows.map((row) => normalizeLabelText(String(row[labelIndex] ?? ''))).join(' | ');
 
+  const countMatches = (markers: ContentMarker[] | undefined): number =>
+    (markers ?? []).reduce((count, marker) => count + (matchesContentMarker(labelText, marker) ? 1 : 0), 0);
+
+  // Diem = (so NEO khop) * ANCHOR_WEIGHT + (so marker khop). Neo (tu khoa doc
+  // quyen 1 bang) ap dao marker map mo, nen 1 bang chua neo cua LCTT khong the
+  // bi lat thanh BCDKT chi vi tinh co chua "tien va tuong duong tien" (xem
+  // ANCHOR_MARKERS_BY_KEY). Marker map mo van gop 1 diem le - CHI dung phan
+  // xu khi KHONG bang nao co neo (giu nguyen hanh vi tho cu cho truong hop do).
   const scores = CONTENT_MARKERS_BY_KEY.map(({ key, markers }) => ({
     key,
-    score: markers.reduce((count, marker) => count + (matchesContentMarker(labelText, marker) ? 1 : 0), 0),
+    score: countMatches(ANCHOR_MARKERS_BY_KEY[key]) * ANCHOR_WEIGHT + countMatches(markers),
   })).sort((a, b) => b.score - a.score);
 
   const [best, second] = scores;
