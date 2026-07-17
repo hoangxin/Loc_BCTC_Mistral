@@ -603,14 +603,72 @@ function findCashFlowEndingByFinancingSectionOrder(lines: string[], searchFromIn
   return -1;
 }
 
+// SUA 2026-07-17 (theo yeu cau nguoi dung, sau khi BSL that lo ra ca lop 1 LAN
+// lop 2 o tren deu KHONG tim duoc diem ket thuc LCTT): trang LCTT "hoat dong
+// tai chinh" cua BSL bi Mistral OCR ra 1 KHOI JSON CAPTION (khong phai bang
+// markdown "| ... |" chuan) - khong co dong "Tien dau ky"/"Tien cuoi ky" nao o
+// DANG BANG THAT trong ca tai lieu de 2 lop tren bam vao, Thuyet minh lot het
+// vao pham vi quet.
+//
+// LOP DU PHONG THU 3: KHOI PHUC lai co che HEADING+TU KHOA da tung dung LAM
+// CHINH truoc day (2026-07-14, xem lich su "phuong an (c)" ngay tren comment
+// nay - da GIU LAI duoi dang comment, chua xoa - va NOTES_SECTION_MARKERS)
+// nhung bi thay boi co che CASH_FLOW_ENDING_SEQUENCE (lop 1/2 o tren) lam
+// CHINH theo de nghi nguoi dung luc do - comment cu ghi ro co che nay "Hoat
+// dong dung" (khong loi, chi bi thay vi nguoi dung muon 1 tin hieu thong nhat
+// hon lam CHINH). Dung lai y nguyen tinh than do lam DU PHONG cuoi cung.
+//
+// Muc tieu de: TEN CHINH THUC cua chinh mau bieu Thuyet minh - "Bản thuyết
+// minh báo cáo tài chính" (Mau B09-DN, Thong tu 200/2014/TT-BTC) - la ten GOI
+// PHAP LY co dinh cua ca mau bieu, khong phai 1 cach dien dat tuy chon. Ban
+// dau thu dung tieu de MUC 3 cu the ("Chuan muc va Che do ke toan ap dung")
+// nhung KIEM TRA LAI qua chinh du lieu BSL that moi phat hien BSL dung so muc/
+// ten muc KHAC (muc 3 cua BSL la "Tóm tắt những chính sách kế toán chủ yếu",
+// khong co muc rieng ten "Chuẩn mực và Chế độ kế toán ap dung" - cum do chi
+// xuat hien duoi dang VAN XUOI long trong muc 2(a) "Tuyên bố về tuân thủ") -
+// SO MUC/TEN MUC CON LAI (1,2,3,4...) bien doi qua nhieu giua cac cong ty de
+// dung an toan. NGUOC LAI, TEN CHINH cua ca mau bieu ("Bản thuyết minh báo
+// cáo tài chính"/"Thuyết minh báo cáo tài chính") xac nhan xuat hien O CA 2
+// bao cao that (BSL: "**Thuyết minh báo cáo tài chính quý 2...**" dang chu
+// dam KHONG "#"; FTS: "## BẢN THUYẾT MINH BÁO CÁO TÀI CHÍNH RIÊNG" dang "##")
+// - dung looksLikeHeadingLine (dong ngan, khong phai hang bang - KHONG doi
+// hoi "#" nhu ban goc 2026-07-14, vi BSL khong dung "#" cho dong nay) thay vi
+// yeu cau "#" nghiem ngat, de tuong thich CA 2 kieu OCR danh dau tieu de.
+//
+// AN TOAN VOI COLLISION DA BIET (trang bia liet ke ten 4 bang dang danh sach,
+// xem comment parseStatementsFromMarkdown ve firstContentLine): ham nay CHI
+// duoc goi voi `searchFromIndex` = diem DA XAC NHAN qua noi dung bang THAT (
+// firstContentLine, sau trang bia) - dong lap lai ten "Thuyet minh" o trang
+// bia (TRUOC firstContentLine) nam NGOAI pham vi tim kiem cua ham nay, khong
+// con rui ro khop nham nhu lan dau thu (2026-07-14).
+const NOTES_SECTION_TITLE_MARKERS = [['THUYET MINH', 'BAO CAO TAI CHINH']];
+
+function isNotesSectionTitleHeadingLine(normalizedLine: string): boolean {
+  return NOTES_SECTION_TITLE_MARKERS.some((tokens) => tokens.every((t) => normalizedLine.includes(t)));
+}
+
+function findNotesSectionStartIndex(lines: string[], searchFromIndex: number): number {
+  for (let i = searchFromIndex; i < lines.length; i++) {
+    if (!looksLikeHeadingLine(lines[i])) continue;
+    if (isNotesSectionTitleHeadingLine(normalizeLabelText(lines[i]))) return i;
+  }
+  return -1;
+}
+
 // Diem vao DUY NHAT cho ca containsNotesSectionMarker va parseStatementsFromMarkdown
-// - thu phuong an chinh xac hon (khoang cach gioi han) TRUOC, chi fallback
-// sang phuong an thu tu (khong gioi han khoang cach, rui ro hon mot chut)
-// khi phuong an dau khong tim thay gi.
+// - thu phuong an chinh xac hon (khoang cach gioi han) TRUOC, fallback sang
+// phuong an thu tu (khong gioi han khoang cach) khi phuong an dau khong tim
+// thay gi, CUOI CUNG fallback sang tieu de mandated cua Thuyet minh (lop 3,
+// BSL that) khi CA 2 lop tren deu that bai (vd 1 trang LCTT bi OCR hong hoan
+// toan, khong con dong bang nao de bam vao).
 function findCashFlowEndingIndex(lines: string[], searchFromIndex: number): number {
   const strict = findCashFlowEndingSequenceIndex(lines, searchFromIndex);
   if (strict !== -1) return strict;
-  return findCashFlowEndingByFinancingSectionOrder(lines, searchFromIndex);
+  const byOrder = findCashFlowEndingByFinancingSectionOrder(lines, searchFromIndex);
+  if (byOrder !== -1) return byOrder;
+  const notesStart = findNotesSectionStartIndex(lines, searchFromIndex);
+  if (notesStart !== -1) return notesStart - 1;
+  return -1;
 }
 
 // Rieng CTCK (Mau B01-CTCK): "Cac chi tieu ngoai bao cao tinh hinh tai chinh"
