@@ -1,4 +1,10 @@
-import { findLabelColumnIndex, normalizeLabelText, type FinancialStatements, type StatementTable } from './statement-shared';
+import {
+  findLabelColumnIndex,
+  normalizeGroupLabelForContentMatch,
+  normalizeLabelText,
+  type FinancialStatements,
+  type StatementTable,
+} from './statement-shared';
 
 // Parse markdown Mistral OCR tra ve (dang bang "| a | b | c |") thanh
 // FinancialStatements - hoan toan LOCAL, KHONG goi AI nao them (khac han cach
@@ -1036,11 +1042,35 @@ const INCOME_STATEMENT_PART_MARKERS: { part: IncomeStatementPart; test: (normali
 // nguyen ten bang KEM "(Tiếp theo)" moi khi ngat trang - quy dinh chung,
 // khong doi theo cong ty) lam tin hieu phan loai cho bang con ngay sau no -
 // tin cay hon han vi khong phu thuoc bang con do viet chu gi ben trong.
-const CONTINUATION_HEADING_MARKERS: { key: keyof FinancialStatements; test: (normalizedLine: string) => boolean }[] = [
-  { key: 'balanceSheet', test: (l) => (l.includes('BANG CAN DOI KE TOAN') || l.includes('BAO CAO TINH HINH TAI CHINH')) && l.includes('TIEP THEO') },
-  { key: 'incomeStatement', test: (l) => l.includes('KET QUA HOAT DONG') && l.includes('TIEP THEO') },
-  { key: 'cashFlow', test: (l) => l.includes('LUU CHUYEN TIEN TE') && l.includes('TIEP THEO') },
+// SUA 2026-07-18 (CTS that): truoc day CHI set pendingContinuationKey khi gap
+// tieu de khop "(Tiếp theo)", KHONG BAO GIO clear no khi gap tieu de KHAC -
+// neu 1 tieu de "(Tiếp theo)" (vd "BÁO CÁO KẾT QUẢ HOẠT ĐỘNG RIÊNG (tiếp
+// theo)") lai dung ngay TRUOC 1 trang KHONG co bang that theo sau (vd trang
+// chu ky nguoi lap/ke toan truong/nguoi dai dien - CTS lap lai tieu de KQKD
+// "(tiếp theo)" o dau trang chu ky, khong con bang nao ca), pendingContinuationKey
+// van CON SET khi vong lap toi duoc tieu de bao cao KHAC hoan toan (vd "BÁO
+// CÁO LƯU CHUYỂN TIỀN TỆ...") va gan NHAM ca bang LCTT do vao incomeStatement.
+// Tach rieng "tieu de GOC" (khong doi hoi "tiếp theo") de dung LAM TIN HIEU
+// CLEAR: gap dung tieu de goc CUA 1 trong 3 mau bieu ma KHONG kem "tiếp theo"
+// nghia la dang o 1 bang MOI/dau tien cua mau do (khong phai tiep noi bang
+// truoc) - bat ke la CUNG mau hay mau KHAC, tin hieu "tiep noi" cu (neu co)
+// da het hieu luc, phai clear. Neu tieu de KHONG khop mau bieu nao (vd ma so
+// "B01a-CTCK", ten nguoi ky) thi GIU NGUYEN pendingContinuationKey - day la
+// ly do KHONG the don gian "clear moi khi gap heading line", se pha vo truong
+// hop hop le (tieu de that ngay sau lai co 1-2 dong ma-so/ten cong ty truoc
+// khi toi bang that).
+const STATEMENT_TITLE_BASE_MARKERS: { key: keyof FinancialStatements; test: (normalizedLine: string) => boolean }[] = [
+  { key: 'balanceSheet', test: (l) => l.includes('BANG CAN DOI KE TOAN') || l.includes('BAO CAO TINH HINH TAI CHINH') },
+  { key: 'incomeStatement', test: (l) => l.includes('KET QUA HOAT DONG') },
+  { key: 'cashFlow', test: (l) => l.includes('LUU CHUYEN TIEN TE') },
 ];
+// CTS that: tieu de LCTT thuc te dai hon 80 ky tu (MAX_HEADING_LINE_LENGTH)
+// vi co gan them cau "cho ky ke toan ket thuc ngay..." - khong lot qua duoc
+// looksLikeHeadingLine nen tin hieu CLEAR o tren khong bao gio kich hoat cho
+// dung dong nay. Dung nguong RIENG, rong hon, CHI cho tin hieu title-base (an
+// toan hon tang MAX_HEADING_LINE_LENGTH toan cuc - ham do con dung cho muc
+// dich khac o noi khac trong file, xem dong su dung).
+const MAX_STATEMENT_TITLE_LINE_LENGTH = 160;
 
 interface ParsedTable extends StatementTable {
   incomeStatementPart?: IncomeStatementPart;
@@ -1082,8 +1112,19 @@ function parseAllTablesInRange(lines: string[]): ParsedTable[] {
         const normalized = normalizeLabelText(lines[i]);
         const marker = INCOME_STATEMENT_PART_MARKERS.find((m) => m.test(normalized));
         if (marker) currentIncomeStatementPart = marker.part;
-        const continuationMarker = CONTINUATION_HEADING_MARKERS.find((m) => m.test(normalized));
-        if (continuationMarker) pendingContinuationKey = continuationMarker.key;
+      }
+      // Xem comment o STATEMENT_TITLE_BASE_MARKERS: tieu de goc CO "tiep
+      // theo" -> SET (hanh vi cu); tieu de goc KHONG co "tiep theo" -> CLEAR
+      // (tin hieu tiep noi cu, neu co, da het hieu luc); khong khop tieu de
+      // goc nao -> GIU NGUYEN (ma-so/ten cong ty/chu ky khong lam thay doi
+      // trang thai dang cho). Dung nguong dai rieng (MAX_STATEMENT_TITLE_LINE_LENGTH),
+      // KHONG dung looksLikeHeadingLine/MAX_HEADING_LINE_LENGTH o tren - xem
+      // comment o do.
+      const trimmedLine = lines[i].trim();
+      if (trimmedLine.length > 0 && trimmedLine.length <= MAX_STATEMENT_TITLE_LINE_LENGTH && !trimmedLine.startsWith('|')) {
+        const normalized = normalizeLabelText(lines[i]);
+        const titleBase = STATEMENT_TITLE_BASE_MARKERS.find((m) => m.test(normalized));
+        if (titleBase) pendingContinuationKey = normalized.includes('TIEP THEO') ? titleBase.key : undefined;
       }
       i++;
       continue;
@@ -1526,7 +1567,9 @@ export function parseStatementsFromMarkdown(rawMarkdown: string): FinancialState
     // KHONG co Phan II (khong phai mau bao hiem, hoac OCR khong bat duoc Phan
     // II) thi giu nguyen hanh vi cu - khong loai gi ca.
     const hasDetailPart = key === 'incomeStatement' && grouped[key].some((t) => t.incomeStatementPart === 'detail');
-    const matchedTables = hasDetailPart ? grouped[key].filter((t) => t.incomeStatementPart !== 'summary') : grouped[key];
+    const matchedTables = dropRedundantDuplicateTables(
+      hasDetailPart ? grouped[key].filter((t) => t.incomeStatementPart !== 'summary') : grouped[key]
+    );
     if (matchedTables.length > 0) {
       const { columns, labelIndex, maSoIndex } = mostCommonColumns(matchedTables);
       result[key] = {
@@ -1636,6 +1679,93 @@ function mostCommonColumns(tables: ParsedTable[]): { columns: string[]; labelInd
     }
   }
   return { columns: best.columns, labelIndex: best.labelIndex, maSoIndex: best.maSoIndex };
+}
+
+// TT99/2025 buoc mot so doanh nghiep cong bo CA mau "Q-02x" (rieng cho ky Quy,
+// co ca cot Quy LAN cot Luy ke) LAN mau "B02-DN" chuan (ky giua nien do, CHI co
+// cot Luy ke) cho CUNG 1 bao cao KQKD - xac nhan qua markdown that TTS/TIS/IFS
+// Q2/2026. 2 bang nay lap lai GAN NHU TOAN BO cung 1 danh sach chi tieu (tu
+// "Doanh thu ban hang" den "Loi nhuan sau thue"), khac nhau o SO COT gia tri.
+// Neu gop chung nhu 2 NUA bo sung that cua 1 bang (vd BCDKT tach TAI SAN/NGUON
+// VON qua trang) bang flatMap, cac dong TRUNG TEN gay: (1) du lieu hien trong
+// Excel co hang chuc dong lap/rac; (2) findRowIndexByContentMarkers (uu tien
+// "khop cuoi cung" de xu ly rac dau/cuoi bang - xem statement-shared.ts) co
+// the chon nham dong cua bang IT COT hon (cac cot con thieu = null) lam
+// target/term, gay canh bao sai "X khong khop X" du du lieu goc hoan toan
+// dung (xac nhan qua TTS/TIS that: dong "Loi nhuan gop" bi doc thanh 0 vi
+// khop nham vao ban sao chi co cot Luy ke).
+//
+// Phan biet voi 2 NUA bo sung THAT (TAI SAN/NGUON VON, Phan I/Phan II bao
+// hiem...) qua TY LE NHAN TEN CHI TIEU TRUNG NHAU: 2 nua bo sung that gan nhu
+// khong co ten chung nhau (moi nua mo ta 1 tap chi tieu khac nhau hoan toan),
+// trong khi 2 ban sao cua CUNG 1 bao cao lap lai da so ten. Day la tin hieu
+// CAU TRUC (dua vao NOI DUNG chi tieu, khong dua vao ten mau bieu/tu khoa rieng
+// cua tung thong tu) nen ap dung chung cho ca 4 loai bang, khong rieng KQKD.
+function normalizedRowLabelSet(table: ParsedTable): Set<string> {
+  const labels = new Set<string>();
+  for (const row of table.rows) {
+    const raw = row[table.labelIndex];
+    if (typeof raw !== 'string') continue;
+    const normalized = normalizeGroupLabelForContentMatch(raw);
+    if (normalized) labels.add(normalized);
+  }
+  return labels;
+}
+
+function dropRedundantDuplicateTables(tables: ParsedTable[]): ParsedTable[] {
+  // Bang co continuationKey da duoc xac nhan CHAC CHAN la phan tiep cua 1
+  // bang khac qua tieu de "(Tiếp theo)" that - khong xet trung o day, luon
+  // giu lai nguyen ven.
+  const candidateIdx = tables.map((_, idx) => idx).filter((idx) => tables[idx].continuationKey === undefined);
+  if (candidateIdx.length < 2) return tables;
+
+  // 1 bang bi ngat trang (page break) co the tach thanh NHIEU bang markdown
+  // rieng ma KHONG co tieu de "(Tiếp theo)" (xac nhan qua TTS that: KQKD 23
+  // dong tach thanh 2 bang 17+6 dong o 2 trang, khong co continuationKey) -
+  // so sanh TUNG fragment rieng le voi bang trung lap se KHONG vuot nguong
+  // (moi fragment chi mang 1 phan nho danh sach chi tieu). Nhom cac bang
+  // CUNG so cot lai truoc (fragment cua 1 bang giu nguyen so cot qua cac
+  // trang), dung UNION nhan cua ca nhom de so sanh trung lap.
+  const clusters = new Map<number, number[]>(); // columns.length -> danh sach idx (vao `tables`)
+  for (const idx of candidateIdx) {
+    const key = tables[idx].columns.length;
+    const arr = clusters.get(key) ?? [];
+    arr.push(idx);
+    clusters.set(key, arr);
+  }
+  const clusterKeys = [...clusters.keys()];
+  const clusterLabelSets = clusterKeys.map((key) => {
+    const set = new Set<string>();
+    for (const idx of clusters.get(key)!) for (const label of normalizedRowLabelSet(tables[idx])) set.add(label);
+    return set;
+  });
+
+  const droppedClusterKeys = new Set<number>();
+  for (let x = 0; x < clusterKeys.length; x++) {
+    if (droppedClusterKeys.has(x)) continue;
+    for (let y = x + 1; y < clusterKeys.length; y++) {
+      if (droppedClusterKeys.has(y)) continue;
+      const a = clusterLabelSets[x];
+      const b = clusterLabelSets[y];
+      if (a.size === 0 || b.size === 0) continue;
+      let shared = 0;
+      for (const label of a) if (b.has(label)) shared++;
+      const overlapRatio = shared / Math.min(a.size, b.size);
+      // Nguong cao (60%+, toi thieu 3 chi tieu trung) - chi bat cac truong hop
+      // trung lap RO RANG, tranh loai oan 2 nua bo sung that tinh co chung 1-2
+      // ten chi tieu pho bien.
+      if (shared < 3 || overlapRatio < 0.6) continue;
+      // La 2 ban sao cua cung 1 bao cao - giu cluster co nhieu cot gia tri
+      // hon (sieu tap thong tin, xac nhan qua TTS/TIS/IFS: mau Q-02x luon co
+      // ca Quy LAN Luy ke, mau B02-DN chi co Luy ke).
+      const loser = clusterKeys[x] >= clusterKeys[y] ? y : x;
+      droppedClusterKeys.add(loser);
+    }
+  }
+  if (droppedClusterKeys.size === 0) return tables;
+  const droppedIdx = new Set<number>();
+  droppedClusterKeys.forEach((x) => clusters.get(clusterKeys[x])!.forEach((idx) => droppedIdx.add(idx)));
+  return tables.filter((_, idx) => !droppedIdx.has(idx));
 }
 
 // Chuan hoa markdown Mistral tra ve thanh dang van ban ma lib/export/pdf.ts da

@@ -303,6 +303,11 @@ function isKnownAlwaysChildLabel(label: string): boolean {
 // (thay the HOAN TOAN "arabicDirectChildRows" cu dua vao tien to so A-rap).
 const KNOWN_EQUITY_DIRECT_CHILD_CONTENT = [
   'VON GOP CUA CHU SO HUU',
+  // MES that (2026-07-18): mot so bao cao dung "Vốn đầu tư của chủ sở hữu"
+  // thay vi "Vốn góp của chủ sở hữu" chuan TT200 cho CUNG 1 ma so 411 - thieu
+  // bien the nay khien dong nay (thanh phan LON NHAT trong nhom, MES:
+  // 186 ty) bi loai hoan toan khoi tong "Von chu so huu".
+  'VON DAU TU CUA CHU SO HUU',
   // Sua 2026-07-15 (phan hoi nguoi dung, xac nhan qua MCH that): bao cao hop
   // nhat mau MCH ghi "Vốn cổ phần" (khong phai "Vốn góp của chủ sở hữu" chuan
   // TT200) - thieu bien the nay khien "Vốn cổ phần" (12.9 nghin ty) bi loai
@@ -549,7 +554,7 @@ const GROUP_LABEL_SYNONYM_CANONICAL: Record<string, string> = {
   'NGUON VON CHU SO HUU': 'VON CHU SO HUU',
 };
 
-function normalizeGroupLabelForContentMatch(label: string): string {
+export function normalizeGroupLabelForContentMatch(label: string): string {
   const normalized = normalizeLabelText(label)
     .replace(LEADING_GROUP_MARKER_PREFIX, '')
     .replace(LEADING_BARE_DASH_BULLET, '')
@@ -1161,12 +1166,27 @@ function fuzzyIncludes(haystack: string, needle: string, threshold = 0.92): bool
 // KHAC "L" = so La Ma 50) se bi hieu NHAM la tien to so thu tu don le va bi
 // cat mat, lam "LO CAC KHOAN..." con lai "O CAC KHOAN..." - khong con nhan
 // dung la tu "LO" nua (da xac nhan qua VND that 2026-07-14).
-// Nhom lap (+) o ngoai de boc het NHIEU TANG so thu tu lien tiep (vd "1.1."
-// BVS: 2 tang "1." roi "1." nua) - 1 lan strip DON le se chi bo tang dau,
-// con lai "1. LAI TU..." van bat dau bang chu so nen khong nhan ra duoc tu
-// "LAI"/"LO" phia sau (da xac nhan qua BVS that 2026-07-14, nhan da qua 2
-// tang danh so "1.1."/"2.1.").
-const LEADING_NUMBERING_FOR_SIGN_WORD = /^(?:[\dIVXLCDM]+\s*[.\/)-]+\s*)+/;
+// Nhom lap o ngoai de boc het NHIEU TANG so thu tu lien tiep (vd "1.1." BVS:
+// 2 tang "1." roi "1." nua) - 1 lan strip DON le se chi bo tang dau, con lai
+// "1. LAI TU..." van bat dau bang chu so nen khong nhan ra duoc tu "LAI"/"LO"
+// phia sau (da xac nhan qua BVS that 2026-07-14, nhan da qua 2 tang danh so
+// "1.1."/"2.1.").
+// SUA 2026-07-18 (ABW that): ma so THAP PHAN kieu "1.2" (1 tang so DUY NHAT,
+// khong lap lai dau cham) khong duoc nhom lap o tren bat duoc - tang lap doi
+// hoi MOI tang deu ket thuc bang dau phan cach that ("so+phan cach"), nhung
+// "1.2 " chi co 1 dau phan cach ("." giua "1" va "2"), tang so THU HAI ("2")
+// khong co dau phan cach rieng truoc khoang trang -> tang lap dung lai sau
+// khi chi bo duoc "1.", de lai "2 Lai tu..." - van bat dau bang chu so nen
+// leadingSignWord tra ve null (khong nhan ra "LAI"), khien hasOppositeSignWordConflict
+// khong phat hien duoc xung dot that giua marker CHI PHI ("LO...") va dong
+// DOANH THU "1.2 Lãi từ các khoản đầu tư..." - dong doanh thu bi cong NHAM
+// vao tong "Cong chi phi hoat dong" (hang chuc ty). Cau truc lai: dau phan
+// cach BAT BUOC chi can xuat hien MOT LAN (ngay sau tang so DAU TIEN - giu
+// nguyen tinh an toan chinh: 1 chu "L" tran khong co dau phan cach nao se
+// KHONG khop duoc, tranh hieu nham "LO"/"LAI" thanh so La Ma 50/1), cac tang
+// so tiep theo (thap phan hoac lap lai) duoc chap nhan CO or KHONG dau phan
+// cach rieng truoc khoang trang cuoi.
+const LEADING_NUMBERING_FOR_SIGN_WORD = /^[\dIVXLCDM]+[.\/)-]+(?:[\dIVXLCDM]+[.\/)-]+)*[\dIVXLCDM]*\s*/;
 function leadingSignWord(normalizedText: string): 'LAI' | 'LO' | null {
   const stripped = normalizedText.replace(LEADING_NUMBERING_FOR_SIGN_WORD, '');
   if (/^LAI\b/.test(stripped)) return 'LAI';
@@ -1438,7 +1458,15 @@ const DN_THUONG_INCOME_FORMULAS: FormulaDef[] = [
   // thieu so), khong phai dong TONG that su. Can markers CU THE, du de tang
   // "chinh xac" (sau khi bo hau to cong thuc) tim dung dong TRUOC KHI roi vao
   // tang substring mo hon.
-  { groupLabel: 'Loi nhuan sau thue thu nhap doanh nghiep', target: ['LOI NHUAN SAU THUE THU NHAP DOANH NGHIEP', 'LOI NHUAN SAU THUE TNDN'], terms: [req(['TONG LOI NHUAN KE TOAN TRUOC THUE']), reqExpense(['CHI PHI THUE THU NHAP DOANH NGHIEP HIEN HANH']), reqExpense(['CHI PHI THUE THU NHAP DOANH NGHIEP HOAN LAI'])] },
+  // SUA 2026-07-18 (GEE that): "Chi phi thue TNDN hoan lai" (thue hoan lai)
+  // KHAC "hien hanh" - co the la CHI PHI THAT hoac khoan LOI ICH/hoan nhap
+  // THAT (dau am/duong doi nghia giua cac ky trong CUNG 1 bao cao GEE, tu
+  // -8.575.376.405 (2026) sang +7.118.614.035 (2025)) - dung reqExpense (ep
+  // Math.abs) SAI huong khi dong nay dang la loi ich that, lam sai LECH GAP
+  // DOI gia tri (tru thay vi cong). Doi sang reqNetAmbiguous (xem comment
+  // dinh nghia interface FormulaTerm) - "hien hanh" van la reqExpense (chi
+  // phi thuan tuy, khong bao gio la khoan loi ich).
+  { groupLabel: 'Loi nhuan sau thue thu nhap doanh nghiep', target: ['LOI NHUAN SAU THUE THU NHAP DOANH NGHIEP', 'LOI NHUAN SAU THUE TNDN'], terms: [req(['TONG LOI NHUAN KE TOAN TRUOC THUE']), reqExpense(['CHI PHI THUE THU NHAP DOANH NGHIEP HIEN HANH']), reqNetAmbiguous(['CHI PHI THUE THU NHAP DOANH NGHIEP HOAN LAI'])] },
 ];
 
 // CTCK (Thong tu 210/2014 + 334/2016) - xac nhan qua VCK/PHS/MBS Q1/2026 that
@@ -1462,7 +1490,17 @@ const CTCK_INCOME_FORMULAS: FormulaDef[] = [
       // qua lai lo (FVTPL)") - phai giu nguyen chu "LAI TU" (dung TEN CHI TIEU
       // that, giong cach dong CHI PHI FVTPL da giu "LO TU") lam mo neo dau, chu
       // khong chi dua vao doan mo ta chung o giua cau.
-      opt(['LAI TU CAC TAI SAN TAI CHINH GHI NHAN THEO GIA TRI HOP LY THONG QUA LAI', 'LAI TU CAC TAI SAN TAI CHINH GHI NHAN THONG QUA LAI']),
+      // CTS that (2026-07-18): mot so cong ty ghi GON dong nay bang chinh
+      // chu viet tat "FVTPL" ("Lãi từ các tài sản tài chính FVTPL") thay vi
+      // cum mo ta day du "ghi nhan thong qua lai/lo" - phia CHI PHI doi ung
+      // da co san bien the viet tat nay ('LO TU CAC TAI SAN TAI CHINH FVTPL'
+      // o CTCK_INCOME_FORMULAS ben duoi) nhung phia DOANH THU truoc day thieu
+      // bien the tuong ung, khien dong FVTPL (thuong la thanh phan LON NHAT
+      // trong nhom) bi loai hoan toan khoi tong "Cong doanh thu hoat dong".
+      // Them CHUNG 1 term (khong tach term rieng) - findRowIndexByContentMarkers
+      // khop CA mang marker cho 1 lan tra cuu duy nhat, tranh nguy co 2 term
+      // doc lap khop nham 2 dong khac nhau cho CUNG 1 khai niem ke toan.
+      opt(['LAI TU CAC TAI SAN TAI CHINH GHI NHAN THEO GIA TRI HOP LY THONG QUA LAI', 'LAI TU CAC TAI SAN TAI CHINH GHI NHAN THONG QUA LAI', 'LAI TU CAC TAI SAN TAI CHINH FVTPL']),
       opt(['LAI TU CAC KHOAN DAU TU NAM GIU DEN NGAY DAO HAN']),
       opt(['LAI TU CAC KHOAN CHO VAY VA PHAI THU']),
       opt(['LAI TU TAI SAN TAI CHINH SAN SANG DE BAN', 'LAI TU CAC TAI SAN TAI CHINH SAN SANG']),
@@ -1547,7 +1585,24 @@ const CTCK_INCOME_FORMULAS: FormulaDef[] = [
   },
   { groupLabel: 'Cong ket qua hoat dong khac', target: ['CONG KET QUA HOAT DONG KHAC', 'TONG KET QUA HOAT DONG KHAC'], terms: [opt(['THU NHAP KHAC']), opt(['CHI PHI KHAC'], -1)] },
   { groupLabel: 'Tong loi nhuan ke toan truoc thue', target: ['TONG LOI NHUAN KE TOAN TRUOC THUE'], terms: [req(['KET QUA HOAT DONG']), opt(['CONG KET QUA HOAT DONG KHAC'])] },
-  { groupLabel: 'Loi nhuan ke toan sau thue TNDN', target: ['LOI NHUAN KE TOAN SAU THUE'], terms: [req(['TONG LOI NHUAN KE TOAN TRUOC THUE']), req(['CHI PHI THUE THU NHAP DOANH NGHIEP'], -1)] },
+  // SUA 2026-07-18 (ABW/CTS that): marker gop "CHI PHI THUE THU NHAP DOANH
+  // NGHIEP" khong khop duoc dong TONG (ABW ghi tat "CHI PHI THUE TNDN", CTS
+  // ghi "THUE THU NHAP DOANH NGHIEP" khong co "Chi phi") trong khi 2 dong CON
+  // thap phan (hien hanh/hoan lai) lai ghi DAY DU "...thu nhap doanh nghiep
+  // hien hanh/hoan lai" nen khop NHAM 1 trong 2 dong con, bo sot dong con kia
+  // (thieu hang chuc ty). Tach thanh 2 term rieng (giong DN_THUONG_INCOME_FORMULAS)
+  // dung THANG vao 2 dong thap phan thay vi do 1 dong "tong" co ten khong on dinh -
+  // an toan hon vi khop CHINH XAC dung 2 khai niem ke toan can, khong phu
+  // thuoc dong tong duoc ghi ten kieu gi.
+  {
+    groupLabel: 'Loi nhuan ke toan sau thue TNDN',
+    target: ['LOI NHUAN KE TOAN SAU THUE'],
+    terms: [
+      req(['TONG LOI NHUAN KE TOAN TRUOC THUE']),
+      req(['CHI PHI THUE THU NHAP DOANH NGHIEP HIEN HANH', 'CHI PHI THUE TNDN HIEN HANH'], -1),
+      req(['CHI PHI THUE THU NHAP DOANH NGHIEP HOAN LAI', 'CHI PHI THUE TNDN HOAN LAI'], -1),
+    ],
+  },
 ];
 
 // Bien the BVH (tap doan bao hiem, ket hop nhan tho + phi nhan tho, Thong tu
