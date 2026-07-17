@@ -756,23 +756,26 @@ const ANCHOR_MARKERS_BY_KEY: Partial<Record<keyof FinancialStatements, ContentMa
   incomeStatement: [
     // Pho quat / DN thuong (TT200) - dung tu khoa GON, doc quyen KQKD
     ['DOANH THU THUAN'],            // ma 10 ("...ve ban hang..."/"...HDKD bao hiem")
-    // SUA 2026-07-17 (backtest 16 bao cao Q2/2026 that, BSL): siet ['GIA VON']
-    // (qua gon) thanh ['GIA VON HANG BAN'] - thuyet minh chi tiet "Gia von hang
-    // ban" thuong co dong con "Gia von KHAC" (mo ta thanh phan, KHONG phai dong
-    // KQKD that), khop nham voi tu khoa gon "GIA VON" don le. Cum day du "GIA
-    // VON HANG BAN" (giong het marker THUONG da an toan tu truoc) khong con
-    // khop dong con nay.
-    ['GIA VON HANG BAN'],           // ma 11
+    // SUA 2026-07-17 (theo phan hoi nguoi dung): TRUOC DAY tung siet ['GIA
+    // VON']->['GIA VON HANG BAN'] va BO han ['CHI PHI QUAN LY'] khoi neo, vi 1
+    // bao cao (BSL) co thuyet minh chi tiet "Gia von KHAC"/"Chi phi quan ly
+    // KHAC" khop nham. DA REVERT theo yeu cau nguoi dung: siet/bo mot marker
+    // TONG QUAT (dung cho MOI cong ty) chi vi 1 bao cao cu the la sai huong -
+    // rui ro BO SOT bien the that cua cac cong ty KHAC (vd "Gia von" khong co
+    // "hang ban", hay CTCK ghi "Chi phi quan ly cong ty chung khoan") lon hon
+    // nhieu so voi loi ich tranh 1 mismatch hiem. Nguyen nhan that cua BSL la
+    // O TANG DIEM CAT (notesLine khong cat het vi trang LCTT "hoat dong tai
+    // chinh" cua BSL bi Mistral OCR ra 1 khoi JSON caption thay vi bang
+    // markdown chuan, khong the tim thay chu ky ket thuc) - KHONG phai loi
+    // marker. Day la 1 loi OCR hiem, kho khai quat hoa (giong tinh than
+    // feedback_prefer_structural_over_wording_fixes) - chap nhan BSL co the
+    // con hien mismatch/canh bao do phan du (thuyet minh lot qua) thay vi
+    // noi long marker cho MOI bao cao khac de vá rieng 1 truong hop.
+    ['GIA VON'],                    // ma 11
     ['LOI NHUAN GOP'],              // ma 20 (hut ca "...HDKD bao hiem")
     ['GIAM TRU DOANH THU'],         // ma 02
     ['CHI PHI BAN HANG'],           // ma 25
-    // SUA 2026-07-17 (BSL that): BO ['CHI PHI QUAN LY'] khoi neo - thuyet minh
-    // chi tiet "Chi phi quan ly doanh nghiep" thuong co dong con "Chi phi quan
-    // ly KHAC", khop nham tu khoa gon nay. KQKD van du neo khac (Doanh thu
-    // thuan, Gia von hang ban, Loi nhuan gop...) nen khong can giu rieng dong nay
-    // o tang neo (100 diem) - marker THUONG 'CHI PHI QUAN LY DOANH NGHIEP' (cum
-    // day du, an toan) van con dung binh thuong o tang cham diem thap hon.
-    //
+    ['CHI PHI QUAN LY'],            // ma 26 (hut "...doanh nghiep"/"...cong ty CK")
     // KHONG dung ['LOI NHUAN THUAN','HOAT DONG KINH DOANH'] (ma 30) lam neo:
     // LCTT GIAN TIEP Ngan hang (TT49, Mau B04a/TCTD-HN) co dong CHINH THUC "Loi
     // nhuan thuan tu hoat dong kinh doanh TRUOC NHUNG THAY DOI ve tai san va

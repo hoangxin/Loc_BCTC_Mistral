@@ -240,26 +240,21 @@ const KNOWN_CAP4_LABEL_CONTENT = [
   'GIAI DOAN',
   'CHUA PHAN PHOI KY NAY',
   'CHUA PHAN PHOI NAM NAY',
+  'CHUA PHAN PHOI LUY KE DEN CUOI',
 ];
 
-// SUA 2026-07-17 (backtest 16 bao cao Q2/2026 that, TRC): "CHUA PHAN PHOI LUY
-// KE DEN CUOI" (cum cung, doi hoi dung chinh ta "luy ke") TRUOT khi OCR danh
-// may sai "lũy kế" thanh "lấy kế" (Mistral doi 1 ky tu, "ũ"->"ấ") - day la LOI
-// GO/OCR NGAU NHIEN (khong phai 1 cach viet khac chuan cua cong ty nao, "lấy
-// kế" khong co nghia trong tieng Viet ke toan), nen KHONG them rieng "LAY KE"
-// nhu 1 bien the wording (se lai truot voi lan OCR sai kieu khac - "lụy kế"/
-// "lủy kế"...). Thay bang TOKEN-AND, bo han yeu cau chinh ta "luy ke": chi can
-// "CHUA PHAN PHOI" + "DEN CUOI" cung xuat hien (khong doi hoi lien tiep) - van
-// du dac trung cho dung 2 dong chi tiet mã 421a (khong khop dong cha "Loi
-// nhuan sau thue chua phan phoi", khong co "den cuoi"), nhung KHONG con phu
-// thuoc chinh ta chinh xac cua tu "luy ke" nua - chiu duoc BAT KY loi go/OCR
-// nao cua rieng tu do.
-const KNOWN_CAP4_TOKEN_MARKERS: string[][] = [['CHUA PHAN PHOI', 'DEN CUOI']];
-
+// SUA 2026-07-17 (theo phan hoi nguoi dung, sau backtest 16 bao cao Q2/2026):
+// TRC gap loi OCR danh may "lũy kế" -> "lấy kế" (1 ky tu, ngau nhien) khien
+// dong cap-4 mã 421a khong nhan dien duoc, cong trung Von chu so huu. DA THU
+// noi long thanh token-AND (bo yeu cau chinh ta "luy ke") nhung nguoi dung
+// yeu cau REVERT: day la LOI OCR ngau nhien (khong phai cach viet khac chuan
+// cua cong ty nao), khong nen "sua" trong code - CHAP NHAN duoc, de lai canh
+// bao (mismatch) cho nguoi xem tay, thay vi noi rong dieu kien khop (rui ro
+// bat nham thu khac o bao cao sau - dung tinh than
+// feedback_prefer_structural_over_wording_fixes). Giu NGUYEN marker cu.
 export function isKnownCap4Label(label: string): boolean {
   const normalized = normalizeLabelText(label);
-  if (KNOWN_CAP4_LABEL_CONTENT.some((marker) => normalized.includes(marker))) return true;
-  return KNOWN_CAP4_TOKEN_MARKERS.some((tokens) => tokens.every((t) => normalized.includes(t)));
+  return KNOWN_CAP4_LABEL_CONTENT.some((marker) => normalized.includes(marker));
 }
 
 // Ten CHUAN cua cac dong CON (cap 2/3, KHONG BAO GIO la dong tong cap-1) duoc
