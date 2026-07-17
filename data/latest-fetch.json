@@ -12990,41 +12990,6 @@
           ],
           "rows": [
             [
-              null,
-              "Báo cáo tình hình tài chính",
-              null,
-              null,
-              "01-04"
-            ],
-            [
-              null,
-              "Báo cáo kết quả hoạt động",
-              null,
-              null,
-              "05-06"
-            ],
-            [
-              null,
-              "Báo cáo lưu chuyển tiền tệ",
-              null,
-              null,
-              "07-09"
-            ],
-            [
-              null,
-              "Báo cáo tình hình biến động vốn chủ sở hữu",
-              null,
-              null,
-              10
-            ],
-            [
-              null,
-              "Thuyết minh Báo cáo tài chính",
-              null,
-              null,
-              "11-34"
-            ],
-            [
               "VND",
               "VND",
               null,
@@ -22243,154 +22208,18 @@
         "incomeStatement": {
           "columns": [
             "Chỉ tiêu",
-            "Lợi nhuận sau thuế thu nhập doanh nghiệp",
-            "",
-            "",
-            ""
+            "Mã số",
+            "Thuyết minh",
+            "Quý 2 Năm nay",
+            "Quý 2 Năm trước",
+            "Lũy kế từ đầu năm đến cuối quý này Năm nay",
+            "Lũy kế từ đầu năm đến cuối quý này Năm trước"
           ],
           "rows": [
             [
-              "Báo cáo tài chính Quý II/2026",
-              null,
-              "Báo cáo tài chính Quý II/2025",
-              "Giá trị chênh lệch của quý cùng kỳ.",
-              "Tỷ lệ tăng/giảm so với kỳ trước (%)"
-            ],
-            [
               null,
               null,
-              -1,
-              -2,
-              "(3) = (1) - (2)"
-            ],
-            [
-              "Doanh thu",
-              3000000,
-              22227861983,
-              -22224861983,
-              "-100%"
-            ],
-            [
-              "Giá vốn",
-              "-",
-              19940467942,
-              -19940467942,
-              "-100%"
-            ],
-            [
-              "Lợi nhuận gộp",
-              3000000,
-              2287394041,
-              -2284394041,
-              "-100%"
-            ],
-            [
-              "Doanh thu hoạt động tài chính",
-              121989275,
-              16148704,
-              105840571,
-              "655%"
-            ],
-            [
-              "Chi phí quản lý",
-              1235925915,
-              1196562039,
-              39363876,
-              "3%"
-            ],
-            [
-              "Chi phí tài chính",
-              "-",
-              94177875,
-              -94177875,
-              "-100%"
-            ],
-            [
-              "Chi phí khác",
-              4097859237,
-              333189092,
-              3764670145,
-              "1.130%"
-            ],
-            [
-              "Lợi nhuận sau thuế",
-              -5208795877,
-              679613739,
-              -5888409616,
-              "-866%"
-            ],
-            [
-              "Báo cáo tài chính Quý II/2026",
-              null,
-              "Báo cáo tài chính Quý II/2025",
-              "Giá trị chênh lệch của quý cùng kỳ.",
-              "Tỷ lệ tăng/giảm so với kỳ trước (%)"
-            ],
-            [
-              null,
-              null,
-              -1,
-              -2,
-              "(3) = (1) - (2)"
-            ],
-            [
-              "Doanh thu",
-              3000000,
-              22227861983,
-              -22224861983,
-              "-100%"
-            ],
-            [
-              "Giá vốn",
-              "-",
-              19940467942,
-              -19940467942,
-              "-100%"
-            ],
-            [
-              "Lợi nhuận gộp",
-              3000000,
-              2287394041,
-              -2284394041,
-              "-100%"
-            ],
-            [
-              "Doanh thu hoạt động tài chính",
-              121989275,
-              16148704,
-              105840571,
-              "655%"
-            ],
-            [
-              "Chi phí quản lý",
-              1235925915,
-              1196562039,
-              39363876,
-              "3%"
-            ],
-            [
-              "Chi phí tài chính",
-              "-",
-              94177875,
-              -94177875,
-              "-100%"
-            ],
-            [
-              "Chi phí khác",
-              4097859237,
-              333189092,
-              3764670145,
-              "1.130%"
-            ],
-            [
-              "Lợi nhuận sau thuế",
-              -5208795877,
-              679613739,
-              -5888409616,
-              "-866%"
-            ],
-            [
-              null,
+              1,
               2,
               3,
               4,
@@ -22398,6 +22227,8 @@
             ],
             [
               "1. Doanh thu bán hàng và cung cấp dịch vụ",
+              "01",
+              "VI.1",
               3000000,
               22227861983,
               6000000,
@@ -22405,6 +22236,8 @@
             ],
             [
               "2. Các khoản giảm trừ doanh thu",
+              "02",
+              null,
               null,
               null,
               null,
@@ -22412,6 +22245,8 @@
             ],
             [
               "3. Doanh thu thuần về bán hàng và cung cấp dịch vụ (10=01-02)",
+              "10",
+              "VI.2",
               3000000,
               22227861983,
               6000000,
@@ -22419,6 +22254,8 @@
             ],
             [
               "4. Giá vốn hàng bán",
+              "11",
+              null,
               null,
               19940467942,
               null,
@@ -22426,6 +22263,8 @@
             ],
             [
               "5. Lợi nhuận gộp về bán hàng và cung cấp dịch vụ (20=10-11)",
+              "20",
+              "VI.3",
               3000000,
               2287394041,
               6000000,
@@ -22433,6 +22272,8 @@
             ],
             [
               "6. Lãi/lỗ của hoạt động bán, thanh lý bất động sản",
+              "21",
+              null,
               null,
               null,
               null,
@@ -22440,6 +22281,8 @@
             ],
             [
               "7. Doanh thu hoạt động tài chính",
+              "22",
+              null,
               121989275,
               16148704,
               235154572,
@@ -22447,6 +22290,8 @@
             ],
             [
               "8. Chi phí tài chính",
+              "23",
+              null,
               null,
               94177875,
               null,
@@ -22454,6 +22299,8 @@
             ],
             [
               "- Trong đó: Chi phí đi vay",
+              "24",
+              null,
               null,
               null,
               null,
@@ -22461,6 +22308,8 @@
             ],
             [
               "9. Chi phí bán hàng",
+              "25",
+              null,
               null,
               null,
               null,
@@ -22468,6 +22317,8 @@
             ],
             [
               "10. Chi phí quản lý doanh nghiệp",
+              "26",
+              null,
               1235925915,
               1196562039,
               2453905753,
@@ -22475,6 +22326,8 @@
             ],
             [
               "11. Lợi nhuận thuần từ hoạt động kinh doanh (30=20+21+22-(23+25+26))",
+              "30",
+              null,
               -1110936640,
               1012802831,
               -2212751181,
@@ -22482,6 +22335,8 @@
             ],
             [
               "12. Thu nhập khác",
+              "31",
+              null,
               null,
               null,
               null,
@@ -22489,6 +22344,8 @@
             ],
             [
               "13. Chi phí khác",
+              "32",
+              "VI.6",
               4097859237,
               333189092,
               4097859237,
@@ -22496,6 +22353,8 @@
             ],
             [
               "14. Lợi nhuận khác (40=31-32)",
+              "40",
+              null,
               -4097859237,
               -333189092,
               -4097859237,
@@ -22503,6 +22362,8 @@
             ],
             [
               "15. Tổng lợi nhuận kế toán trước thuế (50=30+40)",
+              "50",
+              null,
               -5208795877,
               679613739,
               -6310610418,
@@ -22510,6 +22371,8 @@
             ],
             [
               "16. Chi phí thuế TNDN hiện hành",
+              "51",
+              null,
               null,
               null,
               null,
@@ -22517,6 +22380,8 @@
             ],
             [
               "17. Chi phí thuế TNDN hoãn lại",
+              "52",
+              null,
               null,
               null,
               null,
@@ -22524,6 +22389,8 @@
             ],
             [
               "18. Lợi nhuận sau thuế thu nhập doanh nghiệp (60=50-51-52)",
+              "60",
+              "V.12",
               -5208795877,
               679613739,
               -6310610418,
@@ -22531,6 +22398,8 @@
             ],
             [
               "19. Lãi cơ bản trên cổ phiếu",
+              "70",
+              null,
               -341,
               38,
               -413,
@@ -22538,6 +22407,8 @@
             ],
             [
               "20. Lãi suy giảm trên cổ phiếu",
+              "71",
+              "VI.7",
               -341,
               38,
               -413,
@@ -22884,8 +22755,7 @@
       "periodYear": 2026,
       "periodSlug": "Q2",
       "warnings": [
-        "\"\": Loi nhuan sau thue (-5888409616) khong khop Loi nhuan truoc thue - Chi phi thue TNDN (-6310610418)",
-        "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 4 muc trong KQKD (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
+        "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 2 muc trong KQKD (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
       ]
     },
     {
@@ -26486,7 +26356,7 @@
         },
         {
           "label": "LNST",
-          "percentChange": -26.790096556758254,
+          "percentChange": -26.790096674667147,
           "tier": null,
           "unreliable": false
         },
@@ -27010,60 +26880,6 @@
           ],
           "rows": [
             [
-              "Tăng/giảm Increase/ decrease",
-              null,
-              null,
-              null,
-              null,
-              null,
-              "Tỷ lệ/ Proportion"
-            ],
-            [
-              "Tổng doanh thu Total revenue",
-              null,
-              null,
-              14408226,
-              17332735,
-              -2924509,
-              "-16,87%"
-            ],
-            [
-              "Tổng chi phí Total cost",
-              null,
-              null,
-              8031567,
-              8638003,
-              -606436,
-              "-7,02%"
-            ],
-            [
-              "Lợi nhuận trước thuế Profit before tax",
-              null,
-              null,
-              6376659,
-              8694732,
-              -2318073,
-              "-26,66%"
-            ],
-            [
-              "Chi phí thuế TNDN Corporate income tax expense",
-              null,
-              null,
-              1289705,
-              1746281,
-              -456576,
-              "-26,15%"
-            ],
-            [
-              "Lợi nhuận sau thuế TNDN Profit after corporate income tax",
-              null,
-              null,
-              5086955,
-              6948452,
-              -1861497,
-              "-26,79%"
-            ],
-            [
               "1 Doanh thu bán hàng và cung cấp",
               "01",
               24,
@@ -27379,10 +27195,7 @@
       "entryName": null,
       "periodYear": 2026,
       "periodSlug": "Q2",
-      "warnings": [
-        "\"Lũy kế từ đầu năm đến cuối quý này Năm nay VND\": Loi nhuan sau thue (-1861497) khong khop Loi nhuan truoc thue - Chi phi thue TNDN (-2774649)",
-        "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 1 muc trong KQKD (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
-      ]
+      "warnings": []
     },
     {
       "source": "vietstock",
@@ -28195,34 +28008,6 @@
             "6 tháng năm 2025 VND"
           ],
           "rows": [
-            [
-              null,
-              "Báo cáo tình hình tài chính",
-              null,
-              null,
-              "01 - 03"
-            ],
-            [
-              null,
-              "Báo cáo kết quả hoạt động kinh doanh",
-              null,
-              null,
-              4
-            ],
-            [
-              null,
-              "Báo cáo lưu chuyển tiền tệ",
-              null,
-              null,
-              5
-            ],
-            [
-              null,
-              "Thuyết minh Báo cáo tài chính",
-              null,
-              null,
-              "06 - 42"
-            ],
             [
               "",
               "I. LƯU CHUYỂN TIỀN TỪ HOẠT ĐỘNG KINH DOANH",
@@ -33321,7 +33106,7 @@
         },
         {
           "label": "LNST",
-          "percentChange": -91.2164699723452,
+          "percentChange": -91.21624636129259,
           "tier": null,
           "unreliable": false
         },
@@ -33432,41 +33217,6 @@
             "Số đầu năm"
           ],
           "rows": [
-            [
-              null,
-              "Báo cáo tình hình tài chính riêng",
-              null,
-              null,
-              "3 - 6"
-            ],
-            [
-              null,
-              "Báo cáo kết quả hoạt động riêng",
-              null,
-              null,
-              "7 - 9"
-            ],
-            [
-              null,
-              "Báo cáo lưu chuyển tiền tệ riêng",
-              null,
-              null,
-              "10 - 12"
-            ],
-            [
-              null,
-              "Báo cáo tình hình biến động vốn chủ sở hữu riêng",
-              null,
-              null,
-              13
-            ],
-            [
-              null,
-              "Thuyết minh báo cáo tài chính riêng",
-              null,
-              null,
-              "14 - 52"
-            ],
             [
               "100",
               "A. TÀI SẢN NGẮN HẠN",
@@ -34250,42 +34000,6 @@
             "Từ 1/1-30/06/2025"
           ],
           "rows": [
-            [
-              null,
-              "Số tiền (trd)/ Amount (million dong)",
-              null,
-              null,
-              null,
-              null,
-              "Tỷ lệ/ Ratio (%)"
-            ],
-            [
-              null,
-              "Tổng doanh thu và thu nhập khác/ Total Revenue and other income",
-              null,
-              357565,
-              578832,
-              -221267,
-              "-38%"
-            ],
-            [
-              null,
-              "Tổng chi phí và chi phí khác/ Total Expenses and other expenses",
-              null,
-              338859,
-              361447,
-              -22588,
-              "-6%"
-            ],
-            [
-              null,
-              "Tổng lợi nhuận kế toán sau thuế TNDN/ Total profit after CIT",
-              null,
-              15436,
-              175738,
-              -160302,
-              "-91%"
-            ],
             [
               "",
               "I. DOANH THU HOẠT ĐỘNG",
@@ -46898,27 +46612,6 @@
           ],
           "rows": [
             [
-              "Báo cáo kết quả hoạt động kinh doanh",
-              null,
-              null,
-              null,
-              4
-            ],
-            [
-              "Báo cáo lưu chuyển tiền tệ",
-              null,
-              null,
-              null,
-              5
-            ],
-            [
-              "Thuyết minh Báo cáo tài chính",
-              null,
-              null,
-              null,
-              "6 - 38"
-            ],
-            [
               "Kỳ trước",
               null,
               null,
@@ -48105,48 +47798,6 @@
           ],
           "rows": [
             [
-              null,
-              "Báo cáo của Ban Tổng Giám đốc",
-              null,
-              "02-03"
-            ],
-            [
-              null,
-              "Báo cáo tài chính hợp nhất",
-              null,
-              "04-39"
-            ],
-            [
-              null,
-              "Báo cáo tình hình tài chính hợp nhất",
-              null,
-              "04-05"
-            ],
-            [
-              null,
-              "Báo cáo kết quả hoạt động kinh doanh hợp nhất",
-              null,
-              6
-            ],
-            [
-              null,
-              "Báo cáo lưu chuyển tiền tệ hợp nhất",
-              null,
-              "07-08"
-            ],
-            [
-              null,
-              "Bản thuyết minh Báo cáo tài chính hợp nhất",
-              null,
-              "09-39"
-            ],
-            [
-              null,
-              "Phụ lục Thông tin so sánh",
-              null,
-              40
-            ],
-            [
               "",
               "I. LƯU CHUYỂN TIỀN TỪ HOẠT ĐỘNG KINH DOANH",
               null,
@@ -49157,42 +48808,6 @@
             "Cho kỳ hoạt động 6 tháng kết thúc này 30/6/2025 VND"
           ],
           "rows": [
-            [
-              null,
-              "Báo cáo của Ban Tổng Giám đốc",
-              null,
-              "02-03"
-            ],
-            [
-              null,
-              "Báo cáo tình hình tài chính riêng",
-              null,
-              "04-05"
-            ],
-            [
-              null,
-              "Báo cáo kết quả hoạt động kinh doanh riêng",
-              null,
-              6
-            ],
-            [
-              null,
-              "Báo cáo lưu chuyển tiền tệ riêng",
-              null,
-              "07-08"
-            ],
-            [
-              null,
-              "Thuyết minh Báo cáo tài chính riêng",
-              null,
-              "09-31"
-            ],
-            [
-              null,
-              "Phụ lục",
-              null,
-              32
-            ],
             [
               "",
               "I. LƯU CHUYỂN TIỀN TỪ HOẠT ĐỘNG KINH DOANH",

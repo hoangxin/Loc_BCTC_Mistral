@@ -641,6 +641,55 @@ function isEquityChangesStatementTable(table: ParsedTable): boolean {
   return matches >= 2;
 }
 
+// SUA 2026-07-17 (phan hoi nguoi dung, xac nhan qua ABW/ATS/CTS/GEE/NTC/UDJ/VPD
+// Q2/2026 that): classifyTableByContent cham diem tren TOAN BO text cac dong
+// GOP LAI, khong kiem tra bang co THAT SU la 1 bang chi tieu ke toan hay
+// khong - 2 loai bang trang bia hay vo tinh "trung tu khoa" ma bi gan NHAM
+// vao 1 trong 3 bang chinh (dong dau bang that bi thay bang rac):
+//
+// 1. Bang "Muc luc" (liet ke TEN 4 bang + so trang, vd "Bao cao tinh hinh tai
+//    chinh | 01-04") - chinh no LIET KE ten cac bang nen tu khoa cua ca 4 key
+//    (balanceSheet/incomeStatement/cashFlow/notes) deu xuat hien, ngau nhien
+//    "thang" 1 key nao do khi cac key khac hoa diem thap hon. Nhan dien: bang
+//    co >=2 dong/cot la TEN NGUYEN VAN 1 trong cac bao cao/muc chinh (mau
+//    bieu bat buoc dung dung cum tu nay lam TIEU DE muc luc, khong doi theo
+//    cong ty) - khac han 1 chi tieu ke toan that (khong bao gio ten 1 dong la
+//    "Bao cao tinh hinh tai chinh" nguyen van).
+// 2. Bang "so sanh nhanh"/"highlights" o trang bia (vd "Tong doanh thu | Ky
+//    nay | Ky truoc | Chenh lech | Ty le tang/giam") - dung dung tu vung
+//    "Doanh thu" trung INCOME_STATEMENT_CONTENT_MARKERS nhung la 1 bang tom
+//    tat rieng (3-10 dong), KHONG PHAI bang KQKD day du. Nhan dien qua cum tu
+//    dac trung CHI co o loai bang tom tat nay (BCDKT/KQKD/LCTT day du theo
+//    mau bieu chuan khong bao gio dung "Ty le tang/giam"/"Chenh lech...so voi
+//    ky truoc" lam ten cot/dong).
+const COVER_PAGE_SECTION_NAME_MARKERS = [
+  'BAO CAO TINH HINH TAI CHINH',
+  'BAO CAO KET QUA HOAT DONG',
+  'BAO CAO LUU CHUYEN TIEN TE',
+  'THUYET MINH BAO CAO TAI CHINH',
+  'BAO CAO CUA BAN TONG GIAM DOC',
+  'BAO CAO CUA BAN GIAM DOC',
+  'BAO CAO KIEM TOAN',
+];
+
+function isCoverPageOrSummaryTable(table: ParsedTable): boolean {
+  const combinedText = [...table.columns, ...table.rows.flat()]
+    .map((cell) => normalizeLabelText(String(cell ?? '')))
+    .join(' | ');
+
+  const sectionNameMatches = COVER_PAGE_SECTION_NAME_MARKERS.reduce(
+    (count, marker) => count + (combinedText.includes(marker) ? 1 : 0),
+    0
+  );
+  if (sectionNameMatches >= 2) return true;
+
+  const hasTangGiam = combinedText.includes('TANG GIAM') || combinedText.includes('TANG/GIAM');
+  const hasPercentChangeWording = combinedText.includes('TY LE') && hasTangGiam;
+  const hasDifferenceWording =
+    combinedText.includes('CHENH LECH') && (hasTangGiam || combinedText.includes('SO VOI KY TRUOC') || combinedText.includes('CUNG KY'));
+  return hasPercentChangeWording || hasDifferenceWording;
+}
+
 // Dem so tu khoa dac trung cua tung bang xuat hien trong NHAN cac dong cua 1
 // bang markdown da parse - gan bang do vao key co diem cao nhat, CHI khi diem
 // do RO RANG vuot troi (khong hoa voi key khac) va > 0. Khong ep gan bua khi
@@ -648,6 +697,7 @@ function isEquityChangesStatementTable(table: ParsedTable): boolean {
 // bang khong lien quan, vd bang phu "Co cau von dieu le" o trang bia).
 function classifyTableByContent(table: ParsedTable): keyof FinancialStatements | null {
   if (isEquityChangesStatementTable(table)) return null;
+  if (isCoverPageOrSummaryTable(table)) return null;
   // Dung labelIndex DA TINH SAN cua bang (parseAllTablesInRange, co xet noi
   // dong mau) - KHONG tinh lai chi qua ten cot o day: da gap that MBS Q2/2026
   // (2026-07-11), bang "Nợ phải trả"/"Vốn chủ sở hữu" co CA 2 cot dau deu
