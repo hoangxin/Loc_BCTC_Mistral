@@ -209,8 +209,23 @@ function parseNumericCell(value: string): string | number | null {
 // giua chung khong doi, chi co the bi thieu 1 cot metadata o giua.
 const MA_SO_PATTERN = /^\d{2,4}[a-zA-Z]?$/;
 
+// Chuoi CHI gom ky tu La Ma (I,V,X,L,C,D,M, co the kem 1 dau phan cach don le)
+// - la STT MUC (vd "III.", "VIII", "II)"), KHONG PHAI nhan that - du co the
+// TINH CO khop pattern "3+ chu cai lien tiep" duoi day (vd "III" = 3 chu "I").
+// Da xac nhan qua CSV that (2026-07-17): dong that su la "III. | Các khoản
+// phải thu ngắn hạn | 130 | ...| gia tri |" bi hieu SAI la "da dung vi tri
+// san" (chi vi o dau tien "III." tinh co "trong nhu nhan that"), GIU NGUYEN
+// hang thay vi phan loai lai theo noi dung - lam nhan THAT ("Các khoản phải
+// thu ngắn hạn") bi ket qua o SAI cot (dinh o vi tri STT), khien dong nay
+// KHONG con duoc nhan dien la ranh gioi nhom "cap-1" ke tiep, pha tan het
+// pham vi tinh tong cho nhom truoc no. Loai truong hop nay TRUOC khi kiem tra
+// pattern chu cai chung.
+const PURE_ROMAN_NUMERAL_CELL = /^[IVXLCDM]+\s*[.\/)-]?\s*$/;
+
 function looksLikeLabel(cell: string | null): boolean {
-  return typeof cell === 'string' && /[a-zA-ZÀ-ỹ]{3,}/.test(cell);
+  if (typeof cell !== 'string') return false;
+  if (PURE_ROMAN_NUMERAL_CELL.test(cell.trim())) return false;
+  return /[a-zA-ZÀ-ỹ]{3,}/.test(cell);
 }
 
 // KHONG dung MA_SO_PATTERN o day (chi khop ma so DON gian nhu "212"/"117a") -
@@ -263,7 +278,15 @@ function realignRowByContent(
 
   const result: (string | null)[] = new Array(columns.length).fill(null);
 
-  const labelCellIdx = row.findIndex((cell) => typeof cell === 'string' && /[a-zA-ZÀ-ỹ]{3,}/.test(cell));
+  // SUA 2026-07-17 (backtest 16 bao cao Q2/2026 that, CSV): dung LAI
+  // looksLikeLabel() (da loai STT La Ma thuan tuy nhu "III.") thay vi 1 regex
+  // tho rieng o day - truoc day 2 noi nay dung 2 kiem tra KHAC NHAU (fast-path
+  // o tren da sua, nhung buoc tim "o nao la nhan" trong nhanh phan loai lai
+  // NAY van dung regex tho cu, KHONG duoc huong loi ich sua o tren) - dong
+  // "III. | Các khoản phải thu ngắn hạn | 130 | ..." van bi chon o[0]="III."
+  // lam nhan (van khop pattern "3+ chu cai" tho), day nhan THAT ("Các khoản
+  // phải thu ngắn hạn") sang vi tri SAI (cot Ma so).
+  const labelCellIdx = row.findIndex((cell) => looksLikeLabel(cell));
   if (labelCellIdx !== -1) result[labelColumnIndex] = row[labelCellIdx];
 
   const remaining = row.filter((_, i) => i !== labelCellIdx);
