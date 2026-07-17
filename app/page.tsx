@@ -4,9 +4,7 @@ import { formatTimestamp } from '@/lib/format';
 import { getPreviousQuarter } from '@/lib/quarter';
 import FetchControls from './FetchControls';
 import CustomSourceForm from './CustomSourceForm';
-import BusinessTypeTabs from './BusinessTypeTabs';
-import ClearResultsButton from './ClearResultsButton';
-import ExportSummaryButton from './ExportSummaryButton';
+import ResultsByPeriodTabs from './ResultsByPeriodTabs';
 import Tabs from './Tabs';
 
 // "Tai moi tu lan tai cuoi" (app/FetchControls.tsx, mode 'sinceLast') can biet
@@ -61,13 +59,6 @@ export default function HomePage() {
         }
         resultsTab={
           <>
-            {status.reports.length > 0 && (
-              <div className="summary-actions summary-actions-end">
-                <ExportSummaryButton filePaths={status.reports.map((report) => report.filePath)} />
-                <ClearResultsButton currentGeneratedAt={status.generatedAt} />
-              </div>
-            )}
-
             {status.periodLabel && (
               <div className="summary-bar">
                 <div className="summary-item">
@@ -98,7 +89,7 @@ export default function HomePage() {
             {status.reports.length === 0 ? (
               <div className="empty-state">Chưa có báo cáo nào - chọn quý và bấm "Tải BCTC" ở tab "Chọn báo cáo lọc", hoặc thêm nguồn riêng.</div>
             ) : (
-              <BusinessTypeTabs reports={status.reports} />
+              <ResultsByPeriodTabs reports={status.reports} currentGeneratedAt={status.generatedAt} />
             )}
           </>
         }

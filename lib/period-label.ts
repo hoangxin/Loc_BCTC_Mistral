@@ -36,3 +36,29 @@ export function periodDisplayLabel(term: ReportTerm): string {
   if (desc === 'Năm') return `Cả năm ${term.yearPeriod}`;
   return `${desc}/${term.yearPeriod}`;
 }
+
+// Chieu NGUOC lai periodDisplayLabel - suy nhan hien thi TU periodYear/periodSlug
+// da luu san tren TUNG report (lib/status.ts DownloadedReport, xem
+// periodFolderSlug o tren de biet cach 2 truong nay duoc sinh ra) thay vi tu 1
+// ReportTerm day du (khong co san khi doc lai status.reports, vd app/PeriodResultsPanel.tsx
+// gom nhom ket qua theo ky de hien tab "Ket qua {ky}" - yeu cau nguoi dung 2026-07-17).
+export function periodSlugDisplayLabel(periodYear: number, periodSlug: string): string {
+  const quarterMatch = periodSlug.match(/^Q([1-4])$/);
+  if (quarterMatch) return `Quý ${quarterMatch[1]}/${periodYear}`;
+  if (periodSlug === '6T') return `6 tháng đầu năm ${periodYear}`;
+  if (periodSlug === '9T') return `9 tháng đầu năm ${periodYear}`;
+  if (periodSlug === 'Nam') return `Cả năm ${periodYear}`;
+  return `${periodSlug}/${periodYear}`;
+}
+
+// Thu tu sap xep tab ky (moi nhat truoc) - Q4 > Q3 > Q2 > Q1, "Nam"/"9T"/"6T"
+// xep sau cung trong nam (thuong cong bo muon hon cac quy) vi khong co "thu
+// tu quy" ro rang de so sanh truc tiep voi Q1-4.
+const PERIOD_SLUG_SORT_WEIGHT: Record<string, number> = { Q1: 1, Q2: 2, Q3: 3, Q4: 4, '6T': 5, '9T': 6, Nam: 7 };
+
+export function comparePeriodDesc(a: { periodYear: number; periodSlug: string }, b: { periodYear: number; periodSlug: string }): number {
+  if (a.periodYear !== b.periodYear) return b.periodYear - a.periodYear;
+  const weightA = PERIOD_SLUG_SORT_WEIGHT[a.periodSlug] ?? 0;
+  const weightB = PERIOD_SLUG_SORT_WEIGHT[b.periodSlug] ?? 0;
+  return weightB - weightA;
+}

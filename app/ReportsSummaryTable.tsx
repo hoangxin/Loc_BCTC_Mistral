@@ -29,7 +29,26 @@ function excelFileHref(filePath: string): string {
   return `/api/report-file?filePath=${encodeURIComponent(filePath)}&kind=excel`;
 }
 
-export default function ReportsSummaryTable({ reports }: { reports: DownloadedReport[] }) {
+// Checkbox chon bao cao (yeu cau nguoi dung 2026-07-17 - nut "Xuat Excel tong
+// hop"/"Xoa ket qua" tren tung tab "Ket qua {ky}" can chon dung vai bao cao
+// thay vi luon ap dung ca ky) - state SONG (Set<filePath>) song o component
+// cha (PeriodResultsPanel) de giu nguyen lua chon khi chuyen qua lai giua cac
+// tab loai hinh DN (BusinessTypeTabs), khong reset moi lan doi tab. selected/
+// onToggle/onToggleAll deu TUY CHON - bo qua het (khong hien cot checkbox) o
+// noi con dung bang nay ma chua can chon (hien khong con noi nao khac dung
+// component nay ngoai PeriodResultsPanel, giu tuy chon de an toan/de tai su
+// dung sau nay).
+export default function ReportsSummaryTable({
+  reports,
+  selected,
+  onToggle,
+  onToggleAll,
+}: {
+  reports: DownloadedReport[];
+  selected?: Set<string>;
+  onToggle?: (filePath: string) => void;
+  onToggleAll?: (filePaths: string[]) => void;
+}) {
   const labels = useMemo(() => collectLabels(reports), [reports]);
   const [stockCodeQuery, setStockCodeQuery] = useState('');
 
@@ -58,6 +77,16 @@ export default function ReportsSummaryTable({ reports }: { reports: DownloadedRe
       <table className="report-table">
         <thead>
           <tr>
+            {onToggleAll && (
+              <th>
+                <input
+                  type="checkbox"
+                  checked={filteredReports.length > 0 && filteredReports.every((r) => selected?.has(r.filePath))}
+                  onChange={() => onToggleAll(filteredReports.map((r) => r.filePath))}
+                  aria-label="Chọn tất cả"
+                />
+              </th>
+            )}
             <th>Xuất file</th>
             <th>STT</th>
             <th className="stockcode-col">Mã CK</th>
@@ -71,7 +100,7 @@ export default function ReportsSummaryTable({ reports }: { reports: DownloadedRe
         <tbody>
           {filteredReports.length === 0 && (
             <tr>
-              <td colSpan={4 + labels.length + 1} className="empty-state">
+              <td colSpan={4 + labels.length + 1 + (onToggleAll ? 1 : 0)} className="empty-state">
                 Không tìm thấy mã CK nào khớp "{stockCodeQuery}".
               </td>
             </tr>
@@ -80,6 +109,16 @@ export default function ReportsSummaryTable({ reports }: { reports: DownloadedRe
             const byLabel = new Map((report.analysis ?? []).map((item) => [item.label, item]));
             return (
               <tr key={report.filePath}>
+                {onToggle && (
+                  <td>
+                    <input
+                      type="checkbox"
+                      checked={selected?.has(report.filePath) ?? false}
+                      onChange={() => onToggle(report.filePath)}
+                      aria-label={`Chọn báo cáo ${report.stockCode}`}
+                    />
+                  </td>
+                )}
                 <td>
                   <div className="row-export-actions">
                     {/* Excel: khong doi - server dung THANG report.statements da

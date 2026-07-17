@@ -498,6 +498,47 @@ auto) cat mat du bam o hang dau/cuoi bang. */
   gap: 6px;
 }
 
+.split-button {
+  position: relative;
+  display: inline-block;
+}
+
+.split-button-menu {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  z-index: 20;
+  min-width: 220px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+  padding: 4px;
+}
+
+.split-button-menu-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  font-family: inherit;
+  font-size: 13px;
+  padding: 8px 10px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+}
+
+.split-button-menu-item:hover:not(:disabled) {
+  background: #f1f2f4;
+}
+
+.split-button-menu-item:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .row-export-actions .secondary-button {
   padding: 5px 10px;
   font-size: 12px;

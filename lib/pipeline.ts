@@ -63,23 +63,40 @@ export function writeCustomSourceCheck(check: NonNullable<FetchStatus['lastCusto
 }
 
 // Nut "Xoa" o tab Ket qua (app/ClearResultsButton.tsx, dispatch qua
-// app/api/clear-results, mode=clear) - xoa TOAN BO ket qua da tich luy tu
-// truoc den nay (nguoc lai voi runFetchPipeline moi lan chi BO SUNG, khong tu
-// xoa - xem comment o duoi), tra ve trang thai rong nhu chua tung chay lan
-// nao.
-export function clearResults(): FetchStatus {
-  const status: FetchStatus = {
-    running: false,
-    generatedAt: new Date().toISOString(),
-    periodLabel: null,
-    year: null,
-    totalFound: 0,
-    totalMatched: 0,
-    downloaded: 0,
-    failed: [],
-    reports: [],
-    lastCustomSourceCheck: null,
-  };
+// app/api/clear-results, mode=clear) - xoa ket qua da tich luy tu truoc den
+// nay (nguoc lai voi runFetchPipeline moi lan chi BO SUNG, khong tu xoa - xem
+// comment o duoi).
+//
+// SUA 2026-07-17 (yeu cau nguoi dung - moi tab "Ket qua {ky}" can nut "Xoa
+// ket qua" rieng, co the xoa CHI vai bao cao da tick thay vi luon xoa het):
+// them tham so filePaths TUY CHON. Khong truyen (hoac mang rong) = giu nguyen
+// hanh vi cu (xoa TOAN BO, ve trang thai rong nhu chua tung chay lan nao).
+// Co truyen = CHI loai cac report co filePath khop khoi status.reports, giu
+// nguyen totalFound/totalMatched/downloaded/failed (cac so nay mo ta 1 LAN
+// CHAY cu the trong qua khu, khong phai dem song theo reports.length hien
+// tai - xoa vai report cu KHONG lam sai lech y nghia cua chung).
+export function clearResults(filePaths?: string[]): FetchStatus {
+  if (!filePaths || filePaths.length === 0) {
+    const status: FetchStatus = {
+      running: false,
+      generatedAt: new Date().toISOString(),
+      periodLabel: null,
+      year: null,
+      totalFound: 0,
+      totalMatched: 0,
+      downloaded: 0,
+      failed: [],
+      reports: [],
+      lastCustomSourceCheck: null,
+    };
+    writeStatus(status);
+    return status;
+  }
+
+  const toRemove = new Set(filePaths);
+  const status = readStatus();
+  status.reports = status.reports.filter((report) => !toRemove.has(report.filePath));
+  status.generatedAt = new Date().toISOString();
   writeStatus(status);
   return status;
 }
