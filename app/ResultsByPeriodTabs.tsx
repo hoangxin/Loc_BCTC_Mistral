@@ -42,6 +42,12 @@ export default function ResultsByPeriodTabs({
         });
       }
     }
+    // Trong TUNG ky, xep ma nao TAI/CAP NHAT GAN NHAT len tren cung (yeu cau
+    // nguoi dung 2026-07-17) - status.reports luon noi bao cao MOI vao CUOI
+    // mang (khong ghi de tai cho cu - xem [...keptReports, ...newReports] o
+    // lib/pipeline.ts runFetchPipeline va [...status.reports, report] o
+    // addCustomReport), nen dao nguoc thu tu trong 1 nhom = moi nhat truoc.
+    for (const group of map.values()) group.reports.reverse();
     return Array.from(map.values()).sort(comparePeriodDesc);
   }, [reports]);
 

@@ -154,6 +154,13 @@ tren man hinh sieu rong (4K) de header/tabs khong bi keo dai qua muc doc duoc. *
   font-size: 12px;
   text-transform: uppercase;
   letter-spacing: 0.02em;
+  /* Dong tieu de "dong bang" khi cuon xuong xem cac ma sau (yeu cau nguoi
+     dung 2026-07-17) - report-table-wrapper da co san overflow-x: auto (o
+     tren) nen no da la 1 scroll container, sticky o day tu dong bam theo
+     truc doc khi cuon TRANG (khong can them max-height/overflow-y rieng). */
+  position: sticky;
+  top: 0;
+  z-index: 2;
 }
 
 .report-table tr:last-child td {
