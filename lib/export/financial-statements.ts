@@ -261,6 +261,7 @@ export async function extractFinancialStatementsWithOcrProbe(filePath: string, t
     const collected: MistralOcrPage[] = [];
     let cursor = 0;
     let checkedLanguage = false;
+    let stoppedNoTablesInFirstBlock = false;
 
     while (cursor < totalPages && collected.length < MAX_PROBE_PAGES) {
       const step = collected.length === 0 ? INITIAL_PROBE_BATCH_SIZE : EXPAND_STEP;
@@ -291,11 +292,35 @@ export async function extractFinancialStatementsWithOcrProbe(filePath: string, t
         if (nonVietnamesePageCount > collected.length / 2) {
           throw new NonVietnameseContentError('Noi dung khong phai tieng Viet (phat hien sau lo OCR dau tien)');
         }
+        // Bao cao dang dac biet (vd bao cao QUY dau tu, xem FUEVN100 Q2/2026,
+        // 2026-07-18 - phan Thuyet minh danh muc dai HANG CHUC trang nam
+        // TRUOC ca 3 bang chinh, khac han cau truc thong thuong "3 bang roi
+        // toi Thuyet minh"): thiet ke ca he thong (INITIAL_PROBE_BATCH_SIZE,
+        // xem comment tren) dua tren gia dinh da kiem chung qua nhieu bao cao
+        // that - CA 3 bang chinh luon nam TRON trong 12 trang dau. Neu lo dau
+        // nay parse ra 0 dong CA 3 bang, mo rong them (toi da 4 lan, 2
+        // trang/lan) gan nhu chac chan cung khong tim thay gi (bang that con
+        // nam xa hon ve sau, sau ca chuc trang thuyet minh) - dung NGAY thay
+        // vi ton them cac lan goi OCR mo rong vo ich (moi lan la 1 batch job
+        // rieng, co the tre neu hang doi Mistral nghen - xem MAX_POLL_DURATION_MS,
+        // lib/ai/mistral-ocr-batch.ts). Ket qua van di qua buildResultFromMarkdown
+        // nhu binh thuong, tu nhien duoc gan canh bao "CANH BAO: ca 3 bang
+        // chinh...rong" (isEmptyParse o duoi) de nguoi dung biet can xem tay.
+        if (isEmptyParse(parseStatementsFromMarkdown(markdownSoFar))) {
+          stoppedNoTablesInFirstBlock = true;
+          break;
+        }
       }
       if (containsNotesSectionMarker(markdownSoFar)) break;
     }
 
-    const stopReason = collected.length >= MAX_PROBE_PAGES ? 'cham tran 20 trang' : collected.length === totalPages ? 'het file' : 'thay Thuyet minh';
+    const stopReason = stoppedNoTablesInFirstBlock
+      ? `khong thay bang nao trong ${collected.length} trang dau`
+      : collected.length >= MAX_PROBE_PAGES
+        ? 'cham tran 20 trang'
+        : collected.length === totalPages
+          ? 'het file'
+          : 'thay Thuyet minh';
     console.log(`[mistral-ocr] ${filePath}: OCR ${collected.length} trang (tong cong, dung vi ${stopReason})`);
     return collected.map((p) => p.markdown).join('\n\n');
   });

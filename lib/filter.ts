@@ -29,6 +29,21 @@ function isParentOnlyReport(r: ReportFile): boolean {
   return classifyStatementScope({ metadataText: `${r.title} ${r.fullName}` }) === 'Riêng lẻ';
 }
 
+// Bo qua ma CK dai hon 3 ky tu (vd FUEVN100, E1VFVN30...) - yeu cau nguoi
+// dung 2026-07-18 sau su co FUEVN100 Q2/2026: ma co phieu thuong tren HOSE/
+// HNX/UPCOM LUON dung 3 ky tu, ma dai hon la CHUNG CHI QUY/ETF (mau BCTC
+// khac han doanh nghiep thuong - vd Thuyet minh danh muc dai hang chuc trang
+// nam TRUOC ca 3 bang chinh, xem project_fetch_hang_fuevn100_2026-07-18 -
+// khong thuoc pham vi phan tich cua he thong nay), loai TU VONG LOC nay
+// (truoc khi tai/OCR) de tiet kiem ca chi phi tai file lan OCR, khong chi
+// dua vao co che "dung som neu 12 trang dau khong co bang"
+// (extractFinancialStatementsWithOcrProbe, lib/export/financial-statements.ts).
+function isNonStandardTickerLength(r: ReportFile): boolean {
+  return r.stockCode.trim().length > 3;
+}
+
 export function filterReports(reports: ReportFile[]): ReportFile[] {
-  return reports.filter((r) => !EXCLUDED_EXCHANGES.has(r.exchange.trim().toLowerCase()) && !isParentOnlyReport(r));
+  return reports.filter(
+    (r) => !EXCLUDED_EXCHANGES.has(r.exchange.trim().toLowerCase()) && !isParentOnlyReport(r) && !isNonStandardTickerLength(r)
+  );
 }

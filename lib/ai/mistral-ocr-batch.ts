@@ -67,6 +67,19 @@ const POLL_INTERVAL_MS = 3000;
 // mac dinh 24h cua Mistral (job ket thuc "TIMEOUT_EXCEEDED" som hon neu that
 // su bi ket, thay vi cho ca ngay moi biet).
 const JOB_TIMEOUT_HOURS = 2;
+// TRAN CHO PHIA CLIENT rieng, THAP HON HAN JOB_TIMEOUT_HOURS (2h) - su co that
+// FUEVN100 Q2/2026 (2026-07-18): batch queue cua Mistral bi nghen tam thoi,
+// 1 job OCR (12 trang, thuong chi vai chuc giay-vai phut) treo o RUNNING toi
+// 58 phut - vi truoc day vong poll duoi day KHONG co tran nao rieng (chi dua
+// vao timeout_hours phia server), 1 bao cao cham bat thuong an het gan toan
+// bo ngan sach 60 phut cua CA job GitHub Actions (.github/workflows/
+// fetch-bctc.yml), khien job bi cancel giua chung, mat tat ca ket qua da OCR
+// xong cua CAC bao cao khac (khong commit duoc). Vuot tran nay chi nem loi
+// cho DUNG 1 bao cao dang xu ly (lib/pipeline.ts da co try/catch rieng tung
+// file, day vao failed[] - khong lam hong cac bao cao khac dang chay song
+// song), de worker ranh tay xu ly bao cao tiep theo thay vi ket toi khi het
+// gio.
+const MAX_POLL_DURATION_MS = 10 * 60 * 1000;
 
 type MistralBatchJobStatus = 'QUEUED' | 'RUNNING' | 'SUCCESS' | 'FAILED' | 'TIMEOUT_EXCEEDED' | 'CANCELLATION_REQUESTED' | 'CANCELLED';
 
@@ -228,7 +241,13 @@ export async function callMistralOcrBatch(filePath: string, options?: CallMistra
   });
 
   let current = job;
+  const pollStartedAt = Date.now();
   while (current.status === 'QUEUED' || current.status === 'RUNNING') {
+    if (Date.now() - pollStartedAt > MAX_POLL_DURATION_MS) {
+      throw new Error(
+        `Mistral batch job ${job.id} qua ${Math.round(MAX_POLL_DURATION_MS / 60000)} phut van con trang thai ${current.status} - dung cho (co the do hang doi batch cua Mistral bi nghen tam thoi), coi la loi tam thoi cho bao cao nay.`
+      );
+    }
     await sleep(POLL_INTERVAL_MS);
     current = await mistralRequest<MistralBatchJob>(`/v1/batch/jobs/${job.id}`, apiKey, { method: 'GET' });
   }
