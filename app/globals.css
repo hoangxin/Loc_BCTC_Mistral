@@ -43,6 +43,19 @@ tren man hinh sieu rong (4K) de header/tabs khong bi keo dai qua muc doc duoc. *
 }
 
 .flex-col-fill {
+  /* SUA 2026-07-18 (bug that: dong tieu de van khong dong bang) - .flex-col-fill
+     truoc day KHONG co display: flex, chi co flex-direction/flex/min-height -
+     3 thuoc tinh do CHI co tac dung khi element la flex ITEM cua cha no (dung
+     de TU sizing dung), nhung KHONG tu bien chinh no thanh flex CONTAINER cho
+     CON no. O app/Tabs.tsx, div goc (`<div className="flex-col-fill">`, KHONG
+     kem style display rieng) vi vay van la display:block (mac dinh cua div) -
+     con no (panel Ket qua) khong duoc goi flex:1/min-height:0 nao ca (vo hieu
+     hoan toan vi khong nam trong flex context), nen .report-table-wrapper cuoi
+     chuoi khong bao gio thuc su bi rang buoc chieu cao -> khong tu cuon ben
+     trong -> sticky khong co gi de bam theo. Them display: flex vao THANG day
+     (thay vi rai rac inline style tung noi) - style inline display='none' khi
+     an van thang the (inline luon uu tien hon class cho CUNG 1 thuoc tinh). */
+  display: flex;
   flex-direction: column;
   flex: 1 1 auto;
   min-height: 0;
