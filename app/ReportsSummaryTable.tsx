@@ -4,6 +4,8 @@ import { useMemo, useState } from 'react';
 import type { DownloadedReport } from '@/lib/status';
 import { buildOriginalFileUrl } from '@/lib/original-file-url';
 import WarningBadge from './WarningBadge';
+import ExportSummaryButton from './ExportSummaryButton';
+import ClearResultsButton from './ClearResultsButton';
 
 function collectLabels(reports: DownloadedReport[]): string[] {
   const labels: string[] = [];
@@ -43,11 +45,23 @@ export default function ReportsSummaryTable({
   selected,
   onToggle,
   onToggleAll,
+  allFilePaths,
+  selectedFilePaths,
+  currentGeneratedAt,
 }: {
   reports: DownloadedReport[];
   selected?: Set<string>;
   onToggle?: (filePath: string) => void;
   onToggleAll?: (filePaths: string[]) => void;
+  // Nut Xuat/Xoa (yeu cau nguoi dung 2026-07-18 - dua len CHUNG dong voi o tim
+  // kiem thay vi 1 dong rieng phia tren, toi da khong gian doc cho bang) - mo
+  // ta CA KY dang mo (khong phai chi cac dong dang hien trong bang nay sau khi
+  // loc theo nhom loai hinh/Ma CK), truyen tu PeriodResultsPanel qua
+  // BusinessTypeTabs xuong day nguyen ven. Bo qua ca 3 (khong hien nut) neu
+  // khong truyen - giu component nay dung duoc o noi khac ma chua can nut.
+  allFilePaths?: string[];
+  selectedFilePaths?: string[];
+  currentGeneratedAt?: string;
 }) {
   const labels = useMemo(() => collectLabels(reports), [reports]);
   const [stockCodeQuery, setStockCodeQuery] = useState('');
@@ -73,6 +87,16 @@ export default function ReportsSummaryTable({
           />
         </label>
         {labels.length === 0 && <span className="muted-note">(Chưa có tiêu chí đọc BCTC - cột % sẽ hiện khi có tiêu chí)</span>}
+        {allFilePaths && selectedFilePaths && currentGeneratedAt !== undefined && (
+          <div className="summary-actions-buttons">
+            <ExportSummaryButton allFilePaths={allFilePaths} selectedFilePaths={selectedFilePaths} />
+            <ClearResultsButton
+              allFilePaths={allFilePaths}
+              selectedFilePaths={selectedFilePaths}
+              currentGeneratedAt={currentGeneratedAt}
+            />
+          </div>
+        )}
       </div>
       <table className="report-table">
         <thead>

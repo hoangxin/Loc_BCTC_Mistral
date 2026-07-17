@@ -3,8 +3,6 @@
 import { useState } from 'react';
 import type { DownloadedReport } from '@/lib/status';
 import BusinessTypeTabs from './BusinessTypeTabs';
-import ExportSummaryButton from './ExportSummaryButton';
-import ClearResultsButton from './ClearResultsButton';
 
 // Noi dung 1 tab "Ket qua {ky}" (xem ResultsByPeriodTabs) - giu state chon
 // bao cao (checkbox) O DAY, khong o ReportsSummaryTable, de lua chon SONG khi
@@ -44,16 +42,14 @@ export default function PeriodResultsPanel({
   const selectedFilePaths = allFilePaths.filter((p) => selected.has(p));
 
   return (
-    <div>
-      <div className="summary-actions summary-actions-end">
-        <ExportSummaryButton allFilePaths={allFilePaths} selectedFilePaths={selectedFilePaths} />
-        <ClearResultsButton
-          allFilePaths={allFilePaths}
-          selectedFilePaths={selectedFilePaths}
-          currentGeneratedAt={currentGeneratedAt}
-        />
-      </div>
-      <BusinessTypeTabs reports={reports} selected={selected} onToggle={toggle} onToggleAll={toggleAll} />
-    </div>
+    <BusinessTypeTabs
+      reports={reports}
+      selected={selected}
+      onToggle={toggle}
+      onToggleAll={toggleAll}
+      allFilePaths={allFilePaths}
+      selectedFilePaths={selectedFilePaths}
+      currentGeneratedAt={currentGeneratedAt}
+    />
   );
 }

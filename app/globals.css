@@ -28,7 +28,10 @@ tren man hinh sieu rong (4K) de header/tabs khong bi keo dai qua muc doc duoc. *
 .page {
   max-width: 1800px;
   margin: 0 auto;
-  padding: 24px 32px 64px;
+  /* Bottom padding giam tu 64px xuong 24px (yeu cau nguoi dung 2026-07-18) -
+     64px tao 1 khoang trong lon vo ich duoi thanh cuon ngang cua bang, choan
+     mat khong gian doc danh cho cac dong Ma CK. */
+  padding: 24px 32px 24px;
 }
 
 .site-header {
@@ -493,12 +496,20 @@ auto) cat mat du bam o hang dau/cuoi bang. */
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 12px 14px;
+  /* Thu gon tu 12px 14px (yeu cau nguoi dung 2026-07-18 - toi da khong gian
+     doc cho cac dong Ma CK, dong nay chi con o tim kiem + nut Xuat/Xoa). */
+  padding: 8px 14px;
   border-bottom: 1px solid var(--border);
 }
 
-.summary-actions-end {
-  justify-content: flex-end;
+/* Nut Xuat Excel tong hop/Xoa ket qua (yeu cau nguoi dung 2026-07-18 - dua
+   xuong CHUNG dong voi o tim kiem thay vi 1 dong rieng phia tren) - day sang
+   sat le phai cua .summary-actions bang margin-left: auto. */
+.summary-actions-buttons {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: auto;
 }
 
 .muted-note {

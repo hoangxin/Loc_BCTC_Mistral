@@ -13,11 +13,21 @@ export default function BusinessTypeTabs({
   selected,
   onToggle,
   onToggleAll,
+  allFilePaths,
+  selectedFilePaths,
+  currentGeneratedAt,
 }: {
   reports: DownloadedReport[];
   selected?: Set<string>;
   onToggle?: (filePath: string) => void;
   onToggleAll?: (filePaths: string[]) => void;
+  // 3 truong duoi day mo ta CA KY (khong phai chi nhom loai hinh DN dang active)
+  // - truyen thang xuong ReportsSummaryTable de nut Xuat/Xoa hien tren cung
+  // dong voi o tim kiem (yeu cau nguoi dung 2026-07-18), KHONG suy tu `reports`
+  // (da bi loc theo 1 nhom loai hinh) o day.
+  allFilePaths?: string[];
+  selectedFilePaths?: string[];
+  currentGeneratedAt?: string;
 }) {
   const grouped = useMemo(() => {
     const map = new Map<BusinessType, DownloadedReport[]>(BUSINESS_TYPE_ORDER.map((type) => [type, []]));
@@ -57,7 +67,15 @@ export default function BusinessTypeTabs({
       {activeReports.length === 0 ? (
         <div className="empty-state">Chưa có báo cáo nào thuộc nhóm "{BUSINESS_TYPE_LABELS[active]}".</div>
       ) : (
-        <ReportsSummaryTable reports={activeReports} selected={selected} onToggle={onToggle} onToggleAll={onToggleAll} />
+        <ReportsSummaryTable
+          reports={activeReports}
+          selected={selected}
+          onToggle={onToggle}
+          onToggleAll={onToggleAll}
+          allFilePaths={allFilePaths}
+          selectedFilePaths={selectedFilePaths}
+          currentGeneratedAt={currentGeneratedAt}
+        />
       )}
     </div>
   );
