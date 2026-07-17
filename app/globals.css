@@ -129,6 +129,18 @@ tren man hinh sieu rong (4K) de header/tabs khong bi keo dai qua muc doc duoc. *
      dinh) - cuon ngang thay vi cat mat cot (truoc day "overflow: hidden" lam
      mat cac cot cuoi khi bang rong hon khung, yeu cau user 2026-07-08). */
   overflow-x: auto;
+  /* SUA 2026-07-18 (yeu cau nguoi dung - dong tieu de khong dong bang duoc):
+     chi co overflow-x: auto KHONG DU de "position: sticky" tren th bam theo
+     TRANG - overflow-x non-visible tu dong keo overflow-y ve 'auto' (quy tac
+     CSS lien ket 2 truc), bien wrapper thanh 1 scroll container, nhung vi
+     wrapper KHONG co gioi han chieu cao (auto, luon vua khop noi dung) nen no
+     khong bao gio tu cuon - trang ben ngoai cuon thay, va sticky bi "khoa"
+     vao chinh khung do (khong con bam duoc theo cuon trang thuc te). Them
+     max-height + overflow-y: auto de wrapper THAT SU la khung cuon rieng (ca
+     doc lan ngang) - luc do sticky moi bam dung vao dinh khung nay khi cuon
+     ben trong no. */
+  max-height: calc(100vh - 260px);
+  overflow-y: auto;
 }
 
 .report-table {

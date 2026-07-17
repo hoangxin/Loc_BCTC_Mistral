@@ -19699,15 +19699,15 @@
         },
         {
           "label": "Tiền",
-          "percentChange": null,
+          "percentChange": -48.37444758725817,
           "tier": null,
-          "unreliable": true
+          "unreliable": false
         },
         {
           "label": "FVTPL",
-          "percentChange": null,
-          "tier": null,
-          "unreliable": true
+          "percentChange": 67.31216379447656,
+          "tier": "level2",
+          "unreliable": false
         },
         {
           "label": "HTM",
@@ -19723,9 +19723,9 @@
         },
         {
           "label": "Cho Vay",
-          "percentChange": null,
+          "percentChange": -18.873418305121152,
           "tier": null,
-          "unreliable": true
+          "unreliable": false
         },
         {
           "label": "TS Ngắn Hạn",
@@ -28231,25 +28231,25 @@
           "label": "Tiền",
           "percentChange": null,
           "tier": null,
-          "unreliable": true
+          "unreliable": false
         },
         {
           "label": "Phải thu khách hàng",
-          "percentChange": null,
+          "percentChange": -99.99999999972553,
           "tier": null,
-          "unreliable": true
+          "unreliable": false
         },
         {
           "label": "Trả trước người bán",
-          "percentChange": null,
+          "percentChange": -99.99999999691889,
           "tier": null,
-          "unreliable": true
+          "unreliable": false
         },
         {
           "label": "Phải thu khác",
-          "percentChange": null,
+          "percentChange": -99.99999995360773,
           "tier": null,
-          "unreliable": true
+          "unreliable": false
         },
         {
           "label": "Tồn kho",
@@ -28277,9 +28277,9 @@
         },
         {
           "label": "TS Thuế TN Hoãn lại",
-          "percentChange": null,
+          "percentChange": -99.99999996278841,
           "tier": null,
-          "unreliable": true
+          "unreliable": false
         },
         {
           "label": "Phải trả người bán",
@@ -28384,8 +28384,8 @@
               627000000000
             ],
             [
-              "III.",
               "Các khoản phải thu ngắn hạn",
+              "III.",
               "130",
               null,
               442100523346,
@@ -28568,8 +28568,8 @@
               -4602588875
             ],
             [
-              "III.",
               "Tài sản sinh học dài hạn",
+              "III.",
               "230",
               null,
               "-",
@@ -28616,8 +28616,8 @@
               41807143278
             ],
             [
-              "VII.",
               "Tài sản dài hạn khác",
+              "VII.",
               "270",
               null,
               304628930078,
@@ -29241,10 +29241,6 @@
       "periodYear": 2026,
       "periodSlug": "Q2",
       "warnings": [
-        "\"30/06/2026\": Tong cac muc trong TS ngan han (1219519522495) khong khop dong TS ngan han (1661620045841)",
-        "\"01/01/2026\": Tong cac muc trong TS ngan han (1135145145168) khong khop dong TS ngan han (1488939232741)",
-        "\"30/06/2026\": Tong cac muc trong TS dai han (111423517787) khong khop dong TS dai han (416052447865)",
-        "\"01/01/2026\": Tong cac muc trong TS dai han (89828760226) khong khop dong TS dai han (402764080204)",
         "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 7 muc trong BCDKT (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
       ]
     },
@@ -31690,42 +31686,48 @@
               "30",
               -44114975824,
               -50777169039
+            ],
+            [
+              "LƯU CHUYỂN TIỀN TỪ HOẠT ĐỘNG TÀI CHÍNH",
+              "",
+              null,
+              null
+            ],
+            [
+              "Tiền thu từ đi vay ngắn hạn",
+              "33",
+              "-",
+              15400000000
+            ],
+            [
+              "Tiền chi trả nợ gốc vay",
+              "34",
+              "-",
+              -15400000000
+            ],
+            [
+              "Tiền chi trả cổ tức",
+              "36",
+              -11771300000,
+              -117000000
+            ],
+            [
+              "Lưu chuyển tiền thuần từ hoạt động tài chính",
+              "40",
+              -11771300000,
+              -117000000
+            ],
+            [
+              "Lưu chuyển tiền thuần trong kỳ (50 = 20 + 30 + 40)",
+              "50",
+              9698162275,
+              53993237190
             ]
           ]
         },
         "offBalanceSheet": {
-          "columns": [
-            "",
-            "30/6/2026 và 1/1/2026",
-            ""
-          ],
-          "rows": [
-            [
-              "Số cổ phiếu",
-              null,
-              "VND"
-            ],
-            [
-              "Vốn cổ phần được duyệt và đã phát hành",
-              null,
-              null
-            ],
-            [
-              "Cổ phiếu phổ thông",
-              45000000,
-              450000000000
-            ],
-            [
-              "Số cổ phiếu đang lưu hành",
-              null,
-              null
-            ],
-            [
-              "Cổ phiếu phổ thông",
-              45000000,
-              450000000000
-            ]
-          ]
+          "columns": [],
+          "rows": []
         }
       },
       "financeUrl": "https://finance.vietstock.vn/BSL-ctcp-bia-sai-gon-song-lam.htm",
@@ -33118,9 +33120,9 @@
         },
         {
           "label": "Tiền",
-          "percentChange": null,
+          "percentChange": -41.5234478999992,
           "tier": null,
-          "unreliable": true
+          "unreliable": false
         },
         {
           "label": "FVTPL",
@@ -33142,9 +33144,9 @@
         },
         {
           "label": "Cho Vay",
-          "percentChange": null,
+          "percentChange": 7.201483434479811,
           "tier": null,
-          "unreliable": true
+          "unreliable": false
         },
         {
           "label": "TS Ngắn Hạn",
