@@ -1,18 +1,19 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import type { DownloadedReport } from '@/lib/status';
 import { buildOriginalFileUrl } from '@/lib/original-file-url';
 import WarningBadge from './WarningBadge';
 import ExportSummaryButton from './ExportSummaryButton';
 import ClearResultsButton from './ClearResultsButton';
 import WatchlistButton from './WatchlistButton';
-import { useWatchlist } from './WatchlistContext';
+import { useWatchlist, type HighlightState } from './WatchlistContext';
 
-// Key mute-nhap-nhay cho 1 o chi tieu (yeu cau nguoi dung 2026-07-18) - theo
-// filePath (khong phai stockCode) vi 1 ma CK co the co nhieu bao cao (nhieu
-// ky/loai BCTC) voi trang thai mute doc lap nhau.
-function muteKey(filePath: string, label: string): string {
+// Key trang thai highlight cho 1 o chi tieu (yeu cau nguoi dung 2026-07-18) -
+// theo filePath (khong phai stockCode) vi 1 ma CK co the co nhieu bao cao
+// (nhieu ky/loai BCTC) voi trang thai doc lap nhau.
+function highlightKey(filePath: string, label: string): string {
   return `${filePath}::${label}`;
 }
 
@@ -41,30 +42,64 @@ function excelFileHref(filePath: string): string {
 }
 
 const MUTE_CONFIRM_TIMEOUT_MS = 5000;
+const HIGHLIGHT_STATES: HighlightState[] = ['blink', 'light', 'off'];
 
-// O chi tieu cap 2 (vang dam + nhap nhay) kem tickbox + popup xac nhan
-// (yeu cau nguoi dung 2026-07-18) - tickbox KHONG dai dien cho trang thai
-// mute/khong-mute, no CHI la trang thai "dang cho xac nhan": mac dinh luon
-// khong tick; bam vao tick hien ra + hien 1 nut "Xac nhan" ro rang (khong
-// dung window.confirm() vi no chan dong bo, khong the tu huy theo timeout)
-// trong MUTE_CONFIRM_TIMEOUT_MS; bam nut do moi thuc su doi trang thai mute
-// (ca 2 chieu: mute <-> mo lai), tick + popup mat ngay lap tuc; bam lai vao
-// tickbox trong luc dang cho hoac het gio ma khong bam nut deu HUY (tick tu
-// mat, khong doi gi). Tach rieng component vi moi o can 1 state/timer rieng -
-// khong goi useState trong vong lap .map cua component cha duoc (vi pham
-// rules of hooks).
+// Nhan nut cho 1 lua chon xac nhan, tuy vao dang chuyen TU dau SANG dau (yeu
+// cau nguoi dung 2026-07-18): sang 'blink' luon la "Nhấp nháy"; sang 'off'
+// luon la "Tắt"; sang 'light' la "Ngừng nhấp nháy" (neu dang tu 'blink') hoac
+// "Bật" (neu dang tu 'off' - khong co truong hop light->light vi target khac
+// current).
+function labelForTransition(current: HighlightState, target: HighlightState): string {
+  if (target === 'blink') return 'Nhấp nháy';
+  if (target === 'off') return 'Tắt';
+  return current === 'blink' ? 'Ngừng nhấp nháy' : 'Bật';
+}
+
+function tierClassForState(state: HighlightState): string {
+  if (state === 'blink') return 'pct-level2';
+  if (state === 'light') return 'pct-level1';
+  return '';
+}
+
+// O chi tieu dang highlight (level1 "vang nhat" hoac level2 "vang dam + nhap
+// nhay") kem tickbox + popup xac nhan (yeu cau nguoi dung 2026-07-18) - chu
+// trinh 3 trang thai (HighlightState): 'blink' <-> 'light' <-> 'off', chuyen
+// duoc QUA LAI ca 3 bat ke tier goc. Tickbox KHONG dai dien cho trang thai
+// hien tai, no CHI la "dang cho xac nhan": mac dinh khong tick; bam vao tick
+// hien ra + hien 2 nut lua chon (2 trang thai CON LAI, xem labelForTransition)
+// trong MUTE_CONFIRM_TIMEOUT_MS; bam 1 trong 2 moi thuc su doi trang thai,
+// tick+popup mat ngay; qua gio ma khong bam thi tu huy.
+//
+// Popup RENDER QUA PORTAL vao document.body (yeu cau nguoi dung 2026-07-18 -
+// bug that: 2 o highlight dung lien tiep theo chieu doc, tick o TREN thi popup
+// bi CHIM xuong duoi o o DUOI - td .pct-col-highlighted chi la position:
+// relative voi z-index:auto nen KHONG tu lap 1 stacking context rieng, popup
+// z-index:30 cua no bi so sanh lan voi o hang duoi o 1 stacking context xa
+// hon to o - ket qua khong on dinh trong bang. Dung portal + position: fixed
+// toa do tuyet doi (getBoundingClientRect) thi popup thoat han khoi cay DOM
+// cua bang, khong con bi anh huong boi stacking/overflow cua table/tr/td nao
+// nua.
 function MuteableHighlightCell({
   label,
-  muted,
-  onConfirmToggle,
+  currentState,
+  onSetState,
   displayValue,
 }: {
   label: string;
-  muted: boolean;
-  onConfirmToggle: () => void;
+  currentState: HighlightState;
+  onSetState: (state: HighlightState) => void;
   displayValue: string;
 }) {
   const [armed, setArmed] = useState(false);
+  const [popoverPos, setPopoverPos] = useState<{ top: number; left: number } | null>(null);
+  const checkboxRef = useRef<HTMLInputElement>(null);
+  // Ref toi CHINH popover cua component nay (khong phai truy DOM qua
+  // querySelector([data-...=label]) - label la ten cot, LAP LAI o moi hang
+  // nen 2 o khac hang cung cot se trung selector do, click-outside cua 1 o co
+  // the vo tinh doc nham popover cua o kia). ref hoat dong binh thuong du
+  // phan tu nam trong Portal - React gan ref theo VI TRI TRONG CAY REACT,
+  // khong phai vi tri trong DOM thuc te.
+  const popoverElRef = useRef<HTMLDivElement | null>(null);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
@@ -72,6 +107,22 @@ function MuteableHighlightCell({
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
     };
   }, []);
+
+  useEffect(() => {
+    if (!armed) return;
+    // Bam ra ngoai popup (khong phai tickbox, tickbox tu xu ly rieng qua
+    // onChange) thi huy - giong pattern click-outside o ExportSummaryButton.
+    function onClickOutside(e: MouseEvent) {
+      const target = e.target as Node;
+      if (checkboxRef.current?.contains(target)) return;
+      if (popoverElRef.current?.contains(target)) return;
+      clearArmTimeout();
+      setArmed(false);
+    }
+    document.addEventListener('mousedown', onClickOutside);
+    return () => document.removeEventListener('mousedown', onClickOutside);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [armed]);
 
   function clearArmTimeout() {
     if (timeoutRef.current) {
@@ -86,6 +137,8 @@ function MuteableHighlightCell({
       setArmed(false);
       return;
     }
+    const rect = checkboxRef.current?.getBoundingClientRect();
+    setPopoverPos(rect ? { top: rect.bottom + 4, left: rect.left } : null);
     setArmed(true);
     timeoutRef.current = setTimeout(() => {
       timeoutRef.current = null;
@@ -93,32 +146,44 @@ function MuteableHighlightCell({
     }, MUTE_CONFIRM_TIMEOUT_MS);
   }
 
-  function handleConfirm() {
+  function chooseState(state: HighlightState) {
     clearArmTimeout();
     setArmed(false);
-    onConfirmToggle();
+    onSetState(state);
   }
 
-  const tierClass = muted ? 'pct-level1' : 'pct-level2';
+  const otherStates = HIGHLIGHT_STATES.filter((s) => s !== currentState);
+  const tierClass = tierClassForState(currentState);
 
   return (
     <td className={`pct-col pct-col-highlighted ${tierClass}`}>
       <input
+        ref={checkboxRef}
         type="checkbox"
         className="pct-mute-checkbox"
         checked={armed}
         onChange={handleCheckboxChange}
-        title={armed ? 'Bấm "Xác nhận" bên dưới (tự huỷ sau 5s)' : muted ? 'Bật lại nhấp nháy' : 'Tắt nhấp nháy'}
-        aria-label={`${muted ? 'Bật lại' : 'Tắt'} nhấp nháy cho ${label}`}
+        title={armed ? 'Chọn 1 trong 2 lựa chọn bên dưới (tự huỷ sau 5s)' : `Đổi trạng thái highlight cho ${label}`}
+        aria-label={`Đổi trạng thái highlight cho ${label}`}
       />
       {displayValue}
-      {armed && (
-        <div className="mute-confirm-popover">
-          <button type="button" className="mute-confirm-button" onClick={handleConfirm}>
-            {muted ? 'Xác nhận bật lại' : 'Xác nhận tắt'}
-          </button>
-        </div>
-      )}
+      {armed &&
+        popoverPos &&
+        typeof document !== 'undefined' &&
+        createPortal(
+          <div
+            ref={popoverElRef}
+            className="mute-confirm-popover"
+            style={{ top: popoverPos.top, left: popoverPos.left }}
+          >
+            {otherStates.map((state) => (
+              <button key={state} type="button" className="mute-confirm-button" onClick={() => chooseState(state)}>
+                {labelForTransition(currentState, state)}
+              </button>
+            ))}
+          </div>,
+          document.body,
+        )}
     </td>
   );
 }
@@ -157,7 +222,7 @@ export default function ReportsSummaryTable({
 }) {
   const labels = useMemo(() => collectLabels(reports), [reports]);
   const [stockCodeQuery, setStockCodeQuery] = useState('');
-  const { isWatched, isMuted, toggleMuted } = useWatchlist();
+  const { isWatched, getHighlightOverride, setHighlightOverride } = useWatchlist();
 
   // Tim theo Ma CK (yeu cau user 2026-07-08) - so sanh khong phan biet hoa
   // thuong, cho phep go tat/mot phan ma (vd "id" khop "IDV").
@@ -326,28 +391,19 @@ export default function ReportsSummaryTable({
                       </td>
                     );
                   }
-                  // Cap 1 (vang nhat) khong nhap nhay va khong doi giao dien
-                  // khi mute (xem .pct-level1 o globals.css) nen KHONG can
-                  // tickbox o day (yeu cau nguoi dung 2026-07-18: tick truoc/
-                  // sau chang doi gi ca) - chi cap 2 (vang dam + nhap nhay)
-                  // moi can.
-                  if (tier === 'level1') {
-                    return (
-                      <td key={label} className="pct-col pct-level1">
-                        {formatPercent(item?.percentChange)}
-                      </td>
-                    );
-                  }
-                  // Mute-nhap-nhay cho cap 2 - xem MuteableHighlightCell o tren
-                  // (tick de "cho", bam nut popup "Xac nhan" moi thuc su doi
-                  // trang thai, tu huy sau 5s neu khong bam).
-                  const key = muteKey(report.filePath, label);
+                  // O co highlight (level1 hoac level2) - ca 2 deu dung chu
+                  // trinh 3 trang thai qua MuteableHighlightCell o tren, trang
+                  // thai TU NHIEN (chua tung doi) suy tu tier: level1 -> 'light',
+                  // level2 -> 'blink'.
+                  const key = highlightKey(report.filePath, label);
+                  const naturalState: HighlightState = tier === 'level2' ? 'blink' : 'light';
+                  const currentState = getHighlightOverride(key) ?? naturalState;
                   return (
                     <MuteableHighlightCell
                       key={label}
                       label={label}
-                      muted={isMuted(key)}
-                      onConfirmToggle={() => toggleMuted(key)}
+                      currentState={currentState}
+                      onSetState={(state) => setHighlightOverride(key, state)}
                       displayValue={formatPercent(item?.percentChange)}
                     />
                   );

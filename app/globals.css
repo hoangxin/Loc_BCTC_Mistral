@@ -292,20 +292,24 @@ tren man hinh sieu rong (4K) de header/tabs khong bi keo dai qua muc doc duoc. *
   cursor: pointer;
 }
 
-/* Popup nut "Xac nhan" hien khi tickbox dang cho (armed) - yeu cau nguoi
-   dung 2026-07-18: buoc xac nhan phai la 1 nut BAM RO RANG, khong chi ngam
-   hieu qua tickbox dang tick. .pct-col-highlighted da position: relative o
-   tren nen dat absolute canh theo no la du, khong can wrapper rieng. */
+/* Popup 2 nut lua chon hien khi tickbox dang cho (armed) - yeu cau nguoi dung
+   2026-07-18: buoc xac nhan phai la nut BAM RO RANG, khong chi ngam hieu qua
+   tickbox dang tick. position: fixed + toa do tinh tay qua getBoundingClientRect
+   (xem MuteableHighlightCell o ReportsSummaryTable.tsx) - BAT BUOC vi popup
+   nay render qua React Portal ra document.body (bug that: 2 o highlight dung
+   lien tiep theo chieu doc, o tren bam tick thi popup bi CHIM xuong duoi o o
+   duoi do td .pct-col-highlighted khong tu lap stacking context rieng; portal
+   thoat han khoi cay DOM cua bang nen khong con dinh gi den stacking/overflow
+   cua table/tr/td nua). top/left dat qua inline style (JS), khong dat o day. */
 .mute-confirm-popover {
-  position: absolute;
-  top: calc(100% + 4px);
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 30;
+  position: fixed;
+  z-index: 1000;
+  display: flex;
+  gap: 4px;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 6px;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
   padding: 4px;
   white-space: nowrap;
 }
