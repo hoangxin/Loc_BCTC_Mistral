@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, type ReactNode } from 'react';
+import { WatchlistProvider } from './WatchlistContext';
 
 // 2 tab tach rieng "Tai bao cao" (chon ky + xem truoc danh muc that + Tai
 // BCTC/Them nguon rieng) voi "Ket qua" (bang tong hop %/xuat Excel-PDF) - yeu
@@ -30,33 +31,49 @@ export default function Tabs({
   const [active, setActive] = useState<'fetch' | 'results'>('fetch');
 
   return (
-    <div className="flex-col-fill">
-      <div className="tabs" role="tablist">
-        <button
-          type="button"
-          role="tab"
-          aria-selected={active === 'fetch'}
-          className={`tab-button ${active === 'fetch' ? 'active' : ''}`}
-          onClick={() => setActive('fetch')}
-        >
-          Chọn báo cáo lọc
-        </button>
-        <button
-          type="button"
-          role="tab"
-          aria-selected={active === 'results'}
-          className={`tab-button ${active === 'results' ? 'active' : ''}`}
-          onClick={() => setActive('results')}
-        >
-          Kết quả
-        </button>
-        {statsBar && <div className="tabs-stats">{statsBar}</div>}
-      </div>
+    // WatchlistProvider dat O DAY (khong phai rieng trong ResultsByPeriodTabs
+    // nhu truoc) - yeu cau nguoi dung 2026-07-18: watchlist phai dong bo SANG
+    // CA tab "Chon bao cao loc" (fetchTab, xem FetchControls.tsx dung chung
+    // useWatchlist de highlight bang preview), khong chi giua cac tab con cua
+    // "Ket qua". Component nay la goc chung cua ca 2 nhanh fetchTab/resultsTab
+    // va khong unmount khi doi tab (chi doi display:none/block) nen 1 Provider
+    // duy nhat o day la du cho toan bo trang.
+    <WatchlistProvider>
+      <div className="flex-col-fill">
+        <div className="tabs" role="tablist">
+          <button
+            type="button"
+            role="tab"
+            aria-selected={active === 'fetch'}
+            className={`tab-button ${active === 'fetch' ? 'active' : ''}`}
+            onClick={() => setActive('fetch')}
+          >
+            Chọn báo cáo lọc
+          </button>
+          <button
+            type="button"
+            role="tab"
+            aria-selected={active === 'results'}
+            className={`tab-button ${active === 'results' ? 'active' : ''}`}
+            onClick={() => setActive('results')}
+          >
+            Kết quả
+          </button>
+          {statsBar && <div className="tabs-stats">{statsBar}</div>}
+        </div>
 
-      <div style={{ display: active === 'fetch' ? 'block' : 'none' }}>{fetchTab}</div>
-      <div className="flex-col-fill" style={{ display: active === 'results' ? 'flex' : 'none' }}>
-        {resultsTab}
+        {/* flex-col-fill CA 2 ben (yeu cau nguoi dung 2026-07-18 - truoc day
+        fetchTab chi la div block thuong, khong chiem het chieu cao con lai
+        nen bang preview Ma CK bi gioi han max-height co dinh + de lo khoang
+        trong lon duoi day trang) - xem .controls-bar/.fetch-controls/
+        .preview-panel o globals.css phoi hop cung chuoi flex nay. */}
+        <div className="flex-col-fill" style={{ display: active === 'fetch' ? 'flex' : 'none' }}>
+          {fetchTab}
+        </div>
+        <div className="flex-col-fill" style={{ display: active === 'results' ? 'flex' : 'none' }}>
+          {resultsTab}
+        </div>
       </div>
-    </div>
+    </WatchlistProvider>
   );
 }

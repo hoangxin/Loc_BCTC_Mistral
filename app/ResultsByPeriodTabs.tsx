@@ -4,7 +4,6 @@ import { useMemo, useState } from 'react';
 import type { DownloadedReport } from '@/lib/status';
 import { comparePeriodDesc, periodSlugDisplayLabel } from '@/lib/period-label';
 import PeriodResultsPanel from './PeriodResultsPanel';
-import { WatchlistProvider } from './WatchlistContext';
 
 interface PeriodGroup {
   key: string;
@@ -59,28 +58,28 @@ export default function ResultsByPeriodTabs({
   if (groups.length === 0) return null;
 
   return (
-    // WatchlistProvider o day (khong phai trong PeriodResultsPanel) vi component
-    // nay KHONG unmount khi doi tab ky - chi con no (PeriodResultsPanel) unmount/
-    // remount, nen watchlist/mute tao o 1 ky se con nguyen khi chuyen sang ky khac.
-    <WatchlistProvider>
-      <div className="flex-col-fill" style={{ display: 'flex' }}>
-        <div className="tabs" role="tablist">
-          {groups.map((group) => (
-            <button
-              key={group.key}
-              type="button"
-              role="tab"
-              aria-selected={activeKey === group.key}
-              className={`tab-button ${activeKey === group.key ? 'active' : ''}`}
-              onClick={() => setActive(group.key)}
-            >
-              Kết quả {group.label} ({group.reports.length})
-            </button>
-          ))}
-        </div>
-
-        {activeGroup && <PeriodResultsPanel reports={activeGroup.reports} currentGeneratedAt={currentGeneratedAt} />}
+    // WatchlistProvider chuyen len app/Tabs.tsx (goc chung fetchTab/resultsTab,
+    // yeu cau nguoi dung 2026-07-18: dong bo ca sang tab "Chon bao cao loc") -
+    // o day chi con dung useWatchlist() qua Context, khong tao Provider rieng
+    // nua (tao them o day se lam 1 Provider LONG NHAU thua, cac con se bam
+    // theo Provider GAN NHAT thay vi Provider chung o Tabs.tsx, pha mat dong bo).
+    <div className="flex-col-fill" style={{ display: 'flex' }}>
+      <div className="tabs" role="tablist">
+        {groups.map((group) => (
+          <button
+            key={group.key}
+            type="button"
+            role="tab"
+            aria-selected={activeKey === group.key}
+            className={`tab-button ${activeKey === group.key ? 'active' : ''}`}
+            onClick={() => setActive(group.key)}
+          >
+            Kết quả {group.label} ({group.reports.length})
+          </button>
+        ))}
       </div>
-    </WatchlistProvider>
+
+      {activeGroup && <PeriodResultsPanel reports={activeGroup.reports} currentGeneratedAt={currentGeneratedAt} />}
+    </div>
   );
 }

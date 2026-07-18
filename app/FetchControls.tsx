@@ -5,6 +5,8 @@ import type { ReportFile, ReportTerm } from '@/lib/vietstock-reports';
 import type { QuarterPeriod } from '@/lib/quarter';
 import { isRegularQuarterTerm, periodDisplayLabel, periodFolderSlug } from '@/lib/period-label';
 import { formatTimestamp } from '@/lib/format';
+import WatchlistButton from './WatchlistButton';
+import { useWatchlist } from './WatchlistContext';
 
 type Status = 'idle' | 'loading' | 'waiting' | 'error';
 type FilterMode = 'sinceLast' | 'count' | 'select';
@@ -98,6 +100,10 @@ export default function FetchControls({
   // ve rong moi khi doi ky (giong selectedFileInfoIds, xem effect loadPreview
   // duoi).
   const [stockCodeQuery, setStockCodeQuery] = useState('');
+  // Watchlist dong bo tu tab "Ket qua" (yeu cau nguoi dung 2026-07-18) - dung
+  // chung Context o app/Tabs.tsx de highlight dung nhung ma da danh dau, du
+  // dang o tab nao.
+  const { isWatched } = useWatchlist();
 
   useEffect(() => {
     return () => {
@@ -366,6 +372,30 @@ export default function FetchControls({
         <button className="trigger-button" onClick={runFetch} disabled={triggerDisabled}>
           {busy ? 'Đang chạy...' : 'Tải BCTC'}
         </button>
+
+        {/* Tim theo Ma CK + Watchlist dua len CHUNG dong voi "Lựa chọn báo cáo"
+        (yeu cau nguoi dung 2026-07-18 - toi da hoa khong gian doc cho bang Ma
+        CK ben duoi, bo dong .summary-actions rieng truoc day chi co 2 thu
+        nay + dong dem so luong). Chi hien khi da co danh muc that (previewStatus
+        === 'ready') - truoc do stockCodeQuery/WatchlistButton chua co gi de loc/
+        highlight. */}
+        {previewStatus === 'ready' && previewReports && (
+          <>
+            <span className="muted-note">
+              {previewReports.length} báo cáo trong danh mục {selectedTerm ? periodDisplayLabel(selectedTerm) : ''} (theo Vietstock)
+            </span>
+            <label className="field">
+              <span className="field-label">Tìm theo Mã CK</span>
+              <input
+                type="text"
+                value={stockCodeQuery}
+                onChange={(e) => setStockCodeQuery(e.target.value)}
+                placeholder="VD: IDV"
+              />
+            </label>
+            <WatchlistButton />
+          </>
+        )}
       </div>
 
       {/* Danh sach review cac bao cao da tick (yeu cau user 2026-07-13) - can
@@ -421,20 +451,6 @@ export default function FetchControls({
           )}
           {previewStatus === 'ready' && previewReports && filteredPreviewReports && (
             <div className="report-table-wrapper preview-table-wrapper">
-              <div className="summary-actions">
-                <span className="muted-note">
-                  {previewReports.length} báo cáo trong danh mục {periodDisplayLabel(selectedTerm)} (theo Vietstock)
-                </span>
-                <label className="field">
-                  <span className="field-label">Tìm theo Mã CK</span>
-                  <input
-                    type="text"
-                    value={stockCodeQuery}
-                    onChange={(e) => setStockCodeQuery(e.target.value)}
-                    placeholder="VD: IDV"
-                  />
-                </label>
-              </div>
               <table className="report-table">
                 <thead>
                   <tr>
@@ -464,8 +480,13 @@ export default function FetchControls({
                       </td>
                     </tr>
                   )}
-                  {filteredPreviewReports.map((report, index) => (
-                    <tr key={report.fileInfoID}>
+                  {filteredPreviewReports.map((report, index) => {
+                    // Watchlist (yeu cau nguoi dung 2026-07-18) - dung y het
+                    // .watchlist-row/.watchlist-code o ReportsSummaryTable.tsx
+                    // de dong bo giao dien highlight ca 2 noi.
+                    const watched = isWatched(report.stockCode);
+                    return (
+                    <tr key={report.fileInfoID} className={watched ? 'watchlist-row' : ''}>
                       {effectiveMode === 'select' && (
                         <td>
                           <input
@@ -477,7 +498,7 @@ export default function FetchControls({
                         </td>
                       )}
                       <td>{index + 1}</td>
-                      <td>{report.stockCode || '—'}</td>
+                      <td className={watched ? 'watchlist-code' : ''}>{report.stockCode || '—'}</td>
                       <td>{report.companyName}</td>
                       <td>
                         <span className="exchange-tag">{report.exchange}</span>
@@ -485,7 +506,8 @@ export default function FetchControls({
                       <td>{report.title}</td>
                       <td>{formatTimestamp(String(report.lastUpdate))}</td>
                     </tr>
-                  ))}
+                    );
+                  })}
                 </tbody>
               </table>
             </div>

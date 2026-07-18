@@ -36,12 +36,12 @@ interface WatchlistContextValue {
 
 const WatchlistContext = createContext<WatchlistContextValue | null>(null);
 
-// Watchlist + mute-nhap-nhay (yeu cau nguoi dung 2026-07-18) - Context dat o
-// ResultsByPeriodTabs (component KHONG unmount khi doi tab ky/loai hinh DN,
-// chi PeriodResultsPanel/BusinessTypeTabs/ReportsSummaryTable ben trong no
-// unmount) de "tao watchlist o 1 tab tu dong dong bo cac tab con lai" ma
-// khong can prop-drilling qua tung tang. Kem localStorage de khong mat khi
-// F5/reload (vd sau khi bam "Xoá kết quả" goi window.location.reload()).
+// Watchlist + mute-nhap-nhay (yeu cau nguoi dung 2026-07-18) - Provider dat o
+// app/Tabs.tsx (goc chung CA tab "Chon bao cao loc" lan "Ket qua", khong
+// unmount khi doi tab/sub-tab nao) de watchlist tao o 1 tab tu dong dong bo
+// MOI noi (ca ket qua lan bang preview trong "Chon bao cao loc") ma khong can
+// prop-drilling qua tung tang. Kem localStorage de khong mat khi F5/reload
+// (vd sau khi bam "Xoá kết quả" goi window.location.reload()).
 export function WatchlistProvider({ children }: { children: ReactNode }) {
   const [codes, setCodes] = useState<Set<string>>(() => new Set());
   const [muted, setMuted] = useState<Set<string>>(() => new Set());

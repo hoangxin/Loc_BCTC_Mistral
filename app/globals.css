@@ -525,16 +525,27 @@ auto) cat mat du bam o hang dau/cuoi bang. */
   color: var(--text-muted);
 }
 
+/* SUA 2026-07-18 (yeu cau nguoi dung - toi da hoa so dong Ma CK hien duoc,
+   bo khoang trong duoi day trang) - .controls-bar/.fetch-controls/
+   .preview-panel gio la 1 chuoi flex-column noi tiep (giong flex-col-fill o
+   Tabs.tsx/ResultsByPeriodTabs.tsx) de bang preview trong FetchControls.tsx
+   chiem HET chieu cao con lai va TU CUON BEN TRONG no (xem .report-table-wrapper
+   dung chung voi bang Ket qua), thay vi truoc day .preview-table-wrapper bi
+   ep max-height: 360px co dinh + .controls-bar chi cao vua du noi dung (con
+   margin-bottom 20px de lo nen trang trong ben duoi). align-items: flex-start
+   bo (khong con can, .fetch-controls da co width:100% rieng) vi no chi anh
+   huong truc ngang (cross-axis) trong flex-direction:column, khong lien quan
+   viec .fetch-controls co flex-grow theo truc doc hay khong. */
 .controls-bar {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  gap: 16px;
+  gap: 10px;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 10px;
-  padding: 16px 18px;
-  margin-bottom: 20px;
+  padding: 10px 14px;
+  flex: 1 1 auto;
+  min-height: 0;
 }
 
 .controls-bar > .fetch-controls {
@@ -545,6 +556,8 @@ auto) cat mat du bam o hang dau/cuoi bang. */
   display: flex;
   flex-direction: column;
   gap: 8px;
+  flex: 1 1 auto;
+  min-height: 0;
 }
 
 .fetch-controls-row {
@@ -783,12 +796,16 @@ auto) cat mat du bam o hang dau/cuoi bang. */
 
 .preview-panel {
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
 }
 
-.preview-table-wrapper {
-  max-height: 360px;
-  overflow-y: auto;
-}
+/* Khong con max-height co dinh (bo yeu cau nguoi dung 2026-07-18) -
+   .preview-table-wrapper dung CHUNG voi bang Ket qua qua class
+   .report-table-wrapper (flex: 1 1 auto; min-height: 0; overflow-y: auto - xem
+   rule do o tren), tu chiem het phan con lai cua .preview-panel va tu cuon. */
 
 .tabs {
   display: flex;
