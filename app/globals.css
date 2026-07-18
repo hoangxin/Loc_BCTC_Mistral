@@ -270,6 +270,145 @@ tren man hinh sieu rong (4K) de header/tabs khong bi keo dai qua muc doc duoc. *
   }
 }
 
+/* Tickbox "mute" nho trong o cap 2 (vang dam + nhap nhay) - tick CHI la trang
+   thai "dang cho xac nhan" (bam lan 1 tick hien ra cho 5s, bam lan 2 moi that
+   su doi trang thai mute va tick tu mat, xem MuteableHighlightCell o
+   ReportsSummaryTable.tsx). Kich thuoc thu nho con ~1/2-1/3 checkbox mac dinh
+   (yeu cau nguoi dung 2026-07-18). !important vi ".report-table input[type='checkbox']"
+   (o duoi, dung cho checkbox chon dong) co specificity CAO HON 1 class don
+   (attribute+type selector) nen se de de ghi de width/height o day neu khong co no. */
+.pct-col-highlighted {
+  position: relative;
+  padding-right: 14px;
+}
+
+.pct-mute-checkbox {
+  position: absolute !important;
+  top: 3px !important;
+  right: 3px !important;
+  width: 10px !important;
+  height: 10px !important;
+  margin: 0 !important;
+  cursor: pointer;
+}
+
+/* Popup nut "Xac nhan" hien khi tickbox dang cho (armed) - yeu cau nguoi
+   dung 2026-07-18: buoc xac nhan phai la 1 nut BAM RO RANG, khong chi ngam
+   hieu qua tickbox dang tick. .pct-col-highlighted da position: relative o
+   tren nen dat absolute canh theo no la du, khong can wrapper rieng. */
+.mute-confirm-popover {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 30;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+  padding: 4px;
+  white-space: nowrap;
+}
+
+.mute-confirm-button {
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 8px;
+  border: none;
+  border-radius: 4px;
+  background: var(--accent);
+  color: #fff;
+  cursor: pointer;
+}
+
+.mute-confirm-button:hover {
+  filter: brightness(1.1);
+}
+
+/* Watchlist (yeu cau nguoi dung 2026-07-18) - ma trong watchlist in dam hon +
+   ca dong noi bat hon dong xung quanh bang mau nen + vien trai. Dat SAU cac
+   rule pct-level1/2 trong file nay khong quan trong vi day la selector khac
+   nhau (tr vs td), khong tranh chap specificity. */
+.watchlist-row {
+  /* Tang tuong phan (yeu cau nguoi dung 2026-07-18 - ban dau #eaf2ff qua nhat,
+     kho phan biet voi cac dong con lai) - xanh dam hon han nen trang/xam cua
+     bang. */
+  background: #bcd9ff;
+}
+
+.watchlist-row:hover {
+  background: #a3ccff;
+}
+
+.watchlist-row td:first-child {
+  box-shadow: inset 4px 0 0 0 #1a56d6;
+}
+
+.watchlist-code {
+  font-weight: 900 !important;
+}
+
+/* Panel mo tu nut "Watchlist" (app/WatchlistButton.tsx) - tai su dung khung
+   .split-button-menu, chi them padding/layout rieng. */
+.watchlist-panel {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 240px;
+}
+
+.watchlist-add-row {
+  display: flex;
+  gap: 6px;
+}
+
+.watchlist-add-row input {
+  flex: 1;
+  min-width: 0;
+  font-family: inherit;
+  font-size: 13px;
+  padding: 6px 8px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+
+.watchlist-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  max-height: 180px;
+  overflow-y: auto;
+}
+
+.watchlist-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 3px 4px 3px 10px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.watchlist-chip button {
+  border: none;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1;
+  padding: 2px 6px;
+}
+
+.watchlist-empty {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
 /* Chi tieu bi kiem tra cheo tong nhom KQKD phat hien sai SAU KHI DA RETRY het
    so lan cho phep (yeu cau user 2026-07-11: "báo lỗi ra bảng kết quả ở dòng
    tương ứng") - khac han pct-level1/2 (mau vang, van la % TIN CAY DUOC), o day

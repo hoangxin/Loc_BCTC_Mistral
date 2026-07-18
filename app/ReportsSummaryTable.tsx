@@ -1,11 +1,20 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import type { DownloadedReport } from '@/lib/status';
 import { buildOriginalFileUrl } from '@/lib/original-file-url';
 import WarningBadge from './WarningBadge';
 import ExportSummaryButton from './ExportSummaryButton';
 import ClearResultsButton from './ClearResultsButton';
+import WatchlistButton from './WatchlistButton';
+import { useWatchlist } from './WatchlistContext';
+
+// Key mute-nhap-nhay cho 1 o chi tieu (yeu cau nguoi dung 2026-07-18) - theo
+// filePath (khong phai stockCode) vi 1 ma CK co the co nhieu bao cao (nhieu
+// ky/loai BCTC) voi trang thai mute doc lap nhau.
+function muteKey(filePath: string, label: string): string {
+  return `${filePath}::${label}`;
+}
 
 function collectLabels(reports: DownloadedReport[]): string[] {
   const labels: string[] = [];
@@ -29,6 +38,89 @@ function formatPercent(value: number | null | undefined): string {
 
 function excelFileHref(filePath: string): string {
   return `/api/report-file?filePath=${encodeURIComponent(filePath)}&kind=excel`;
+}
+
+const MUTE_CONFIRM_TIMEOUT_MS = 5000;
+
+// O chi tieu cap 2 (vang dam + nhap nhay) kem tickbox + popup xac nhan
+// (yeu cau nguoi dung 2026-07-18) - tickbox KHONG dai dien cho trang thai
+// mute/khong-mute, no CHI la trang thai "dang cho xac nhan": mac dinh luon
+// khong tick; bam vao tick hien ra + hien 1 nut "Xac nhan" ro rang (khong
+// dung window.confirm() vi no chan dong bo, khong the tu huy theo timeout)
+// trong MUTE_CONFIRM_TIMEOUT_MS; bam nut do moi thuc su doi trang thai mute
+// (ca 2 chieu: mute <-> mo lai), tick + popup mat ngay lap tuc; bam lai vao
+// tickbox trong luc dang cho hoac het gio ma khong bam nut deu HUY (tick tu
+// mat, khong doi gi). Tach rieng component vi moi o can 1 state/timer rieng -
+// khong goi useState trong vong lap .map cua component cha duoc (vi pham
+// rules of hooks).
+function MuteableHighlightCell({
+  label,
+  muted,
+  onConfirmToggle,
+  displayValue,
+}: {
+  label: string;
+  muted: boolean;
+  onConfirmToggle: () => void;
+  displayValue: string;
+}) {
+  const [armed, setArmed] = useState(false);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, []);
+
+  function clearArmTimeout() {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
+  }
+
+  function handleCheckboxChange() {
+    if (armed) {
+      clearArmTimeout();
+      setArmed(false);
+      return;
+    }
+    setArmed(true);
+    timeoutRef.current = setTimeout(() => {
+      timeoutRef.current = null;
+      setArmed(false);
+    }, MUTE_CONFIRM_TIMEOUT_MS);
+  }
+
+  function handleConfirm() {
+    clearArmTimeout();
+    setArmed(false);
+    onConfirmToggle();
+  }
+
+  const tierClass = muted ? 'pct-level1' : 'pct-level2';
+
+  return (
+    <td className={`pct-col pct-col-highlighted ${tierClass}`}>
+      <input
+        type="checkbox"
+        className="pct-mute-checkbox"
+        checked={armed}
+        onChange={handleCheckboxChange}
+        title={armed ? 'Bấm "Xác nhận" bên dưới (tự huỷ sau 5s)' : muted ? 'Bật lại nhấp nháy' : 'Tắt nhấp nháy'}
+        aria-label={`${muted ? 'Bật lại' : 'Tắt'} nhấp nháy cho ${label}`}
+      />
+      {displayValue}
+      {armed && (
+        <div className="mute-confirm-popover">
+          <button type="button" className="mute-confirm-button" onClick={handleConfirm}>
+            {muted ? 'Xác nhận bật lại' : 'Xác nhận tắt'}
+          </button>
+        </div>
+      )}
+    </td>
+  );
 }
 
 // Checkbox chon bao cao (yeu cau nguoi dung 2026-07-17 - nut "Xuat Excel tong
@@ -65,6 +157,7 @@ export default function ReportsSummaryTable({
 }) {
   const labels = useMemo(() => collectLabels(reports), [reports]);
   const [stockCodeQuery, setStockCodeQuery] = useState('');
+  const { isWatched, isMuted, toggleMuted } = useWatchlist();
 
   // Tim theo Ma CK (yeu cau user 2026-07-08) - so sanh khong phan biet hoa
   // thuong, cho phep go tat/mot phan ma (vd "id" khop "IDV").
@@ -86,6 +179,11 @@ export default function ReportsSummaryTable({
             placeholder="VD: IDV"
           />
         </label>
+        {/* Watchlist dat NGAY SAU o tim (yeu cau nguoi dung 2026-07-18) - rieng
+        biet voi cum Xuat/Xoa (day sang phai qua margin-left: auto tren
+        .summary-actions-buttons), khong phu thuoc allFilePaths/selectedFilePaths
+        vi khong lien quan xuat/xoa bao cao. */}
+        <WatchlistButton />
         {labels.length === 0 && <span className="muted-note">(Chưa có tiêu chí đọc BCTC - cột % sẽ hiện khi có tiêu chí)</span>}
         {allFilePaths && selectedFilePaths && currentGeneratedAt !== undefined && (
           <div className="summary-actions-buttons">
@@ -130,8 +228,12 @@ export default function ReportsSummaryTable({
           )}
           {filteredReports.map((report) => {
             const byLabel = new Map((report.analysis ?? []).map((item) => [item.label, item]));
+            // Watchlist (yeu cau nguoi dung 2026-07-18): ma trong watchlist in
+            // dam + ca dong noi bat hon dong xung quanh (xem .watchlist-row/
+            // .watchlist-code o globals.css).
+            const watched = isWatched(report.stockCode);
             return (
-              <tr key={report.filePath}>
+              <tr key={report.filePath} className={watched ? 'watchlist-row' : ''}>
                 {onToggle && (
                   <td>
                     <input
@@ -164,7 +266,13 @@ export default function ReportsSummaryTable({
                   (yeu cau user 2026-07-07) - do dai ten cong ty thuong lam bang
                   qua rong, trong khi Ma CK + San giao dich la du de nhan dien
                   nhanh, chi can xem ten day du khi thuc su can. */}
-                  <a href={report.financeUrl} target="_blank" rel="noreferrer" title={report.companyName}>
+                  <a
+                    href={report.financeUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    title={report.companyName}
+                    className={watched ? 'watchlist-code' : ''}
+                  >
                     {report.stockCode || '—'}
                   </a>
                   {/* Canh bao parse (validateFinancialStatements, xem
@@ -210,11 +318,38 @@ export default function ReportsSummaryTable({
                       </td>
                     );
                   }
-                  const tierClass = item?.tier === 'level1' ? 'pct-level1' : item?.tier === 'level2' ? 'pct-level2' : '';
+                  const tier = item?.tier === 'level1' ? 'level1' : item?.tier === 'level2' ? 'level2' : null;
+                  if (!tier) {
+                    return (
+                      <td key={label} className="pct-col">
+                        {formatPercent(item?.percentChange)}
+                      </td>
+                    );
+                  }
+                  // Cap 1 (vang nhat) khong nhap nhay va khong doi giao dien
+                  // khi mute (xem .pct-level1 o globals.css) nen KHONG can
+                  // tickbox o day (yeu cau nguoi dung 2026-07-18: tick truoc/
+                  // sau chang doi gi ca) - chi cap 2 (vang dam + nhap nhay)
+                  // moi can.
+                  if (tier === 'level1') {
+                    return (
+                      <td key={label} className="pct-col pct-level1">
+                        {formatPercent(item?.percentChange)}
+                      </td>
+                    );
+                  }
+                  // Mute-nhap-nhay cho cap 2 - xem MuteableHighlightCell o tren
+                  // (tick de "cho", bam nut popup "Xac nhan" moi thuc su doi
+                  // trang thai, tu huy sau 5s neu khong bam).
+                  const key = muteKey(report.filePath, label);
                   return (
-                    <td key={label} className={`pct-col ${tierClass}`}>
-                      {formatPercent(item?.percentChange)}
-                    </td>
+                    <MuteableHighlightCell
+                      key={label}
+                      label={label}
+                      muted={isMuted(key)}
+                      onConfirmToggle={() => toggleMuted(key)}
+                      displayValue={formatPercent(item?.percentChange)}
+                    />
                   );
                 })}
               </tr>
