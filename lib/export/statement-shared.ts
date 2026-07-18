@@ -327,7 +327,11 @@ const KNOWN_EQUITY_DIRECT_CHILD_CONTENT = [
   'QUY DU TRU BAT BUOC', // Bao hiem, TT232/2012 (BVH: "Quỹ dự trữ bắt buộc hoạt động bảo hiểm", ma 423)
   'NGUON VON DAU TU XDCB',
   'NGUON VON DAU TU XAY DUNG CO BAN',
+  // VTB that 2026-07-18: ten day du co "cua" ("Lợi ích CỦA cổ đông không
+  // kiểm soát") - marker cu thieu tu nay nen khong khop, loai het dong nay
+  // (thanh phan CUOI trong nhom) khoi tong "Von chu so huu" bao cao hop nhat.
   'LOI ICH CO DONG KHONG KIEM SOAT', // bao cao hop nhat
+  'LOI ICH CUA CO DONG KHONG KIEM SOAT',
 ];
 
 function isKnownEquityDirectChildLabel(label: string): boolean {
@@ -405,6 +409,7 @@ const KNOWN_BALANCE_SHEET_LEVEL1_CONTENT = [
   'CAC KHOAN DAU TU TAI CHINH NGAN HAN', // bien the co "Cac khoan" - da xac nhan qua doi chieu that
   'TAI SAN TAI CHINH', // CTCK (vd SHS "I. Tài sản tài chính")
   'CAC KHOAN PHAI THU NGAN HAN',
+  'CAC KHOAN PHAI THU', // PWS that 2026-07-18: bo hau to "ngan han" (ngu canh da o trong TS ngan han)
   'HANG TON KHO',
   'TAI SAN TAI BAO HIEM', // Bao hiem, TT232/2012 (vd PRE "Tài sản tái bảo hiểm", xac nhan 2026-07-13)
   'TAI SAN NGAN HAN KHAC',
@@ -1207,28 +1212,70 @@ function hasOppositeSignWordConflict(rowNorm: string, marker: string): boolean {
 // hop le (thuoc than bang that) truoc, CHI trong nhom do moi ap dung "khop
 // cuoi cung"; cac dong KHONG co ma so (rat co the la phu luc/thuyet minh) chi
 // dung khi khong con lua chon nao khac.
-function lastMatchingRowIndex(rows: (string | number | null)[][], labelIndex: number, test: (norm: string, raw: string) => boolean, preferredIndexes?: Set<number>): number {
+function lastMatchingRowIndex(rows: (string | number | null)[][], labelIndex: number, test: (norm: string, raw: string, index: number) => boolean, preferredIndexes?: Set<number>): number {
   let found = -1;
   let foundPreferred = -1;
   rows.forEach((r, i) => {
     const raw = String(r[labelIndex] ?? '').trim();
-    if (!test(normalizeLabelText(raw), raw)) return;
+    if (!test(normalizeLabelText(raw), raw, i)) return;
     found = i;
     if (preferredIndexes?.has(i)) foundPreferred = i;
   });
   return foundPreferred !== -1 ? foundPreferred : found;
 }
 
+// "Trong do: ..." la dong chu giai/phan tich CON CUA dong ngay TRUOC no (vd
+// "Trong do: Loi nhuan ke toan sau thue TNDN thuc hien" - 1 PHAN cua dong
+// tong "Loi nhuan ke toan sau thue TNDN", KHONG PHAI 1 chi tieu doc lap),
+// theo quy uoc chung cua BCTC VN - khong bao gio la dong TARGET/TERM that su
+// can kiem tra. SUA 2026-07-18 (BVS that): dong nay thuong LAP LAI y het cum
+// tu cua dong tong ngay truoc no, khien "khop cuoi cung" (lastMatchingRowIndex)
+// chon NHAM no lam target thay vi dong tong that (BVS: "Loi nhuan ke toan sau
+// thue TNDN" 42.386.035.336 that su, nhung dong "Trong do...thuc hien"
+// 37.332.700.922 lai bi chon vi dung SAU trong bang).
+function isMemoBreakdownRow(raw: string): boolean {
+  return normalizeLabelText(raw).startsWith('TRONG DO');
+}
+
+// Mau bieu KQKD (B02-DN/B02a-CTCK/B03-TCTD...) chuan hoa ma so muc "Thu nhap
+// (lo) toan dien khac" (OCI - lai/lo danh gia lai tai san toan dien, KHONG
+// PHAI doanh thu/chi phi hoat dong that su) bat dau tu 300 tro len (vd ma
+// 300/301/400 - xac nhan qua FTS/ABW that: "XII. THU NHAP (LO) TOAN DIEN
+// KHAC SAU THUE TNDN" ma 300, "Tong thu nhap toan dien" ma 400). Dong toan
+// bo KQKD hoat dong (doanh thu/chi phi/loi nhuan truoc-sau thue) khong bao
+// gio dung ma so >=300 o BAT KY loai hinh nao. SUA 2026-07-18 (ABW that):
+// dong ma "301" ("Lai/(Lo) tu danh gia lai cac tai san tai chinh san sang de
+// ban" - 1 khoan OCI) bi tang fuzzy (tier 3) khop NHAM voi marker "Lai tu tai
+// san tai chinh san sang de ban" (dung cho dong doanh thu hoat dong that,
+// KHAC khai niem hoan toan), lam "Cong doanh thu hoat dong" cong du 1 khoan
+// khong lien quan. Loai het cac dong ma so >=300 khoi moi tang khop (khong
+// chi fuzzy) - an toan vi day la ranh gioi CHUAN theo mau bieu, khong phai
+// doan tu ngu.
+function isOciSectionCode(raw: string): boolean {
+  // CHI ap dung cho ma NGUYEN don (3-4 chu so, khong dau cham/phay) - ma con
+  // dang thap phan nhu "21.1"/"01.2" (rat pho bien cho cac dong chi tiet
+  // FVTPL/HTM...) KHONG PHAI muc OCI du parseCode (bo het dau cham) co the vo
+  // tinh cho ra >=300 (vd "30.1" -> "301"). Dung regex tren CHUOI GOC (truoc
+  // khi strip ky tu) de loai truong hop nay.
+  const trimmed = raw.trim();
+  if (!/^\d{3,4}[a-zA-Z]?$/.test(trimmed)) return false;
+  return Number(trimmed.replace(/[a-zA-Z]/g, '')) >= 300;
+}
+
 function findRowIndexByContentMarkers(table: StatementTable, labelIndex: number, markers: string[]): number {
   const maSoIndex = findMaSoColumnIndex(table);
   let hasValidCode: Set<number> | undefined;
+  let ociRowIndexes: Set<number> | undefined;
   if (maSoIndex !== null) {
     hasValidCode = new Set<number>();
+    ociRowIndexes = new Set<number>();
     table.rows.forEach((r, i) => {
       const raw = String(r[maSoIndex] ?? '').trim();
       if (raw && parseCode(raw) !== null) hasValidCode!.add(i);
+      if (isOciSectionCode(raw)) ociRowIndexes!.add(i);
     });
   }
+  const isExcludedRow = (raw: string, index: number): boolean => isMemoBreakdownRow(raw) || !!ociRowIndexes?.has(index);
   // Tang "chinh xac" so ca ban THO lan ban da BO tien to STT/hau to cong
   // thuc (vd "Doanh thu phi bao hiem (01=02+03+04)" -> "Doanh thu phi bao
   // hiem") - can de phan biet 2 dong CO TEN GAN GIONG NHAU nhung KHAC NGHIA
@@ -1238,7 +1285,7 @@ function findRowIndexByContentMarkers(table: StatementTable, labelIndex: number,
   const exactIdx = lastMatchingRowIndex(
     table.rows,
     labelIndex,
-    (norm, raw) => markers.some((m) => norm === m || normalizeGroupLabelForContentMatch(raw) === m),
+    (norm, raw, index) => !isExcludedRow(raw, index) && markers.some((m) => norm === m || normalizeGroupLabelForContentMatch(raw) === m),
     hasValidCode
   );
   if (exactIdx !== -1) return exactIdx;
@@ -1253,14 +1300,14 @@ function findRowIndexByContentMarkers(table: StatementTable, labelIndex: number,
   const substringIdx = lastMatchingRowIndex(
     table.rows,
     labelIndex,
-    (norm) => markers.some((m) => !hasOppositeSignWordConflict(norm, m) && norm.includes(m)),
+    (norm, raw, index) => !isExcludedRow(raw, index) && markers.some((m) => !hasOppositeSignWordConflict(norm, m) && norm.includes(m)),
     hasValidCode
   );
   if (substringIdx !== -1) return substringIdx;
   return lastMatchingRowIndex(
     table.rows,
     labelIndex,
-    (norm) => markers.some((m) => !hasOppositeSignWordConflict(norm, m) && fuzzyIncludes(norm, m)),
+    (norm, raw, index) => !isExcludedRow(raw, index) && markers.some((m) => !hasOppositeSignWordConflict(norm, m) && fuzzyIncludes(norm, m)),
     hasValidCode
   );
 }
@@ -1440,8 +1487,17 @@ const DN_THUONG_INCOME_FORMULAS: FormulaDef[] = [
       // kien (nhu ACG can) se pha "Loi nhuan thuan" cua IDV - xem comment day
       // du o dinh nghia FormulaTerm.
       reqNetAmbiguous(['CHI PHI TAI CHINH', 'CHI PHI HOAT DONG TAI CHINH']),
-      opt(['CONG TY LIEN DOANH, LIEN KET']),
-      reqExpense(['CHI PHI BAN HANG']),
+      // VNP that 2026-07-18: thu tu dao nguoc "Cong ty LIEN KET, LIEN DOANH"
+      // (khac "LIEN DOANH, LIEN KET" chuan) - substring khong khop neu giu
+      // dung 1 thu tu.
+      opt(['CONG TY LIEN DOANH, LIEN KET', 'CONG TY LIEN KET, LIEN DOANH']),
+      // BTH that 2026-07-18: "Chi phi ban hang" AM (19.235.801.634)) that su
+      // la khoan hoan nhap/giam chi phi (kiem chung tay: tong Luy ke KHOP
+      // TUYET DOI khi TRU (- am = CONG), khac han quy uoc hien thi co dinh
+      // nhu ACG - doi sang reqNetAmbiguous (thu ca 2 cach) giong "Chi phi tai
+      // chinh"/"Chi phi khac", AN TOAN cho ca 2 truong hop (van khop duoc
+      // truong hop ACG can abs vi netAmbiguous thu CA HAI to hop).
+      reqNetAmbiguous(['CHI PHI BAN HANG']),
       reqExpense(['CHI PHI QUAN LY DOANH NGHIEP']), // fuzzy match xu ly bien the chinh ta (vd "quan li")
     ],
   },
@@ -1464,9 +1520,16 @@ const DN_THUONG_INCOME_FORMULAS: FormulaDef[] = [
   // -8.575.376.405 (2026) sang +7.118.614.035 (2025)) - dung reqExpense (ep
   // Math.abs) SAI huong khi dong nay dang la loi ich that, lam sai LECH GAP
   // DOI gia tri (tru thay vi cong). Doi sang reqNetAmbiguous (xem comment
-  // dinh nghia interface FormulaTerm) - "hien hanh" van la reqExpense (chi
-  // phi thuan tuy, khong bao gio la khoan loi ich).
-  { groupLabel: 'Loi nhuan sau thue thu nhap doanh nghiep', target: ['LOI NHUAN SAU THUE THU NHAP DOANH NGHIEP', 'LOI NHUAN SAU THUE TNDN'], terms: [req(['TONG LOI NHUAN KE TOAN TRUOC THUE']), reqExpense(['CHI PHI THUE THU NHAP DOANH NGHIEP HIEN HANH']), reqNetAmbiguous(['CHI PHI THUE THU NHAP DOANH NGHIEP HOAN LAI'])] },
+  // dinh nghia interface FormulaTerm).
+  // SUA TIEP 2026-07-18 (DTG that): gia dinh cu "hien hanh luon la reqExpense
+  // (chi phi thuan tuy, khong bao gio la khoan loi ich)" SAI - DTG that co ky
+  // "Chi phí thuế TNDN hiện hành" AM (16.154.384)) va CHINH LA khoan loi ich
+  // thue that (kiem chung tay: 310.666.670 - (-16.154.384) - 39.662.864 =
+  // 287.158.190 khop dung LNST bao cao, trong khi ep abs cho 254.849.422 sai).
+  // Doi ca "hien hanh" sang reqNetAmbiguous, dong bo voi "hoan lai" va voi
+  // validateIncomeStatementTax (lib/export/validate-statements.ts, cung sua
+  // qua PTC that cung ngay).
+  { groupLabel: 'Loi nhuan sau thue thu nhap doanh nghiep', target: ['LOI NHUAN SAU THUE THU NHAP DOANH NGHIEP', 'LOI NHUAN SAU THUE TNDN'], terms: [req(['TONG LOI NHUAN KE TOAN TRUOC THUE']), reqNetAmbiguous(['CHI PHI THUE THU NHAP DOANH NGHIEP HIEN HANH']), reqNetAmbiguous(['CHI PHI THUE THU NHAP DOANH NGHIEP HOAN LAI'])] },
 ];
 
 // CTCK (Thong tu 210/2014 + 334/2016) - xac nhan qua VCK/PHS/MBS Q1/2026 that
@@ -1548,7 +1611,7 @@ const CTCK_INCOME_FORMULAS: FormulaDef[] = [
       opt(['CHI PHI NGHIEP VU TU VAN DAU TU CHUNG KHOAN', 'CHI PHI TU VAN DAU TU CHUNG KHOAN']),
       opt(['CHI PHI NGHIEP VU LUU KY CHUNG KHOAN', 'CHI PHI LUU KY CHUNG KHOAN']),
       opt(['CHI PHI HOAT DONG TU VAN TAI CHINH', 'CHI PHI NGHIEP VU TU VAN TAI CHINH']), // HCM dung "nghiep vu" thay vi "hoat dong" (2026-07-13)
-      opt(['CHI PHI CAC DICH VU KHAC', 'CHI PHI HOAT DONG KHAC']), // VND that 2026-07-14: cung dong "muc 32" nhung dat ten "Chi phi hoat dong khac" thay vi "Chi phi cac dich vu khac" (BVS/PHS)
+      opt(['CHI PHI CAC DICH VU KHAC', 'CHI PHI DICH VU KHAC', 'CHI PHI HOAT DONG KHAC']), // VND that 2026-07-14: cung dong "muc 32" nhung dat ten "Chi phi hoat dong khac" thay vi "Chi phi cac dich vu khac" (BVS/PHS). VPX that 2026-07-18: bo "cac" ("Chi phi dich vu khac")
       opt(['CHI PHI DI VAY CUA CAC KHOAN CHO VAY']), // HCM that 2026-07-13: dong chi phi rieng, khong co o VCK/PHS/MBS
     ],
   },
@@ -1557,6 +1620,10 @@ const CTCK_INCOME_FORMULAS: FormulaDef[] = [
     target: ['CONG DOANH THU HOAT DONG TAI CHINH', 'TONG DOANH THU HOAT DONG TAI CHINH'],
     terms: [
       opt(['CHENH LECH LAI TY GIA HOI DOAI']),
+      // VPX that 2026-07-18: dung ten rieng "Chenh lech loi nhuan va chi phi
+      // thuc hien" thay cho dong "Chenh lech lai ty gia hoi doai" chuan (cung
+      // vi tri "1." ngay sau tieu de nhom, cung dong vai tro dau tien cua nhom).
+      opt(['CHENH LECH LOI NHUAN VA CHI PHI THUC HIEN']),
       opt(['DOANH THU, DU THU CO TUC, LAI TIEN GUI', 'DOANH THU DU THU CO TUC']),
       opt(['LAI BAN, THANH LY CAC KHOAN DAU TU']),
       opt(['DOANH THU KHAC VE DAU TU']),
@@ -1570,6 +1637,12 @@ const CTCK_INCOME_FORMULAS: FormulaDef[] = [
       opt(['CHI PHI LAI VAY']),
       opt(['TRICH LAP DU PHONG SUY GIAM GIA TRI CAC KHOAN DAU TU TAI CHINH DAI HAN']),
       opt(['CHI PHI TAI CHINH KHAC']),
+      // AGR that 2026-07-18: dong "Chi phi dau tu khac" (mã 55) - tieu de
+      // nhom ghi cong thuc "60 = 51->54" (khong bao gom mã 55) nhung tong in
+      // tren bao cao THAT SU co cong ca dong nay (xac nhan qua doi chieu tay:
+      // 47.378.109.265 (lai vay) + 578.488.217 (dau tu khac) = 47.956.597.482
+      // dung bang tong in).
+      opt(['CHI PHI DAU TU KHAC']),
     ],
   },
   {

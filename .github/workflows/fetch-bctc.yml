@@ -58,10 +58,10 @@ jobs:
     # Mistral cho hang chuc bao cao/lan chay.
     timeout-minutes: 60
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
-          node-version: 20
+          node-version: 22
           cache: 'npm'
       - run: npm ci
       - name: Run fetch pipeline
@@ -90,7 +90,7 @@ jobs:
       # DE theo ma+ky nen khong phinh theo lich su) de debug/dieu tra sau nay
       # (vd LCTT rong tren live) KHONG can OCR that lan 2.
       - name: Commit updated status
-        uses: stefanzweifel/git-auto-commit-action@v5
+        uses: stefanzweifel/git-auto-commit-action@v7
         with:
           commit_message: 'chore: cap nhat ket qua BCTC'
           file_pattern: data/latest-fetch.json data/ocr-markdown/**

@@ -195,11 +195,34 @@ function parseNumericCell(value: string): string | number | null {
     return trimmed;
   }
 
+  // SUA 2026-07-18 (GTA that): nhom hang nghin phan cach boi dau "." BAT BUOC
+  // dung 3 chu so (tru nhom dau tien, 1-3 chu so) - vi du "112.763.996.9"
+  // (nhom cuoi chi 1 chu so) la 1 o bi OCR CAT CUT/hong (thieu chu so), KHONG
+  // PHAI so hop le. Truoc day digitsOnly chi noi TRAN cac nhom lai
+  // ("1127639969") ma khong kiem tra do dai tung nhom, bien 1 o hong thanh 1
+  // SO SAI TRONG NHU DUNG (nguy hiem hon tra ve null/chuoi tho - gay canh bao
+  // sai lech hang ty dong o buoc kiem tra cheo phia sau). Neu vi pham, tra ve
+  // chuoi tho (giong cac truong hop khong chac chan khac trong ham nay) de
+  // downstream coi la KHONG CO tin hieu so, khong dung so sai.
+  if (!hasValidThousandGrouping(numericToken)) return trimmed;
+
   const isNegative = numericToken.startsWith('(') || numericToken.startsWith('-');
   const digitsOnly = numericToken.replace(/\D/g, '');
   if (!digitsOnly) return trimmed;
   const num = Number(digitsOnly);
   return Number.isNaN(num) ? trimmed : isNegative ? -num : num;
+}
+
+// Kiem tra nhom chu so cach nhau boi dau "." (phan cach hang nghin VN): nhom
+// dau 1-3 chu so, cac nhom SAU BAT BUOC dung 3 chu so. Chi xet phan nguyen
+// (truoc dau "," neu co, vi "," la dau thap phan trong quy uoc VN).
+function hasValidThousandGrouping(token: string): boolean {
+  const core = token.replace(/^[-(]+/, '').replace(/[)]+$/, '');
+  if (!core.includes('.')) return true;
+  const integerPart = core.split(',')[0];
+  const groups = integerPart.split('.');
+  if (groups.length < 2) return true;
+  return groups.slice(1).every((g) => g.length === 3);
 }
 
 // Vai dong (vd mã 230 "Bất động sản đầu tư" trong TIX) bi thieu 1 cot GIUA
@@ -981,7 +1004,15 @@ function isCoverPageOrSummaryTable(table: ParsedTable): boolean {
   const hasPercentChangeWording = combinedText.includes('TY LE') && hasTangGiam;
   const hasDifferenceWording =
     combinedText.includes('CHENH LECH') && (hasTangGiam || combinedText.includes('SO VOI KY TRUOC') || combinedText.includes('CUNG KY'));
-  return hasPercentChangeWording || hasDifferenceWording;
+  // SUA 2026-07-18 (FTS that): bang "giai trinh bien dong loi nhuan" (bat
+  // buoc theo Thong tu 96/2020/TT-BTC, cong bo kem BCTC) dung dung ten dong
+  // "Loi nhuan truoc thue"/"Loi nhuan sau thue" GIONG HET KQKD that nhung la
+  // 1 bang tom tat rieng (don vi "Trieu dong" ghi NGAY TRONG ten cot, kem 1
+  // cot "Bien dong (%)" o cuoi) - KQKD/BCDKT chuan khong bao gio dung "Bien
+  // dong" lam ten cot (chi cong bo 1 dong "Don vi tinh" duy nhat ben ngoai
+  // bang, khong co cot % rieng).
+  const hasBienDongPercentWording = combinedText.includes('BIEN DONG') && combinedText.includes('%');
+  return hasPercentChangeWording || hasDifferenceWording || hasBienDongPercentWording;
 }
 
 // Dem so tu khoa dac trung cua tung bang xuat hien trong NHAN cac dong cua 1

@@ -652,10 +652,20 @@ function validateIncomeStatementTax(table: StatementTable): ValidationIssue[] {
       // mang y nghia GIAM loi nhuan (tru truong hop hiem duoc loi thue rong,
       // chua gap trong du lieu that nao ca).
       const taxMagnitude = Math.abs(tax);
-      if (!numbersClose(beforeTax - taxMagnitude, afterTax)) {
+      const absResult = beforeTax - taxMagnitude;
+      // SUA 2026-07-18 (PTC that): dung y "truong hop hiem" da luu y o tren
+      // (loi thue rong that su) - "Chi phi thue TNDN hien hanh" AM
+      // (367.364.066) khong phai quy uoc hien thi, ma la 1 khoan LOI ICH thue
+      // that (kiem chung tay: 3.343.535.688 - (-367.364.066) = 3.710.899.754
+      // KHOP DUNG LNST bao cao, trong khi tru gia tri tuyet doi cho ra
+      // 2.976.171.622 sai). Thu them ca cach TRU NGUYEN DAU (khong ep abs) -
+      // chap nhan neu 1 trong 2 cach khop, giong tinh than reqNetAmbiguous da
+      // dung cho "Chi phi tai chinh"/"Chi phi khac"/"Chi phi ban hang".
+      const signedResult = beforeTax - tax;
+      if (!numbersClose(absResult, afterTax) && !numbersClose(signedResult, afterTax)) {
         issues.push({
           table: 'incomeStatement',
-          message: `"${columnName}": Loi nhuan sau thue (${afterTax}) khong khop Loi nhuan truoc thue - Chi phi thue TNDN (${beforeTax - taxMagnitude})`,
+          message: `"${columnName}": Loi nhuan sau thue (${afterTax}) khong khop Loi nhuan truoc thue - Chi phi thue TNDN (${absResult})`,
         });
       }
     } else {
