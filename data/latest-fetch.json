@@ -1,12 +1,38 @@
 {
   "running": true,
-  "generatedAt": "2026-07-20T08:30:09.552Z",
+  "generatedAt": "2026-07-20T10:06:46.818Z",
   "periodLabel": "Quý 2/2026",
   "year": 2026,
-  "totalFound": 179,
-  "totalMatched": 15,
-  "downloaded": 15,
-  "failed": [],
+  "totalFound": 229,
+  "totalMatched": 10,
+  "downloaded": 9,
+  "failed": [
+    {
+      "stockCode": "HRC",
+      "title": "BCTC quý 2 năm 2026",
+      "error": "Mistral batch job 462574a7-4108-4c96-b580-15b4495bbf81 qua 45 phut van con trang thai QUEUED - dung cho (co the do hang doi batch cua Mistral bi nghen tam thoi), coi la loi tam thoi cho bao cao nay."
+    },
+    {
+      "stockCode": "DTT",
+      "title": "BCTC quý 2 năm 2026",
+      "error": "Mistral batch job 618a92c8-a92e-4ac6-a6a6-f61a59f68ace qua 45 phut van con trang thai QUEUED - dung cho (co the do hang doi batch cua Mistral bi nghen tam thoi), coi la loi tam thoi cho bao cao nay."
+    },
+    {
+      "stockCode": "SBL",
+      "title": "BCTC quý 2 năm 2026",
+      "error": "Mistral batch job 79047e01-99c5-4aa7-8c5c-c6bd89cb4aa7 qua 45 phut van con trang thai QUEUED - dung cho (co the do hang doi batch cua Mistral bi nghen tam thoi), coi la loi tam thoi cho bao cao nay."
+    },
+    {
+      "stockCode": "THN",
+      "title": "BCTC quý 2 năm 2026",
+      "error": "Mistral batch job 8e1b3623-26e6-4930-8391-3705fd6e5332 qua 45 phut van con trang thai QUEUED - dung cho (co the do hang doi batch cua Mistral bi nghen tam thoi), coi la loi tam thoi cho bao cao nay."
+    },
+    {
+      "stockCode": "SD3",
+      "title": "BCTC Hợp nhất quý 2 năm 2026",
+      "error": "Mistral batch job 3ed612bf-3410-4056-94ed-6a95a70ebace qua 45 phut van con trang thai QUEUED - dung cho (co the do hang doi batch cua Mistral bi nghen tam thoi), coi la loi tam thoi cho bao cao nay."
+    }
+  ],
   "reports": [
     {
       "source": "vietstock",
