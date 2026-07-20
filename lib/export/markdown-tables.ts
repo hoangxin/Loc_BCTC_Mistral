@@ -204,25 +204,69 @@ function parseNumericCell(value: string): string | number | null {
   // sai lech hang ty dong o buoc kiem tra cheo phia sau). Neu vi pham, tra ve
   // chuoi tho (giong cac truong hop khong chac chan khac trong ham nay) de
   // downstream coi la KHONG CO tin hieu so, khong dung so sai.
-  if (!hasValidThousandGrouping(numericToken)) return trimmed;
-
   const isNegative = numericToken.startsWith('(') || numericToken.startsWith('-');
-  const digitsOnly = numericToken.replace(/\D/g, '');
+  const digitsOnly = extractIntegerDigits(numericToken);
   if (!digitsOnly) return trimmed;
   const num = Number(digitsOnly);
   return Number.isNaN(num) ? trimmed : isNegative ? -num : num;
 }
 
-// Kiem tra nhom chu so cach nhau boi dau "." (phan cach hang nghin VN): nhom
-// dau 1-3 chu so, cac nhom SAU BAT BUOC dung 3 chu so. Chi xet phan nguyen
-// (truoc dau "," neu co, vi "," la dau thap phan trong quy uoc VN).
-function hasValidThousandGrouping(token: string): boolean {
-  const core = token.replace(/^[-(]+/, '').replace(/[)]+$/, '');
-  if (!core.includes('.')) return true;
-  const integerPart = core.split(',')[0];
-  const groups = integerPart.split('.');
-  if (groups.length < 2) return true;
-  return groups.slice(1).every((g) => g.length === 3);
+// Tach phan nguyen (bo phan thap phan) tu 1 token so, ho tro CA 2 quy uoc
+// phan cach: VN (dau "." nhom nghin, dau "," thap phan) VA quoc te (dau ","
+// nhom nghin, dau "." thap phan). Nhom thap phan luon la nhom SAU CUNG chi co
+// 1-2 chu so (khac nhom nghin luon dung DUNG 3 chu so) - day la tin hieu CAU
+// TRUC de phan biet, khong doan theo ky tu cu the dau nao la gi.
+//
+// SUA 2026-07-20 (PHN that): file nay dung dau "," lam phan cach nghin
+// ("219,304,461,655") nhung 2 dong "Số đầu năm" lai co duoi thap phan ".0"
+// ("219,304,461,655.0") - dung quy uoc quoc te nguoc voi gia dinh VN cu. Ham
+// cu chi kiem tra HINH DANG nhom (hasValidThousandGrouping, gia dinh cung "."
+// la nhom nghin) roi xoa TRANG TRO moi ky tu khong phai so
+// (.replace(/\D/g,'')) - VO TINH noi ca duoi thap phan vao phan nguyen thay
+// vi BO no, lam gia tri gap 10 lan (219,304,461,655.0 -> "2193044616550" thay
+// vi "219304461655"). VND khong co don vi le nen phan thap phan (neu co,
+// thuong chi la ".0" do lam tron khi xuat file) LUON phai bi BO, khong duoc
+// cong don vao phan nguyen. Kiem tra cheo (validateBalanceSheet) da tu phat
+// hien va bao dung 5 canh bao lech 10 lan cho ca 2 dong bi anh huong (200 va
+// 280) truoc khi co fix nay - xac nhan co che canh bao van hoat dong dung,
+// chi thieu buoc TU SUA gia tri.
+function extractIntegerDigits(numericToken: string): string | null {
+  const core = numericToken.replace(/^[-(]+/, '').replace(/[)]+$/, '');
+  const lastDot = core.lastIndexOf('.');
+  const lastComma = core.lastIndexOf(',');
+
+  if (lastDot !== -1 && lastComma !== -1) {
+    // Ca 2 dau deu xuat hien: dau xuat hien SAU CUNG la ung vien thap phan,
+    // dau con lai la nhom nghin.
+    const decimalIsDot = lastDot > lastComma;
+    const decimalIdx = decimalIsDot ? lastDot : lastComma;
+    const thousandsSep = decimalIsDot ? ',' : '.';
+    const integerPart = core.slice(0, decimalIdx);
+    const fractionPart = core.slice(decimalIdx + 1);
+    if (!/^\d{1,2}$/.test(fractionPart)) return null;
+    const groups = integerPart.split(thousandsSep);
+    if (!/^\d+$/.test(groups[0])) return null;
+    if (!groups.slice(1).every((g) => /^\d{3}$/.test(g))) return null;
+    return groups.join('');
+  }
+
+  if (lastDot !== -1 || lastComma !== -1) {
+    const sep = lastDot !== -1 ? '.' : ',';
+    const groups = core.split(sep);
+    if (groups.length === 1) return /^\d+$/.test(groups[0]) ? groups[0] : null;
+    const lastGroup = groups[groups.length - 1];
+    if (/^\d{3}$/.test(lastGroup)) {
+      if (!/^\d+$/.test(groups[0])) return null;
+      if (!groups.slice(1).every((g) => /^\d{3}$/.test(g))) return null;
+      return groups.join('');
+    }
+    if (groups.length === 2 && /^\d{1,2}$/.test(lastGroup)) {
+      return /^\d+$/.test(groups[0]) ? groups[0] : null;
+    }
+    return null;
+  }
+
+  return /^\d+$/.test(core) ? core : null;
 }
 
 // Vai dong (vd mã 230 "Bất động sản đầu tư" trong TIX) bi thieu 1 cot GIUA

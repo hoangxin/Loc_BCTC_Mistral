@@ -116575,7 +116575,7 @@
               "200",
               null,
               35112137091,
-              353995918050
+              35399591805
             ],
             [
               "I. Các khoản phải thu dài hạn",
@@ -116694,7 +116694,7 @@
               "280",
               null,
               216113608372,
-              2193044616550
+              219304461655
             ],
             [
               "CHỈ TIÊU",
@@ -116715,7 +116715,7 @@
               "300",
               null,
               55169851669,
-              617224545140
+              61722454514
             ],
             [
               "I. Nợ ngắn hạn",
@@ -117239,13 +117239,7 @@
       "entryName": "1_phn_2026_7_20_049b9ad_vi_baocaotaichinh_q2_2026.pdf",
       "periodYear": 2026,
       "periodSlug": "Q2",
-      "warnings": [
-        "\"Số đầu năm\": Tong cong tai san (2193044616550) khong khop Tong cong nguon von (219304461655)",
-        "\"Số đầu năm\": TS ngan han (183904869850) + TS dai han (353995918050) khong khop Tong cong tai san (2193044616550)",
-        "\"Số đầu năm\": Tong cac muc trong TS dai han (35399591805) khong khop dong TS dai han (353995918050)",
-        "\"Số đầu năm\": No phai tra (617224545140) + Von chu so huu (157582007141) khong khop Tong cong nguon von (219304461655)",
-        "\"Số đầu năm\": Tong cac muc trong No phai tra (61722454514) khong khop dong No phai tra (617224545140)"
-      ]
+      "warnings": []
     },
     {
       "source": "vietstock",
