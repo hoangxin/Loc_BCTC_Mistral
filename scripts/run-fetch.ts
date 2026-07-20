@@ -62,7 +62,7 @@ async function main() {
 
   const status = await runFetchPipeline({ term, quarter: quarterOverride, year: yearOverride, hoursWindow, reportLimit, selectedFileInfoIds });
   console.log(
-    `${status.periodLabel}: tim thay ${status.totalFound}, sau loc ${status.totalMatched}, tai thanh cong ${status.downloaded} (${status.failed.length} loi).`
+    `${status.periodLabel}: tim thay ${status.totalFound}, sau loc ${status.totalMatched}, da tai file ${status.downloaded} (${status.failed.length} loi, ${status.interruptedReports.length} do dang chua xu ly xong).`
   );
 }
 

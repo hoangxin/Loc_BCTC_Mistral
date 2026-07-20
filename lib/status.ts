@@ -10,6 +10,17 @@ export interface FailedReport {
   error?: string;
 }
 
+// Bao cao NAM TRONG danh sach da loc (matched) nhung CHUA xu ly xong o LAN
+// CHAY GAN NHAT - khong o "reports" (chua trich xong) cung khong o "failed"
+// (khong co loi nao duoc nem ra) vi tien trinh bi GitHub Actions giet giua
+// chung khi cham timeout-minutes (xem lib/pipeline.ts processedIndices).
+// KHAC voi FailedReport: day khong phai loi, chi la "chua ro ket qua, can tai
+// lai" - tach rieng khoi `failed` de khong lam sai lech y nghia "X loi" da co.
+export interface InterruptedReport {
+  stockCode: string;
+  title: string;
+}
+
 export interface DownloadedReport {
   // 'vietstock' = tai hang loat qua danh sach ky bao cao Vietstock; 'custom' =
   // them tay qua nut "Them nguon rieng" (paste link web cong ty, xem
@@ -79,6 +90,9 @@ export interface FetchStatus {
   totalMatched: number;
   downloaded: number;
   failed: FailedReport[];
+  // Xem InterruptedReport - rong khi lan chay gan nhat hoan tat binh thuong
+  // (khong bi kill giua chung).
+  interruptedReports: InterruptedReport[];
   reports: DownloadedReport[];
   // Ket qua lan "Them nguon rieng" GAN NHAT (dispatch GitHub Actions, xem
   // app/api/custom-source, lib/custom-source.ts) - LUON duoc ghi (ke ca

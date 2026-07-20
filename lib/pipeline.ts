@@ -27,11 +27,17 @@ export function readStatus(): FetchStatus {
       totalMatched: 0,
       downloaded: 0,
       failed: [],
+      interruptedReports: [],
       reports: [],
       lastCustomSourceCheck: null,
     };
   }
-  return JSON.parse(readFileSync(STATUS_PATH, 'utf-8')) as FetchStatus;
+  const parsed = JSON.parse(readFileSync(STATUS_PATH, 'utf-8')) as Partial<FetchStatus>;
+  // SUA 2026-07-20: backfill field them SAU nay (interruptedReports) khi doc
+  // 1 file data/latest-fetch.json cu da ghi TRUOC khi field nay ton tai -
+  // tranh phai sua tay file data (rui ro xung dot rebase voi 1 job dang chay
+  // dong thoi tren GitHub Actions, xem lib/status.ts InterruptedReport).
+  return { interruptedReports: [], ...parsed } as FetchStatus;
 }
 
 // SUA 2026-07-20 (yeu cau nguoi dung, sau su co Mistral nghen hang doi lam
@@ -94,6 +100,7 @@ export function clearResults(filePaths?: string[]): FetchStatus {
       totalMatched: 0,
       downloaded: 0,
       failed: [],
+      interruptedReports: [],
       reports: [],
       lastCustomSourceCheck: null,
     };
@@ -232,6 +239,17 @@ export async function runFetchPipeline(options: RunFetchPipelineOptions = {}): P
     let downloadedCount = 0;
     let nextIndex = 0;
 
+    // Danh dau 1 index trong `matched` la DA XU LY XONG (du ket qua la them
+    // vao reportEntries, failedEntries, hay bo qua co chu dich - vd file
+    // khong phai tieng Viet) - xem InterruptedReport (lib/status.ts). Khac voi
+    // downloadedCount (chi bao "da TAI file", chua chac da OCR xong), tap hop
+    // nay chi nhan 1 index SAU KHI ca vong lap worker cho index do chay xong
+    // toan bo (qua het buoc tai + giai nen + trich + cleanup). Neu tien trinh
+    // bi GitHub Actions giet giua chung (cham timeout-minutes), cac index CHUA
+    // kip vao day se lo ra qua buildStatus() duoi - phat hien dung bao cao nao
+    // bi bo do, thay vi im lang bien mat (xem downloaded).
+    const processedIndices = new Set<number>();
+
     // Dung chung boi flushProgress (sau MOI bao cao) va khoi ket thuc ham (sau
     // Promise.all) - CHI khac o `running`. BO SUNG vao previousStatus.reports/
     // failed giong het logic cu (khong tao dong trung lap - xem
@@ -242,6 +260,9 @@ export async function runFetchPipeline(options: RunFetchPipelineOptions = {}): P
       const newFailed = failedEntries.sort((a, b) => a.idx - b.idx).map((e) => e.failed);
       const newKeys = new Set(newReports.map(reportIdentityKey));
       const keptReports = previousStatus.reports.filter((r) => !newKeys.has(reportIdentityKey(r)));
+      const interruptedReports = matched
+        .filter((_, idx) => !processedIndices.has(idx))
+        .map((report) => ({ stockCode: report.stockCode, title: report.title }));
       return {
         running,
         generatedAt: new Date().toISOString(),
@@ -251,6 +272,7 @@ export async function runFetchPipeline(options: RunFetchPipelineOptions = {}): P
         totalMatched: matched.length,
         downloaded: downloadedCount,
         failed: [...previousStatus.failed, ...newFailed],
+        interruptedReports,
         reports: [...keptReports, ...newReports],
         lastCustomSourceCheck: previousStatus.lastCustomSourceCheck,
       };
@@ -287,6 +309,7 @@ export async function runFetchPipeline(options: RunFetchPipelineOptions = {}): P
             idx: index,
             failed: { stockCode: report.stockCode, title: report.title, error: error instanceof Error ? error.message : String(error) },
           });
+          processedIndices.add(index);
           flushProgress();
           continue;
         }
@@ -407,6 +430,7 @@ export async function runFetchPipeline(options: RunFetchPipelineOptions = {}): P
         // can nua, xoa NGAY (khong doi het batch nhu truoc) de data/reports/
         // khong phinh dan qua giua chung khi chay batch lon.
         await cleanupDownloadedFile(filePath);
+        processedIndices.add(index);
         flushProgress();
       }
     }
