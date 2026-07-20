@@ -22,7 +22,8 @@ on:
       description:
         type: string
         default: ''
-      hoursWindow:
+      onlyMissing:
+        description: '1 = chi tai bu bao cao chua co san (Tu lan tai cuoi), bat ke thoi gian xuat hien'
         type: string
         default: ''
       reportLimit:
@@ -73,7 +74,7 @@ jobs:
           FETCH_REPORT_TERM_ID: ${{ github.event.inputs.reportTermID }}
           FETCH_YEAR_PERIOD: ${{ github.event.inputs.yearPeriod }}
           FETCH_DESCRIPTION: ${{ github.event.inputs.description }}
-          FETCH_HOURS_WINDOW: ${{ github.event.inputs.hoursWindow }}
+          FETCH_ONLY_MISSING: ${{ github.event.inputs.onlyMissing }}
           FETCH_REPORT_LIMIT: ${{ github.event.inputs.reportLimit }}
           FETCH_SELECTED_IDS: ${{ github.event.inputs.selectedIds }}
           FETCH_CUSTOM_URL: ${{ github.event.inputs.customUrl }}

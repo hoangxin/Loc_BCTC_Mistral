@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { ReportFile, ReportTerm } from '@/lib/vietstock-reports';
 import type { QuarterPeriod } from '@/lib/quarter';
-import { isRegularQuarterTerm, periodDisplayLabel, periodFolderSlug } from '@/lib/period-label';
+import { isRegularQuarterTerm, periodDisplayLabel } from '@/lib/period-label';
 import { formatTimestamp } from '@/lib/format';
 import WatchlistButton from './WatchlistButton';
 import { useWatchlist } from './WatchlistContext';
@@ -17,40 +17,6 @@ const POLL_INTERVAL_MS = 5000;
 // lau de tranh tab quen mat dang fetch mai.
 const MAX_POLL_MS = 15 * 60 * 1000;
 
-// Hien thi hoursValue (co the le, vd 4.0833h ~ 4h5p) kieu "4h5p" thay vi so
-// thap phan xau - dung cung cach hien Loc_Tin_Deepseek (TriggerDigestButton.tsx).
-function formatHoursLabel(hoursValue: number): string {
-  const totalMinutes = Math.round(hoursValue * 60);
-  const wholeHours = Math.floor(totalMinutes / 60);
-  const minutes = totalMinutes % 60;
-  if (wholeHours === 0) return `${minutes}p`;
-  if (minutes === 0) return `${wholeHours}h`;
-  return `${wholeHours}h${minutes}p`;
-}
-
-// Gio ke tu lan tai GAN NHAT cua DUNG ky dang chon (khong phai lan tai gan
-// nhat noi chung - moi ky co moc rieng, xem buildTermLastFetchMap o
-// app/page.tsx). Lam tron LEN theo PHUT (khong phai gio) roi quy doi ra phan
-// so cua gio - lam tron len theo gio se doi khi cong du them toi 59 phut vo
-// ly (yeu cau user 2026-07-10: "do chinh xac tinh den phut"). Tra ve 0 khi ky
-// nay CHUA TUNG duoc tai (khong co moc so sanh) - runFetch se hieu 0 la
-// "khong loc theo thoi gian", tuc lay TOAN BO danh muc.
-function sinceLastHoursForTerm(term: ReportTerm, termLastFetch: Record<string, string>): number {
-  const key = `${term.yearPeriod}-${periodFolderSlug(term)}`;
-  const lastFetchIso = termLastFetch[key];
-  if (!lastFetchIso) return 0;
-  const lastFetchMs = new Date(lastFetchIso).getTime();
-  if (!Number.isFinite(lastFetchMs)) return 0;
-  const elapsedMinutes = Math.max(1, Math.ceil((Date.now() - lastFetchMs) / (60 * 1000)));
-  return elapsedMinutes / 60;
-}
-
-function sinceLastLabel(term: ReportTerm, termLastFetch: Record<string, string>): string {
-  const hoursValue = sinceLastHoursForTerm(term, termLastFetch);
-  if (hoursValue === 0) return 'Từ lần tải cuối (chưa tải kỳ này lần nào - lấy toàn bộ danh mục)';
-  return `Từ lần tải cuối (${formatHoursLabel(hoursValue)} trước)`;
-}
-
 // reportTermID KHONG duy nhat qua cac nam (vd "Quý 3" moi nam deu dung lai
 // reportTermID=4 - da gap that qua debug that: dropdown bi trung value giua
 // "Quý 3/2025" va "Quý 3/2026") - phai ghep them yearPeriod moi ra key duy nhat.
@@ -61,14 +27,9 @@ function termKey(term: ReportTerm): string {
 export default function FetchControls({
   currentGeneratedAt,
   previousQuarter,
-  termLastFetch,
 }: {
   currentGeneratedAt: string;
   previousQuarter: QuarterPeriod;
-  // Moc "lan tai gan nhat" cua TUNG ky (key `${yearPeriod}-${periodSlug}`,
-  // xem buildTermLastFetchMap o app/page.tsx) - dung cho mode 'sinceLast'
-  // duoi day.
-  termLastFetch: Record<string, string>;
 }) {
   const [terms, setTerms] = useState<ReportTerm[] | null>(null);
   const [termsError, setTermsError] = useState('');
@@ -275,7 +236,7 @@ export default function FetchControls({
           yearPeriod: selectedTerm.yearPeriod,
           description: selectedTerm.description,
           ...(effectiveMode === 'sinceLast'
-            ? { hoursWindow: sinceLastHoursForTerm(selectedTerm, termLastFetch) || undefined }
+            ? { onlyMissing: true }
             : effectiveMode === 'select'
               ? { selectedFileInfoIds: Array.from(selectedFileInfoIds) }
               : { reportLimit }),
@@ -351,7 +312,7 @@ export default function FetchControls({
         </div>
 
         {effectiveMode === 'sinceLast' && selectedTerm && (
-          <span className="trigger-message">{sinceLastLabel(selectedTerm, termLastFetch)}</span>
+          <span className="trigger-message">Chỉ tải bù các báo cáo chưa có trong kết quả (bỏ qua báo cáo đã có, không phụ thuộc thời gian)</span>
         )}
         {effectiveMode === 'count' && (
           <label className="field">

@@ -142,19 +142,27 @@ export interface RunFetchPipelineOptions {
   // ho tro Quy 1-4, se tu quy doi sang ReportTerm o duoi.
   quarter?: number;
   year?: number;
-  // Loc theo thoi gian - lay bao cao co lastUpdate trong vong X gio gan nhat
-  // (bao cao quy vua ket thuc tiep tuc trickle-in trong nhieu tuan, xem
-  // lib/vietstock-reports.ts). UI (app/FetchControls.tsx) chi cho chon lua
-  // chon nay khi ky la Quy "vua qua" (2 ky khac deu da nop du tu lau, "gio gan
-  // nhat" khong co y nghia) - nhung pipeline o day KHONG tu gate theo quy,
-  // chi ap dung dung tham so nao duoc truyen vao.
-  hoursWindow?: number;
+  // "Tu lan tai cuoi" (app/FetchControls.tsx) - CHI tai bu nhung bao cao CHUA
+  // co san trong ket qua da tich luy cua CHINH ky nay (so khop qua
+  // reportIdentityKey), BAT KE bao cao do xuat hien tren Vietstock truoc hay
+  // sau lan tai gan nhat.
+  //
+  // SUA 2026-07-20 (yeu cau nguoi dung, thay the hoan toan ban cu loc theo
+  // THOI GIAN "lastUpdate >= X gio truoc"): ban cu bo sot dung truong hop
+  // nguoi dung mo ta - 1 bao cao (B/C) da xuat hien tren Vietstock TRUOC lan
+  // tai gan nhat (lastUpdate < moc gio) nhung CHUA tung tai duoc (vd bi
+  // timeout Mistral giua chung o 1 lan chay truoc, hoac lan do chi chon tay
+  // vai bao cao thay vi tai het) - ban cu se KHONG BAO GIO tai lai duoc B/C vi
+  // lastUpdate cua chung da qua cu so voi moc gio, du chung van con thieu that
+  // su. Loc theo SU HIEN DIEN (co/chua co trong reports) thay vi THOI GIAN
+  // giai quyet dung goc van de nay - xem scopedReports duoi.
+  onlyMissing?: boolean;
   // Loc theo so luong - gioi han lay N bao cao moi cap nhat gan nhat. Luon co
-  // the chon (moi ky), rieng Quy "vua qua" UI cho chon giua day va hoursWindow.
+  // the chon (moi ky), rieng Quy "vua qua" UI cho chon giua day va onlyMissing.
   reportLimit?: number;
   // Tick chon tay tung bao cao (app/FetchControls.tsx, mode 'select') - danh
   // sach ReportFile.fileInfoID. Khi co mat (mang khong rong), UU TIEN CAO
-  // NHAT - ghi de hoan toan hoursWindow/reportLimit, CHI tai dung cac bao cao
+  // NHAT - ghi de hoan toan onlyMissing/reportLimit, CHI tai dung cac bao cao
   // nay (xem scopedReports duoi).
   selectedFileInfoIds?: number[];
 }
@@ -191,6 +199,11 @@ export async function runFetchPipeline(options: RunFetchPipelineOptions = {}): P
     const allReports = await fetchReportFilesForTerm(term);
     console.timeEnd('[perf] fetchReportFilesForTerm');
 
+    // Doc TRUOC khi loc scopedReports (can cho nhanh onlyMissing duoi day) va
+    // dung lam nen cho MOI lan flushProgress o cuoi ham, xem comment tai do.
+    const previousStatus = readStatus();
+    const periodSlug = periodFolderSlug(term);
+
     // Loc theo dung tham so caller truyen (xem comment RunFetchPipelineOptions
     // o tren) - KHONG tu gate theo loai ky o day, UI (app/FetchControls.tsx)
     // da quyet dinh lua chon nao duoc phep hien cho tung loai ky.
@@ -198,9 +211,13 @@ export async function runFetchPipeline(options: RunFetchPipelineOptions = {}): P
     if (options.selectedFileInfoIds && options.selectedFileInfoIds.length > 0) {
       const idSet = new Set(options.selectedFileInfoIds);
       scopedReports = allReports.filter((r) => idSet.has(r.fileInfoID));
-    } else if (options.hoursWindow) {
-      const cutoff = Date.now() - options.hoursWindow * 60 * 60 * 1000;
-      scopedReports = allReports.filter((r) => r.lastUpdate.getTime() >= cutoff);
+    } else if (options.onlyMissing) {
+      const existingKeys = new Set(
+        previousStatus.reports
+          .filter((r) => r.periodYear === term.yearPeriod && r.periodSlug === periodSlug)
+          .map(reportIdentityKey)
+      );
+      scopedReports = allReports.filter((r) => !existingKeys.has(`${r.stockCode}::${term.yearPeriod}-${periodSlug}::${r.title}`));
     } else if (options.reportLimit) {
       scopedReports = [...allReports]
         .sort((a, b) => b.lastUpdate.getTime() - a.lastUpdate.getTime())
@@ -212,13 +229,8 @@ export async function runFetchPipeline(options: RunFetchPipelineOptions = {}): P
     // loc theo noi dung so lieu.
     const matched = filterReports(scopedReports);
 
-    const periodSlug = periodFolderSlug(term);
     const destDir = join(DATA_DIR, 'reports', `${term.yearPeriod}-${periodSlug}`);
     mkdirSync(destDir, { recursive: true });
-
-    // Doc TRUOC khi vong lap ghi bat dau (chi 1 lan) - dung lam nen cho MOI
-    // lan flushProgress ben duoi, xem comment tai do.
-    const previousStatus = readStatus();
 
     // Goi dau tai -> giai nen -> OCR theo TUNG bao cao (2026-07-08, thay cho 3
     // giai doan tuan tu theo batch truoc day: tai HET -> giai nen HET -> OCR

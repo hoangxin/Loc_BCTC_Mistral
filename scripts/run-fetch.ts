@@ -48,7 +48,7 @@ async function main() {
   const reportTermID = process.env.FETCH_REPORT_TERM_ID ? Number(process.env.FETCH_REPORT_TERM_ID) : undefined;
   const yearPeriod = process.env.FETCH_YEAR_PERIOD ? Number(process.env.FETCH_YEAR_PERIOD) : undefined;
   const description = process.env.FETCH_DESCRIPTION || undefined;
-  const hoursWindow = process.env.FETCH_HOURS_WINDOW ? Number(process.env.FETCH_HOURS_WINDOW) : undefined;
+  const onlyMissing = process.env.FETCH_ONLY_MISSING === '1';
   const reportLimit = process.env.FETCH_REPORT_LIMIT ? Number(process.env.FETCH_REPORT_LIMIT) : undefined;
   const selectedFileInfoIds = process.env.FETCH_SELECTED_IDS
     ? process.env.FETCH_SELECTED_IDS.split(',').map(Number).filter((n) => Number.isFinite(n))
@@ -60,7 +60,7 @@ async function main() {
   const quarterOverride = process.env.FETCH_QUARTER ? Number(process.env.FETCH_QUARTER) : undefined;
   const yearOverride = process.env.FETCH_YEAR ? Number(process.env.FETCH_YEAR) : undefined;
 
-  const status = await runFetchPipeline({ term, quarter: quarterOverride, year: yearOverride, hoursWindow, reportLimit, selectedFileInfoIds });
+  const status = await runFetchPipeline({ term, quarter: quarterOverride, year: yearOverride, onlyMissing, reportLimit, selectedFileInfoIds });
   console.log(
     `${status.periodLabel}: tim thay ${status.totalFound}, sau loc ${status.totalMatched}, da tai file ${status.downloaded} (${status.failed.length} loi, ${status.interruptedReports.length} do dang chua xu ly xong).`
   );

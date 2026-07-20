@@ -1,5 +1,4 @@
 import { readStatus } from '@/lib/pipeline';
-import type { DownloadedReport } from '@/lib/status';
 import { formatTimestamp } from '@/lib/format';
 import { getPreviousQuarter } from '@/lib/quarter';
 import FetchControls from './FetchControls';
@@ -8,23 +7,6 @@ import ResultsByPeriodTabs from './ResultsByPeriodTabs';
 import Tabs from './Tabs';
 import FailedReportsBadge from './FailedReportsBadge';
 import InterruptedReportsBadge from './InterruptedReportsBadge';
-
-// "Tai moi tu lan tai cuoi" (app/FetchControls.tsx, mode 'sinceLast') can biet
-// lan gan nhat DA tai ky dang chon la khi nao - status.reports gop chung tat
-// ca cac ky da tai (xem comment runFetchPipeline o lib/pipeline.ts), nen o day
-// chi can gom nhom theo periodYear+periodSlug va lay "lastUpdate" MOI NHAT
-// trong nhom do lam moc so sanh.
-function buildTermLastFetchMap(reports: DownloadedReport[]): Record<string, string> {
-  const map: Record<string, string> = {};
-  for (const report of reports) {
-    const key = `${report.periodYear}-${report.periodSlug}`;
-    const existing = map[key];
-    if (!existing || new Date(report.lastUpdate).getTime() > new Date(existing).getTime()) {
-      map[key] = report.lastUpdate;
-    }
-  }
-  return map;
-}
 
 // Doc dong tu dia (khong import tinh JSON nua) - `data/latest-fetch.json`
 // KHONG nam trong repo (gitignore, la du lieu sinh ra luc chay, xem
@@ -72,11 +54,7 @@ export default function HomePage() {
         }
         fetchTab={
           <div className="controls-bar">
-            <FetchControls
-              currentGeneratedAt={status.generatedAt}
-              previousQuarter={previousQuarter}
-              termLastFetch={buildTermLastFetchMap(status.reports)}
-            />
+            <FetchControls currentGeneratedAt={status.generatedAt} previousQuarter={previousQuarter} />
             <CustomSourceForm />
           </div>
         }

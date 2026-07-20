@@ -12,11 +12,13 @@ interface TriggerFetchBody {
   reportTermID?: number;
   yearPeriod?: number;
   description?: string;
-  hoursWindow?: number;
+  // "Tu lan tai cuoi" - xem lib/pipeline.ts RunFetchPipelineOptions.onlyMissing
+  // (thay the hoan toan ban cu loc theo gio 2026-07-20).
+  onlyMissing?: boolean;
   reportLimit?: number;
   // Tick chon tay tung bao cao trong bang preview (app/FetchControls.tsx,
   // mode 'select') - danh sach ReportFile.fileInfoID. Khi co mat (khong
-  // rong), ghi de hoan toan hoursWindow/reportLimit (xem lib/pipeline.ts).
+  // rong), ghi de hoan toan onlyMissing/reportLimit (xem lib/pipeline.ts).
   selectedFileInfoIds?: number[];
 }
 
@@ -33,7 +35,7 @@ export async function POST(request: Request) {
     reportTermID: body.reportTermID ? String(body.reportTermID) : '',
     yearPeriod: body.yearPeriod ? String(body.yearPeriod) : '',
     description: body.description ?? '',
-    hoursWindow: body.hoursWindow ? String(body.hoursWindow) : '',
+    onlyMissing: body.onlyMissing ? '1' : '',
     reportLimit: body.reportLimit ? String(body.reportLimit) : '',
     selectedIds: body.selectedFileInfoIds?.length ? body.selectedFileInfoIds.join(',') : '',
   });

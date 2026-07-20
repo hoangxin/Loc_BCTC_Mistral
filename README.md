@@ -112,7 +112,7 @@ diện web hoặc bằng lệnh `npm run fetch`.
   điền lại key thật khi cần dùng.
 - `lib/ai/claude.ts` - client Claude, viết sẵn nhưng chưa dùng ở đâu (dự phòng).
 - `lib/pipeline.ts` - orchestrator dùng chung cho cả CLI (`scripts/run-fetch.ts`) và GitHub Actions
-  (`.github/workflows/fetch-bctc.yml`); `runFetchPipeline(options)` nhận `{term|quarter+year, hoursWindow,
+  (`.github/workflows/fetch-bctc.yml`); `runFetchPipeline(options)` nhận `{term|quarter+year, onlyMissing,
   reportLimit}` - CHỈ trích 3 bảng + tính % + phân loại cho MỌI báo cáo, ghi `data/latest-fetch.json` -
   KHÔNG còn tự OCR toàn văn/ghi `.xlsx`/`.clean.pdf` ở bước này nữa (dời sang lúc user bấm "Xuất", xem
   `app/api/report-file`); `addCustomReport`/`writeCustomSourceCheck` để `lib/custom-source.ts` ghi thêm.
@@ -127,10 +127,11 @@ diện web hoặc bằng lệnh `npm run fetch`.
   `POST .../actions/workflows/fetch-bctc.yml/dispatches` (dùng PAT `GITHUB_DISPATCH_TOKEN`, raw `fetch`,
   không Octokit) để kích hoạt workflow trên, theo đúng `trigger-digest`/route tương tự của loc_tin.
 - `app/FetchControls.tsx` - dropdown chọn kỳ (lấy trực tiếp từ `app/api/report-terms`, KHÔNG tự sinh) +
-  lựa chọn "Từ lần tải cuối" (đúng Quý vừa qua - tự tính số giờ trôi qua kể từ lần tải GẦN NHẤT của
-  chính kỳ đó, chính xác tới phút, xem `sinceLastHoursForTerm`/`termLastFetch` từ `app/page.tsx`
-  `buildTermLastFetchMap`) hoặc "số BCTC gần nhất" (kỳ khác), nút "Tải BCTC" - polling
-  `app/api/fetch-status` (đổi `generatedAt` = xong, tự reload).
+  lựa chọn "Từ lần tải cuối" (đúng Quý vừa qua - CHỈ tải bù báo cáo CHƯA CÓ trong kết quả đã tích luỹ
+  của kỳ đó, so khớp qua `reportIdentityKey`, KHÔNG còn lọc theo thời gian như trước 2026-07-20 - tránh bỏ
+  sót báo cáo xuất hiện trước lần tải cuối nhưng chưa từng tải được, vd do timeout Mistral hoặc lần đó chỉ
+  chọn tay 1 phần - xem `onlyMissing` ở `lib/pipeline.ts`) hoặc "số BCTC gần nhất" (kỳ khác), nút "Tải BCTC"
+  - polling `app/api/fetch-status` (đổi `generatedAt` = xong, tự reload).
 - `app/CustomSourceForm.tsx` - nút "Thêm nguồn riêng" -> input link + Enter -> dispatch (không trả kết
   quả ngay nữa) -> polling `app/api/fetch-status`, đối chiếu `lastCustomSourceCheck.requestId` (tự sinh
   lúc gửi) để phân biệt "chưa xong" với "xong nhưng không thấy" (hiện "Chưa có").
