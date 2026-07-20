@@ -203,6 +203,23 @@ async function pollJobStatus(jobId: string, apiKey: string): Promise<MistralBatc
   throw lastError;
 }
 
+// SUA 2026-07-20 (yeu cau nguoi dung, sau su co nghen hang doi keo dai ca
+// buoi chieu): khi vuot MAX_POLL_DURATION_MS, HUY LUON job do ben Mistral
+// (POST .../cancel - da xac nhan endpoint nay hoat dong dung qua test that
+// tay hom nay, tra ve status CANCELLED) thay vi bo mac no chay tiep ngam toi
+// khi tu het han JOB_TIMEOUT_HOURS - truoc day 5 job bi bo cuoc kieu nay van
+// tiep tuc chay/co the SUCCESS ma khong ai quay lai lay, co nguy co bi tinh
+// phi cho ket qua khong bao gio dung den. Best-effort: goi huy that bai
+// (vd job vua xong dung luc goi huy) KHONG duoc che mat loi timeout goc -
+// chi log rieng, van nem loi timeout nhu binh thuong cho nguoi goi xu ly.
+async function cancelJob(jobId: string, apiKey: string): Promise<void> {
+  try {
+    await mistralRequest(`/v1/batch/jobs/${jobId}/cancel`, apiKey, { method: 'POST' });
+  } catch (error) {
+    console.error(`Huy job ${jobId} that bai sau khi vuot MAX_POLL_DURATION_MS (bo qua, khong anh huong loi timeout goc)`, error);
+  }
+}
+
 // Xem CANH BAO QUAN TRONG o dau file - thu ca 2 kha nang hinh dang pho bien
 // nhat cho 1 dong ket qua batch: (a) { custom_id, response: { body: {...} } }
 // (kieu OpenAI va da so provider khac) hoac (b) { custom_id, body: {...} }
@@ -282,8 +299,9 @@ export async function callMistralOcrBatch(filePath: string, options?: CallMistra
   const pollStartedAt = Date.now();
   while (current.status === 'QUEUED' || current.status === 'RUNNING') {
     if (Date.now() - pollStartedAt > MAX_POLL_DURATION_MS) {
+      await cancelJob(job.id, apiKey);
       throw new Error(
-        `Mistral batch job ${job.id} qua ${Math.round(MAX_POLL_DURATION_MS / 60000)} phut van con trang thai ${current.status} - dung cho (co the do hang doi batch cua Mistral bi nghen tam thoi), coi la loi tam thoi cho bao cao nay.`
+        `Mistral batch job ${job.id} qua ${Math.round(MAX_POLL_DURATION_MS / 60000)} phut van con trang thai ${current.status} - dung cho (co the do hang doi batch cua Mistral bi nghen tam thoi), da huy job de tranh bi tinh phi cho ket qua se khong lay ve, coi la loi tam thoi cho bao cao nay.`
       );
     }
     await sleep(POLL_INTERVAL_MS);
