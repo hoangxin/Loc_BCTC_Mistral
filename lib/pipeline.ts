@@ -12,6 +12,7 @@ import { computeAnalysisRows } from './analysis';
 import { classifyStatementScope } from './statement-scope';
 import { saveProductionOcrMarkdown } from './ocr-markdown-store';
 import type { FetchStatus, DownloadedReport, FailedReport } from './status';
+import { reportIdentityKey } from './report-identity';
 
 const DATA_DIR = join(process.cwd(), 'data');
 const STATUS_PATH = join(DATA_DIR, 'latest-fetch.json');
@@ -119,10 +120,10 @@ export function clearResults(filePaths?: string[]): FetchStatus {
 // Khoa nhan dien "cung 1 bao cao" khi cong don ket qua qua nhieu lan "Tai
 // BCTC" (xem runFetchPipeline duoi) - ma CK + ky (nam+hau to) + tieu de (da
 // phan biet Hop nhat/Rieng le vi title Vietstock luon ghi ro, vd "BCTC Hợp
-// nhất quý 2 năm 2026" khac "BCTC Công ty mẹ quý 2 năm 2026").
-function reportIdentityKey(report: DownloadedReport): string {
-  return `${report.stockCode}::${report.periodYear}-${report.periodSlug}::${report.title}`;
-}
+// nhất quý 2 năm 2026" khac "BCTC Công ty mẹ quý 2 năm 2026"). Dinh nghia
+// dung chung o lib/report-identity.ts (khong co import Node-only) de
+// app/FetchControls.tsx (client) tinh truoc cung 1 khoa nay khi tu tick sẵn
+// cac bao cao con thieu luc bam "Tu lan tai cuoi".
 
 function buildStatementScopeInput(
   resolved: ResolvedReportFile,

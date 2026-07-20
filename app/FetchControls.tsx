@@ -3,8 +3,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { ReportFile, ReportTerm } from '@/lib/vietstock-reports';
 import type { QuarterPeriod } from '@/lib/quarter';
-import { isRegularQuarterTerm, periodDisplayLabel } from '@/lib/period-label';
+import { isRegularQuarterTerm, periodDisplayLabel, periodFolderSlug } from '@/lib/period-label';
 import { formatTimestamp } from '@/lib/format';
+import { reportIdentityKey, type ReportIdentity } from '@/lib/report-identity';
 import WatchlistButton from './WatchlistButton';
 import { useWatchlist } from './WatchlistContext';
 
@@ -24,12 +25,33 @@ function termKey(term: ReportTerm): string {
   return `${term.reportTermID}-${term.yearPeriod}`;
 }
 
+// "Tu lan tai cuoi" (yeu cau nguoi dung 2026-07-20) - tu tick san CHINH XAC
+// cac bao cao CHUA co trong ket qua tich luy cua ky dang chon (so khop qua
+// reportIdentityKey, CUNG khoa dung o server - lib/pipeline.ts onlyMissing),
+// dua vao danh muc that (previewReports) da tai san. Nguoi dung van co the bo
+// tick/tick them truoc khi bam "Tai BCTC" - khac voi onlyMissing (server tu
+// tinh lai luc chay, khong xem/sua truoc duoc).
+function computeMissingFileInfoIds(term: ReportTerm, previewReports: ReportFile[], existingReports: ReportIdentity[]): number[] {
+  const periodSlug = periodFolderSlug(term);
+  const existingKeys = new Set(
+    existingReports.filter((r) => r.periodYear === term.yearPeriod && r.periodSlug === periodSlug).map(reportIdentityKey)
+  );
+  return previewReports
+    .filter((r) => !existingKeys.has(reportIdentityKey({ stockCode: r.stockCode, periodYear: term.yearPeriod, periodSlug, title: r.title })))
+    .map((r) => r.fileInfoID);
+}
+
 export default function FetchControls({
   currentGeneratedAt,
   previousQuarter,
+  existingReports,
 }: {
   currentGeneratedAt: string;
   previousQuarter: QuarterPeriod;
+  // Danh sach nhan dien (khong can toan bo du lieu) cua TAT CA bao cao da co
+  // trong ket qua (moi ky) - dung de tu tick san cac bao cao CON THIEU khi bam
+  // "Tu lan tai cuoi" (xem computeMissingFileInfoIds duoi).
+  existingReports: ReportIdentity[];
 }) {
   const [terms, setTerms] = useState<ReportTerm[] | null>(null);
   const [termsError, setTermsError] = useState('');
@@ -125,6 +147,11 @@ export default function FetchControls({
   // tren).
   const effectiveMode: FilterMode =
     filterMode === 'select' ? 'select' : isCurrentQuarter ? 'sinceLast' : 'count';
+  // 'sinceLast' hien dung y het giao dien tick-chon cua 'select' (tu tick san
+  // cac bao cao con thieu, nguoi dung van sua duoc truoc khi tai - xem
+  // computeMissingFileInfoIds) - CHI khac o nut nao dang "active" va cach tick
+  // ban dau duoc dien san.
+  const showsCheckboxes = effectiveMode === 'select' || effectiveMode === 'sinceLast';
 
   const loadPreview = useCallback(async (term: ReportTerm) => {
     setPreviewStatus('loading');
@@ -235,11 +262,7 @@ export default function FetchControls({
           reportTermID: selectedTerm.reportTermID,
           yearPeriod: selectedTerm.yearPeriod,
           description: selectedTerm.description,
-          ...(effectiveMode === 'sinceLast'
-            ? { onlyMissing: true }
-            : effectiveMode === 'select'
-              ? { selectedFileInfoIds: Array.from(selectedFileInfoIds) }
-              : { reportLimit }),
+          ...(showsCheckboxes ? { selectedFileInfoIds: Array.from(selectedFileInfoIds) } : { reportLimit }),
         }),
       });
       const data = await response.json();
@@ -263,9 +286,9 @@ export default function FetchControls({
   // chon da tai xong (previewStatus === 'ready') - tranh nguoi dung bam "Tai
   // BCTC" truoc khi thay dung danh muc that (yeu cau user).
   const inputsDisabled = busy || !selectedTerm || previewStatus !== 'ready';
-  // Mode 'select' can it nhat 1 bao cao duoc tick - khong cho bam "Tai BCTC"
-  // voi danh sach rong (se tai ve... khong gi ca).
-  const triggerDisabled = inputsDisabled || (effectiveMode === 'select' && selectedFileInfoIds.size === 0);
+  // Mode co tick (select/sinceLast) can it nhat 1 bao cao duoc tick - khong
+  // cho bam "Tai BCTC" voi danh sach rong (se tai ve... khong gi ca).
+  const triggerDisabled = inputsDisabled || (showsCheckboxes && selectedFileInfoIds.size === 0);
 
   return (
     <div className="fetch-controls">
@@ -286,7 +309,12 @@ export default function FetchControls({
             <button
               type="button"
               className={`mode-toggle-btn ${filterMode === 'sinceLast' ? 'active' : ''}`}
-              onClick={() => setFilterMode('sinceLast')}
+              onClick={() => {
+                if (selectedTerm && previewReports) {
+                  setSelectedFileInfoIds(new Set(computeMissingFileInfoIds(selectedTerm, previewReports, existingReports)));
+                }
+                setFilterMode('sinceLast');
+              }}
               disabled={inputsDisabled}
             >
               Từ lần tải cuối
@@ -311,9 +339,6 @@ export default function FetchControls({
           </button>
         </div>
 
-        {effectiveMode === 'sinceLast' && selectedTerm && (
-          <span className="trigger-message">Chỉ tải bù các báo cáo chưa có trong kết quả (bỏ qua báo cáo đã có, không phụ thuộc thời gian)</span>
-        )}
         {effectiveMode === 'count' && (
           <label className="field">
             <span className="field-label">Số BCTC gần nhất muốn lấy về</span>
@@ -326,8 +351,11 @@ export default function FetchControls({
             />
           </label>
         )}
-        {effectiveMode === 'select' && (
-          <span className="trigger-message">{selectedFileInfoIds.size} báo cáo đã chọn</span>
+        {showsCheckboxes && (
+          <span className="trigger-message">
+            {selectedFileInfoIds.size} báo cáo đã chọn
+            {effectiveMode === 'sinceLast' ? ' (tự động theo báo cáo còn thiếu - có thể bỏ tick/tick thêm)' : ''}
+          </span>
         )}
 
         <button className="trigger-button" onClick={runFetch} disabled={triggerDisabled}>
@@ -365,7 +393,7 @@ export default function FetchControls({
       rieng nay. Loc tu previewReports (KHONG phai filteredPreviewReports) vi
       nguoi dung co the da bo tim kiem sau khi tick, danh sach nay phai thay
       DUNG toan bo lua chon bat ke tim kiem hien tai. */}
-      {effectiveMode === 'select' && previewReports && selectedFileInfoIds.size > 0 && (
+      {showsCheckboxes && previewReports && selectedFileInfoIds.size > 0 && (
         <div className="selected-reports-panel">
           <div className="selected-reports-header">
             <span className="field-label">Báo cáo đã chọn ({selectedFileInfoIds.size})</span>
@@ -415,7 +443,7 @@ export default function FetchControls({
               <table className="report-table">
                 <thead>
                   <tr>
-                    {effectiveMode === 'select' && (
+                    {showsCheckboxes && (
                       <th>
                         <input
                           type="checkbox"
@@ -436,7 +464,7 @@ export default function FetchControls({
                 <tbody>
                   {filteredPreviewReports.length === 0 && (
                     <tr>
-                      <td colSpan={effectiveMode === 'select' ? 7 : 6} className="empty-state">
+                      <td colSpan={showsCheckboxes ? 7 : 6} className="empty-state">
                         Không tìm thấy mã CK nào khớp "{stockCodeQuery}".
                       </td>
                     </tr>
@@ -448,7 +476,7 @@ export default function FetchControls({
                     const watched = isWatched(report.stockCode);
                     return (
                     <tr key={report.fileInfoID} className={watched ? 'watchlist-row' : ''}>
-                      {effectiveMode === 'select' && (
+                      {showsCheckboxes && (
                         <td>
                           <input
                             type="checkbox"

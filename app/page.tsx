@@ -54,7 +54,16 @@ export default function HomePage() {
         }
         fetchTab={
           <div className="controls-bar">
-            <FetchControls currentGeneratedAt={status.generatedAt} previousQuarter={previousQuarter} />
+            <FetchControls
+              currentGeneratedAt={status.generatedAt}
+              previousQuarter={previousQuarter}
+              existingReports={status.reports.map((r) => ({
+                stockCode: r.stockCode,
+                periodYear: r.periodYear,
+                periodSlug: r.periodSlug,
+                title: r.title,
+              }))}
+            />
             <CustomSourceForm />
           </div>
         }
