@@ -22,7 +22,7 @@ function buildFileName(report: ReportFile): string {
 // resolve va axios KHONG con giam sat gi nua, nen 1 stream tai nhoi tung chut
 // (server Vietstock treo giua chung) van co the cho VO THOI HAN. Dung
 // AbortController de gioi han CA header lan toan bo qua trinh ghi file.
-const DOWNLOAD_TIMEOUT_MS = 10 * 60 * 1000;
+const DOWNLOAD_TIMEOUT_MS = 30 * 60 * 1000;
 
 // Tai 1 bao cao - dung boi worker-pool "goi dau" tai->giai nen->OCR cua
 // lib/pipeline.ts (2026-07-08, xem comment runFetchPipeline).
