@@ -244,22 +244,29 @@ tren man hinh sieu rong (4K) de header/tabs khong bi keo dai qua muc doc duoc. *
 
 /* Mui ten sap xep LUON hien (yeu cau nguoi dung 2026-07-20) - mo nhat khi
    chua active de khong lam roi tieu de, dam mau + đậm hon khi dang duoc ap
-   dung (xem pct-col-header-sorted o tren, dung chung 1 mau accent). */
+   dung (xem pct-col-header-sorted o tren, dung chung 1 mau accent).
+   SUA 2026-07-20: opacity 0.4 + 10px qua nhat, gan nhu khong thay tren nen
+   header xam nhat #eef0f2 (nguoi dung bao "khong thay gi thay doi" du deploy
+   da len dung) - tang opacity + font-size + dung mau text-muted (dam hon han
+   nen) thay vi ke thua mau chu (von cung nhat) de tuong phan ro rang. */
 .pct-col-sort-arrow {
-  opacity: 0.4;
-  font-size: 10px;
+  opacity: 1;
+  font-size: 13px;
+  color: var(--text-muted);
 }
 
 .pct-col-sort-arrow-active {
-  opacity: 1;
+  color: var(--accent);
   font-weight: 700;
 }
 
 /* Duong ranh gioi giua cac o tieu de (yeu cau nguoi dung 2026-07-20) - de
    phan tach ro tung cot % khi co nhieu cot lien tiep gia tri gan giong nhau,
-   tranh nhin nham cot. Bo o cot cuoi cung (khong can vien sat mep phai). */
+   tranh nhin nham cot. Bo o cot cuoi cung (khong can vien sat mep phai).
+   SUA 2026-07-20: var(--border) (#e3e5e9) gan nhu trung mau nen header
+   (#eef0f2) - gan nhu vo hinh. Doi sang mau dam hon han de thay ro. */
 .report-table th {
-  border-right: 1px solid var(--border);
+  border-right: 1px solid #c4c8ce;
 }
 
 .report-table th:last-child {
