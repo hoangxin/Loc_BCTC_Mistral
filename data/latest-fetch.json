@@ -1,11 +1,11 @@
 {
   "running": true,
-  "generatedAt": "2026-07-20T10:06:46.818Z",
+  "generatedAt": "2026-07-20T11:15:23.396Z",
   "periodLabel": "Quý 2/2026",
   "year": 2026,
-  "totalFound": 229,
-  "totalMatched": 10,
-  "downloaded": 9,
+  "totalFound": 266,
+  "totalMatched": 86,
+  "downloaded": 7,
   "failed": [
     {
       "stockCode": "HRC",
@@ -31,6 +31,357 @@
       "stockCode": "SD3",
       "title": "BCTC Hợp nhất quý 2 năm 2026",
       "error": "Mistral batch job 3ed612bf-3410-4056-94ed-6a95a70ebace qua 45 phut van con trang thai QUEUED - dung cho (co the do hang doi batch cua Mistral bi nghen tam thoi), coi la loi tam thoi cho bao cao nay."
+    },
+    {
+      "stockCode": "SVD",
+      "title": "BCTC quý 2 năm 2026",
+      "error": "Mistral batch job 56239560-679b-416e-b745-c3c0559dbef7 qua 45 phut van con trang thai QUEUED - dung cho (co the do hang doi batch cua Mistral bi nghen tam thoi), coi la loi tam thoi cho bao cao nay."
+    },
+    {
+      "stockCode": "HNA",
+      "title": "BCTC quý 2 năm 2026",
+      "error": "Mistral batch job 2e8c1313-9799-4f33-bf58-dc6355151395 qua 45 phut van con trang thai QUEUED - dung cho (co the do hang doi batch cua Mistral bi nghen tam thoi), coi la loi tam thoi cho bao cao nay."
+    },
+    {
+      "stockCode": "SKG",
+      "title": "BCTC quý 2 năm 2026",
+      "error": "Mistral batch job 9ac7f47a-15c9-4672-8723-e2ca60640b87 qua 45 phut van con trang thai QUEUED - dung cho (co the do hang doi batch cua Mistral bi nghen tam thoi), coi la loi tam thoi cho bao cao nay."
+    },
+    {
+      "stockCode": "CCL",
+      "title": "BCTC quý 2 năm 2026",
+      "error": "Mistral batch job 44b5654e-4318-4909-acb3-0be9628709d5 qua 45 phut van con trang thai QUEUED - dung cho (co the do hang doi batch cua Mistral bi nghen tam thoi), coi la loi tam thoi cho bao cao nay."
+    },
+    {
+      "stockCode": "VHG",
+      "title": "BCTC quý 2 năm 2026",
+      "error": "Mistral batch job 02434c97-c42b-4433-8920-667fa75aec53 qua 45 phut van con trang thai QUEUED - dung cho (co the do hang doi batch cua Mistral bi nghen tam thoi), coi la loi tam thoi cho bao cao nay."
+    }
+  ],
+  "interruptedReports": [
+    {
+      "stockCode": "SAV",
+      "title": "BCTC quý 2 năm 2026"
+    },
+    {
+      "stockCode": "CAG",
+      "title": "BCTC quý 2 năm 2026"
+    },
+    {
+      "stockCode": "PPY",
+      "title": "BCTC quý 2 năm 2026"
+    },
+    {
+      "stockCode": "HAC",
+      "title": "BCTC quý 2 năm 2026"
+    },
+    {
+      "stockCode": "NFC",
+      "title": "BCTC quý 2 năm 2026"
+    },
+    {
+      "stockCode": "WSS",
+      "title": "BCTC quý 2 năm 2026"
+    },
+    {
+      "stockCode": "DSC",
+      "title": "BCTC quý 2 năm 2026"
+    },
+    {
+      "stockCode": "VE9",
+      "title": "BCTC quý 2 năm 2026"
+    },
+    {
+      "stockCode": "KHS",
+      "title": "BCTC quý 2 năm 2026"
+    },
+    {
+      "stockCode": "HCM",
+      "title": "BCTC quý 2 năm 2026"
+    },
+    {
+      "stockCode": "FMC",
+      "title": "BCTC Hợp nhất quý 2 năm 2026"
+    },
+    {
+      "stockCode": "DHG",
+      "title": "BCTC quý 2 năm 2026"
+    },
+    {
+      "stockCode": "D2D",
+      "title": "BCTC quý 2 năm 2026"
+    },
+    {
+      "stockCode": "VIG",
+      "title": "BCTC quý 2 năm 2026"
+    },
+    {
+      "stockCode": "PDN",
+      "title": "BCTC quý 2 năm 2026"
+    },
+    {
+      "stockCode": "THM",
+      "title": "BCTC quý 2 năm 2026"
+    },
+    {
+      "stockCode": "CSM",
+      "title": "BCTC quý 2 năm 2026"
+    },
+    {
+      "stockCode": "COM",
+      "title": "BCTC quý 2 năm 2026"
+    },
+    {
+      "stockCode": "MH3",
+      "title": "BCTC quý 2 năm 2026"
+    },
+    {
+      "stockCode": "MEL",
+      "title": "BCTC quý 2 năm 2026"
+    },
+    {
+      "stockCode": "DDN",
+      "title": "BCTC quý 2 năm 2026"
+    },
+    {
+      "stockCode": "VCX",
+      "title": "BCTC quý 2 năm 2026"
+    },
+    {
+      "stockCode": "ART",
+      "title": "Thuyết minh BCTC quý 2 năm 2026"
+    },
+    {
+      "stockCode": "UIC",
+      "title": "BCTC quý 2 năm 2026"
+    },
+    {
+      "stockCode": "NT2",
+      "title": "BCTC quý 2 năm 2026"
+    },
+    {
+      "stockCode": "NHA",
+      "title": "BCTC quý 2 năm 2026"
+    },
+    {
+      "stockCode": "MCM",
+      "title": "BCTC quý 2 năm 2026"
+    },
+    {
+      "stockCode": "L10",
+      "title": "BCTC quý 2 năm 2026"
+    },
+    {
+      "stockCode": "IMP",
+      "title": "BCTC quý 2 năm 2026"
+    },
+    {
+      "stockCode": "DTC",
+      "title": "BCTC quý 2 năm 2026"
+    },
+    {
+      "stockCode": "QTP",
+      "title": "BCTC quý 2 năm 2026"
+    },
+    {
+      "stockCode": "VCK",
+      "title": "BCTC quý 2 năm 2026"
+    },
+    {
+      "stockCode": "VCF",
+      "title": "BCTC quý 2 năm 2026"
+    },
+    {
+      "stockCode": "TDW",
+      "title": "BCTC quý 2 năm 2026"
+    },
+    {
+      "stockCode": "TCT",
+      "title": "BCTC quý 2 năm 2026"
+    },
+    {
+      "stockCode": "DAT",
+      "title": "BCTC quý 2 năm 2026"
+    },
+    {
+      "stockCode": "SRC",
+      "title": "BCTC quý 2 năm 2026"
+    },
+    {
+      "stockCode": "SPM",
+      "title": "BCTC quý 2 năm 2026"
+    },
+    {
+      "stockCode": "SFG",
+      "title": "BCTC quý 2 năm 2026"
+    },
+    {
+      "stockCode": "SCS",
+      "title": "BCTC quý 2 năm 2026"
+    },
+    {
+      "stockCode": "SBA",
+      "title": "BCTC quý 2 năm 2026"
+    },
+    {
+      "stockCode": "NDW",
+      "title": "BCTC quý 2 năm 2026"
+    },
+    {
+      "stockCode": "MDG",
+      "title": "BCTC quý 2 năm 2026"
+    },
+    {
+      "stockCode": "VE1",
+      "title": "BCTC quý 2 năm 2026"
+    },
+    {
+      "stockCode": "DMC",
+      "title": "BCTC quý 2 năm 2026"
+    },
+    {
+      "stockCode": "CLW",
+      "title": "BCTC quý 2 năm 2026"
+    },
+    {
+      "stockCode": "CHP",
+      "title": "BCTC quý 2 năm 2026"
+    },
+    {
+      "stockCode": "CCI",
+      "title": "BCTC quý 2 năm 2026"
+    },
+    {
+      "stockCode": "AFX",
+      "title": "BCTC quý 2 năm 2026"
+    },
+    {
+      "stockCode": "VLW",
+      "title": "BCTC quý 2 năm 2026"
+    },
+    {
+      "stockCode": "ORS",
+      "title": "BCTC quý 2 năm 2026"
+    },
+    {
+      "stockCode": "VLG",
+      "title": "BCTC quý 2 năm 2026"
+    },
+    {
+      "stockCode": "PXI",
+      "title": "BCTC quý 2 năm 2026"
+    },
+    {
+      "stockCode": "SZL",
+      "title": "BCTC quý 2 năm 2026"
+    },
+    {
+      "stockCode": "LAF",
+      "title": "BCTC quý 2 năm 2026"
+    },
+    {
+      "stockCode": "HRC",
+      "title": "BCTC quý 2 năm 2026"
+    },
+    {
+      "stockCode": "DTT",
+      "title": "BCTC quý 2 năm 2026"
+    },
+    {
+      "stockCode": "SBL",
+      "title": "BCTC quý 2 năm 2026"
+    },
+    {
+      "stockCode": "THN",
+      "title": "BCTC quý 2 năm 2026"
+    },
+    {
+      "stockCode": "SD3",
+      "title": "BCTC Hợp nhất quý 2 năm 2026"
+    },
+    {
+      "stockCode": "TTH",
+      "title": "BCTC quý 2 năm 2026"
+    },
+    {
+      "stockCode": "VLA",
+      "title": "BCTC quý 2 năm 2026"
+    },
+    {
+      "stockCode": "PMB",
+      "title": "BCTC quý 2 năm 2026"
+    },
+    {
+      "stockCode": "GMH",
+      "title": "BCTC quý 2 năm 2026"
+    },
+    {
+      "stockCode": "BSI",
+      "title": "BCTC quý 2 năm 2026"
+    },
+    {
+      "stockCode": "UPS",
+      "title": "BCTC quý 2 năm 2026"
+    },
+    {
+      "stockCode": "HKB",
+      "title": "BCTC Hợp nhất quý 2 năm 2026"
+    },
+    {
+      "stockCode": "HTT",
+      "title": "BCTC quý 2 năm 2026"
+    },
+    {
+      "stockCode": "GSM",
+      "title": "BCTC quý 2 năm 2026"
+    },
+    {
+      "stockCode": "S72",
+      "title": "BCTC quý 2 năm 2026"
+    },
+    {
+      "stockCode": "IVS",
+      "title": "BCTC quý 2 năm 2026"
+    },
+    {
+      "stockCode": "TCX",
+      "title": "BCTC quý 2 năm 2026"
+    },
+    {
+      "stockCode": "FGL",
+      "title": "BCTC quý 2 năm 2026"
+    },
+    {
+      "stockCode": "NAV",
+      "title": "BCTC quý 2 năm 2026"
+    },
+    {
+      "stockCode": "GSP",
+      "title": "BCTC quý 2 năm 2026"
+    },
+    {
+      "stockCode": "NTH",
+      "title": "BCTC quý 2 năm 2026"
+    },
+    {
+      "stockCode": "KHW",
+      "title": "BCTC quý 2 năm 2026"
+    },
+    {
+      "stockCode": "AAM",
+      "title": "BCTC quý 2 năm 2026"
+    },
+    {
+      "stockCode": "LDW",
+      "title": "BCTC quý 2 năm 2026"
+    },
+    {
+      "stockCode": "JOS",
+      "title": "BCTC quý 2 năm 2026"
+    },
+    {
+      "stockCode": "CMC",
+      "title": "BCTC quý 2 năm 2026"
     }
   ],
   "reports": [
