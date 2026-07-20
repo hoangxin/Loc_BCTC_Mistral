@@ -41,6 +41,39 @@ function excelFileHref(filePath: string): string {
   return `/api/report-file?filePath=${encodeURIComponent(filePath)}&kind=excel`;
 }
 
+// Sap xep theo cot chi tieu (yeu cau nguoi dung 2026-07-20) - bam vao tieu de
+// cot % de sap theo GIA TRI (percentChange) thay vi chi xem duoc tung dong
+// rieng le. Chu trinh 3 trang thai/lan bam CUNG 1 cot: null (mac dinh) ->
+// 'desc' (lon nhat truoc) -> 'asc' (nho nhat truoc) -> null. Bam sang COT
+// KHAC luon bat dau lai o 'desc'. null = quay ve sap xep MAC DINH theo thoi
+// gian tai gan nhat (report.lastUpdate giam dan) - CHU DONG sap lai theo
+// truong nay thay vi chi dua vao thu tu mang truyen vao, vi thu tu do KHONG
+// dam bao la theo lastUpdate (status.reports gop bao cao MOI vao CUOI mang,
+// xem lib/pipeline.ts).
+type SortState = { label: string; direction: 'desc' | 'asc' } | null;
+
+function getPercentValue(report: DownloadedReport, label: string): number | null {
+  const item = (report.analysis ?? []).find((i) => i.label === label);
+  return item?.unreliable ? null : (item?.percentChange ?? null);
+}
+
+function sortReports(reports: DownloadedReport[], sortState: SortState): DownloadedReport[] {
+  if (!sortState) {
+    return [...reports].sort((a, b) => new Date(b.lastUpdate).getTime() - new Date(a.lastUpdate).getTime());
+  }
+  const { label, direction } = sortState;
+  return [...reports].sort((a, b) => {
+    const av = getPercentValue(a, label);
+    const bv = getPercentValue(b, label);
+    // Gia tri thieu (—/can xem tay) luon xuong CUOI bat ke chieu sap xep -
+    // khong nen xen giua cac gia tri that, du dang sap tang hay giam dan.
+    if (av == null && bv == null) return 0;
+    if (av == null) return 1;
+    if (bv == null) return -1;
+    return direction === 'desc' ? bv - av : av - bv;
+  });
+}
+
 const MUTE_CONFIRM_TIMEOUT_MS = 5000;
 const HIGHLIGHT_STATES: HighlightState[] = ['blink', 'light', 'off'];
 
@@ -222,6 +255,7 @@ export default function ReportsSummaryTable({
 }) {
   const labels = useMemo(() => collectLabels(reports), [reports]);
   const [stockCodeQuery, setStockCodeQuery] = useState('');
+  const [sortState, setSortState] = useState<SortState>(null);
   const { isWatched, getHighlightOverride, setHighlightOverride } = useWatchlist();
 
   // Tim theo Ma CK (yeu cau user 2026-07-08) - so sanh khong phan biet hoa
@@ -231,6 +265,16 @@ export default function ReportsSummaryTable({
     if (!query) return reports;
     return reports.filter((report) => (report.stockCode ?? '').toUpperCase().includes(query));
   }, [reports, stockCodeQuery]);
+
+  const sortedReports = useMemo(() => sortReports(filteredReports, sortState), [filteredReports, sortState]);
+
+  function handleHeaderSortClick(label: string) {
+    setSortState((prev) => {
+      if (!prev || prev.label !== label) return { label, direction: 'desc' };
+      if (prev.direction === 'desc') return { label, direction: 'asc' };
+      return null;
+    });
+  }
 
   return (
     <div className="report-table-wrapper">
@@ -249,6 +293,14 @@ export default function ReportsSummaryTable({
         .summary-actions-buttons), khong phu thuoc allFilePaths/selectedFilePaths
         vi khong lien quan xuat/xoa bao cao. */}
         <WatchlistButton />
+        {/* Nut reset nhanh ve sap xep mac dinh (yeu cau nguoi dung 2026-07-20) -
+        CHI hien khi dang sap theo 1 cot chi tieu, tranh phai bam lai dung cot
+        do 2 lan (desc -> asc -> mac dinh) de quay ve. */}
+        {sortState && (
+          <button type="button" className="secondary-button" onClick={() => setSortState(null)}>
+            ↺ Sắp xếp mặc định
+          </button>
+        )}
         {labels.length === 0 && <span className="muted-note">(Chưa có tiêu chí đọc BCTC - cột % sẽ hiện khi có tiêu chí)</span>}
         {allFilePaths && selectedFilePaths && currentGeneratedAt !== undefined && (
           <div className="summary-actions-buttons">
@@ -278,9 +330,35 @@ export default function ReportsSummaryTable({
             <th className="stockcode-col">Mã CK</th>
             <th className="exchange-col">Sàn GD</th>
             <th>Loại BCTC</th>
-            {labels.map((label) => (
-              <th key={label} className="pct-col-header">{label}</th>
-            ))}
+            {labels.map((label) => {
+              const active = sortState?.label === label;
+              const arrow = active ? (sortState!.direction === 'desc' ? ' ▼' : ' ▲') : '';
+              return (
+                <th
+                  key={label}
+                  className={`pct-col-header pct-col-header-sortable ${active ? 'pct-col-header-sorted' : ''}`}
+                  role="button"
+                  tabIndex={0}
+                  onClick={() => handleHeaderSortClick(label)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      handleHeaderSortClick(label);
+                    }
+                  }}
+                  title={
+                    active
+                      ? sortState!.direction === 'desc'
+                        ? 'Đang sắp xếp: lớn nhất trước - bấm để đổi sang nhỏ nhất trước'
+                        : 'Đang sắp xếp: nhỏ nhất trước - bấm để quay về mặc định'
+                      : `Bấm để sắp xếp theo ${label}`
+                  }
+                >
+                  {label}
+                  {arrow}
+                </th>
+              );
+            })}
           </tr>
         </thead>
         <tbody>
@@ -291,7 +369,7 @@ export default function ReportsSummaryTable({
               </td>
             </tr>
           )}
-          {filteredReports.map((report) => {
+          {sortedReports.map((report) => {
             const byLabel = new Map((report.analysis ?? []).map((item) => [item.label, item]));
             // Watchlist (yeu cau nguoi dung 2026-07-18): ma trong watchlist in
             // dam + ca dong noi bat hon dong xung quanh (xem .watchlist-row/

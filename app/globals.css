@@ -224,6 +224,24 @@ tren man hinh sieu rong (4K) de header/tabs khong bi keo dai qua muc doc duoc. *
   overflow-wrap: normal;
 }
 
+/* Sap xep theo cot chi tieu (yeu cau nguoi dung 2026-07-20) - bam vao tieu de
+   cot % de sap theo gia tri (xem sortReports trong ReportsSummaryTable.tsx).
+   .pct-col-header-sorted danh dau cot dang duoc ap dung, giup nhan ra ngay
+   giua nhieu cot giong het nhau ve mau (header nen xam dong nhat, khong du
+   phan biet neu chi dua vao mui ten nho). */
+.pct-col-header-sortable {
+  cursor: pointer;
+  user-select: none;
+}
+
+.pct-col-header-sortable:hover {
+  color: var(--text);
+}
+
+.pct-col-header-sorted {
+  color: var(--accent);
+}
+
 /* Mã CK / Sàn GD: thu hep vua du chua noi dung, cho xuong dong neu can nhung
    khong cat ngang tu (yeu cau user 2026-07-08). */
 .stockcode-col,
