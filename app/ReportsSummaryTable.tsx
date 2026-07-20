@@ -359,7 +359,8 @@ export default function ReportsSummaryTable({
                       : `Bấm để sắp xếp theo ${label}`
                   }
                 >
-                  {label} <span className={`pct-col-sort-arrow ${active ? 'pct-col-sort-arrow-active' : ''}`}>{arrow}</span>
+                  {label}
+                  <span className={`pct-col-sort-arrow ${active ? 'pct-col-sort-arrow-active' : ''}`}>{arrow}</span>
                 </th>
               );
             })}

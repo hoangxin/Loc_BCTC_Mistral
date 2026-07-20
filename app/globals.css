@@ -232,6 +232,17 @@ tren man hinh sieu rong (4K) de header/tabs khong bi keo dai qua muc doc duoc. *
 .pct-col-header-sortable {
   cursor: pointer;
   user-select: none;
+  position: relative;
+}
+
+/* SUA 2026-07-20 (yeu cau nguoi dung: dua mui ten xuong goc duoi-phai o tieu
+   de) - them khoang trong duoi de chu tieu de (co the xuong toi 3 dong, vd
+   "PHẢI THU KHÁCH HÀNG") khong bi mui ten de len. Can selector du dac hieu
+   (.report-table th + 2 class) de THANG duoc `.report-table th, .report-table
+   td { padding: 10px 14px }` o tren (2 selector cung (0,1,1), rieng 1 class
+   don le se THUA vi thap hon, bat ke thu tu khai bao truoc/sau trong file). */
+.report-table th.pct-col-header-sortable {
+  padding-bottom: 22px;
 }
 
 .pct-col-header-sortable:hover {
@@ -242,17 +253,19 @@ tren man hinh sieu rong (4K) de header/tabs khong bi keo dai qua muc doc duoc. *
   color: var(--accent);
 }
 
-/* Mui ten sap xep LUON hien (yeu cau nguoi dung 2026-07-20) - mo nhat khi
-   chua active de khong lam roi tieu de, dam mau + đậm hon khi dang duoc ap
-   dung (xem pct-col-header-sorted o tren, dung chung 1 mau accent).
-   SUA 2026-07-20: opacity 0.4 + 10px qua nhat, gan nhu khong thay tren nen
-   header xam nhat #eef0f2 (nguoi dung bao "khong thay gi thay doi" du deploy
-   da len dung) - tang opacity + font-size + dung mau text-muted (dam hon han
-   nen) thay vi ke thua mau chu (von cung nhat) de tuong phan ro rang. */
+/* Mui ten sap xep LUON hien (yeu cau nguoi dung 2026-07-20) - o goc duoi-phai
+   o tieu de (position: absolute, xem .pct-col-header-sortable o tren), mau
+   xanh lam TUONG PHAN HAN voi mau chu tieu de (xam trung tinh
+   var(--text-muted) khi thuong, do var(--accent) khi active) thay vi chi la
+   1 sac xam khac gan nhu lan vao chu - yeu cau nguoi dung 2026-07-20 sau 2
+   lan sua truoc van chua du ro/chua dung vi tri mong muon. */
 .pct-col-sort-arrow {
-  opacity: 1;
-  font-size: 13px;
-  color: var(--text-muted);
+  position: absolute;
+  right: 6px;
+  bottom: 4px;
+  font-size: 12px;
+  line-height: 1;
+  color: #2563eb;
 }
 
 .pct-col-sort-arrow-active {
@@ -270,6 +283,19 @@ tren man hinh sieu rong (4K) de header/tabs khong bi keo dai qua muc doc duoc. *
 }
 
 .report-table th:last-child {
+  border-right: none;
+}
+
+/* Ranh gioi giua cac o DU LIEU cua tung ma (yeu cau nguoi dung 2026-07-20) -
+   NET DUT (khac voi vien tieu de o tren la net lien) de phan biet 2 vai tro:
+   tieu de la ranh gioi CO DINH giua cac cot, con o du lieu chi can 1 goi y
+   nhe nhang hon (net dut) tranh bang qua nang mat, dac biet voi bang nhieu
+   cot % nhu ngan hang (18 cot). */
+.report-table td {
+  border-right: 1px dashed #c9ccd2;
+}
+
+.report-table td:last-child {
   border-right: none;
 }
 
