@@ -176,6 +176,33 @@ async function downloadFileContent(fileId: string, apiKey: string): Promise<stri
   throw new Error(`Tai output_file that bai (HTTP ${lastStatus}) sau ${DOWNLOAD_RETRY_ATTEMPTS} lan thu`);
 }
 
+// SUA 2026-07-20 (su co that: 1 bao cao (PSD) bi nem loi ngay lap tuc trong
+// luc poll vi Mistral tra ve "503 upstream connect error / reset before
+// headers" - 1 lan reset ket noi tam thoi lam mat trang HET job dang OCR do
+// (phai OCR lai tu dau, ton tien lan 2), du job thuc te co the van dang chay
+// binh thuong ben Mistral. Retry NGAN ngay tai request GET nay (khong tao
+// job moi - giong het pattern downloadFileContent o tren), CHI cho loi ro
+// rang la tam thoi (5xx hoac fetch/ket noi that bai truoc khi co response) -
+// KHONG retry loi khac (vd 400/401) vi do la loi that, retry vo ich.
+const POLL_TRANSIENT_RETRY_ATTEMPTS = 3;
+const POLL_TRANSIENT_RETRY_DELAY_MS = 5000;
+const TRANSIENT_ERROR_PATTERN = /Mistral API loi \(5\d\d\)|fetch failed|ECONNRESET|ETIMEDOUT|EAI_AGAIN/;
+
+async function pollJobStatus(jobId: string, apiKey: string): Promise<MistralBatchJob> {
+  let lastError: unknown;
+  for (let attempt = 0; attempt < POLL_TRANSIENT_RETRY_ATTEMPTS; attempt++) {
+    try {
+      return await mistralRequest<MistralBatchJob>(`/v1/batch/jobs/${jobId}`, apiKey, { method: 'GET' });
+    } catch (error) {
+      lastError = error;
+      const message = error instanceof Error ? error.message : String(error);
+      if (!TRANSIENT_ERROR_PATTERN.test(message)) throw error;
+      if (attempt < POLL_TRANSIENT_RETRY_ATTEMPTS - 1) await sleep(POLL_TRANSIENT_RETRY_DELAY_MS);
+    }
+  }
+  throw lastError;
+}
+
 // Xem CANH BAO QUAN TRONG o dau file - thu ca 2 kha nang hinh dang pho bien
 // nhat cho 1 dong ket qua batch: (a) { custom_id, response: { body: {...} } }
 // (kieu OpenAI va da so provider khac) hoac (b) { custom_id, body: {...} }
@@ -202,18 +229,18 @@ export interface CallMistralOcrBatchOptions {
   pages?: number[];
 }
 
-// Drop-in thay callMistralOcr (./mistral-ocr.ts) khi da bat billing tren tai
-// khoan Mistral - hien CHUA duoc goi o dau trong pipeline chinh
-// (lib/export/financial-statements.ts van dung callMistralOcr dong bo nhu
-// cu), chi ton tai san sang de doi 1 dong import sau nay.
+// Drop-in thay callMistralOcr (./mistral-ocr.ts) - DA la duong OCR chinh
+// trong production tu 2026-07-12 (lib/export/financial-statements.ts import
+// va goi truc tiep o day; ban dong bo callMistralOcr chi con comment lai lam
+// fallback du phong, xem comment dau file financial-statements.ts).
 //
 // KHAC callMistralOcr: khong can "paced()" (gioi han 1 request/giay cua free
 // tier, xem mistral-ocr.ts) - tai khoan da bat billing co gioi han rate cao
 // hon han (chua do dac chinh xac, kiem tra lai neu gap 429 khi dung that).
-// Cung khong retry loi mang tam thoi kieu MAX_NETWORK_RETRIES nhu ban dong
-// bo - moi buoc (tao job/poll/tai file) deu la request rieng, that bai o
-// buoc nao se nem loi ngay, nguoi goi (financial-statements.ts, khi noi vao
-// that) da co san retry o tang cao hon (extractWithGroupCheckRetry) de xu ly.
+// Tao job/tai output_file da co retry rieng (uploadBatchFile khong, nhung
+// downloadFileContent va pollJobStatus co - xem 2 ham do); nguoi goi
+// (financial-statements.ts) van co them 1 lop retry o tang cao hon
+// (extractWithGroupCheckRetry) cho truong hop that su can OCR lai tu dau.
 export async function callMistralOcrBatch(filePath: string, options?: CallMistralOcrBatchOptions): Promise<MistralOcrResult> {
   const apiKey = process.env.MISTRAL_API_KEY;
   if (!apiKey) throw new Error('Thieu MISTRAL_API_KEY');
@@ -260,7 +287,7 @@ export async function callMistralOcrBatch(filePath: string, options?: CallMistra
       );
     }
     await sleep(POLL_INTERVAL_MS);
-    current = await mistralRequest<MistralBatchJob>(`/v1/batch/jobs/${job.id}`, apiKey, { method: 'GET' });
+    current = await pollJobStatus(job.id, apiKey);
   }
 
   if (current.status !== 'SUCCESS' || !current.output_file) {

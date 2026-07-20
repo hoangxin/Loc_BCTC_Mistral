@@ -56,8 +56,14 @@ jobs:
   run-fetch:
     runs-on: ubuntu-latest
     # Lau hon 15 phut cua news-digest.yml (chi scrape tin) vi pipeline nay OCR
-    # Mistral cho hang chuc bao cao/lan chay.
-    timeout-minutes: 60
+    # Mistral cho hang chuc bao cao/lan chay. NANG tu 60 len 120 phut
+    # (2026-07-20, su co Mistral batch nghen keo dai ca buoi chieu): 60 phut
+    # xung khac truc tiep voi MAX_POLL_DURATION_MS=45 phut (lib/ai/mistral-
+    # ocr-batch.ts) - chi can 2 bao cao ket lien tiep tren CUNG 1 worker la
+    # chac chan cham tran cu, huy ca job du flushProgress da giu duoc tien do.
+    # Day KHONG phai gioi han cung cua GitHub (runner do GitHub host cho phep
+    # toi 360 phut/job) - la con so tu chon, nen nang duoc tu do.
+    timeout-minutes: 120
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v7
