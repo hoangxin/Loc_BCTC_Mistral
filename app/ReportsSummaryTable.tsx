@@ -332,7 +332,12 @@ export default function ReportsSummaryTable({
             <th>Loại BCTC</th>
             {labels.map((label) => {
               const active = sortState?.label === label;
-              const arrow = active ? (sortState!.direction === 'desc' ? ' ▼' : ' ▲') : '';
+              // Luon hien dau mui ten (yeu cau nguoi dung 2026-07-20) - mo
+              // nhat/2 chieu (⇅) khi CHUA sap theo cot nay (goi y "bam duoc"),
+              // dam mau + 1 chieu ro rang (▼/▲) khi DANG sap theo cot nay -
+              // thay vi truoc day chi hien khi active (nguoi dung khong biet
+              // cot nao bam duoc neu chua tung bam thu).
+              const arrow = active ? (sortState!.direction === 'desc' ? '▼' : '▲') : '⇅';
               return (
                 <th
                   key={label}
@@ -354,8 +359,7 @@ export default function ReportsSummaryTable({
                       : `Bấm để sắp xếp theo ${label}`
                   }
                 >
-                  {label}
-                  {arrow}
+                  {label} <span className={`pct-col-sort-arrow ${active ? 'pct-col-sort-arrow-active' : ''}`}>{arrow}</span>
                 </th>
               );
             })}
