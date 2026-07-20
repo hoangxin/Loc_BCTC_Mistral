@@ -98,6 +98,21 @@ jobs:
       # duoc commit len git khi bi huy, mat het tien do. always() dam bao buoc
       # nay VAN chay du job thanh cong/loi/bi huy - git-auto-commit-action tu
       # kiem tra `git diff`, khong co gi thay doi thi khong tao commit rong.
+      #
+      # SUA 2026-07-20 (yeu cau nguoi dung, sau su co that: push code sua
+      # loi tu local ngay LUC job nay dang chay khien buoc commit ben duoi bi
+      # GitHub tu choi "non-fast-forward" - checkout luc dau job da CU hon
+      # nhieu so voi origin/main sau khi pipeline chay xong, co the mat toi
+      # 60 phut): dong bo lai voi origin/main NGAY TRUOC khi commit.
+      # --autostash tu cat tam data/latest-fetch.json/ocr-markdown DANG SUA
+      # (chua commit) qua 1 ben, rebase, roi khoi phuc lai - khong bi chan
+      # boi working tree co thay doi. An toan vi 2 nguon thay doi khong dung
+      # file: code push tu local KHONG dung data/latest-fetch.json, con file
+      # nay chi 1 workflow nay ghi (concurrency group o tren dam bao khong co
+      # 2 lan chay workflow nay chong nhau).
+      - name: Sync voi origin/main truoc khi commit
+        if: always()
+        run: git pull --rebase --autostash origin main
       - name: Commit updated status
         if: always()
         uses: stefanzweifel/git-auto-commit-action@v7
