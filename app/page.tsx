@@ -6,6 +6,7 @@ import FetchControls from './FetchControls';
 import CustomSourceForm from './CustomSourceForm';
 import ResultsByPeriodTabs from './ResultsByPeriodTabs';
 import Tabs from './Tabs';
+import FailedReportsBadge from './FailedReportsBadge';
 
 // "Tai moi tu lan tai cuoi" (app/FetchControls.tsx, mode 'sinceLast') can biet
 // lan gan nhat DA tai ky dang chon la khi nao - status.reports gop chung tat
@@ -53,7 +54,12 @@ export default function HomePage() {
               <strong>{status.periodLabel}</strong>
               {' · '}
               {status.totalFound} tìm thấy · {status.totalMatched} sau lọc · {status.downloaded} tải thành công
-              {status.failed.length > 0 && ` · ${status.failed.length} lỗi`}
+              {status.failed.length > 0 && (
+                <>
+                  {' · '}
+                  <FailedReportsBadge failed={status.failed} />
+                </>
+              )}
             </>
           )
         }

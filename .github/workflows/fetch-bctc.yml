@@ -89,7 +89,17 @@ jobs:
       # kem markdown OCR THO cua tung bao cao (lib/ocr-markdown-store.ts, GHI
       # DE theo ma+ky nen khong phinh theo lich su) de debug/dieu tra sau nay
       # (vd LCTT rong tren live) KHONG can OCR that lan 2.
+      #
+      # if: always() them 2026-07-20 (yeu cau nguoi dung, sau su co Mistral
+      # nghen hang doi lam ca batch chay lau): mac dinh GitHub Actions SKIP
+      # cac buoc con lai neu job bi HUY (vd cham timeout-minutes: 60 o tren) -
+      # truoc day nghia la data/latest-fetch.json tren dia (du lib/pipeline.ts
+      # da flush tung bao cao MOT xuong dia, xem flushProgress) KHONG BAO GIO
+      # duoc commit len git khi bi huy, mat het tien do. always() dam bao buoc
+      # nay VAN chay du job thanh cong/loi/bi huy - git-auto-commit-action tu
+      # kiem tra `git diff`, khong co gi thay doi thi khong tao commit rong.
       - name: Commit updated status
+        if: always()
         uses: stefanzweifel/git-auto-commit-action@v7
         with:
           commit_message: 'chore: cap nhat ket qua BCTC'

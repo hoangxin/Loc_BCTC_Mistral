@@ -70,16 +70,27 @@ const JOB_TIMEOUT_HOURS = 2;
 // TRAN CHO PHIA CLIENT rieng, THAP HON HAN JOB_TIMEOUT_HOURS (2h) - su co that
 // FUEVN100 Q2/2026 (2026-07-18): batch queue cua Mistral bi nghen tam thoi,
 // 1 job OCR (12 trang, thuong chi vai chuc giay-vai phut) treo o RUNNING toi
-// 58 phut - vi truoc day vong poll duoi day KHONG co tran nao rieng (chi dua
-// vao timeout_hours phia server), 1 bao cao cham bat thuong an het gan toan
-// bo ngan sach 60 phut cua CA job GitHub Actions (.github/workflows/
-// fetch-bctc.yml), khien job bi cancel giua chung, mat tat ca ket qua da OCR
-// xong cua CAC bao cao khac (khong commit duoc). Vuot tran nay chi nem loi
-// cho DUNG 1 bao cao dang xu ly (lib/pipeline.ts da co try/catch rieng tung
-// file, day vao failed[] - khong lam hong cac bao cao khac dang chay song
-// song), de worker ranh tay xu ly bao cao tiep theo thay vi ket toi khi het
-// gio.
-const MAX_POLL_DURATION_MS = 10 * 60 * 1000;
+// 58 phut. Vuot tran nay chi nem loi cho DUNG 1 bao cao dang xu ly (lib/
+// pipeline.ts da co try/catch rieng tung file, day vao failed[] - KHONG lam
+// hong cac worker/bao cao khac dang chay song song, va (2026-07-20) KHONG
+// con lam mat tien do cac bao cao ĐÃ xong truoc do nua - xem flushProgress
+// trong lib/pipeline.ts + `if: always()` o buoc commit trong .github/
+// workflows/fetch-bctc.yml), de worker ranh tay xu ly bao cao tiep theo.
+//
+// NANG tu 10 len 45 phut (2026-07-20, yeu cau nguoi dung): doi chieu that
+// qua Mistral batch-jobs API cho thay trong 1 dot Mistral nghen (cung ngay),
+// 14 job bi client bo cuoc o phut thu 10 deu THAT RA van chay tiep va
+// SUCCESS sau 23-34 phut tren server Mistral - nghia la da bi TINH PHI nhung
+// ket qua bi vut bo hoan toan (khong ai quay lai lay), roi con phai OCR LAI
+// (tra tien lan 2) khi user tai lai. 45 phut du du de bat duoc phan lon cac
+// truong hop nghen tam thoi kieu nay ma van nam duoi han GH Actions
+// timeout-minutes: 60 (co margin ~15 phut cho cac buoc con lai + cac bao cao
+// KHAC con lai trong hang doi cua CUNG worker do) - danh doi: neu 1 worker
+// gap NHIEU hon 1 bao cao bi nghen trong cung 1 lan chay, van co the vuot
+// tran 60 phut cua ca job (xem giai thich rui ro nay da trao doi voi nguoi
+// dung), nhung phan tien do cac bao cao/worker KHAC van duoc giu lai nho co
+// che flushProgress + if: always() o tren, khong con mat trang nhu truoc.
+const MAX_POLL_DURATION_MS = 45 * 60 * 1000;
 
 type MistralBatchJobStatus = 'QUEUED' | 'RUNNING' | 'SUCCESS' | 'FAILED' | 'TIMEOUT_EXCEEDED' | 'CANCELLATION_REQUESTED' | 'CANCELLED';
 

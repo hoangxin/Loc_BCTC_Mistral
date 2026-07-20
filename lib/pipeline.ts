@@ -1,4 +1,4 @@
-import { writeFileSync, mkdirSync, readFileSync, existsSync } from 'fs';
+import { writeFileSync, renameSync, mkdirSync, readFileSync, existsSync } from 'fs';
 import { join } from 'path';
 import { getPreviousQuarter } from './quarter';
 import { resolveQuarterTerm, fetchReportFilesForTerm, type ReportTerm, type ReportFile } from './vietstock-reports';
@@ -34,9 +34,17 @@ export function readStatus(): FetchStatus {
   return JSON.parse(readFileSync(STATUS_PATH, 'utf-8')) as FetchStatus;
 }
 
+// SUA 2026-07-20 (yeu cau nguoi dung, sau su co Mistral nghen hang doi lam
+// batch chay ~30 phut nhung ket qua CHI ghi 1 LAN DUY NHAT o cuoi
+// runFetchPipeline): ghi qua file tam roi rename - rename cung thu muc la
+// atomic (POSIX lan NTFS), tranh JSON bi ghi do neu process bi kill dung luc
+// dang writeFileSync (vd GitHub Actions huy job giua chung khi cham
+// timeout-minutes).
 function writeStatus(status: FetchStatus) {
   mkdirSync(DATA_DIR, { recursive: true });
-  writeFileSync(STATUS_PATH, JSON.stringify(status, null, 2), 'utf-8');
+  const tmpPath = `${STATUS_PATH}.tmp`;
+  writeFileSync(tmpPath, JSON.stringify(status, null, 2), 'utf-8');
+  renameSync(tmpPath, STATUS_PATH);
 }
 
 // Dung cho lib/custom-source.ts - them 1 bao cao tim duoc qua "nguon rieng"
@@ -201,6 +209,10 @@ export async function runFetchPipeline(options: RunFetchPipelineOptions = {}): P
     const destDir = join(DATA_DIR, 'reports', `${term.yearPeriod}-${periodSlug}`);
     mkdirSync(destDir, { recursive: true });
 
+    // Doc TRUOC khi vong lap ghi bat dau (chi 1 lan) - dung lam nen cho MOI
+    // lan flushProgress ben duoi, xem comment tai do.
+    const previousStatus = readStatus();
+
     // Goi dau tai -> giai nen -> OCR theo TUNG bao cao (2026-07-08, thay cho 3
     // giai doan tuan tu theo batch truoc day: tai HET -> giai nen HET -> OCR
     // HET) - moi worker xu ly TRON 1 bao cao qua ca 3 buoc truoc khi lay bao
@@ -220,6 +232,45 @@ export async function runFetchPipeline(options: RunFetchPipelineOptions = {}): P
     let downloadedCount = 0;
     let nextIndex = 0;
 
+    // Dung chung boi flushProgress (sau MOI bao cao) va khoi ket thuc ham (sau
+    // Promise.all) - CHI khac o `running`. BO SUNG vao previousStatus.reports/
+    // failed giong het logic cu (khong tao dong trung lap - xem
+    // reportIdentityKey), chi khac la duoc goi NHIEU LAN thay vi 1 lan duy
+    // nhat o cuoi.
+    function buildStatus(running: boolean): FetchStatus {
+      const newReports = reportEntries.sort((a, b) => a.idx - b.idx).map((e) => e.report);
+      const newFailed = failedEntries.sort((a, b) => a.idx - b.idx).map((e) => e.failed);
+      const newKeys = new Set(newReports.map(reportIdentityKey));
+      const keptReports = previousStatus.reports.filter((r) => !newKeys.has(reportIdentityKey(r)));
+      return {
+        running,
+        generatedAt: new Date().toISOString(),
+        periodLabel: periodDisplayLabel(term),
+        year: term.yearPeriod,
+        totalFound: allReports.length,
+        totalMatched: matched.length,
+        downloaded: downloadedCount,
+        failed: [...previousStatus.failed, ...newFailed],
+        reports: [...keptReports, ...newReports],
+        lastCustomSourceCheck: previousStatus.lastCustomSourceCheck,
+      };
+    }
+
+    // SUA 2026-07-20 (yeu cau nguoi dung, sau su co Mistral nghen hang doi
+    // lam ca batch chay ~30 phut ma KET QUA CHI duoc ghi 1 LAN DUY NHAT sau
+    // Promise.all - neu job bi GitHub Actions huy giua chung vi cham
+    // timeout-minutes, MAT SACH ca cac bao cao da OCR xong tu truoc): ghi
+    // data/latest-fetch.json ra dia NGAY sau moi bao cao (thanh cong hay that
+    // bai deu flush), khong doi het toan bo Promise.all. Neu process bi kill
+    // giua chung, file tren dia van la ban gan nhat co the, khong phai rong.
+    // Day chi la NUA sau cua fix - nua con lai la workflow (.github/workflows/
+    // fetch-bctc.yml) phai co `if: always()` o buoc commit de buoc do VAN
+    // chay ke ca khi job bi huy vi timeout (mac dinh GitHub SKIP cac buoc sau
+    // buoc bi huy, xem comment tai workflow).
+    function flushProgress() {
+      writeStatus(buildStatus(true));
+    }
+
     console.time('[perf] downloadResolveExtract');
     async function worker() {
       while (nextIndex < matched.length) {
@@ -236,6 +287,7 @@ export async function runFetchPipeline(options: RunFetchPipelineOptions = {}): P
             idx: index,
             failed: { stockCode: report.stockCode, title: report.title, error: error instanceof Error ? error.message : String(error) },
           });
+          flushProgress();
           continue;
         }
 
@@ -355,14 +407,12 @@ export async function runFetchPipeline(options: RunFetchPipelineOptions = {}): P
         // can nua, xoa NGAY (khong doi het batch nhu truoc) de data/reports/
         // khong phinh dan qua giua chung khi chay batch lon.
         await cleanupDownloadedFile(filePath);
+        flushProgress();
       }
     }
 
     await Promise.all(Array.from({ length: Math.min(PIPELINE_CONCURRENCY, matched.length) }, worker));
     console.timeEnd('[perf] downloadResolveExtract');
-
-    const newReports = reportEntries.sort((a, b) => a.idx - b.idx).map((e) => e.report);
-    const newFailed = failedEntries.sort((a, b) => a.idx - b.idx).map((e) => e.failed);
 
     // BO SUNG vao ket qua da co (khong tu xoa) - yeu cau user 2026-07-08: moi
     // lan bam "Tai BCTC" truoc day GHI DE toan bo status.reports, xoa mat ket
@@ -370,26 +420,10 @@ export async function runFetchPipeline(options: RunFetchPipelineOptions = {}): P
     // bao cao cua 1 cong ty trong CUNG ky) -> CHI giu 1 ban (ban MOI thay the
     // ban cu, du lieu moi hon), khong tao dong trung lap - theo dung yeu cau
     // user. Xoa het qua nut "Xoa" rieng (xem clearResults o tren), khong tu
-    // dong xoa o day.
-    const previousStatus = readStatus();
-    const newKeys = new Set(newReports.map(reportIdentityKey));
-    const keptReports = previousStatus.reports.filter((r) => !newKeys.has(reportIdentityKey(r)));
-    const reports = [...keptReports, ...newReports];
-    const failed = [...previousStatus.failed, ...newFailed];
-
-    const status: FetchStatus = {
-      running: false,
-      generatedAt: new Date().toISOString(),
-      periodLabel: periodDisplayLabel(term),
-      year: term.yearPeriod,
-      totalFound: allReports.length,
-      totalMatched: matched.length,
-      downloaded: downloadedCount,
-      failed,
-      reports,
-      lastCustomSourceCheck: previousStatus.lastCustomSourceCheck,
-    };
-
+    // dong xoa o day. (previousStatus da doc 1 lan truoc vong lap - xem
+    // buildStatus - dung chung cho ca cac lan flushProgress giua chung lan
+    // lan ghi cuoi nay.)
+    const status = buildStatus(false);
     writeStatus(status);
     return status;
   } catch (error) {
