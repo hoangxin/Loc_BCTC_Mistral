@@ -5,6 +5,7 @@
 // (da xac nhan qua doc code that: raw fetch, khong Octokit, cung ten bien
 // GITHUB_DISPATCH_TOKEN).
 import { dispatchFetchWorkflow } from '@/lib/github-dispatch';
+import { parseOcrMode } from '@/lib/ocr-mode';
 
 interface TriggerFetchBody {
   // Ky da chon tu dropdown (app/FetchControls.tsx, lay tu app/api/report-terms) -
@@ -20,6 +21,8 @@ interface TriggerFetchBody {
   // mode 'select') - danh sach ReportFile.fileInfoID. Khi co mat (khong
   // rong), ghi de hoan toan onlyMissing/reportLimit (xem lib/pipeline.ts).
   selectedFileInfoIds?: number[];
+  // Sync/batch (yeu cau nguoi dung 2026-07-21, xem lib/ocr-mode.ts).
+  ocrMode?: string;
 }
 
 export async function POST(request: Request) {
@@ -38,6 +41,7 @@ export async function POST(request: Request) {
     onlyMissing: body.onlyMissing ? '1' : '',
     reportLimit: body.reportLimit ? String(body.reportLimit) : '',
     selectedIds: body.selectedFileInfoIds?.length ? body.selectedFileInfoIds.join(',') : '',
+    ocrMode: parseOcrMode(body.ocrMode),
   });
 
   if (!result.ok) {

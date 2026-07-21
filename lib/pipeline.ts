@@ -13,6 +13,7 @@ import { classifyStatementScope } from './statement-scope';
 import { saveProductionOcrMarkdown } from './ocr-markdown-store';
 import type { FetchStatus, DownloadedReport, FailedReport } from './status';
 import { reportIdentityKey } from './report-identity';
+import { DEFAULT_OCR_MODE, type OcrMode } from './ocr-mode';
 
 const DATA_DIR = join(process.cwd(), 'data');
 const STATUS_PATH = join(DATA_DIR, 'latest-fetch.json');
@@ -166,6 +167,11 @@ export interface RunFetchPipelineOptions {
   // NHAT - ghi de hoan toan onlyMissing/reportLimit, CHI tai dung cac bao cao
   // nay (xem scopedReports duoi).
   selectedFileInfoIds?: number[];
+  // Sync/batch (yeu cau nguoi dung 2026-07-21, xem lib/ocr-mode.ts) - nguoi
+  // dung chon tren UI (app/FetchControls.tsx) moi lan "Tai BCTC". Khong
+  // truyen = DEFAULT_OCR_MODE (batch, giu hanh vi cu cho caller CLI/script cu
+  // chua sua, vd scripts/run-fetch.ts khi khong co FETCH_OCR_MODE).
+  ocrMode?: OcrMode;
 }
 
 // Dung chung boi ca CLI (scripts/run-fetch.ts) va GitHub Actions
@@ -192,6 +198,7 @@ export async function runFetchPipeline(options: RunFetchPipelineOptions = {}): P
       if (!resolved) throw new Error(`vietstock: khong tim thay ky bao cao "Quý ${quarter}" nam ${year}`);
       return resolved;
     })());
+  const ocrMode: OcrMode = options.ocrMode ?? DEFAULT_OCR_MODE;
 
   writeStatus({ ...readStatus(), running: true, error: undefined });
 
@@ -238,10 +245,24 @@ export async function runFetchPipeline(options: RunFetchPipelineOptions = {}): P
     // HET) - moi worker xu ly TRON 1 bao cao qua ca 3 buoc truoc khi lay bao
     // cao tiep theo, thay vi bat bao cao dau tien phai cho bao cao cuoi cung
     // tai xong moi duoc OCR. So worker uu tien cho buoc tai (huong loi nhieu
-    // nhat tu concurrency, giong DOWNLOAD_CONCURRENCY cu); buoc OCR ben trong
-    // moi worker da tu bi dieu tiet ve 1 request/giay o lib/ai/mistral-ocr.ts
-    // (gioi han Mistral free tier, xac nhan tu user 2026-07-08) nen khong lo
-    // nhieu worker OCR dong thoi gay 429.
+    // nhat tu concurrency, giong DOWNLOAD_CONCURRENCY cu).
+    //
+    // SUA 2026-07-21 (cau hoi nguoi dung "sync thi khong chay song song
+    // duoc a?" - CO, van chay song song duoc, comment cu de gay hieu lam):
+    // ca 2 nhanh OCR deu AN TOAN voi PIPELINE_CONCURRENCY worker chay dong
+    // thoi, nhung vi 2 LY DO khac nhau, khong phai vi bi ep tuan tu:
+    // - nhanh batch: moi bao cao la 1 batch job DOC LAP tren Mistral, khong
+    //   dung chung gioi han request-rate nao ca (nut that cua batch la hang
+    //   doi xu ly phia Mistral - dang nghen, xem memory
+    //   project_mistral_congestion_2026-07-20 - khong phai so luong request
+    //   client gui).
+    // - nhanh sync: TAT CA worker (bat ke may cai) dung CHUNG 1 bo dieu tiet
+    //   theo ngan sach 1.100 trang/60s trong lib/ai/mistral-ocr.ts (paced())-
+    //   dong thoi VAN duoc phep (khong ep tuan tu ve 1 request/giay nhu ban
+    //   cu 2026-07-08, DA LOI THOI - viet truoc khi bat billing 12/7, chua
+    //   bao gio kiem chung lai voi so lieu that tu admin console Mistral),
+    //   chi la TONG so trang ca 5 worker cong lai bi cham lai neu cham tran
+    //   ngan sach do, khong phai serialize tung request 1.
     const PIPELINE_CONCURRENCY = 5;
     // Gan idx theo thu tu trong `matched` de sap xep lai reports/failed o
     // cuoi - cac worker hoan thanh khong theo thu tu (concurrency), nhung UI
@@ -361,7 +382,7 @@ export async function runFetchPipeline(options: RunFetchPipelineOptions = {}): P
         for (const resolvedFile of resolved) {
           if (foundUsable) break; // da co du lieu THAT tu 1 file truoc do trong nhom nay - KHONG OCR them file nao nua
           try {
-            const content = await extractReportContent(resolvedFile);
+            const content = await extractReportContent(resolvedFile, ocrMode);
             // null = file bi loai co chu dich (vd ban dich tieng Anh cua
             // CHINH bao cao nay, xem lib/report-extract.ts) - khong phai loi,
             // bo qua im lang, khong day vao reportEntries lan failedEntries.

@@ -6,6 +6,7 @@ import type { QuarterPeriod } from '@/lib/quarter';
 import { isRegularQuarterTerm, periodDisplayLabel, periodFolderSlug } from '@/lib/period-label';
 import { formatTimestamp } from '@/lib/format';
 import { reportIdentityKey, type ReportIdentity } from '@/lib/report-identity';
+import type { OcrMode } from '@/lib/ocr-mode';
 import WatchlistButton from './WatchlistButton';
 import { useWatchlist } from './WatchlistContext';
 
@@ -67,6 +68,10 @@ export default function FetchControls({
   // (duy nhat, xem lib/vietstock-reports.ts) - reset ve rong moi khi doi ky
   // (xem effect loadPreview duoi).
   const [selectedFileInfoIds, setSelectedFileInfoIds] = useState<Set<number>>(new Set());
+  // Sync/batch (yeu cau nguoi dung 2026-07-21, xem lib/ocr-mode.ts, sau dot
+  // Mistral batch nghen keo dai) - mac dinh batch (re hon, hanh vi cu), nguoi
+  // dung tu doi sang sync ngay truoc khi bam "Tai BCTC" neu batch dang nghen.
+  const [ocrMode, setOcrMode] = useState<OcrMode>('batch');
   const [status, setStatus] = useState<Status>('idle');
   const [message, setMessage] = useState('');
   const pollHandle = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -262,6 +267,7 @@ export default function FetchControls({
           reportTermID: selectedTerm.reportTermID,
           yearPeriod: selectedTerm.yearPeriod,
           description: selectedTerm.description,
+          ocrMode,
           ...(showsCheckboxes ? { selectedFileInfoIds: Array.from(selectedFileInfoIds) } : { reportLimit }),
         }),
       });
@@ -357,6 +363,27 @@ export default function FetchControls({
             {effectiveMode === 'sinceLast' ? ' (tự động theo báo cáo còn thiếu - có thể bỏ tick/tick thêm)' : ''}
           </span>
         )}
+
+        <div className="mode-toggle" role="group" aria-label="Cách gọi Mistral OCR">
+          <button
+            type="button"
+            className={`mode-toggle-btn ${ocrMode === 'batch' ? 'active' : ''}`}
+            onClick={() => setOcrMode('batch')}
+            disabled={inputsDisabled}
+            title="Rẻ hơn ~50%, nhưng phụ thuộc hàng đợi xử lý của Mistral (có thể nghẽn)"
+          >
+            Batch
+          </button>
+          <button
+            type="button"
+            className={`mode-toggle-btn ${ocrMode === 'sync' ? 'active' : ''}`}
+            onClick={() => setOcrMode('sync')}
+            disabled={inputsDisabled}
+            title="Gọi trực tiếp, không qua hàng đợi - dùng khi Batch đang nghẽn"
+          >
+            Sync
+          </button>
+        </div>
 
         <button className="trigger-button" onClick={runFetch} disabled={triggerDisabled}>
           {busy ? 'Đang chạy...' : 'Tải BCTC'}

@@ -5,6 +5,7 @@ import { extractFinancialStatementsFromDoc } from './export/doc-statements';
 import { classifyBusinessType, type BusinessType } from './business-type';
 import type { FinancialStatements, UnreliableCells } from './export/statement-shared';
 import type { ResolvedReportFile } from './report-source';
+import { DEFAULT_OCR_MODE, type OcrMode } from './ocr-mode';
 
 // Diem noi DUY NHAT re nhanh theo dinh dang file (pdf/docx/doc, xem
 // lib/report-source.ts) de trich 3 bang - dung chung cho ca luong Vietstock
@@ -45,7 +46,7 @@ const NO_UNRELIABLE_CELLS: UnreliableCells = { balanceSheet: new Set(), incomeSt
 // hieu ngon ngu trong ten, da gap that HCM Q1/2026 2026-07-12). Caller
 // (lib/pipeline.ts/lib/custom-source.ts) phai tu kiem tra null va BO QUA file
 // nay (khong dua vao ket qua, khong tinh la loi).
-export async function extractReportContent(resolved: ResolvedReportFile): Promise<ReportContentResult | null> {
+export async function extractReportContent(resolved: ResolvedReportFile, ocrMode: OcrMode = DEFAULT_OCR_MODE): Promise<ReportContentResult | null> {
   if (resolved.format === 'docx') {
     const { statements, fullText, warnings } = await extractFinancialStatementsFromDocx(resolved.filePath);
     if (!looksLikeVietnameseText(fullText)) return null;
@@ -74,7 +75,7 @@ export async function extractReportContent(resolved: ResolvedReportFile): Promis
     // trang/lan den khi thay "Thuyet minh") - khong con nhanh rieng doan pham
     // vi tu text layer nua, xem CAP NHAT 2026-07-12 trong lib/pdf-text.ts.
     if (!scope?.totalPages) throw new Error(scope?.error || 'Khong xac dinh duoc tong so trang PDF');
-    const result = await extractFinancialStatementsWithOcrProbe(resolved.filePath, scope.totalPages);
+    const result = await extractFinancialStatementsWithOcrProbe(resolved.filePath, scope.totalPages, ocrMode);
     console.timeEnd(ocrLabel);
     return { ...result, fullText: null };
   } catch (error) {

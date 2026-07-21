@@ -1,5 +1,6 @@
 import { randomUUID } from 'crypto';
 import { dispatchFetchWorkflow } from '@/lib/github-dispatch';
+import { parseOcrMode } from '@/lib/ocr-mode';
 
 // "Them nguon rieng" - dispatch CUNG 1 workflow voi trigger-fetch
 // (.github/workflows/fetch-bctc.yml, mode=custom) - khong con chay
@@ -9,9 +10,11 @@ import { dispatchFetchWorkflow } from '@/lib/github-dispatch';
 // poll app/api/fetch-status doi chieu FetchStatus.lastCustomSourceCheck.
 export async function POST(request: Request) {
   let url: string | undefined;
+  let ocrMode = '';
   try {
-    const body = (await request.json()) as { url?: string };
+    const body = (await request.json()) as { url?: string; ocrMode?: string };
     url = body.url?.trim();
+    ocrMode = parseOcrMode(body.ocrMode);
   } catch {
     // bo qua, xu ly nhu thieu url o duoi
   }
@@ -21,7 +24,7 @@ export async function POST(request: Request) {
   }
 
   const requestId = randomUUID();
-  const result = await dispatchFetchWorkflow({ mode: 'custom', customUrl: url, requestId });
+  const result = await dispatchFetchWorkflow({ mode: 'custom', customUrl: url, requestId, ocrMode });
 
   if (!result.ok) {
     return Response.json({ error: result.error }, { status: result.status ?? 500 });

@@ -12,6 +12,7 @@ import { normalizeLabelText } from './export/statement-shared';
 import { addCustomReport, writeCustomSourceCheck } from './pipeline';
 import type { ReportFile } from './vietstock-reports';
 import type { DownloadedReport, FetchStatus } from './status';
+import { DEFAULT_OCR_MODE, type OcrMode } from './ocr-mode';
 
 // Nut "Them nguon rieng" (paste link web cong ty) - dung AI (Mistral chat,
 // xem lib/ai/mistral-chat.ts) duyet trang de tu tim file BCTC quy vua ket
@@ -148,7 +149,7 @@ async function downloadFile(fileUrl: string, destDir: string): Promise<string> {
 // bang (KHONG OCR toan van/ghi file xuat o day nua, xem lib/pipeline.ts va
 // lib/export/full-document.ts - OCR toan van gio la buoc RIENG, chi lam luc
 // user bam "Xuat" cho 1 bao cao cu the qua app/api/report-file).
-async function downloadAndProcessCustomReport(fileUrl: string, companyNameGuess: string | undefined): Promise<DownloadedReport> {
+async function downloadAndProcessCustomReport(fileUrl: string, companyNameGuess: string | undefined, ocrMode: OcrMode): Promise<DownloadedReport> {
   const destDir = join(process.cwd(), 'data', 'reports', 'custom');
   const filePath = await downloadFile(fileUrl, destDir);
 
@@ -183,7 +184,7 @@ async function downloadAndProcessCustomReport(fileUrl: string, companyNameGuess:
     let resolvedFile = resolved[0];
     let content: Awaited<ReturnType<typeof extractReportContent>> = null;
     for (const candidate of resolved) {
-      content = await extractReportContent(candidate);
+      content = await extractReportContent(candidate, ocrMode);
       if (content) {
         resolvedFile = candidate;
         break;
@@ -219,7 +220,7 @@ async function downloadAndProcessCustomReport(fileUrl: string, companyNameGuess:
   }
 }
 
-async function browseForReport(startUrl: string): Promise<CustomSourceResult> {
+async function browseForReport(startUrl: string, ocrMode: OcrMode): Promise<CustomSourceResult> {
   const { quarter, year } = getPreviousQuarter();
   const visited = new Set<string>();
   let currentUrl = startUrl;
@@ -248,7 +249,7 @@ async function browseForReport(startUrl: string): Promise<CustomSourceResult> {
         } catch {
           break;
         }
-        const report = await downloadAndProcessCustomReport(absoluteUrl, decision.companyNameGuess);
+        const report = await downloadAndProcessCustomReport(absoluteUrl, decision.companyNameGuess, ocrMode);
         return { found: true, report };
       }
 
@@ -278,8 +279,8 @@ async function browseForReport(startUrl: string): Promise<CustomSourceResult> {
 // lastCustomSourceCheck (ke ca found:false) qua writeCustomSourceCheck, day la
 // cach DUY NHAT app/CustomSourceForm.tsx (polling app/api/fetch-status) biet
 // duoc "da chay xong" thay vi cho toi khi het thoi gian poll.
-export async function runCustomSourceCheck(url: string, requestId: string): Promise<FetchStatus> {
-  const result = await browseForReport(url);
+export async function runCustomSourceCheck(url: string, requestId: string, ocrMode: OcrMode = DEFAULT_OCR_MODE): Promise<FetchStatus> {
+  const result = await browseForReport(url, ocrMode);
 
   if (result.found) {
     addCustomReport(result.report);

@@ -42,6 +42,10 @@ on:
         description: 'mode=clear: danh sach filePath can xoa rieng (phan cach dau phay). Rong = xoa toan bo.'
         type: string
         default: ''
+      ocrMode:
+        description: 'sync (goi API /v1/ocr truc tiep) hoac batch (mac dinh, re hon nhung dang phu thuoc hang doi Mistral)'
+        type: string
+        default: 'batch'
 
 permissions:
   contents: write
@@ -86,6 +90,7 @@ jobs:
           FETCH_CUSTOM_URL: ${{ github.event.inputs.customUrl }}
           FETCH_REQUEST_ID: ${{ github.event.inputs.requestId }}
           FETCH_CLEAR_FILE_PATHS: ${{ github.event.inputs.clearFilePaths }}
+          FETCH_OCR_MODE: ${{ github.event.inputs.ocrMode }}
         run: npx tsx scripts/run-fetch.ts
       # Commit data/latest-fetch.json neu co thay doi - cu push nay tu khien
       # Vercel deploy lai (Git integration mac dinh), day la cach client

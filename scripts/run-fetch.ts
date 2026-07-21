@@ -2,6 +2,7 @@ import { existsSync } from 'fs';
 import { join } from 'path';
 import { runFetchPipeline, clearResults } from '../lib/pipeline';
 import { runCustomSourceCheck } from '../lib/custom-source';
+import { parseOcrMode } from '../lib/ocr-mode';
 
 // Khac voi `npm run dev`/`next start` (Next.js tu nap .env), chay thang qua
 // tsx (`npm run fetch`, hoac tren GitHub Actions runner - xem
@@ -19,6 +20,10 @@ if (existsSync(envPath)) {
 // (mode=clear) - ca 3 deu goi tu CUNG 1 script nay tren GitHub Actions runner
 // (.github/workflows/fetch-bctc.yml).
 const mode = process.env.FETCH_MODE || 'term';
+// Sync/batch (yeu cau nguoi dung 2026-07-21, xem lib/ocr-mode.ts) - truyen tu
+// UI (app/FetchControls.tsx, app/CustomSourceForm.tsx) qua .github/workflows/
+// fetch-bctc.yml. Khong hop le/khong co = DEFAULT_OCR_MODE (batch).
+const ocrMode = parseOcrMode(process.env.FETCH_OCR_MODE);
 
 async function main() {
   if (mode === 'clear') {
@@ -37,7 +42,7 @@ async function main() {
     const url = process.env.FETCH_CUSTOM_URL;
     const requestId = process.env.FETCH_REQUEST_ID || '';
     if (!url) throw new Error('Thieu FETCH_CUSTOM_URL cho FETCH_MODE=custom');
-    const status = await runCustomSourceCheck(url, requestId);
+    const status = await runCustomSourceCheck(url, requestId, ocrMode);
     console.log(`Nguon rieng ${url}: ${status.lastCustomSourceCheck?.found ? 'tim thay' : 'chua co'}`);
     return;
   }
@@ -60,7 +65,7 @@ async function main() {
   const quarterOverride = process.env.FETCH_QUARTER ? Number(process.env.FETCH_QUARTER) : undefined;
   const yearOverride = process.env.FETCH_YEAR ? Number(process.env.FETCH_YEAR) : undefined;
 
-  const status = await runFetchPipeline({ term, quarter: quarterOverride, year: yearOverride, onlyMissing, reportLimit, selectedFileInfoIds });
+  const status = await runFetchPipeline({ term, quarter: quarterOverride, year: yearOverride, onlyMissing, reportLimit, selectedFileInfoIds, ocrMode });
   console.log(
     `${status.periodLabel}: tim thay ${status.totalFound}, sau loc ${status.totalMatched}, da tai file ${status.downloaded} (${status.failed.length} loi, ${status.interruptedReports.length} do dang chua xu ly xong).`
   );

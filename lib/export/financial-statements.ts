@@ -1,13 +1,18 @@
-// Doi sang Batch API (2026-07-12, sau khi bat billing tren Mistral console -
-// xem memory/reference_mistral_batch_api.md). Giu dong import dong bo cu O
-// DAY (comment lai, khong xoa) de doi lai nhanh neu callMistralOcrBatch gap
-// van de (dinh dang dong ket qua batch chua duoc xac nhan qua test that, xem
-// canh bao trong lib/ai/mistral-ocr-batch.ts):
-// import { callMistralOcr } from '../ai/mistral-ocr';
+// SUA 2026-07-21 (yeu cau nguoi dung, sau dot Mistral batch nghen keo dai
+// nhieu gio - xem memory project_mistral_congestion_2026-07-20): thay vi
+// hard-code 1 nhanh duy nhat (batch, tu 2026-07-12 - xem memory
+// reference_mistral_batch_api.md), nguoi dung TU CHON sync/batch tren UI moi
+// lan "Tai BCTC"/"Them nguon rieng" (xem lib/ocr-mode.ts, truyen xuyen suot
+// tu app/FetchControls.tsx qua GitHub Actions toi day). extractFinancialStatementsWithOcrProbe
+// duoi nhan them tham so ocrMode, re nhanh callMistralOcr (sync)/
+// callMistralOcrBatch (batch) NGAY TRONG vong lap probe (dung chung 1 logic
+// probe/merge/parse, chi khac ham OCR tung lo duoc goi).
+import { callMistralOcr } from '../ai/mistral-ocr';
 import { mkdir, writeFile } from 'fs/promises';
 import { join } from 'path';
 import { callMistralOcrBatch } from '../ai/mistral-ocr-batch';
 import type { MistralOcrPage } from '../ai/mistral-ocr';
+import type { OcrMode } from '../ocr-mode';
 import { validateFinancialStatements, findAllGroupSumMismatches, type TaggedGroupSumMismatch } from './validate-statements';
 import { containsNotesSectionMarker, parseStatementsFromMarkdown } from './markdown-tables';
 import { classifyBusinessType, type BusinessType } from '../business-type';
@@ -188,12 +193,17 @@ function toUnreliableCells(mismatches: TaggedGroupSumMismatch[]): UnreliableCell
 // truoc day (it lan goi hon, nhanh hon ro ret), mo rong 2 trang/lan (thay vi 1)
 // neu chua du - can bang giua toc do (it lan goi hon 1 trang/lan) va tranh OCR
 // du qua nhieu (khong quay lai lo lon 12 trang/lan luc mo rong).
-const INITIAL_PROBE_BATCH_SIZE = 12;
+//
+// GIAM tu 12 xuong 10 (2026-07-21, yeu cau nguoi dung, ap dung CHUNG cho ca 2
+// nhanh sync/batch vi cung di qua 1 vong lap nay): doi ty le lo dau/so lan mo
+// rong tu 12+4*2 sang 10+5*2 (van cung tran 20 trang, xem MAX_PROBE_PAGES).
+const INITIAL_PROBE_BATCH_SIZE = 10;
 // Sau lo dau, moi lan OCR THEM 2 trang moi (khong OCR lai cac trang cu - merge
 // vao ket qua da co) roi kiem tra lai ngay.
 const EXPAND_STEP = 2;
-// GIOI HAN TOI DA 20 trang/bao cao (yeu cau nguoi dung 2026-07-18: lo dau 12
-// trang + toi da 4 lo mo rong 2 trang = 12+4*2=20) - truoc day vong lap chi
+// GIOI HAN TOI DA 20 trang/bao cao (yeu cau nguoi dung 2026-07-18: lo dau 10
+// trang + toi da 5 lo mo rong 2 trang = 10+5*2=20, cap nhat ty le 2026-07-21) -
+// truoc day vong lap chi
 // dung o "totalPages" (het file) hoac tim thay "Thuyet minh", KHONG co tran
 // tren rieng, nen 1 tai lieu dai bat thuong (ma OCR mai khong ra dung tieu de
 // "Thuyet minh", vd do trang bi doc sai/thieu) co the OCR toi tan cuoi file
@@ -256,7 +266,11 @@ export function buildResultFromMarkdown(markdown: string, statements: FinancialS
   };
 }
 
-export async function extractFinancialStatementsWithOcrProbe(filePath: string, totalPages: number): Promise<ExtractFinancialStatementsResult> {
+export async function extractFinancialStatementsWithOcrProbe(
+  filePath: string,
+  totalPages: number,
+  ocrMode: OcrMode
+): Promise<ExtractFinancialStatementsResult> {
   const { markdown, statements, mismatches } = await extractWithGroupCheckRetry(filePath, async () => {
     const collected: MistralOcrPage[] = [];
     let cursor = 0;
@@ -267,8 +281,10 @@ export async function extractFinancialStatementsWithOcrProbe(filePath: string, t
       const step = collected.length === 0 ? INITIAL_PROBE_BATCH_SIZE : EXPAND_STEP;
       const batchEnd = Math.min(cursor + step, totalPages);
       const pagesZeroBased = Array.from({ length: batchEnd - cursor }, (_, i) => cursor + i);
-      // const { pages } = await callMistralOcr(filePath, { pages: pagesZeroBased }); // fallback dong bo, xem comment o dau file
-      const { pages } = await callMistralOcrBatch(filePath, { pages: pagesZeroBased });
+      const { pages } =
+        ocrMode === 'sync'
+          ? await callMistralOcr(filePath, { pages: pagesZeroBased })
+          : await callMistralOcrBatch(filePath, { pages: pagesZeroBased });
       collected.push(...pages);
       cursor = batchEnd;
 
@@ -297,13 +313,15 @@ export async function extractFinancialStatementsWithOcrProbe(filePath: string, t
         // TRUOC ca 3 bang chinh, khac han cau truc thong thuong "3 bang roi
         // toi Thuyet minh"): thiet ke ca he thong (INITIAL_PROBE_BATCH_SIZE,
         // xem comment tren) dua tren gia dinh da kiem chung qua nhieu bao cao
-        // that - CA 3 bang chinh luon nam TRON trong 12 trang dau. Neu lo dau
-        // nay parse ra 0 dong CA 3 bang, mo rong them (toi da 4 lan, 2
+        // that - CA 3 bang chinh luon nam TRON trong 10 trang dau. Neu lo dau
+        // nay parse ra 0 dong CA 3 bang, mo rong them (toi da 5 lan, 2
         // trang/lan) gan nhu chac chan cung khong tim thay gi (bang that con
         // nam xa hon ve sau, sau ca chuc trang thuyet minh) - dung NGAY thay
-        // vi ton them cac lan goi OCR mo rong vo ich (moi lan la 1 batch job
-        // rieng, co the tre neu hang doi Mistral nghen - xem MAX_POLL_DURATION_MS,
-        // lib/ai/mistral-ocr-batch.ts). Ket qua van di qua buildResultFromMarkdown
+        // vi ton them cac lan goi OCR mo rong vo ich (moi lan la 1 lan goi
+        // Mistral rieng - nhanh batch la 1 batch job rieng, co the tre neu
+        // hang doi Mistral nghen, xem MAX_POLL_DURATION_MS trong lib/ai/
+        // mistral-ocr-batch.ts; nhanh sync khong co rui ro nay nhung van ton
+        // round-trip khong can thiet). Ket qua van di qua buildResultFromMarkdown
         // nhu binh thuong, tu nhien duoc gan canh bao "CANH BAO: ca 3 bang
         // chinh...rong" (isEmptyParse o duoi) de nguoi dung biet can xem tay.
         if (isEmptyParse(parseStatementsFromMarkdown(markdownSoFar))) {

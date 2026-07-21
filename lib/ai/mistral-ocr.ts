@@ -21,27 +21,60 @@ function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-// Mistral OCR free tier: toi da 1 request/GIAY theo API key (xac nhan tu
-// user 2026-07-08) - vi pham la bi 429 (xem isRetryableStatus duoi), roi lai
-// cham vao RETRY_DELAY_MS o tren, TON THOI GIAN hon la cu gian cach dung tu
-// dau. Hang doi FIFO nay dam bao MOI request (moi worker cua
-// EXTRACT_CONCURRENCY, lib/report-extract.ts, ke ca cac vong "OCR probe" goi
-// lien tiep cho 1 bao cao - lib/export/financial-statements.ts) deu di qua
-// DUNG 1 diem nghen nay truoc khi bam ra ngoai, khong phu thuoc so luong
-// worker/goi dong thoi tu ben ngoai.
-const MIN_DISPATCH_INTERVAL_MS = 1000;
-let lastDispatchAt = 0;
+// SUA 2026-07-21 (yeu cau nguoi dung, sau khi tu tra admin console Mistral):
+// gioi han THAT cua "Document OCR rate limits" la 1.250 TRANG/PHUT (theo SO
+// TRANG tieu thu, khong phai so request) - khac han gia dinh cu "1 request/
+// giay" (ghi 2026-07-08, TRUOC khi bat billing 2026-07-12, chua bao gio kiem
+// chung lai). Gia dinh cu vua SAI LOAI gioi han vua LANG PHI ngan sach that:
+// 1 request/giay voi lo 10-12 trang chi dat ~600-720 trang/phut (~50-58%
+// ngan sach that), lo mo rong 2 trang/lan con te hon (~120 trang/phut).
+//
+// Doi sang dieu tiet theo TONG SO TRANG trong CUA SO TRUOT 60 GIAY, dat duoi
+// nguong that 1 chut (1.100, chua margin ~12%) - van dung 1 hang doi FIFO
+// dung chung (dispatchQueue) nhu co che cu de dam bao MOI request (moi worker
+// cua PIPELINE_CONCURRENCY, lib/pipeline.ts) deu di qua DUNG 1 diem nghen
+// nay - nhung gio cho phep NHIEU request lien tiep khong can cho neu ngan
+// sach con du (khac han "1 request/giay" ep TUAN TU tuyet doi ke ca khi ngan
+// sach con thua), tan dung dung ngan sach that thay vi ep cham 1 cach vo co.
+const PAGE_RATE_LIMIT_PER_MINUTE = 1100;
+const PAGE_RATE_WINDOW_MS = 60_000;
+
+// Nhat ky (thoi diem, so trang) cua tung lan da duoc "cho phep gui" trong cua
+// so 60s gan nhat - dung de tinh TONG so trang dang tinh vao gioi han, thay
+// vi chi 1 bien lastDispatchAt nhu co che cu (khong the bieu dien "ngan sach
+// con lai" theo kieu cu).
+let dispatchLog: { at: number; pages: number }[] = [];
 let dispatchQueue: Promise<void> = Promise.resolve();
 
-function paced<T>(fn: () => Promise<T>): Promise<T> {
-  const turn = dispatchQueue.then(async () => {
-    const wait = Math.max(0, lastDispatchAt + MIN_DISPATCH_INTERVAL_MS - Date.now());
-    if (wait > 0) await sleep(wait);
-    lastDispatchAt = Date.now();
-  });
+function sumPagesInWindow(now: number): number {
+  dispatchLog = dispatchLog.filter((entry) => now - entry.at < PAGE_RATE_WINDOW_MS);
+  return dispatchLog.reduce((sum, entry) => sum + entry.pages, 0);
+}
+
+async function waitForPageBudget(pageCount: number): Promise<void> {
+  for (;;) {
+    const now = Date.now();
+    const used = sumPagesInWindow(now);
+    if (used + pageCount <= PAGE_RATE_LIMIT_PER_MINUTE || dispatchLog.length === 0) {
+      // Truong hop dispatchLog rong nhung pageCount MOT MINH da vuot ngan
+      // sach (vd 1 tai lieu can OCR hon 1.100 trang cung luc, chua tung gap
+      // that nhung phong truoc de khong bao gio treo vo han cho) - van cho
+      // qua NGAY (khong the cho "du" duoc), Mistral se tu tra 429 neu that su
+      // vuot, retry mang o callMistralOcr se xu ly tiep.
+      dispatchLog.push({ at: now, pages: pageCount });
+      return;
+    }
+    const oldest = dispatchLog[0];
+    const waitMs = Math.max(50, PAGE_RATE_WINDOW_MS - (now - oldest.at) + 50);
+    await sleep(waitMs);
+  }
+}
+
+function paced<T>(pageCount: number, fn: () => Promise<T>): Promise<T> {
+  const turn = dispatchQueue.then(() => waitForPageBudget(pageCount));
   // Giu hang doi song ke ca khi luot truoc loi (turn tu no khong bao gio
-  // reject - chi cong doan sleep/gan lastDispatchAt) - "catch" o day chi de
-  // phong ngua, khong che loi that su cua fn (duoc tra qua turn.then(fn)).
+  // reject - chi cong doan cho ngan sach) - "catch" o day chi de phong ngua,
+  // khong che loi that su cua fn (duoc tra qua turn.then(fn)).
   dispatchQueue = turn.catch(() => {});
   return turn.then(fn);
 }
@@ -86,6 +119,19 @@ export async function callMistralOcr(filePath: string, options?: CallMistralOcrO
   const pdfBuffer = options?.pages ? await slicePdfPages(originalBuffer, options.pages) : originalBuffer;
   const base64Pdf = pdfBuffer.toString('base64');
 
+  // So trang THAT SU se OCR - dung de tru vao ngan sach 1.100 trang/phut
+  // (paced() o tren). CHUA xu ly truong hop khong truyen `options.pages` (OCR
+  // toan van) - hien CHI co lib/export/full-document.ts goi kieu nay, va ham
+  // do la DEAD CODE (khong noi nao trong production goi, xem comment dau file
+  // do) nen khong can tinh dung ngay bay gio (theo yeu cau nguoi dung
+  // 2026-07-21: chua dung toi thi chua lam). Neu sau nay kich hoat lai
+  // full-document.ts, PHAI doc so trang that cua file goc (vd qua pdf-lib
+  // PDFDocument.load(originalBuffer).getPageCount()) truoc dong nay, khong
+  // duoc de nguyen 0 - de 0 se lam paced() coi lan goi OCR TOAN VAN (co the
+  // hang chuc/tram trang) nhu khong ton ngan sach nao, pha vo dung muc dich
+  // gioi han 1.100 trang/phut.
+  const pageCount = options?.pages ? options.pages.length : 0;
+
   const body = JSON.stringify({
     model: process.env.MISTRAL_OCR_MODEL || 'mistral-ocr-latest',
     document: { type: 'document_url', document_url: `data:application/pdf;base64,${base64Pdf}` },
@@ -95,7 +141,7 @@ export async function callMistralOcr(filePath: string, options?: CallMistralOcrO
   let lastError: unknown;
   for (let attempt = 0; attempt < MAX_NETWORK_RETRIES; attempt++) {
     try {
-      const response = await paced(() =>
+      const response = await paced(pageCount, () =>
         fetch('https://api.mistral.ai/v1/ocr', {
           method: 'POST',
           headers: { Authorization: `Bearer ${apiKey}`, 'content-type': 'application/json' },
