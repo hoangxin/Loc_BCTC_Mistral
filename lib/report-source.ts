@@ -86,7 +86,17 @@ const ENGLISH_FINANCIAL_TERM_PATTERNS: RegExp[] = [
   /reviewed[_-]?report/i,
 ];
 
+// "vi_en"/"vi-en" (2 ngon ngu GOP CHUNG 1 file, khac han "en" dung MOT MINH)
+// KHONG duoc coi la "chi tieng Anh" - bug that QTP Q2/2026 (2026-07-21):
+// ten file that "1_qtp_..._vi_en_baocaotaichinhquy2_2026_signed.pdf" (53
+// trang, LA BAN CHINH THAT - gop ca Viet lan Anh trong 1 file scan) bi loc
+// NHAM vi "en" dung ngay sau "_" khop dung pattern token o duoi - lam MAT
+// HOAN TOAN ban BCTC that, chi con lai 2 van ban phu ngan (giai trinh/cong
+// bo thong tin) - ca 2 deu parse rong, tao ra 2 dong ket qua TRUNG LAP rong
+// cho QTP (xem project_qtp_vi_en_filter_bug_2026-07-21). "vi" ngay truoc
+// "en" la dau hieu RO RANG file gop ca 2 ngon ngu, uu tien kiem tra truoc.
 function isEnglishVariantEntry(entryName: string): boolean {
+  if (/vi[_-]en([_.\-]|$)/i.test(entryName)) return false;
   return /(^|[_-])en([_.\-]|$)/i.test(entryName) || ENGLISH_FINANCIAL_TERM_PATTERNS.some((p) => p.test(entryName));
 }
 
