@@ -69,9 +69,11 @@ export default function FetchControls({
   // (xem effect loadPreview duoi).
   const [selectedFileInfoIds, setSelectedFileInfoIds] = useState<Set<number>>(new Set());
   // Sync/batch (yeu cau nguoi dung 2026-07-21, xem lib/ocr-mode.ts, sau dot
-  // Mistral batch nghen keo dai) - mac dinh batch (re hon, hanh vi cu), nguoi
-  // dung tu doi sang sync ngay truoc khi bam "Tai BCTC" neu batch dang nghen.
-  const [ocrMode, setOcrMode] = useState<OcrMode>('batch');
+  // Mistral batch nghen keo dai) - KHONG hien san (yeu cau nguoi dung sua lai
+  // ngay sau khi thay toggle luon hien): bam "Tai BCTC" CHI mo 2 lua chon
+  // Batch/Sync (chua tai gi ca), bam 1 trong 2 moi thuc su goi API. Xem
+  // ocrChoiceOpen duoi.
+  const [ocrChoiceOpen, setOcrChoiceOpen] = useState(false);
   const [status, setStatus] = useState<Status>('idle');
   const [message, setMessage] = useState('');
   const pollHandle = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -256,8 +258,9 @@ export default function FetchControls({
     }, POLL_INTERVAL_MS);
   }
 
-  async function runFetch() {
+  async function runFetch(ocrMode: OcrMode) {
     if (!selectedTerm) return;
+    setOcrChoiceOpen(false);
     setStatus('loading');
     try {
       const response = await fetch('/api/trigger-fetch', {
@@ -309,6 +312,20 @@ export default function FetchControls({
             ))}
           </select>
         </label>
+
+        {/* Chuyen len ngay sau "Ky bao cao", truoc "Tu lan tai cuoi" (yeu cau
+        nguoi dung 2026-07-21) - truoc do nam o cuoi dong, sau nut Tai BCTC. */}
+        {previewStatus === 'ready' && previewReports && (
+          <label className="field">
+            <span className="field-label">Tìm theo Mã CK</span>
+            <input
+              type="text"
+              value={stockCodeQuery}
+              onChange={(e) => setStockCodeQuery(e.target.value)}
+              placeholder="VD: IDV"
+            />
+          </label>
+        )}
 
         <div className="mode-toggle" role="group" aria-label="Cách lấy BCTC">
           {isCurrentQuarter ? (
@@ -364,30 +381,38 @@ export default function FetchControls({
           </span>
         )}
 
-        <div className="mode-toggle" role="group" aria-label="Cách gọi Mistral OCR">
-          <button
-            type="button"
-            className={`mode-toggle-btn ${ocrMode === 'batch' ? 'active' : ''}`}
-            onClick={() => setOcrMode('batch')}
-            disabled={inputsDisabled}
-            title="Rẻ hơn ~50%, nhưng phụ thuộc hàng đợi xử lý của Mistral (có thể nghẽn)"
-          >
-            Batch
+        {/* Bam "Tai BCTC" CHUA tai gi ca - chi mo 2 lua chon Batch/Sync (yeu
+        cau nguoi dung 2026-07-21, sua lai ngay sau ban dau hien toggle san):
+        bam 1 trong 2 moi thuc su goi /api/trigger-fetch. */}
+        {!ocrChoiceOpen ? (
+          <button className="trigger-button" onClick={() => setOcrChoiceOpen(true)} disabled={triggerDisabled}>
+            {busy ? 'Đang chạy...' : 'Tải BCTC'}
           </button>
-          <button
-            type="button"
-            className={`mode-toggle-btn ${ocrMode === 'sync' ? 'active' : ''}`}
-            onClick={() => setOcrMode('sync')}
-            disabled={inputsDisabled}
-            title="Gọi trực tiếp, không qua hàng đợi - dùng khi Batch đang nghẽn"
-          >
-            Sync
-          </button>
-        </div>
-
-        <button className="trigger-button" onClick={runFetch} disabled={triggerDisabled}>
-          {busy ? 'Đang chạy...' : 'Tải BCTC'}
-        </button>
+        ) : (
+          <div className="mode-toggle" role="group" aria-label="Chọn cách gọi Mistral OCR">
+            <button
+              type="button"
+              className="trigger-button"
+              onClick={() => runFetch('batch')}
+              disabled={triggerDisabled}
+              title="Rẻ hơn ~50%, nhưng phụ thuộc hàng đợi xử lý của Mistral (có thể nghẽn)"
+            >
+              Batch
+            </button>
+            <button
+              type="button"
+              className="trigger-button"
+              onClick={() => runFetch('sync')}
+              disabled={triggerDisabled}
+              title="Gọi trực tiếp, không qua hàng đợi - dùng khi Batch đang nghẽn"
+            >
+              Sync
+            </button>
+            <button type="button" className="secondary-button" onClick={() => setOcrChoiceOpen(false)}>
+              Huỷ
+            </button>
+          </div>
+        )}
 
         {/* Tim theo Ma CK + Watchlist dua len CHUNG dong voi "Lựa chọn báo cáo"
         (yeu cau nguoi dung 2026-07-18 - toi da hoa khong gian doc cho bang Ma
@@ -400,15 +425,6 @@ export default function FetchControls({
             <span className="muted-note">
               {previewReports.length} báo cáo trong danh mục {selectedTerm ? periodDisplayLabel(selectedTerm) : ''} (theo Vietstock)
             </span>
-            <label className="field">
-              <span className="field-label">Tìm theo Mã CK</span>
-              <input
-                type="text"
-                value={stockCodeQuery}
-                onChange={(e) => setStockCodeQuery(e.target.value)}
-                placeholder="VD: IDV"
-              />
-            </label>
             <WatchlistButton />
           </>
         )}

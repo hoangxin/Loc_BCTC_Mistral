@@ -37,6 +37,16 @@ function formatPercent(value: number | null | undefined): string {
   return `${sign}${value.toFixed(1)}%`;
 }
 
+// Tooltip hover cho o highlight vang (yeu cau nguoi dung 2026-07-21) - hien
+// so goc dang "kỳ này/kỳ trước" (vd doanh thu thuan tang 30% -> hover thay
+// "150.000.000.000 / 115.000.000.000") thay vi chi thay % ma khong ro so
+// tuyet doi. Dinh dang so kieu Viet (dau . ngan cach hang nghin, dung
+// 'vi-VN' - khong lam tron, cac chi tieu nay luon la so nguyen VND tu OCR).
+function formatCompareTooltip(current: number | null | undefined, prior: number | null | undefined): string | undefined {
+  if (current == null || prior == null) return undefined;
+  return `${current.toLocaleString('vi-VN')} / ${prior.toLocaleString('vi-VN')}`;
+}
+
 function excelFileHref(filePath: string): string {
   return `/api/report-file?filePath=${encodeURIComponent(filePath)}&kind=excel`;
 }
@@ -117,11 +127,13 @@ function MuteableHighlightCell({
   currentState,
   onSetState,
   displayValue,
+  compareTooltip,
 }: {
   label: string;
   currentState: HighlightState;
   onSetState: (state: HighlightState) => void;
   displayValue: string;
+  compareTooltip?: string;
 }) {
   const [armed, setArmed] = useState(false);
   const [popoverPos, setPopoverPos] = useState<{ top: number; left: number } | null>(null);
@@ -189,7 +201,7 @@ function MuteableHighlightCell({
   const tierClass = tierClassForState(currentState);
 
   return (
-    <td className={`pct-col pct-col-highlighted ${tierClass}`}>
+    <td className={`pct-col pct-col-highlighted ${tierClass}`} title={compareTooltip}>
       <input
         ref={checkboxRef}
         type="checkbox"
@@ -488,6 +500,7 @@ export default function ReportsSummaryTable({
                       currentState={currentState}
                       onSetState={(state) => setHighlightOverride(key, state)}
                       displayValue={formatPercent(item?.percentChange)}
+                      compareTooltip={formatCompareTooltip(item?.currentValue, item?.priorValue)}
                     />
                   );
                 })}

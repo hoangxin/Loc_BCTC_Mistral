@@ -13,9 +13,10 @@ const MAX_POLL_MS = 15 * 60 * 1000;
 export default function CustomSourceForm() {
   const [open, setOpen] = useState(false);
   const [url, setUrl] = useState('');
-  // Sync/batch (yeu cau nguoi dung 2026-07-21, xem lib/ocr-mode.ts) - giong
-  // FetchControls.tsx, mac dinh batch.
-  const [ocrMode, setOcrMode] = useState<OcrMode>('batch');
+  // Sync/batch (yeu cau nguoi dung 2026-07-21, xem lib/ocr-mode.ts va
+  // FetchControls.tsx) - bam "Enter"/go phim Enter CHUA goi gi ca, chi mo 2
+  // lua chon Batch/Sync, bam 1 trong 2 moi thuc su submit.
+  const [ocrChoiceOpen, setOcrChoiceOpen] = useState(false);
   const [status, setStatus] = useState<Status>('idle');
   const [message, setMessage] = useState('');
   const pollHandle = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -65,8 +66,9 @@ export default function CustomSourceForm() {
     }, POLL_INTERVAL_MS);
   }
 
-  async function submit() {
+  async function submit(ocrMode: OcrMode) {
     if (!url.trim()) return;
+    setOcrChoiceOpen(false);
     setStatus('loading');
     setMessage('');
     try {
@@ -111,33 +113,39 @@ export default function CustomSourceForm() {
         value={url}
         onChange={(e) => setUrl(e.target.value)}
         onKeyDown={(e) => {
-          if (e.key === 'Enter') submit();
+          if (e.key === 'Enter') setOcrChoiceOpen(true);
         }}
         disabled={busy}
       />
-      <div className="mode-toggle" role="group" aria-label="Cách gọi Mistral OCR">
-        <button
-          type="button"
-          className={`mode-toggle-btn ${ocrMode === 'batch' ? 'active' : ''}`}
-          onClick={() => setOcrMode('batch')}
-          disabled={busy}
-          title="Rẻ hơn ~50%, nhưng phụ thuộc hàng đợi xử lý của Mistral (có thể nghẽn)"
-        >
-          Batch
+      {!ocrChoiceOpen ? (
+        <button className="trigger-button" onClick={() => setOcrChoiceOpen(true)} disabled={busy}>
+          {busy ? 'Đang tìm...' : 'Enter'}
         </button>
-        <button
-          type="button"
-          className={`mode-toggle-btn ${ocrMode === 'sync' ? 'active' : ''}`}
-          onClick={() => setOcrMode('sync')}
-          disabled={busy}
-          title="Gọi trực tiếp, không qua hàng đợi - dùng khi Batch đang nghẽn"
-        >
-          Sync
-        </button>
-      </div>
-      <button className="trigger-button" onClick={submit} disabled={busy}>
-        {busy ? 'Đang tìm...' : 'Enter'}
-      </button>
+      ) : (
+        <div className="mode-toggle" role="group" aria-label="Chọn cách gọi Mistral OCR">
+          <button
+            type="button"
+            className="trigger-button"
+            onClick={() => submit('batch')}
+            disabled={busy}
+            title="Rẻ hơn ~50%, nhưng phụ thuộc hàng đợi xử lý của Mistral (có thể nghẽn)"
+          >
+            Batch
+          </button>
+          <button
+            type="button"
+            className="trigger-button"
+            onClick={() => submit('sync')}
+            disabled={busy}
+            title="Gọi trực tiếp, không qua hàng đợi - dùng khi Batch đang nghẽn"
+          >
+            Sync
+          </button>
+          <button type="button" className="secondary-button" onClick={() => setOcrChoiceOpen(false)} disabled={busy}>
+            Huỷ
+          </button>
+        </div>
+      )}
       <button className="secondary-button" onClick={() => setOpen(false)} disabled={busy}>
         Đóng
       </button>

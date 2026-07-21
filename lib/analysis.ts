@@ -23,6 +23,16 @@ export interface AnalysisRow {
   // percentChange bi ep ve null de tranh hien so SAI TRONG NHU DUNG, UI/export
   // can hien thi CANH BAO rieng cho truong hop nay thay vi "—" thong thuong.
   unreliable: boolean;
+  // So lieu THO (VND, chua lam tron) dung de tinh percentChange - them
+  // 2026-07-21 (yeu cau nguoi dung) de UI hien tooltip "kỳ này/kỳ trước" khi
+  // hover o highlight vang, thay vi chi thay % ma khong biet so goc. LUON lay
+  // tu gia tri OCR doc duoc (null neu khong tim thay dong/o), KHONG bi ep ve
+  // null khi unreliable=true nhu percentChange - o do CHI ap dung cho suy
+  // luan % (co the sai do OCR gop/bia dong), khong xoa mat chinh so da doc
+  // duoc; UI hien tai chi dung 2 truong nay cho cac o co tier (khong bao gio
+  // la unreliable, xem ReportsSummaryTable.tsx) nen khong xung dot.
+  currentValue: number | null;
+  priorValue: number | null;
 }
 
 interface Thresholds {
@@ -1142,7 +1152,7 @@ function buildAnalysisRows(statements: FinancialStatements, metrics: MetricDef[]
           : incomeStatementPeriods;
 
     if (periods === null) {
-      return { label: metric.label, percentChange: null, tier: null, unreliable: false };
+      return { label: metric.label, percentChange: null, tier: null, unreliable: false, currentValue: null, priorValue: null };
     }
 
     const unreliableCellsForTable =
@@ -1155,7 +1165,14 @@ function buildAnalysisRows(statements: FinancialStatements, metrics: MetricDef[]
     const prior = sumFindersAtColumn(table, metric.finders, periods.priorIndex, unreliableCellsForTable);
     const unreliable = current.unreliable || prior.unreliable;
     const percentChange = unreliable ? null : computePercentChange(current.value, prior.value);
-    return { label: metric.label, percentChange, tier: tierFor(percentChange, metric.thresholds), unreliable };
+    return {
+      label: metric.label,
+      percentChange,
+      tier: tierFor(percentChange, metric.thresholds),
+      unreliable,
+      currentValue: current.value,
+      priorValue: prior.value,
+    };
   });
 }
 
