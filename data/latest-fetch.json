@@ -1,9 +1,9 @@
 {
   "running": false,
-  "generatedAt": "2026-07-21T03:39:33.513Z",
+  "generatedAt": "2026-07-21T06:07:14.514Z",
   "periodLabel": "Quý 2/2026",
   "year": 2026,
-  "totalFound": 309,
+  "totalFound": 348,
   "totalMatched": 1,
   "downloaded": 1,
   "failed": [
@@ -126,6 +126,11 @@
       "stockCode": "TVS",
       "title": "BCTC Hợp nhất quý 2 năm 2026",
       "error": "Mistral batch job 9cbffb8d-79e3-451b-9d6f-aeef2a1cc58a qua 45 phut van con trang thai QUEUED - dung cho (co the do hang doi batch cua Mistral bi nghen tam thoi), da huy job de tranh bi tinh phi cho ket qua se khong lay ve, coi la loi tam thoi cho bao cao nay."
+    },
+    {
+      "stockCode": "NCT",
+      "title": "BCTC quý 2 năm 2026",
+      "error": "Mistral batch job 56d75a54-2e68-486d-a19a-27e221a9eb02 qua 45 phut van con trang thai QUEUED - dung cho (co the do hang doi batch cua Mistral bi nghen tam thoi), da huy job de tranh bi tinh phi cho ket qua se khong lay ve, coi la loi tam thoi cho bao cao nay."
     }
   ],
   "interruptedReports": [],
