@@ -1,3 +1,105 @@
+Mẫu số 01-A
+
+CÔNG TY CỔ PHẦN
+CHỨNG KHOÁN PHÚ HƯNG
+
+CỘNG HOÀ XÃ HỘI CHỦ NGHĨA VIỆT NAM
+Độc lập - Tự do - Hạnh phúc
+
+Số: 143/2026/PHS-PL
+
+TP. Hồ Chí Minh, ngày 17 tháng 07 năm 2026
+
+# CÔNG BỐ THÔNG TIN ĐỊNH KỲ BÁO CÁO TÀI CHÍNH
+
+Kính gửi: Sở Giao dịch Chứng khoán Hà Nội
+
+Thực hiện quy định tại khoản 3 Điều 14 Thông tư số 96/2020/TT-BTC ngày 16/11/2020 của Bộ Tài chính hướng dẫn công bố thông tin trên thị trường chứng khoán, Công ty Cổ phần Chứng Khoán Phú Hưng thực hiện công bố thông tin báo cáo tài chính (BCTC) quý 2/2026 với Sở Giao dịch Chứng khoán Hà Nội như sau:
+
+1. Tên tổ chức: CÔNG TY CỔ PHẦN CHỨNG KHOÁN PHÚ HƯNG
+
+- Mã chứng khoán: PHS
+- Địa chỉ: Tầng 21, Phú Mỹ Hưng Tower, 08 Hoàng Văn Thái, Phường Tân Mỹ, TP. Hồ Chí Minh.
+- Điện thoại liên hệ/Tel: (+84 28) 5413 5479 Fax: (+84 28) 5413 5472
+- Email: info@phs.vn Website: www.phs.vn
+
+2. Nội dung thông tin công bố:
+
+- BCTC quý 2/2026:
+  ☑ BCTC riêng (TCNY không có công ty con và đơn vị kế toán cấp trên có đơn vị trực thuộc);
+  ☐ BCTC hợp nhất (TCNY có công ty con);
+  ☐ BCTC tổng hợp (TCNY có đơn vị kế toán trực thuộc tổ chức bộ máy kế toán riêng).
+- Các trường hợp thuộc diện phải giải trình nguyên nhân:
+  + Tổ chức kiểm toán đưa ra ý kiến không phải là ý kiến chấp nhận toàn phần đối với BCTC (đối với BCTC 2025 được kiểm toán):
+
+☐ Có
+
+☑ Không
+
+Văn bản giải trình trong trường hợp tích có:
+
+☐ Có
+
+☐ Không
+
++ Lợi nhuận sau thuế trong kỳ báo cáo có sự chênh lệch trước và sau kiểm toán từ 5% trở lên, chuyển từ lỗ sang lãi hoặc ngược lại (đối với BCTC 2025 được kiểm toán):
+
+Người ký: CÔNG TY CỔ PHẦN
+CHỨNG KHOÁN PHÚ HƯNG
+
+☐ Có
+
+☑ Không
+
+Văn bản giải trình trong trường hợp tích có:
+
+☐ Có
+
+☐ Không
+
++ Lợi nhuận sau thuế thu nhập doanh nghiệp tại báo cáo kết quả kinh doanh của kỳ báo cáo thay đổi từ 10% trở lên so với báo cáo cùng kỳ năm trước:
+
+☑ Có
+
+☐ Không
+
+Văn bản giải trình trong trường hợp tích có:
+
+☑ Có
+
+☐ Không
+
++ Lợi nhuận sau thuế trong kỳ báo cáo bị lỗ, chuyển từ lãi ở báo cáo cùng kỳ năm trước sang lỗ ở kỳ này hoặc ngược lại:
+
+☐ Có
+
+☑ Không
+
+Văn bản giải trình trong trường hợp tích có:
+
+☐ Có
+
+☐ Không
+
+Thông tin này đã được công bố trên trang thông tin điện tử của công ty vào ngày 17/07/2026 tại đường dẫn: www.phs.vn (Mục Về PHS/Quan hệ cổ đông/Thông tin tài chính).
+
+Chúng tôi xin cam kết các thông tin công bố trên đây là đúng sự thật và hoàn toàn chịu trách nhiệm trước pháp luật về nội dung các thông tin công bố.
+
+Tài liệu đính kèm:
+
+- Báo cáo tài chính Quý II/2026;
+- Văn bản giải trình.
+
+Đại diện tổ chức
+
+Người đại diện theo pháp luật/Người UQCBTT
+
+(Ký, ghi rõ họ tên, chức vụ, đóng dấu)
+
+Ông CHEN CHIA KEN
+
+Tổng Giám đốc
+
 # CÔNG TY CỔ PHẦN
 CHỨNG KHOÁN PHÚ HƯNG
 
@@ -18,14 +120,14 @@ Kính gửi:
 • SỞ GIAO DỊCH CHỨNG KHOÁN VIỆT NAM;
 • SỞ GIAO DỊCH CHỨNG KHOÁN HÀ NỘI.
 
-1. Tên cóng ty: Cóng Ty Có PHÁN CHUNG KHOÁN PHU HUNG (PHS)
+1. Tên cóng ty: Cóng TY Cò PHAN CHúng KHOán PHú Húng (PHS)
 2. Dia chi tru so chinh: Tang 21, Phú My Hung Tower, 08 Hoang Van Thái, Phuong Tan My, TP. Ho Chi Minh.
-3. Dien thoai: (+84 28) 5413 5479 Fax: (+84 28) 5413 5472
+3. Dien thoai: \((+8428)\) 5413 5479 Fax: \((+8428)\) 5413 5472
 4. Nguoi thuc hiên cóng bó thong tin: Ong Chen Chia Ken
 5. Loai cong bo thong tin: 24h 72h Bhat thuong Dinh ky
 6. Nói dung cua thong tin cóng bó:
 
-6.1 Báo cáo tài chinh Quý II nám 2026 cua Cóng ty Co phan Chung khoan Phú Hung duoc lap ngay 15 tháng 07 nám 2026 bao gom: Báo cáo tinh hinh tài chinh riêng, Báo cao két qua hoat dong riêng, Báo cao lru chuyen tièn tê riêng (PPGT), Báo cao tinh hinh bien dong vón chu so hru va Bàn thuyét minh bao cao tài chinh riêng.
+6.1 Báo cáo tài chinh Quý II nám 2026 cua Cóng ty Co phan Chung khoan Phú Hung duoc lap ngay 15 thang 07 nám 2026 bao gom: Báo cáo tinh hinh tài chinh riêng, Báo cao két qua hoat dong riêng, Báo cao luu chuyen tièn tê riêng (PPGT), Báo cao tinh hinh bien dong vón chu so hru va Bàn thuyét minh bao cao tài chinh riêng.
 6.2 Nói dung giài trinh: Loi nhuan sau thue thu nhap doanh nghiêp tai Báo cao két qua hoat dong kinh doanh cua ky bao cao thay doi t' 10% tro len so voi bao cao cung ky nam truc.
 
 Theo Báo cáo tài chính Quý II năm 2026, lợi nhuận sau thuế thu nhập doanh nghiệp là
@@ -35,18 +137,12 @@ là do:
 - Tóng doanh thu hoat dong tāng 38,6 t' (28%) so vói cung ký, chu yéu nhô tāng truong doanh thu tú cac hoat dong:
 + Hoat dong cho vay tang: lai tu cac khoan cho vay va phai thu tang 19 ty dong (23%).
 + Doi voi hoat dong tu doanh: Lai tu cac tai san tai chinh ghi nhanh thong qua lai/lo (FVTPL) tang 16,5 ty dong nho gia tri danh muc dau tu tang.
-- Tóng chi pí tāng 44,7 t' y dong (36%), chu yéu do chi pí tāi chinh tāng, bao gōm chi pí lái vay va anh huóng cua chēnh lèch t'y giá.
+- Tóng chi pí tāng 44,7 t' y dong (36%), chu yéu do chi pí tāi chinh tāng, bao gōm chi pí lái vay va anh huóng cua chenh léch t'y giá.
 
 7. Thông tin này đã được công bố trên trang thông tin điện tử của công ty vào ngày 17/07/2026
 tại đường dẫn: www.phs.vn (Mục Về PHS/Quan hệ cổ đông/Thông tin tài chính).
 
 1/2
-
-Phu Hung
-KHOÁN PHÚ HƯNG
-
-Người ký: CÔNG TY CỔ PHẦN
-CHỨNG KHOÁN PHÚ HƯNG
 
 Chúng tôi xin cam kết các thông tin công bố trên đây là đúng sự thật và hoàn toàn chịu trách nhiệm trước pháp luật về nội dung thông tin công bố.
 
@@ -409,12 +505,6 @@ KẾ TOÁN TRƯỞNG
 
 Đỗ Thị Ái Vy
 
-CƠN VỊ: 12 tháng 07 năm 2026
-TỔNG GIÁM ĐỐC
-CỘ PHẦN
-CHỨNG KHOÁN
-PHÚ HƯNG
-T.P HỒ CHÍ MINH
 Chen Chia Ken
 
 6
