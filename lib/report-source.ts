@@ -86,17 +86,33 @@ const ENGLISH_FINANCIAL_TERM_PATTERNS: RegExp[] = [
   /reviewed[_-]?report/i,
 ];
 
-// "vi_en"/"vi-en" (2 ngon ngu GOP CHUNG 1 file, khac han "en" dung MOT MINH)
-// KHONG duoc coi la "chi tieng Anh" - bug that QTP Q2/2026 (2026-07-21):
-// ten file that "1_qtp_..._vi_en_baocaotaichinhquy2_2026_signed.pdf" (53
-// trang, LA BAN CHINH THAT - gop ca Viet lan Anh trong 1 file scan) bi loc
-// NHAM vi "en" dung ngay sau "_" khop dung pattern token o duoi - lam MAT
-// HOAN TOAN ban BCTC that, chi con lai 2 van ban phu ngan (giai trinh/cong
-// bo thong tin) - ca 2 deu parse rong, tao ra 2 dong ket qua TRUNG LAP rong
-// cho QTP (xem project_qtp_vi_en_filter_bug_2026-07-21). "vi" ngay truoc
-// "en" la dau hieu RO RANG file gop ca 2 ngon ngu, uu tien kiem tra truoc.
+// Ten file GOP CA MO TA TIENG VIET LAN TIENG ANH cho CUNG 1 tai lieu tieng
+// Viet (khac han file CHI co mo ta tieng Anh, moi thuc su la "ban tieng
+// Anh") - 2 bug that lien tiep Q2/2026 (2026-07-21), CUNG 1 nguyen nhan goc,
+// khac co che be mat:
+// - QTP: "1_qtp_..._vi_en_baocaotaichinhquy2_2026_signed.pdf" (53 trang, BAN
+//   CHINH THAT) bi loai vi "en" dung ngay sau "_" khop dung token "chi tieng
+//   Anh" o duoi.
+// - ND2: "1_nd2_..._baocaotaichinh_q2_2026_financialstatements_q2_2026_signed.pdf"
+//   (79 trang, BAN CHINH THAT) bi loai vi "financialstatements" khop dung
+//   ENGLISH_FINANCIAL_TERM_PATTERNS o tren.
+// Ca 2 lan deu MAT HOAN TOAN ban BCTC that, chi con van ban phu ngan (giai
+// trinh/cong bo thong tin) parse rong (xem project_q2_2026_night_batch_bugfix_2026-07-21).
+// Sua GOC thay vi va tung pattern rieng le: neu ten file CON co dau hieu
+// tieng Viet ro rang (tu "baocaotaichinh"/"bao cao tai chinh" khong dau, hoac
+// token "vi" rieng biet) thi KHONG BAO GIO coi la "chi tieng Anh" du co khop
+// pattern tieng Anh nao - day la file MO TA SONG NGU cho 1 tai lieu tieng
+// Viet, khac han file chi mo ta bang tieng Anh (PMP "..._en.pdf", CTS
+// "m88_..._financial_statements_in_quarter..." - khong co dau hieu tieng
+// Viet nao trong ten, van dung dung nhu cu, khong regress).
+const VIETNAMESE_FILENAME_INDICATOR_PATTERNS: RegExp[] = [/baocaotaichinh/i, /(^|[_-])vi([_.\-]|$)/i];
+
+function hasVietnameseFilenameIndicator(entryName: string): boolean {
+  return VIETNAMESE_FILENAME_INDICATOR_PATTERNS.some((p) => p.test(entryName));
+}
+
 function isEnglishVariantEntry(entryName: string): boolean {
-  if (/vi[_-]en([_.\-]|$)/i.test(entryName)) return false;
+  if (hasVietnameseFilenameIndicator(entryName)) return false;
   return /(^|[_-])en([_.\-]|$)/i.test(entryName) || ENGLISH_FINANCIAL_TERM_PATTERNS.some((p) => p.test(entryName));
 }
 
