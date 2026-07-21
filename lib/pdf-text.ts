@@ -57,6 +57,45 @@ export function looksLikeVietnameseText(text: string): boolean {
   return vietnameseDiacriticRatio(text) >= VIETNAMESE_DIACRITIC_RATIO_THRESHOLD;
 }
 
+// SUA 2026-07-21 (bug that: PMP Q2/2026 - xem doi chieu that duoi day). File
+// BCTC tieng Viet THAT nhung dung FONT KIEU CU (VNI/TCVN3...) khong co
+// ToUnicode CMap dung chuan - text layer trich ra bi GARBLE HOAN TOAN (vd
+// "cONG TY co PHAN BAo Bi EAM PHU MV aAo cAo rRt cHittH" thuc chat la "CÔNG TY
+// CỔ PHẦN BAO BÌ ĐẠM PHÚ MỸ - BÁO CÁO TÀI CHÍNH" nhung tung ky tu bi doc SAI),
+// nen ty le dau tieng Viet do duoc = 0 (khong con dau nao con nguyen ven de
+// dem) - "khong giong tieng Viet" (looksLikeVietnameseText tra ve false) LA
+// DUNG, nhung suy tiep "vay day la ban tieng Anh" (isLikelyNonVietnamese cu,
+// duoi day) LA SAI: garbled-Viet va tieng Anh THAT deu "khong giong tieng
+// Viet" nhu nhau, chi 1 trong 2 truong hop that su la tieng Anh.
+//
+// Doi huong: KHONG con suy "khong giong tieng Viet" => "la tieng Anh" (thieu
+// bang chung, chi la loai tru sai kieu). Doi thanh doi hoi BANG CHUNG DUONG
+// that su la tieng Anh - cac cum tu ke toan CHUAN theo dung mau dich Vietstock
+// dung cho MOI cong ty (Thong tu ke toan quy dinh thuat ngu nay, khong doi
+// giua cac cong ty), gan nhu khong the xuat hien TINH CO trong 1 doan text bi
+// garble ngau nhien (garble ra ky tu la, khong ra cum tu tieng Anh co nghia).
+// Neu khong khop cum tu nao (vd garbled-Viet nhu PMP), coi la CHUA DU BANG
+// CHUNG (isLikelyNonVietnamese=false, giao lai cho buoc kiem tra SAU OCR -
+// financial-statements.ts, doc dung vi OCR nhin ANH RENDER, khong dung text
+// layer hong) thay vi loai NHAM truoc ca khi OCR.
+const ENGLISH_FINANCIAL_STATEMENT_PHRASES: RegExp[] = [
+  /balance\s+sheet/i,
+  /income\s+statement/i,
+  /statement\s+of\s+financial\s+position/i,
+  /cash\s+flow\s+statement/i,
+  /financial\s+statements?/i,
+  /notes?\s+to\s+(the\s+)?(consolidated\s+)?financial\s+statements?/i,
+  /independent\s+auditor/i,
+  /total\s+assets/i,
+  /total\s+liabilities/i,
+  /owners?'?\s+equity/i,
+  /shareholders?'?\s+equity/i,
+];
+
+function looksLikeEnglishFinancialText(text: string): boolean {
+  return ENGLISH_FINANCIAL_STATEMENT_PHRASES.some((pattern) => pattern.test(text));
+}
+
 export interface PageScopeResult {
   // Tong so trang ca tai lieu - dung lam dau vao cho
   // extractFinancialStatementsWithOcrProbe (lib/export/financial-statements.ts).
@@ -104,7 +143,12 @@ async function determineOne(filePath: string): Promise<{ totalPages: number; isL
     const totalPages = rawPages.length;
     const allPagesHaveSubstantialText = rawPages.every((page) => page.text.trim().length >= MIN_PAGE_TEXT_LENGTH_FOR_LANGUAGE_CHECK);
     const combinedText = rawPages.map((page) => page.text).join('\n');
-    const isLikelyNonVietnamese = allPagesHaveSubstantialText && !looksLikeVietnameseText(combinedText);
+    // "Khong giong tieng Viet" (looksLikeVietnameseText=false) THOI CHUA DU -
+    // xem ENGLISH_FINANCIAL_STATEMENT_PHRASES o tren: PDF font kieu cu
+    // (VNI/TCVN3...) lam garble text layer cua BCTC tieng Viet THAT cung cho
+    // ra ket qua nay, phai doi hoi them bang chung DUONG (cum tu ke toan tieng
+    // Anh chuan) truoc khi ket luan day la ban tieng Anh.
+    const isLikelyNonVietnamese = allPagesHaveSubstantialText && !looksLikeVietnameseText(combinedText) && looksLikeEnglishFinancialText(combinedText);
     return { totalPages, isLikelyNonVietnamese };
   } finally {
     await parser.destroy();
