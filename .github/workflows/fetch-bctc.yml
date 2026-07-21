@@ -118,13 +118,49 @@ jobs:
       # 60 phut): dong bo lai voi origin/main NGAY TRUOC khi commit.
       # --autostash tu cat tam data/latest-fetch.json/ocr-markdown DANG SUA
       # (chua commit) qua 1 ben, rebase, roi khoi phuc lai - khong bi chan
-      # boi working tree co thay doi. An toan vi 2 nguon thay doi khong dung
-      # file: code push tu local KHONG dung data/latest-fetch.json, con file
-      # nay chi 1 workflow nay ghi (concurrency group o tren dam bao khong co
-      # 2 lan chay workflow nay chong nhau).
+      # boi working tree co thay doi.
+      #
+      # CAP NHAT 2026-07-21 (su co that: 1 lan chay 20 bao cao that bai dung
+      # buoc nay): gia dinh goc o tren ("code push tu local KHONG dung data/
+      # latest-fetch.json") bi PHA VO - 1 phien Claude Code chay
+      # scripts/resync-cache.ts (ghi lai TOAN BO field `analysis` cho MOI bao
+      # cao) roi push THANG len main trong luc job nay dang o dung buoc nay,
+      # ~3 giay truoc. --autostash khong the tu gop 2 thay doi CHONG LAN THAT
+      # SU len nhau (khac tinh huong 20/7 chi la lech nhanh/cham, khong co noi
+      # dung xung dot that) - de lai git index o trang thai "needs merge",
+      # lam buoc "Commit updated status" duoi fail cung (loi "Invalid status
+      # code: 1"), MAT LUON toan bo 20 bao cao vua chay (runner bi huy ngay
+      # sau khi job xong, khong con cach nao lay lai tu `git stash`).
+      #
+      # 2 lop phong ngua (khong co lop nao thay the lop kia):
+      # 1. (quy trinh, ngoai code) Truoc khi push bat ky thay doi nao dung
+      #    data/latest-fetch.json tu local/Claude Code, PHAI kiem tra truoc
+      #    xem workflow nay co dang chay khong (GET .../actions/workflows/
+      #    fetch-bctc.yml/runs?status=in_progress, mien phi, khong can token
+      #    vi repo public) - day la NGUYEN NHAN GOC, sua o day la chinh.
+      # 2. (code, buoc duoi) Luu ket qua THO ra artifact TRUOC khi thu
+      #    dong bo/commit - du buoc dong bo/commit co that bai vi BAT KY ly do
+      #    gi (khong chi truong hop nay), ket qua cua LAN CHAY NAY van lay lai
+      #    duoc tu artifact (giu 7 ngay) thay vi mat trang hoan toan.
+      - name: Luu ket qua tho ra artifact (phong khi buoc dong bo/commit ben duoi that bai)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fetch-result-backup-${{ github.run_id }}
+          path: |
+            data/latest-fetch.json
+            data/ocr-markdown/**
+          retention-days: 7
+          if-no-files-found: ignore
       - name: Sync voi origin/main truoc khi commit
         if: always()
-        run: git pull --rebase --autostash origin main
+        run: |
+          if git pull --rebase --autostash origin main; then
+            exit 0
+          fi
+          echo "::warning::git pull --rebase --autostash xung dot that su voi 1 thay doi khac tren main (khong phai loi tam thoi, khong the tu dong gop duoc) - huy dong bo, ket qua LAN CHAY NAY van con trong artifact 'fetch-result-backup-${{ github.run_id }}' o tren, chua bi mat, nhung se KHONG duoc tu dong commit len data/latest-fetch.json. Can tai artifact ve gop tay."
+          git rebase --abort 2>/dev/null || true
+          git reset --hard origin/main
       - name: Commit updated status
         if: always()
         uses: stefanzweifel/git-auto-commit-action@v7
