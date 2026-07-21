@@ -3,7 +3,7 @@ import { join } from 'path';
 import { getPreviousQuarter } from './quarter';
 import { resolveQuarterTerm, fetchReportFilesForTerm, type ReportTerm, type ReportFile } from './vietstock-reports';
 import { periodDisplayLabel, periodFolderSlug } from './period-label';
-import { filterReports } from './filter';
+import { filterReports, filterExclusionReason } from './filter';
 import { downloadOne } from './download';
 import { resolveReportSourceFiles, cleanupDownloadedFile, type ResolvedReportFile } from './report-source';
 import { extractReportContent, type ReportContentResult } from './report-extract';
@@ -11,7 +11,7 @@ import { isEmptyParse } from './export/financial-statements';
 import { computeAnalysisRows } from './analysis';
 import { classifyStatementScope } from './statement-scope';
 import { saveProductionOcrMarkdown } from './ocr-markdown-store';
-import type { FetchStatus, DownloadedReport, FailedReport } from './status';
+import type { FetchStatus, DownloadedReport, FailedReport, ExcludedReport } from './status';
 import { reportIdentityKey } from './report-identity';
 import { DEFAULT_OCR_MODE, type OcrMode } from './ocr-mode';
 
@@ -30,16 +30,18 @@ export function readStatus(): FetchStatus {
       downloaded: 0,
       failed: [],
       interruptedReports: [],
+      excludedReports: [],
       reports: [],
       lastCustomSourceCheck: null,
     };
   }
   const parsed = JSON.parse(readFileSync(STATUS_PATH, 'utf-8')) as Partial<FetchStatus>;
-  // SUA 2026-07-20: backfill field them SAU nay (interruptedReports) khi doc
-  // 1 file data/latest-fetch.json cu da ghi TRUOC khi field nay ton tai -
-  // tranh phai sua tay file data (rui ro xung dot rebase voi 1 job dang chay
-  // dong thoi tren GitHub Actions, xem lib/status.ts InterruptedReport).
-  return { interruptedReports: [], ...parsed } as FetchStatus;
+  // SUA 2026-07-20/2026-07-21: backfill field them SAU nay (interruptedReports,
+  // excludedReports) khi doc 1 file data/latest-fetch.json cu da ghi TRUOC khi
+  // field nay ton tai - tranh phai sua tay file data (rui ro xung dot rebase
+  // voi 1 job dang chay dong thoi tren GitHub Actions, xem lib/status.ts
+  // InterruptedReport/ExcludedReport).
+  return { interruptedReports: [], excludedReports: [], ...parsed } as FetchStatus;
 }
 
 // SUA 2026-07-20 (yeu cau nguoi dung, sau su co Mistral nghen hang doi lam
@@ -103,6 +105,7 @@ export function clearResults(filePaths?: string[]): FetchStatus {
       downloaded: 0,
       failed: [],
       interruptedReports: [],
+      excludedReports: [],
       reports: [],
       lastCustomSourceCheck: null,
     };
@@ -125,6 +128,64 @@ export function clearResults(filePaths?: string[]): FetchStatus {
 // dung chung o lib/report-identity.ts (khong co import Node-only) de
 // app/FetchControls.tsx (client) tinh truoc cung 1 khoa nay khi tu tick sẵn
 // cac bao cao con thieu luc bam "Tu lan tai cuoi".
+//
+// GIA DINH TREN ("title Vietstock luon ghi ro") KHONG PHAI LUC NAO CUNG DUNG
+// (bug that: VCI Q2/2026, 2026-07-21) - xem dedupeReportsWithinRun duoi.
+
+const CORRECTION_NOTICE_WARNING_PREFIX = 'CANH BAO: day co ve la CONG VAN DINH CHINH';
+
+// Loc TRUNG LAP trong PHAM VI 1 LAN CHAY - khac han dedup o buildStatus duoi
+// (newKeys/keptReports, CHI so sanh report MOI voi report DA CO TU TRUOC).
+// Bug that phat hien 2026-07-21: VCI Q2/2026 co 2 fileInfoID KHAC NHAU tren
+// Vietstock (1 file PDF le luc 01:14, 10 phut sau dong lai thanh zip luc
+// 01:24 - co ve Vietstock tu dang lai) nhung CUNG mot title chung chung
+// "BCTC quý 2 năm 2026" (khong ghi ro Hop nhat/Rieng le nhu gia dinh o tren) -
+// ca 2 deu qua duoc filterReports + OCR thanh cong doc lap, cho ra 2 dong KET
+// QUA TRUNG (cung reportIdentityKey) trong CUNG 1 lan chay - dedup cu khong
+// bat duoc vi no khong so sanh CAC report moi VOI NHAU.
+//
+// Uu tien xu ly 1 nhom trung (yeu cau nguoi dung 2026-07-21):
+// 1. Neu 1/nhieu ban la CONG VAN DINH CHINH (warnings[0] bat dau bang
+//    CORRECTION_NOTICE_WARNING_PREFIX, xem isCorrectionNoticeMarkdown trong
+//    lib/export/financial-statements.ts) va CON LAI KHONG phai - loai BO cac
+//    ban cong van dinh chinh (uu tien ban BCTC that).
+// 2. Neu sau (1) van con >1 ban VA statementScope KHAC NHAU (vd "Hợp nhất"
+//    vs "Chung") - coi la 2 TAI LIEU THAT SU KHAC NHAU (Vietstock dat title
+//    chung chung nen khong phan biet duoc chi qua ten) - GIU CA HAI, KHONG
+//    tu y bo bat ky ban nao (an toan hon la doan sai va mat du lieu that).
+// 3. Neu van con >1 ban CUNG statementScope (nhu VCI - ca 2 deu "Chung",
+//    cung noi dung/canh bao, chi khac gio Vietstock dang lai) - coi la TAI
+//    UPLOAD LAI cung 1 tai lieu, GIU BAN MOI NHAT (lastUpdate lon nhat).
+function dedupeReportsWithinRun(reports: DownloadedReport[]): DownloadedReport[] {
+  const groups = new Map<string, DownloadedReport[]>();
+  for (const report of reports) {
+    const key = reportIdentityKey(report);
+    const group = groups.get(key);
+    if (group) group.push(report);
+    else groups.set(key, [report]);
+  }
+
+  const result: DownloadedReport[] = [];
+  for (const group of groups.values()) {
+    if (group.length === 1) {
+      result.push(group[0]);
+      continue;
+    }
+    const isCorrectionNotice = (r: DownloadedReport) => r.warnings[0]?.startsWith(CORRECTION_NOTICE_WARNING_PREFIX) ?? false;
+    const nonCorrectionNotice = group.filter((r) => !isCorrectionNotice(r));
+    const candidates = nonCorrectionNotice.length > 0 ? nonCorrectionNotice : group;
+
+    const scopes = new Set(candidates.map((r) => r.statementScope));
+    if (scopes.size > 1) {
+      result.push(...candidates);
+      continue;
+    }
+
+    const newest = candidates.reduce((a, b) => (new Date(b.lastUpdate).getTime() > new Date(a.lastUpdate).getTime() ? b : a));
+    result.push(newest);
+  }
+  return result;
+}
 
 function buildStatementScopeInput(
   resolved: ResolvedReportFile,
@@ -237,6 +298,15 @@ export async function runFetchPipeline(options: RunFetchPipelineOptions = {}): P
     // loc theo noi dung so lieu.
     const matched = filterReports(scopedReports);
 
+    // Ghi lai LY DO cu the cho tung report bi loai o vong nay (yeu cau nguoi
+    // dung 2026-07-21, xem ExcludedReport lib/status.ts) - AP DUNG CA KHI
+    // report do duoc CHON TAY qua checkbox (mode 'select') - loc van dung (xac
+    // nhan voi nguoi dung), chi la truoc day KHONG AI BIET report nao/vi sao.
+    const excludedByFilter: ExcludedReport[] = scopedReports.flatMap((r) => {
+      const reason = filterExclusionReason(r);
+      return reason ? [{ stockCode: r.stockCode, title: r.title, reason }] : [];
+    });
+
     const destDir = join(DATA_DIR, 'reports', `${term.yearPeriod}-${periodSlug}`);
     mkdirSync(destDir, { recursive: true });
 
@@ -270,6 +340,12 @@ export async function runFetchPipeline(options: RunFetchPipelineOptions = {}): P
     // chieu voi danh muc goc.
     const reportEntries: { idx: number; report: DownloadedReport }[] = [];
     const failedEntries: { idx: number; failed: FailedReport }[] = [];
+    // Xem ExcludedReport (lib/status.ts) - nhanh SAU khi tai, khac
+    // excludedByFilter (TRUOC khi tai). Day vao khi TOAN BO file trong 1 nhom
+    // (resolved, xem worker duoi) deu bi coi la khong phai tieng Viet - truoc
+    // day (bug PMP Q2/2026, 2026-07-21) truong hop nay hoan toan IM LANG,
+    // khong o dau ca trong FetchStatus.
+    const excludedEntries: { idx: number; excluded: ExcludedReport }[] = [];
     let downloadedCount = 0;
     let nextIndex = 0;
 
@@ -290,8 +366,9 @@ export async function runFetchPipeline(options: RunFetchPipelineOptions = {}): P
     // reportIdentityKey), chi khac la duoc goi NHIEU LAN thay vi 1 lan duy
     // nhat o cuoi.
     function buildStatus(running: boolean): FetchStatus {
-      const newReports = reportEntries.sort((a, b) => a.idx - b.idx).map((e) => e.report);
+      const newReports = dedupeReportsWithinRun(reportEntries.sort((a, b) => a.idx - b.idx).map((e) => e.report));
       const newFailed = failedEntries.sort((a, b) => a.idx - b.idx).map((e) => e.failed);
+      const newExcludedAfterDownload = excludedEntries.sort((a, b) => a.idx - b.idx).map((e) => e.excluded);
       const newKeys = new Set(newReports.map(reportIdentityKey));
       const keptReports = previousStatus.reports.filter((r) => !newKeys.has(reportIdentityKey(r)));
       const interruptedReports = matched
@@ -307,6 +384,7 @@ export async function runFetchPipeline(options: RunFetchPipelineOptions = {}): P
         downloaded: downloadedCount,
         failed: [...previousStatus.failed, ...newFailed],
         interruptedReports,
+        excludedReports: [...previousStatus.excludedReports, ...excludedByFilter, ...newExcludedAfterDownload],
         reports: [...keptReports, ...newReports],
         lastCustomSourceCheck: previousStatus.lastCustomSourceCheck,
       };
@@ -403,6 +481,23 @@ export async function runFetchPipeline(options: RunFetchPipelineOptions = {}): P
               },
             });
           }
+        }
+
+        // TOAN BO file trong nhom deu tra ve null (khong phai tieng Viet, xem
+        // extractReportContent) VA khong co loi nao khac cho index nay - truoc
+        // day IM LANG hoan toan (bug that PMP Q2/2026, 2026-07-21: khong o
+        // dau trong FetchStatus, khong cach nao dieu tra duoc sau nay). Chi
+        // ghi khi resolved.length > 0 (co file de thu that su) - resolved
+        // rong da duoc bao qua `errors` cua resolveReportSourceFiles roi.
+        if (extracted.length === 0 && resolved.length > 0) {
+          excludedEntries.push({
+            idx: index,
+            excluded: {
+              stockCode: report.stockCode,
+              title: report.title,
+              reason: 'Toàn bộ file trong nhóm bị coi là không phải tiếng Việt (kiểm tra text layer trước OCR hoặc nội dung sau OCR) - cần xem tay trên PDF gốc nếu nghi ngờ sai',
+            },
+          });
         }
 
         // Neu da tim duoc du lieu THAT, chi giu (cac) file do - loai am tham

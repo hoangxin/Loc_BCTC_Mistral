@@ -42,8 +42,25 @@ function isNonStandardTickerLength(r: ReportFile): boolean {
   return r.stockCode.trim().length > 3;
 }
 
+// Ly do 1 report bi VONG LOC nay loai, hay null neu KHONG bi loai - dung
+// chung boi filterReports (chi can boolean) VA lib/pipeline.ts (can ly do CU
+// THE de ghi vao excludedReports, xem comment tai do) - tranh lap lai 3 dieu
+// kien o 2 noi (them 2026-07-21, theo yeu cau nguoi dung sau bug 50 bao cao
+// chon tay chi ra 49 ma KHONG biet duoc ma nao/vi sao, "khong co canh bao,
+// khong log, bien mat hoan toan khoi ket qua ma khong ai biet").
+export function filterExclusionReason(r: ReportFile): string | null {
+  if (EXCLUDED_EXCHANGES.has(r.exchange.trim().toLowerCase())) {
+    return `Sàn giao dịch "${r.exchange}" ngoài phạm vi phân tích (OTC/Khác)`;
+  }
+  if (isParentOnlyReport(r)) {
+    return 'Báo cáo "Riêng lẻ" (công ty mẹ) - trùng lặp thông tin với báo cáo Hợp nhất cùng kỳ, đã có trong Hợp nhất';
+  }
+  if (isNonStandardTickerLength(r)) {
+    return `Mã "${r.stockCode}" dài hơn 3 ký tự - là chứng chỉ quỹ/ETF, ngoài phạm vi phân tích`;
+  }
+  return null;
+}
+
 export function filterReports(reports: ReportFile[]): ReportFile[] {
-  return reports.filter(
-    (r) => !EXCLUDED_EXCHANGES.has(r.exchange.trim().toLowerCase()) && !isParentOnlyReport(r) && !isNonStandardTickerLength(r)
-  );
+  return reports.filter((r) => filterExclusionReason(r) === null);
 }

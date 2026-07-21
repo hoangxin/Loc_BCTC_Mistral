@@ -7,6 +7,7 @@ import ResultsByPeriodTabs from './ResultsByPeriodTabs';
 import Tabs from './Tabs';
 import FailedReportsBadge from './FailedReportsBadge';
 import InterruptedReportsBadge from './InterruptedReportsBadge';
+import ExcludedReportsBadge from './ExcludedReportsBadge';
 
 // Doc dong tu dia (khong import tinh JSON nua) - `data/latest-fetch.json`
 // KHONG nam trong repo (gitignore, la du lieu sinh ra luc chay, xem
@@ -47,6 +48,12 @@ export default function HomePage() {
                 <>
                   {' · '}
                   <InterruptedReportsBadge interrupted={status.interruptedReports} />
+                </>
+              )}
+              {status.excludedReports.length > 0 && (
+                <>
+                  {' · '}
+                  <ExcludedReportsBadge excluded={status.excludedReports} />
                 </>
               )}
             </>
