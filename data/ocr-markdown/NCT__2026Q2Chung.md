@@ -384,3 +384,87 @@ Trần Việt Phương
 Các Thuyết minh đính kèm là bộ phận hợp thành của Báo cáo tài chính
 
 6
+
+CÔNG TY CỔ PHẦN DỊCH VỤ HÀNG HÓA NỘI BÀI  
+Sân bay Quốc tế Nội Bài, Xã Nội Bài,  
+Thành phố Hà Nội
+
+BÁO CÁO TÀI CHÍNH  
+Cho giai đoạn  
+từ 01/01/2026 đến 30/06/2026
+
+# **BÁO CÁO LƯU CHUYỂN TIỀN TỆ**  
+(Theo phương pháp gián tiếp)  
+Cho giai đoạn từ 01/01/2026 đến 30/06/2026
+
+|  Chỉ tiêu | Mã số | Thuyết minh | Từ 01/01/2026 đến 30/06/2026 VND | Từ 01/01/2025 đến 30/06/2025 VND  |
+| --- | --- | --- | --- | --- |
+|  **I. LƯU CHUYỂN TIỀN TỪ HOẠT ĐỘNG KINH DOANH**  |   |   |   |   |
+|  **1. Lợi nhuận trước thuế** | 01 |  | **267.444.088.510** | **187.675.064.089**  |
+|  **2. Điều chỉnh cho các khoản** |  |  |  |   |
+|  - Khấu hao TSCĐ và BĐS ĐT | 02 |  | 17.670.404.145 | 15.815.166.221  |
+|  - Các khoản dự phòng | 03 |  | 200.737.914 | 312.637.196  |
+|  - Lãi/ Lỗ chênh lệch tỷ giá hối đoái do đánh giá lại các khoản mục tiền tệ có gốc ngoại tệ | 04 |  | (23.280.190) | (519.695.890)  |
+|  - Lãi/Lỗ từ hoạt động đầu tư, tài chính | 05 |  | (52.082.589.527) | (7.576.563.230)  |
+|  **3. Lợi nhuận từ hoạt động kinh doanh trước thay đổi vốn lưu động** | 08 |  | **233.209.360.852** | **195.706.608.386**  |
+|  - Tăng/ Giảm các khoản phải thu | 09 |  | 1.956.119.601 | (6.507.000.137)  |
+|  - Tăng/ Giảm hàng tồn kho | 10 |  | 502.208.655 | 508.235.147  |
+|  - Tăng/ Giảm các khoản phải trả (không kể lãi vay phải trả, thuế thu nhập DN phải nộp) | 11 |  | (63.803.673.658) | (19.895.225.093)  |
+|  - Tăng/ Giảm chi phí chờ phân bổ | 12 |  | 9.512.627.604 | 10.763.188.344  |
+|  - Thuế TNDN đã nộp | 15 |  | (75.284.051.723) | (51.431.287.936)  |
+|  - Tiền chi khác cho hoạt động kinh doanh (*) | 17 |  | (7.517.562.500) | (5.700.500.000)  |
+|  **Lưu chuyển tiền thuần từ hoạt động kinh doanh** | **20** |  | **98.575.028.831** | **123.444.018.711**  |
+|  **II. LƯU CHUYỂN TIỀN TỪ HOẠT ĐỘNG ĐẦU TƯ**  |   |   |   |   |
+|  1. Tiền chi để mua sắm, xây dựng TSCĐ và các tài sản dài hạn khác | 21 |  | (17.003.354.589) | (23.641.462.741)  |
+|  3. Tiền chi cho vay, mua các công cụ nợ của đơn vị khác | 23 |  | (345.000.000.000) | (440.874.000.000)  |
+|  4. Tiền thu hồi cho vay, bán lại các công cụ nợ của đơn vị khác | 24 |  | 472.234.000.000 | 331.450.000.000  |
+|  7. Tiền thu lãi cho vay, cổ tức và LN được chia | 27 |  | 52.082.589.527 | 7.965.071.131  |
+|  **Lưu chuyển tiền thuần từ hoạt động đầu tư** | **30** |  | **162.313.234.938** | **(125.100.391.610)**  |
+
+(*) Tiền chi khác cho hoạt động kinh doanh là tiền chi từ Quỹ khen thưởng phúc lợi.
+
+Các Thuyết minh đính kèm là bộ phận hợp thành của Báo cáo tài chính
+
+7
+
+CÔNG TY CỔ PHẦN DỊCH VỤ HÀNG HÓA NỘI BÀI
+Sân bay Quốc tế Nội Bài, Xã Nội Bài,
+Thành phố Hà Nội
+
+BÁO CÁO TÀI CHÍNH
+Cho giai đoạn
+từ 01/01/2026 đến 30/06/2026
+
+# **BÁO CÁO LƯU CHUYỂN TIỀN TỆ (TIẾP)**
+(Theo phương pháp gián tiếp)
+Cho giai đoạn từ 01/01/2026 đến 30/06/2026
+
+|  Chỉ tiêu | Thuyết minh | Từ 01/01/2026 đến 30/06/2026 VND | Từ 01/01/2025 đến 30/06/2025 VND  |
+| --- | --- | --- | --- |
+|  **III. LƯU CHUYỂN TIỀN TỪ HOẠT ĐỘNG TÀI CHÍNH**  |   |   |   |
+|  6. Cổ tức, lợi nhuận đã trả cho chủ sở hữu | 36 | - | -  |
+|  *Lưu chuyển tiền thuần từ hoạt động tài chính* | 40 | - | -  |
+|  *Lưu chuyển tiền thuần trong kỳ* | 50 | 260.888.263.769 | (1.656.372.899)  |
+|  Tiền và tương đương tiền đầu kỳ | 60 | 105.256.528.858 | 134.153.298.000  |
+|  Ảnh hưởng của thay đổi tỷ giá hối đoái quy đổi ngoại | 61 | 35.660.999 | 469.503.385  |
+|  Tiền và tương đương tiền cuối kỳ | 70 | 5 366.180.453.626 | 132.966.428.486  |
+
+Hà Nội, ngày 20 tháng 07 năm 2026
+
+Người lập biểu
+
+Nguyễn Thị Thu Hiền
+
+Kế toán trưởng
+
+Hồ Xuân Hiếu
+
+Tổng Giám đốc
+
+![img-0.jpeg](img-0.jpeg)
+
+Trần Việt Phương
+
+Các Thuyết minh đính kèm là bộ phận hợp thành của Báo cáo tài chính
+
+8

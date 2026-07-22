@@ -1,489 +1,63 @@
-CÔNG TY CỔ PHẦN THƯƠNG MẠI BIA HÀ NỘI  
- Địa chỉ: 183 Hoàng Hoa Thám, Phường Ngọc Hà, TP. Hà Nội  
- BÁO CÁO TÀI CHÍNH
+CÔNG TY CỔ PHẦN THƯƠNG MẠI BIA HÀ NỘI
 
-**NGUYỄN HẢI QUÂN**
+Địa chỉ: 183 Hoàng Hoa Thám, Phường Ngọc Hà, TP. Hà Nội^{}[] BÁO CÁO TÀI CHÍNH
 
-Digitally signed by NGUYỄN HẢI QUÂN  
- DN: CĐ: T: H: N: L: T: A:  
- D: H: N: L: C: O: N: T: Y: C: O: P: H:  
- T: H: N: L: T: O: B: I: B: I: H: A: N: O:  
- T: P: H: O: G: M: B: O: C:  
- O: N: N: G: Y: E: N: H: A: Q: U: A:  
- O: C: I: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E: Y: E: N: Y: O:  
- I: O: S: O: N: E: Y: E: N: Y: O:  
- O: O: S: O: N: E: Y: E: N: Y: O:  
- P: O: S: O: N: E: Y: E: N: Y: O:  
- R: O: S: O: N: E: Y: E: N: Y: O:  
- F: O: S: O: N: E
+NGUYỄN^{}[] HẢI^{}[] ^{}[] QUÂN
+
+Digitally signed by NGUYỄN HẢI^{}[] QUÂN^{}[] ^{}[] ĐIỀU KIỆN: 183 HÀ NỘI, Lepsilon^{}[] ^{}[] ĐIỀU KIỆN: 183 HÀ NỘI, L.  
+ĐIỀU KIỆN: 183 HÀ NỘI, L.  
+TỔNG GIÁM ĐỐC:  
+CN=NGUYỄN+HẢI QUÂN,  
+CN=1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.
+
+# BÁO CÁO TÌNH HÌNH TÀI CHÍNH
+
+Tại ngày 30 tháng 6 năm 2026
+
+Đơn vị tính: VND
+
+|  Chỉ tiêu | Mã số | Thuyết minh | 30/06/2026 | 01/01/2026  |
+| --- | --- | --- | --- | --- |
+|  **A. TÀI SẢN NGẮN HẠN** | **100** |  | **147.922.842.185** | **166.810.179.179**  |
+|  **I. Tiền và các khoản tương đương tiền** | **110** | V.1 | **10.521.520.550** | **11.331.105.437**  |
+|  1. Tiền | 111 |  | 10.521.520.550 | 11.331.105.437  |
+|  2. Các khoản tương đương tiền | 112 |  | - | -  |
+|  **II. Đầu tư tài chính ngắn hạn** | **120** |  | **80.304.313.000** | **86.296.635.000**  |
+|  1. Chứng khoán kinh doanh | 121 |  | - | -  |
+|  2. Dự phòng giảm giá chứng khoán kinh doanh (*) | 122 |  | - | -  |
+|  3. Đầu tư nắm giữ đến ngày đáo hạn | 123 | V.2 | 80.304.313.000 | 86.296.635.000  |
+|  4. Dự phòng đầu tư nắm giữ đến ngày đáo hạn ngắn hạn (*) | 124 |  | - | -  |
+|  5. Đầu tư ngắn hạn khác | 125 |  | - | -  |
+|  6. Dự phòng tổn thất các khoản đầu tư ngắn hạn khác (*) | 126 |  | - | -  |
+|  **III. Các khoản phải thu ngắn hạn** | **130** |  | **50.132.053.280** | **59.584.255.365**  |
+|  1. Phải thu ngắn hạn của khách hàng | 131 | V.3 | 2.206.200.000 | 40.172.674.800  |
+|  2. Trả trước cho người bán ngắn hạn | 132 | V.4 | 22.216.932.480 | 19.386.874.553  |
+|  3. Phải thu nội bộ ngắn hạn | 133 |  | - | -  |
+|  4. Phải thu theo tiến độ kế hoạch hợp đồng xây dựng | 134 |  | - | -  |
+|  5. Phải thu ngắn hạn khác | 135 | V.5 | 25.708.920.800 | 24.706.012  |
+|  6. Dự phòng phải thu ngắn hạn khó đòi (*) | 136 |  | - | -  |
+|  7. Tài sản thiếu chờ xử lý | 137 |  | - | -  |
+|  **IV. Hàng tồn kho** | **140** | V.6 | **4.956.735.473** | **6.138.489.883**  |
+|  1. Hàng tồn kho | 141 |  | 4.956.735.473 | 6.138.489.883  |
+|  2. Dự phòng giảm giá hàng tồn kho (*) | 142 |  | - | -  |
+|  **V. Tài sản sinh học ngắn hạn** | **150** |  | - | -  |
+|  1. Sức vật nuôi lấy sản phẩm một lần ngắn hạn | 151 |  | - | -  |
+|  2. Cây trồng theo mùa vụ hoặc lấy sản phẩm một lần ngắn hạn | 152 |  | - | -  |
+|  3. Dự phòng tổn thất tài sản sinh học ngắn hạn (*) | 153 |  | - | -  |
+|  **VI. Tài sản ngắn hạn khác** | **160** |  | **2.008.219.882** | **3.459.693.494**  |
+|  1. Chi phí chở phân bổ ngắn hạn | 161 | V.9 | 1.351.212.500 | 3.459.693.494  |
+|  2. Thuế GTGT được khấu trừ | 162 |  | 657.007.382 | -  |
+|  3. Thuế và các khoản khác phải thu Nhà nước | 163 |  | - | -  |
+|  4. Giao dịch mua bán lại trái phiếu Chính phủ | 164 |  | - | -  |
+|  5. Tài sản ngắn hạn khác | 165 |  | - | -  |
+|  **B. TÀI SẢN DÀI HẠN** | **200** |  | **67.768.459.680** | **54.437.429.213**  |
+|  **I. Các khoản phải thu dài hạn** | **210** |  | - | -  |
+|  1. Phải thu dài hạn của khách hàng | 211 |  | - | -  |
+|  2. Trả trước cho người bán dài hạn | 212 |  | - | -  |
+|  3. Vốn kinh doanh ở đơn vị trực thuộc | 213 |  | - | -  |
+|  4. Phải thu nội bộ dài hạn | 214 |  | - | -  |
+|  5. Phải thu dài hạn khác | 215 |  | - | -  |
+|  6. Dự phòng phải thu dài hạn khó đòi (*) | 216 |  | - | -  |
 
 1
 
@@ -619,17 +193,19 @@ Người lập biểu
 
 Vũ Thị Kim Ngọc
 
-Hà Nội, ngày 10 tháng 07 năm 2026
-
 Kế toán trưởng
 
 ![img-2.jpeg](img-2.jpeg)
 
 Nguyễn Cao Tường
 
+![img-3.jpeg](img-3.jpeg)
+
 Nguyễn Văn Minh
 
-![img-3.jpeg](img-3.jpeg)
+Hà Nội, ngày 10 tháng 07 năm 2026
+
+![img-4.jpeg](img-4.jpeg)
 
 4
 
@@ -757,17 +333,21 @@ BÁO CÁO TÀI CHÍNH
 
 Người lập biểu
 
-Kế toán trưởng
-
-Giám đốc
+![img-5.jpeg](img-5.jpeg)
 
 Vũ Thị Kim Ngọc
 
+Hà Nội, ngày 10 tháng 07 năm 2026
+
+Kế toán trưởng
+
+![img-6.jpeg](img-6.jpeg)
+
 Nguyễn Cao Tường
 
-Nguyễn Văn Minh
+![img-7.jpeg](img-7.jpeg)
 
-Hà Nội, ngày 10 tháng 07 năm 2026
+Nguyễn Văn Minh
 
 7
 
@@ -870,7 +450,7 @@ Việc phân loại các khoản phải thu là phải thu khách hàng, phải 
 
 Dự phòng nợ phải thu khó đòi thể hiện phần giá trị của các khoản phải thu mà Công ty dự kiến tổn thất có thể xảy ra hoặc không có khả năng thu hồi vào ngày kết thúc kỳ kế toán. Tăng hoặc giảm số
 
-![img-4.jpeg](img-4.jpeg)
+![img-8.jpeg](img-8.jpeg)
 
 CÔNG TY CỔ PHẦN THƯƠNG MẠI BIA HÀ NỘI
 Địa chỉ: 183 Hoàng Hoa Thám, Phường Ngọc Hà, TP. Hà Nội
