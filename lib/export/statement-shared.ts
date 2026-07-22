@@ -117,11 +117,62 @@ export function findLabelColumnIndex(columns: string[], sampleRows?: (string | n
 // khop "THUYET MINH" (thieu tu thu 2). Them marker rieng chi can "THUYET" la
 // du (bao trum luon ca "THUYET MINH"/"T.MINH" da co, khong lam mat tac dung
 // 2 marker do, chi de lai cho ro lich su).
-const METADATA_COLUMN_MARKERS = ['STT', 'MA SO', 'MA CHI TIEU', 'THUYET MINH', 'THUYET', 'TM', 'T.MINH', 'CODE', 'NOTE'];
+// "MSO"/"MT" them 2026-07-22 (xac nhan qua PIT that): cot "Mã số" viet lien
+// khong dau cach thanh "MSỐ" (khong khop "MA SO" - can dau cach giua MA/SO),
+// va cot Thuyet minh ghi tat thanh "MT" (khac thu tu voi "TM" da co, khong
+// khop lam CHUOI CON lien tuc). Ca 2 cot deu chua MA SO/so tham chieu THUYET
+// MINH dang SO NGAN (vd "01","10","1","4") nen looksLikeTextColumn (structural
+// fallback) cung khong bat duoc (khong phai dang "cum chu" de nhan la van
+// ban) - PHAI dua vao ten cot. Da quet toan bo corpus cache (270+ bao cao,
+// scripts/_debug-scan-mt-mso-headers.ts) xac nhan CHI PIT dung 2 ten cot nay,
+// khong co bao cao nao khac trung "MT"/"MSO" trong ten cot that su - an toan
+// them, khong regress.
+// "T/M" them 2026-07-22 (xac nhan qua MCF that, CUNG dot): bien the khac cua
+// "Thuyet minh", viet tat kem dau "/" xen giua T va M - khong khop "TM" (dau
+// "/" pha vo chuoi con lien tuc) hay "T.MINH" (dau khac, "/" khong phai ".").
+// Da quet lai toan bo corpus (scripts/_debug-scan-tm-slash.ts), chi MCF dung
+// ten cot nay.
+// "MCT" them 2026-07-22 (xac nhan qua PIT that, bang LCTT): "Ma Chi Tieu"
+// viet tat lien khong dau cach - khong khop "MA CHI TIEU" (can dau cach).
+// Da quet lai toan bo corpus (scripts/_debug-scan-mct.ts), chi PIT dung ten
+// cot nay.
+const METADATA_COLUMN_MARKERS = [
+  'STT',
+  'MA SO',
+  'MSO',
+  'MA CHI TIEU',
+  'MCT',
+  'THUYET MINH',
+  'THUYET',
+  'TM',
+  'MT',
+  'T/M',
+  'T.MINH',
+  'CODE',
+  'NOTE',
+];
+
+// Cot GIA TRI (ngay ky) THAT SU vo tinh chua 1 marker metadata trong CHINH
+// no - xac nhan qua HNR that (2026-07-22): cot "01/01/2026 (Trình bày lại –
+// Thuyết minh VIII)" (so dau nam, kem chu thich "so lieu da trinh bay lai,
+// xem Thuyet minh VIII") bi tinh NHAM la cot metadata vi CHUA chu "Thuyet
+// minh" - lam balanceSheetPeriodColumns() chi con DUY NHAT 1 cot gia tri
+// (thieu cot dau nam), tra ve null hoan toan, xoa trang MOI chi tieu BCDKT
+// tren tab Ket qua (Excel van dung vi khong qua buoc loc nay). Phan biet qua
+// tin hieu CAU TRUC: neu ten cot BAT DAU bang 1 ngay thang ro rang
+// (dd/mm/yyyy), day CHAC CHAN la cot ky/gia tri that (khong ai dat 1 ngay
+// thang lam TIEN TO cho ten cot metadata) - moi chu thich sau do (du co nhac
+// "Thuyet minh"/"Ma so") chi la GHI CHU THEM, khong doi ban chat cot. Dung
+// startsWith() cho CA marker (khong chi ngay thang) se sai (da kiem chung qua
+// scripts/_debug-scan-metadata-startswith.ts): 3 bao cao khac (CNG/DDN/KVC)
+// co cot metadata bi GHEP LIEN voi ten cot nhan phia TRUOC (vd "CHỈ TIÊU Mã
+// số") - marker nam O CUOI chu khong o dau, startsWith() se loai NHAM ca 3.
+const DATE_PREFIX_PATTERN = /^\d{1,2}\/\d{1,2}\/\d{4}\b/;
 
 export function isMetadataColumnName(columnName: string | undefined): boolean {
   if (!columnName) return false;
   const normalized = normalizeLabelText(columnName);
+  if (DATE_PREFIX_PATTERN.test(normalized)) return false;
   return METADATA_COLUMN_MARKERS.some((marker) => normalized.includes(marker));
 }
 
@@ -983,6 +1034,22 @@ export function findArithmeticTotalRow(
   );
 }
 
+// Vien tat ke toan THUONG GAP trong ten dong KQKD ("LN" = Loi nhuan, "DT" =
+// Doanh thu, "LNST" = Loi nhuan sau thue - dang GHEP LIEN khong khoang trang)
+// - CHI mo rong o day (finder theo nhan cua lib/analysis.ts qua findRowByLabel),
+// KHONG dua vao normalizeLabelText dung chung toan file (se anh huong ca
+// buoc phan loai bang/doi chieu tong nhom o markdown-tables.ts/validate-
+// statements.ts, ngoai pham vi loi that su gap phai). Xac nhan qua PTX that
+// (2026-07-22): "5. LN gộp về bán hàng..."/"18. LN sau thuế TNDN (60=...)"
+// khong khop duoc marker day du 'LOI NHUAN GOP'/'LOI NHUAN SAU THUE' cua chi
+// tieu Lai gop/LNST tren tab Ket qua (Excel van dung vi xuat THANG bang tho,
+// khong qua buoc tim theo nhan nay). \b (ranh gioi tu) tranh mo rong nham 1
+// chuoi khac tinh co chua "LN"/"DT" lam chuoi con (vd se KHONG dung tay vao
+// giua 1 tu dai hon).
+function expandLabelFinderAbbreviations(normalized: string): string {
+  return normalized.replace(/\bLNST\b/g, 'LOI NHUAN SAU THUE').replace(/\bLN\b/g, 'LOI NHUAN').replace(/\bDT\b/g, 'DOANH THU');
+}
+
 export function findRowByLabel(
   table: StatementTable,
   matcher: (normalizedLabel: string) => boolean,
@@ -991,7 +1058,7 @@ export function findRowByLabel(
   const labelIndex = findLabelColumnIndex(table.columns, table.rows);
   const matches = table.rows.filter((row) => {
     const label = row[labelIndex];
-    return typeof label === 'string' && matcher(normalizeLabelText(label));
+    return typeof label === 'string' && matcher(expandLabelFinderAbbreviations(normalizeLabelText(label)));
   });
   if (matches.length === 0) return null;
   const arithmeticTotal = findArithmeticTotalRow(table, matches);

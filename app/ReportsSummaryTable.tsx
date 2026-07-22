@@ -364,10 +364,6 @@ export default function ReportsSummaryTable({
             <th className="stockcode-col">Mã CK</th>
             <th className="exchange-col">Sàn GD</th>
             <th>Loại BCTC</th>
-            {/* Tick THU CONG "da doc xong" (yeu cau nguoi dung 2026-07-22) - hoan
-            toan client-local (localStorage qua WatchlistContext), khong lien
-            quan gi den du lieu/warnings tu server. */}
-            <th className="read-col">Đã đọc</th>
             {labels.map((label) => {
               const active = sortState?.label === label;
               // Luon hien dau mui ten (yeu cau nguoi dung 2026-07-20) - mo
@@ -407,7 +403,7 @@ export default function ReportsSummaryTable({
         <tbody>
           {filteredReports.length === 0 && (
             <tr>
-              <td colSpan={4 + labels.length + 1 + (onToggleAll ? 1 : 0)} className="empty-state">
+              <td colSpan={3 + labels.length + 1 + (onToggleAll ? 1 : 0)} className="empty-state">
                 Không tìm thấy mã CK nào khớp "{stockCodeQuery}".
               </td>
             </tr>
@@ -448,6 +444,20 @@ export default function ReportsSummaryTable({
                   </div>
                 </td>
                 <td className={`stockcode-col ${isReportRead(report.filePath) ? 'stockcode-col-read' : ''}`}>
+                  {/* Tick THU CONG "da doc xong" (yeu cau nguoi dung 2026-07-22,
+                  chuyen vao trong o Ma CK thay vi cot rieng - phan hoi ngay sau
+                  khi them cot) - hoan toan client-local (localStorage qua
+                  WatchlistContext), khong lien quan gi den du lieu/warnings tu
+                  server. Tick lam ca o Ma CK chuyen xam (class stockcode-col-read
+                  o tren). */}
+                  <input
+                    type="checkbox"
+                    className="read-inline-checkbox"
+                    checked={isReportRead(report.filePath)}
+                    onChange={() => toggleReportRead(report.filePath)}
+                    aria-label={`Đánh dấu đã đọc xong báo cáo ${report.stockCode}`}
+                    title="Đánh dấu đã đọc xong (chỉ lưu trên máy này)"
+                  />
                   {/* Ten cong ty hien qua tooltip hover (title) thay vi cot rieng
                   (yeu cau user 2026-07-07) - do dai ten cong ty thuong lam bang
                   qua rong, trong khi Ma CK + San giao dich la du de nhan dien
@@ -491,15 +501,6 @@ export default function ReportsSummaryTable({
                   <span className="exchange-tag">{report.exchange}</span>
                 </td>
                 <td>{report.statementScope}</td>
-                <td className="read-col">
-                  <input
-                    type="checkbox"
-                    checked={isReportRead(report.filePath)}
-                    onChange={() => toggleReportRead(report.filePath)}
-                    aria-label={`Đánh dấu đã đọc xong báo cáo ${report.stockCode}`}
-                    title="Đánh dấu đã đọc xong (chỉ lưu trên máy này)"
-                  />
-                </td>
                 {labels.map((label) => {
                   const item = byLabel.get(label);
                   // Uu tien canh bao "khong dang tin cay" (OCR co the da

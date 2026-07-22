@@ -355,11 +355,19 @@ tren man hinh sieu rong (4K) de header/tabs khong bi keo dai qua muc doc duoc. *
   background-color: #d1d5db;
 }
 
-/* Cot tick "Đã đọc" (yeu cau nguoi dung 2026-07-22) - hep, can giua, giong
-   tinh than cot checkbox chon dong dau bang. */
-.read-col {
-  width: 48px;
-  text-align: center;
+/* Tick "Đã đọc" nam TRONG o Mã CK (yeu cau nguoi dung 2026-07-22, chuyen tu
+   cot rieng vao day + thu nho con 1/2 kich thuoc checkbox mac dinh trinh
+   duyet ~13px). vertical-align dam bao thang hang voi chu Ma CK ben canh
+   (mac dinh baseline se lam checkbox lech xuong duoi so voi chu). !important
+   vi ".report-table input[type='checkbox']" (dung cho checkbox chon dong,
+   16px) co specificity CAO HON 1 class don (attribute+type selector), giong
+   ly do .pct-mute-checkbox o tren cung phai dung !important. */
+.read-inline-checkbox {
+  width: 7px !important;
+  height: 7px !important;
+  margin: 0 4px 0 0 !important;
+  vertical-align: middle;
+  cursor: pointer;
 }
 
 .exchange-tag {

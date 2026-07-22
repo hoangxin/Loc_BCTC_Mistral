@@ -1173,9 +1173,43 @@ function isCoverPageOrSummaryTable(table: ParsedTable): boolean {
 // do RO RANG vuot troi (khong hoa voi key khac) va > 0. Khong ep gan bua khi
 // khong ro rang (tra ve null - bang bi bo qua, an toan hon la gan sai vao 1
 // bang khong lien quan, vd bang phu "Co cau von dieu le" o trang bia).
+// Bang "theo Nganh hang"/"theo bo phan" (segment/product breakdown, THUONG
+// la thuyet minh/quan tri BO SUNG cua doanh nghiep, KHONG PHAI 1 trong 4 bang
+// BCTC bat buoc) co dang CHUYEN VI so voi bang chinh: TEN CHI TIEU (vd
+// "Doanh thu thuan"/"Gia von"/"Chi phi ban hang") nam o CHINH TEN COT thay vi
+// o cot nhan/dong nhu bang that. Xac nhan qua MCF that (2026-07-22): bang
+// "BÁO CÁO KẾT QUẢ KINH DOANH THEO NGÀNH HÀNG" (cot = chi tieu KQKD, dong =
+// tung nganh hang/san pham) co 1 dong sub-header phu (nhom cot "Giá vốn" gom
+// 3 cot con "Giá vốn hàng bán"/"CP Sx ko hạch toán vào Z"/"Cộng") KHONG duoc
+// gop dung vao header (khong khop pattern rieng cua looksLikePeriodSubHeaderRow,
+// chi thiet ke cho "Nam nay/Nam truoc") nen roi thanh 1 DONG DU LIEU voi nhan
+// "Gia von hang ban" - tinh co khop dung marker 'GIA VON HANG BAN' cua
+// incomeStatement, khien CA bang breakdown nay bi gan NHAM vao incomeStatement
+// that (mostCommonColumns sau do chon NHAM cau truc cot cua bang breakdown lam
+// "pho bien nhat", day toan bo 20 dong KQKD that ve gia tri null/lech cot).
+// Nhan dien qua CHINH tin hieu gay loi (khong phai sua truc tiep dong sub-
+// header - rui ro cao hon, anh huong CA he thong gop header dung chung cho
+// moi bang): table.columns (KHONG PHAI rows) da chua >=2 tu khoa dac trung
+// cua 1 loai bang - dieu nay KHONG BAO GIO xay ra o bang that (Chi tieu/Ma
+// so/Thuyet minh/cac cot ky, khong bao gio dat TEN CHI TIEU lam TEN COT).
+function isTransposedContentTable(table: ParsedTable): boolean {
+  const columnText = table.columns.map((c) => normalizeLabelText(String(c ?? ''))).join(' | ');
+  // Phai gop CA ANCHOR_MARKERS_BY_KEY (khong chi CONTENT_MARKERS_BY_KEY) -
+  // xac nhan qua MCF that: cac ten cot cua bang breakdown ("Doanh thu
+  // thuần"/"Giá vốn"/"Chi phí quản lý") khop dung cac NEO NGAN GON (['DOANH
+  // THU THUAN']/['GIA VON']/['CHI PHI QUAN LY']), KHONG khop cac marker THUONG
+  // day du hon (vd 'DOANH THU THUAN VE BAN HANG'/'CHI PHI QUAN LY DOANH
+  // NGHIEP') - thieu neo se bo lot chinh truong hop gay loi.
+  return (['balanceSheet', 'incomeStatement', 'cashFlow', 'offBalanceSheet'] as const).some((key) => {
+    const markers = [...(ANCHOR_MARKERS_BY_KEY[key] ?? []), ...(CONTENT_MARKERS_BY_KEY.find((c) => c.key === key)?.markers ?? [])];
+    return markers.reduce((count, marker) => count + (matchesContentMarker(columnText, marker) ? 1 : 0), 0) >= 2;
+  });
+}
+
 function classifyTableByContent(table: ParsedTable): keyof FinancialStatements | null {
   if (isEquityChangesStatementTable(table)) return null;
   if (isCoverPageOrSummaryTable(table)) return null;
+  if (isTransposedContentTable(table)) return null;
   // Dung labelIndex DA TINH SAN cua bang (parseAllTablesInRange, co xet noi
   // dong mau) - KHONG tinh lai chi qua ten cot o day: da gap that MBS Q2/2026
   // (2026-07-11), bang "Nợ phải trả"/"Vốn chủ sở hữu" co CA 2 cot dau deu
