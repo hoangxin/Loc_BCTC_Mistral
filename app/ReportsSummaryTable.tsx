@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
 import { createPortal } from 'react-dom';
 import type { DownloadedReport } from '@/lib/status';
 import { buildOriginalFileUrl } from '@/lib/original-file-url';
@@ -270,6 +270,28 @@ export default function ReportsSummaryTable({
   const [sortState, setSortState] = useState<SortState>(null);
   const { isWatched, getHighlightOverride, setHighlightOverride } = useWatchlist();
 
+  // O "Tim theo Ma CK" bi cuon mat khi keo xuong xem cac dong sau (yeu cau
+  // nguoi dung 2026-07-22) - truoc day CHI co dong tieu de cot (thead) la
+  // "dong bang" (position: sticky, xem .report-table th trong globals.css),
+  // con .summary-actions (chua o tim/Watchlist/nut Xuat-Xoa) van cuon binh
+  // thuong. Lam .summary-actions sticky NGAY BEN TREN thead, va do CHIEU CAO
+  // THAT SU cua no (co the doi theo do rong man hinh/font) bang ResizeObserver
+  // de dat lam --sticky-actions-height cho thead biet cho o duoi ma khong bi
+  // chong len - dung do dong cung thay vi hardcode 1 con so px co dinh (de vo
+  // hieu ngay khi noi dung/font doi).
+  const actionsRef = useRef<HTMLDivElement>(null);
+  const [actionsHeight, setActionsHeight] = useState(0);
+  useEffect(() => {
+    const el = actionsRef.current;
+    if (!el) return;
+    const observer = new ResizeObserver((entries) => {
+      const height = entries[0]?.contentRect.height ?? el.offsetHeight;
+      setActionsHeight(height);
+    });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
   // Tim theo Ma CK (yeu cau user 2026-07-08) - so sanh khong phan biet hoa
   // thuong, cho phep go tat/mot phan ma (vd "id" khop "IDV").
   const filteredReports = useMemo(() => {
@@ -289,8 +311,8 @@ export default function ReportsSummaryTable({
   }
 
   return (
-    <div className="report-table-wrapper">
-      <div className="summary-actions">
+    <div className="report-table-wrapper" style={{ '--sticky-actions-height': `${actionsHeight}px` } as CSSProperties}>
+      <div className="summary-actions" ref={actionsRef}>
         <label className="field">
           <span className="field-label">Tìm theo Mã CK</span>
           <input

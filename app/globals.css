@@ -191,9 +191,13 @@ tren man hinh sieu rong (4K) de header/tabs khong bi keo dai qua muc doc duoc. *
   /* Dong tieu de "dong bang" khi cuon xuong xem cac ma sau (yeu cau nguoi
      dung 2026-07-17) - report-table-wrapper da co san overflow-x: auto (o
      tren) nen no da la 1 scroll container, sticky o day tu dong bam theo
-     truc doc khi cuon TRANG (khong can them max-height/overflow-y rieng). */
+     truc doc khi cuon TRANG (khong can them max-height/overflow-y rieng).
+     top dung bien --sticky-actions-height (do dong tu ReportsSummaryTable.tsx
+     qua ResizeObserver, mac dinh 0px neu chua do kip) thay vi "top: 0" cu -
+     2026-07-22, xep NGAY DUOI .summary-actions (cung sticky, xem o do) thay
+     vi bi no de len khi ca 2 cung dong sticky. */
   position: sticky;
-  top: 0;
+  top: var(--sticky-actions-height, 0px);
   z-index: 2;
 }
 
@@ -750,6 +754,16 @@ auto) cat mat du bam o hang dau/cuoi bang. */
      doc cho cac dong Ma CK, dong nay chi con o tim kiem + nut Xuat/Xoa). */
   padding: 8px 14px;
   border-bottom: 1px solid var(--border);
+  /* "Dong bang" o tim kiem/Watchlist/nut Xuat-Xoa khi cuon xuong xem cac
+     dong sau (yeu cau nguoi dung 2026-07-22) - truoc day chi co dong tieu
+     de cot (.report-table th duoi) la sticky, o tim kiem van cuon mat theo
+     noi dung bang. z-index cao hon .report-table th (2) de luon nam TREN no
+     khi ca 2 cung dong (khong bi chen). Nen mau dac (KHONG trong suot) de
+     che noi dung bang cuon qua ben duoi, giong tinh than thead da lam. */
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  background: var(--surface);
 }
 
 /* Nut Xuat Excel tong hop/Xoa ket qua (yeu cau nguoi dung 2026-07-18 - dua
