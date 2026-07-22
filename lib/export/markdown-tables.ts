@@ -1642,6 +1642,87 @@ export function containsNotesSectionMarker(markdown: string): boolean {
   return findCashFlowEndingIndex(lines, 0) !== -1;
 }
 
+// Phat hien (KHONG sua) truong hop pha vo gia dinh THIET KE cua co che cat
+// pham vi ngay tren/parseStatementsFromMarkdown duoi: ca he thong gia dinh
+// LCTT LUON la bang CUOI CUNG trong 3 bang chinh truoc Thuyet minh (dung
+// diem ket thuc LCTT lam diem cat "notesLine" - moi thu SAU diem do bi coi
+// la Thuyet minh va bi bo qua). Da xac nhan that WSS Q2/2026 (2026-07-22,
+// CTCK mau "Rieng"): tai lieu goc co THU TU KHAC - LCTT (+ 1 bang LCTT phu
+// "hoat dong moi gioi/uy thac") nam TRUOC KQKD, khien diem cat roi dung
+// GIUA tai lieu va KQKD (nam SAU diem cat) bi mat trang hoan toan du van con
+// nguyen trong markdown OCR. Day la thay doi GIA DINH KIEN TRUC (tim dong
+// thoi CA 3 diem ket thuc BCDKT/KQKD/LCTT roi lay diem XA NHAT, thay vi 1
+// diem cat duy nhat theo thu tu co dinh), rui ro regression cao cho ca kho
+// bao cao dang dung dung thu tu chuan - CHU DINH KHONG sua o day, chi phat
+// hien de bao canh bao RO RANG cho nguoi dung tu kiem tra tay (xem
+// buildResultFromMarkdown, lib/export/financial-statements.ts) thay vi de
+// KQKD/BCDKT am tham bien mat khong dau vet nhu truoc.
+// 3 phuong an do THAT BAI truoc khi chot phuong an duoi (kiem chung qua toan
+// bo corpus 234 bao cao cache, scripts/_debug-order-violation-corpus-check.ts):
+//  1) Khop tu khoa THEO TUNG DONG (moi marker, ke ca marker map mo): ~21% bao
+//     cao BINH THUONG bi bao nham (vd VCK - da xac nhan la bao cao BINH
+//     THUONG) vi bang chi tiet Thuyet minh (giai trinh doanh thu/tai san
+//     theo loai...) thuong xuyen dung lai dung tu vung BCDKT/KQKD.
+//  2) classifyTableByContent (cham diem CA BANG qua neo + marker map mo,
+//     dung de gan bang chinh trong parseStatementsFromMarkdown duoi) tren
+//     TUNG BANG sau diem cat cashFlowEndingIndex: van con ~16% bao nham - vua
+//     ke thua rui ro marker map mo o (1), VUA phu thuoc cashFlowEndingIndex
+//     (co the SAI vi 1 nguyen nhan hoan toan khac - da xac nhan qua ORS/IMP:
+//     dong TOC/dong trong bi nham la diem ket thuc LCTT that, khong lien
+//     quan gi den thu tu tai lieu - la 1 LOP LOI RIENG, khong nen tron voi
+//     canh bao nay).
+//  3) Dung ANCHOR_MARKERS_BY_KEY (chi neo, khong marker map mo) nhung VAN so
+//     sanh voi cashFlowEndingIndex nhu (2): van dinh loi phu thuoc diem cat
+//     sai o tren (ORS/IMP), VA van con vai truong hop neo BCDKT/KQKD xuat
+//     hien trong 1 bang CHINH SACH KE TOAN/thuyet minh chinh sach (vd CSV:
+//     bang lich khau hao TSCD nhac lai "Tai san co dinh vo hinh" trong PHAN
+//     MO TA chinh sach, khong phai so lieu that; GGG: doan van mo ta nguyen
+//     tac ghi nhan doanh thu hop dong xay dung nhac "Doanh thu thuan").
+// Phuong an CUOI: BO HAN buoc tim diem cat (khong con phu thuoc
+// findCashFlowEndingIndex/cashFlowEndingIndex nua) - so sanh THANG vi tri
+// XUAT HIEN DAU TIEN cua 1 neo LCTT (ANCHOR_MARKERS_BY_KEY.cashFlow) so voi
+// vi tri XUAT HIEN DAU TIEN cua 1 neo KQKD, CHI tren cac dong la HANG BANG
+// THAT (splitMarkdownRow khac null - loai doan van mo ta chinh sach nhu GGG,
+// thuong la van xuoi khong nam trong bang) VA nam trong 1 bang du du lieu
+// (>=3 dong). Neu neo LCTT xuat hien SOM HON neo KQKD dau tien trong ca tai
+// lieu - dung LA vi pham thu tu (LCTT truoc KQKD), khop CHINH XAC dinh nghia
+// bug WSS, khong con lien quan gi den viec diem cat co tinh dung hay khong.
+// (Cham RIENG voi incomeStatement, KHONG gop ca balanceSheet - xem comment o
+// detectCashFlowBeforeOtherStatementsOrderViolation duoi: BCDKT LUON nam
+// TRUOC LCTT trong ca 2 thu tu, gop vao se che mat vi pham that.)
+function findFirstAnchorTableLineIndex(lines: string[], normalizedLines: string[], tables: ParsedTable[], keys: ('balanceSheet' | 'incomeStatement' | 'cashFlow')[]): number {
+  const anchors = keys.flatMap((key) => ANCHOR_MARKERS_BY_KEY[key] ?? []);
+  let best = -1;
+  for (const t of tables) {
+    if (t.rows.length < 3) continue;
+    if (isEquityChangesStatementTable(t) || isCoverPageOrSummaryTable(t)) continue;
+    for (let i = t.startLineIndex; i < t.endLineIndex; i++) {
+      if (splitMarkdownRow(lines[i]) === null) continue;
+      if (anchors.some((marker) => matchesContentMarker(normalizedLines[i], marker))) {
+        if (best === -1 || i < best) best = i;
+        break;
+      }
+    }
+  }
+  return best;
+}
+
+export function detectCashFlowBeforeOtherStatementsOrderViolation(markdown: string): boolean {
+  const lines = convertJsonCaptionTablesToMarkdown(markdown).split(/\r?\n/);
+  const normalizedLines = lines.map((l) => normalizeLabelText(l));
+  const tables = parseAllTablesInRange(lines);
+  const cashFlowFirst = findFirstAnchorTableLineIndex(lines, normalizedLines, tables, ['cashFlow']);
+  if (cashFlowFirst === -1) return false;
+  // CHI so voi incomeStatement (KHONG gop ca balanceSheet): BCDKT LUON nam
+  // TRUOC LCTT trong ca thu tu CHUAN LAN thu tu bat thuong cua WSS (BCDKT ->
+  // LCTT -> KQKD, thay vi BCDKT -> KQKD -> LCTT) - gop ca balanceSheet vao se
+  // luon lay duoc vi tri BCDKT (som hon LCTT o CA 2 thu tu) lam
+  // "mainStatementFirst", che mat chinh vi pham that (KQKD nam SAU LCTT).
+  const incomeStatementFirst = findFirstAnchorTableLineIndex(lines, normalizedLines, tables, ['incomeStatement']);
+  if (incomeStatementFirst === -1) return false;
+  return cashFlowFirst < incomeStatementFirst;
+}
+
 export function parseStatementsFromMarkdown(rawMarkdown: string): FinancialStatements {
   const markdown = convertJsonCaptionTablesToMarkdown(rawMarkdown);
   const lines = markdown.split(/\r?\n/);

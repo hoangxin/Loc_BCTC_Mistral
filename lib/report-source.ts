@@ -107,7 +107,10 @@ const ENGLISH_FINANCIAL_TERM_PATTERNS: RegExp[] = [
 // Viet nao trong ten, van dung dung nhu cu, khong regress).
 const VIETNAMESE_FILENAME_INDICATOR_PATTERNS: RegExp[] = [/baocaotaichinh/i, /(^|[_-])vi([_.\-]|$)/i];
 
-function hasVietnameseFilenameIndicator(entryName: string): boolean {
+// Export: tai dung o lib/pdf-text.ts/report-extract.ts lam dieu kien PHU
+// (bilingual filename guard) cho buoc kiem tra ngon ngu theo NOI DUNG - xem
+// comment o extractReportContent (report-extract.ts) ve bug QTP 2026-07-22.
+export function hasVietnameseFilenameIndicator(entryName: string): boolean {
   return VIETNAMESE_FILENAME_INDICATOR_PATTERNS.some((p) => p.test(entryName));
 }
 

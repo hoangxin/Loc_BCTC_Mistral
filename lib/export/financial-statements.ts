@@ -14,7 +14,7 @@ import { callMistralOcrBatch } from '../ai/mistral-ocr-batch';
 import type { MistralOcrPage } from '../ai/mistral-ocr';
 import type { OcrMode } from '../ocr-mode';
 import { validateFinancialStatements, findAllGroupSumMismatches, type TaggedGroupSumMismatch } from './validate-statements';
-import { containsNotesSectionMarker, parseStatementsFromMarkdown } from './markdown-tables';
+import { containsNotesSectionMarker, detectCashFlowBeforeOtherStatementsOrderViolation, parseStatementsFromMarkdown } from './markdown-tables';
 import { classifyBusinessType, type BusinessType } from '../business-type';
 import { unreliableCellKeysFromMismatches, normalizeLabelText, type FinancialStatements, type UnreliableCells } from './statement-shared';
 import { looksLikeVietnameseText } from '../pdf-text';
@@ -248,14 +248,27 @@ export function buildResultFromMarkdown(markdown: string, statements: FinancialS
   // yeu cau nguoi dung tu tim ban BCTC goc (KHONG phai ban "(điều chỉnh)")
   // thay vi dung so lieu tu file nay lam bao cao chinh.
   const correctionNotice = isCorrectionNoticeMarkdown(markdown);
+  // Xem detectCashFlowBeforeOtherStatementsOrderViolation (markdown-tables.ts)
+  // - phat hien (KHONG tu sua) truong hop tai lieu co thu tu bang khac chuan
+  // (vd LCTT nam TRUOC KQKD, xac nhan that WSS Q2/2026) khien co che cat pham
+  // vi lam mat trang 1 bang chinh ma khong de lai dau vet nao khac - can canh
+  // bao noi bat rieng thay vi de nguoi dung tuong nham la loi OCR/parse thong
+  // thuong (yeu cau nguoi dung 2026-07-22: bao loi ro rang, chua can sua thiet
+  // ke cat pham vi).
+  const orderViolation = !correctionNotice && detectCashFlowBeforeOtherStatementsOrderViolation(markdown);
   const warnings = correctionNotice
     ? [
         'CANH BAO: day co ve la CONG VAN DINH CHINH (chi sua lai vai chi tieu da cong bo truoc do), KHONG PHAI mot BCTC day du - can tu tim va doi chieu voi ban BAO CAO GOC (khong phai ban "(điều chỉnh)"), khong nen dung so lieu tu file nay lam bao cao chinh thuc.',
         ...issues.map((issue) => issue.message),
       ]
-    : isEmptyParse(statements)
-      ? ['CANH BAO: ca 3 bang chinh (BCDKT/KQKD/LCTT) deu khong doc duoc dong nao - can kiem tra tay.', ...issues.map((issue) => issue.message)]
-      : issues.map((issue) => issue.message);
+    : orderViolation
+      ? [
+          'CANH BAO: tai lieu nay co THU TU BANG khong chuan (Luu chuyen tien te xuat hien TRUOC Ket qua kinh doanh thay vi sau) - he thong dang gia dinh LCTT luon la bang CUOI CUNG nen co the da CAT MAT du lieu Ket qua kinh doanh (va cac bang nam sau no). Vui long mo file PDF/Excel goc de doi chieu tay, khong dung so lieu tab nay lam ban chinh thuc.',
+          ...issues.map((issue) => issue.message),
+        ]
+      : isEmptyParse(statements)
+        ? ['CANH BAO: ca 3 bang chinh (BCDKT/KQKD/LCTT) deu khong doc duoc dong nao - can kiem tra tay.', ...issues.map((issue) => issue.message)]
+        : issues.map((issue) => issue.message);
 
   return {
     statements,

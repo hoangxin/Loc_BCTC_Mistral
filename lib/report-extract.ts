@@ -1,10 +1,11 @@
+import { basename } from 'path';
 import { determineStatementPageScope, looksLikeVietnameseText } from './pdf-text';
 import { extractFinancialStatementsWithOcrProbe, NonVietnameseContentError } from './export/financial-statements';
 import { extractFinancialStatementsFromDocx } from './export/docx-statements';
 import { extractFinancialStatementsFromDoc } from './export/doc-statements';
 import { classifyBusinessType, type BusinessType } from './business-type';
 import type { FinancialStatements, UnreliableCells } from './export/statement-shared';
-import type { ResolvedReportFile } from './report-source';
+import { hasVietnameseFilenameIndicator, type ResolvedReportFile } from './report-source';
 import { DEFAULT_OCR_MODE, type OcrMode } from './ocr-mode';
 
 // Diem noi DUY NHAT re nhanh theo dinh dang file (pdf/docx/doc, xem
@@ -65,8 +66,22 @@ export async function extractReportContent(resolved: ResolvedReportFile, ocrMode
   const scope = scopeMap.get(resolved.filePath);
   if (scope?.error) throw new Error(scope.error);
   // Text layer THAT da xac nhan khong phai tieng Viet - loai NGAY, khong ton
-  // 1 lan goi OCR nao ca (mien phi, xem lib/pdf-text.ts).
-  if (scope?.isLikelyNonVietnamese) return null;
+  // 1 lan goi OCR nao ca (mien phi, xem lib/pdf-text.ts). NHUNG: bug that QTP
+  // 2026-07-22 - file BCTC "vi_en" (gop 1 file scan Viet+Anh cho CUNG 1 tai
+  // lieu, mau chuan HNX/UBCKNN) co text layer NHUNG mac dinh dang loi (font
+  // scan cu, giong PMP 2026-07-21) lam phan TIENG VIET bi garble ve ty le dau
+  // gan 0 (khong con phan biet duoc voi tieng Anh that qua vietnameseDiacriticRatio),
+  // TRONG KHI phan dich TIENG ANH kem theo (dung mau) van doc dung, tinh co
+  // khop du "bang chung duong" ma looksLikeEnglishFinancialText doi hoi (xem
+  // pdf-text.ts) - ket luan SAI la "khong phai tieng Viet", loai mat 1 BCTC
+  // that su truoc ca khi OCR. Ten file da duoc buoc chon file o report-source.ts
+  // (isEnglishVariantEntry/hasVietnameseFilenameIndicator) xac nhan la ban
+  // TIENG VIET duoc CHU DICH giu lai (khop "baocaotaichinh"/"vi") - neu con
+  // dau hieu do, KHONG tin ket luan "khong phai tieng Viet" tu NOI DUNG nua
+  // (chi la CHUA DU BANG CHUNG, khong phai bang chung day la tieng Anh that),
+  // giao han cho buoc kiem tra SAU OCR (extractFinancialStatementsWithOcrProbe,
+  // doc dung vi OCR nhin ANH RENDER, khong dung text layer hong).
+  if (scope?.isLikelyNonVietnamese && !hasVietnameseFilenameIndicator(resolved.entryName ?? basename(resolved.filePath))) return null;
 
   const ocrLabel = `[perf] extractFinancialStatements (Mistral) ${resolved.filePath}`;
   console.time(ocrLabel);

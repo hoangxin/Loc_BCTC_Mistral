@@ -313,6 +313,55 @@ tren man hinh sieu rong (4K) de header/tabs khong bi keo dai qua muc doc duoc. *
   overflow-wrap: normal;
 }
 
+/* Bang can nen DAC (khong con trong suot) cho TUNG dong (yeu cau nguoi dung
+   2026-07-22, phuc vu cot Mã CK "dong bang" duoi day) - THUAN TUY THEM MOI,
+   khong doi giao dien: truoc gio cac td van trong suot, chi lo mau nen cua
+   .report-table-wrapper (var(--surface)) qua - dat NGAY tren tr de .watchlist-row
+   (dinh nghia SAU trong file, class cu the hon) van ghi de dung nhu cu. */
+.report-table tbody tr {
+  background-color: var(--surface);
+}
+
+/* "Dong bang" cot Mã CK khi cuon NGANG (yeu cau nguoi dung 2026-07-22, giong
+   tinh than voi thead "dong bang" khi cuon DOC o tren) - cac cot TRUOC no
+   (checkbox chon dong/Xuat file, KHONG sticky) tu nhien cuon khuat ben trai
+   khi keo qua x=0 nen KHONG can tinh offset cong don gi ca, chi can pin thang
+   tai left:0. background-color: inherit de o Mã CK LUON khop mau nen dong
+   THAT SU (binh thuong = var(--surface) o tren, rieng dong watchlist =
+   #bcd9ff, xem .watchlist-row duoi) thay vi 1 mau co dinh - tranh o dong bang
+   nhin "lac mau" so voi phan con lai cua dong khi la dong watchlist. z-index
+   thap hon th (2) nhung cao hon cac td thuong (auto) de che dung cac cot SAU
+   no (Sàn GD, Loại BCTC, cac cot %...) khi chung cuon qua duoi no. */
+.stockcode-col {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  background-color: inherit;
+}
+
+.report-table th.stockcode-col {
+  /* O goc (dong thoi sticky CA top lan left) can z-index cao hon ca th
+     thuong (2, dung chung .report-table th) LAN td sticky ngang (1) de luon
+     nam TREN het khi cuon ca 2 huong cung luc. */
+  z-index: 3;
+}
+
+/* O Mã CK chuyen xam khi tick "Đã đọc" (yeu cau nguoi dung 2026-07-22) - CHI
+   rieng o Mã CK, KHONG dong bo mau sang cac o chi tieu % cung dong (yeu cau
+   ro rang cua nguoi dung). Selector 2 class (.stockcode-col.stockcode-col-read)
+   de chac chan thang duoc "background-color: inherit" o .stockcode-col (cung
+   file, cung 1 class don) bat ke thu tu khai bao trong file. */
+.stockcode-col.stockcode-col-read {
+  background-color: #d1d5db;
+}
+
+/* Cot tick "Đã đọc" (yeu cau nguoi dung 2026-07-22) - hep, can giua, giong
+   tinh than cot checkbox chon dong dau bang. */
+.read-col {
+  width: 48px;
+  text-align: center;
+}
+
 .exchange-tag {
   display: inline-block;
   font-size: 11px;
