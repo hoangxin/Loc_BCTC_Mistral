@@ -376,7 +376,12 @@ const OTHER_METRICS: MetricDef[] = [
     // Loai 2 dong con "...cua co dong khong kiem soat"/"...cua co dong cua
     // cong ty me" (bao cao Hop nhat) - ca 2 deu chua "LOI NHUAN SAU THUE" nhu
     // dong tong that su, phai loai rieng bang tu khoa "CO DONG".
-    finders: [byLabel(['LOI NHUAN SAU THUE'], ['CO DONG'])],
+    // Them bien the "LOI NHUAN THUAN SAU THUE" 2026-07-22 (xac nhan qua BSQ
+    // that): mot so cong ty chen them chu "thuan" giua "loi nhuan" va "sau
+    // thue" ("Lợi nhuận thuần sau thuế TNDN"), pha vo chuoi con lien tuc "LOI
+    // NHUAN SAU THUE" - giong tinh than byLabelAny da dung cho cac chi tieu
+    // khac o tren (vd "gop"/khong "gop").
+    finders: [byLabelAny(['LOI NHUAN SAU THUE', 'LOI NHUAN THUAN SAU THUE'], ['CO DONG'])],
     thresholds: { level1: 40, level2: 50 },
   },
 ];

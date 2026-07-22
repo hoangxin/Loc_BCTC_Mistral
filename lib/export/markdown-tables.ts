@@ -102,13 +102,34 @@ function looksLikeHeadingLine(rawLine: string): boolean {
 //   });
 // }
 
+// SUA 2026-07-22 (xac nhan qua PPC/PVR that): mot so bao cao Mistral OCR GHEP
+// nhan tieng Viet + ban dich tieng Anh vao CHUNG 1 O (2 dong markdown le ra
+// tach rieng bi OCR nhap lai), vd o goc: "**TỔNG CỘNG TÀI SẢN (270 = 100 +
+// 200)** ***TOTAL ASSETS (270 = 100 + 200)***" - lam nhan dai/xau va co the
+// gop phan lam trat khop nhan (Nhom A). Tin hieu CAU TRUC AN TOAN (khong doan
+// theo tu vung/ngon ngu, giong tinh than
+// feedback_prefer_structural_over_wording_fixes): cong thuc trong ngoac
+// "(NNN...)' (chua so, dac trung rieng cho tung dong BCTC) LAP LAI Y HET lan
+// 2 trong CUNG 1 o - chi cat khi phat hien DUNG mau nay (an toan voi viet tat
+// hop le nhu "FVTPL"/"TNDN", vi cac tu do khong bao gio tao ra 1 cong thuc
+// trong ngoac lap lai 2 lan).
+function stripDuplicateFormulaTranslation(cell: string): string {
+  const formulaMatch = cell.match(/\([^()]*\d[^()]*\)/);
+  if (!formulaMatch) return cell;
+  const formula = formulaMatch[0];
+  const firstEnd = cell.indexOf(formula) + formula.length;
+  const secondIndex = cell.indexOf(formula, firstEnd);
+  if (secondIndex === -1) return cell;
+  return cell.slice(0, firstEnd).trim();
+}
+
 function splitMarkdownRow(line: string): string[] | null {
   const trimmed = line.trim();
   if (!trimmed.startsWith('|') || !trimmed.endsWith('|')) return null;
   return trimmed
     .slice(1, -1)
     .split('|')
-    .map((cell) => cell.replace(/\*\*/g, '').trim());
+    .map((cell) => stripDuplicateFormulaTranslation(cell.replace(/\*\*/g, '').trim()));
 }
 
 function isSeparatorRow(cells: string[]): boolean {
@@ -137,6 +158,38 @@ function looksLikePeriodSubHeaderRow(cells: string[]): boolean {
 // tra ve GIA TRI SAI TRONG NHU DUNG thay vi null - nguy hiem hon nhieu so
 // voi 1 chi tieu tra ve null.
 const SINGLE_NUMBER_PATTERN = /^\(?-?[\d.,]+\)?$/;
+
+// SUA 2026-07-22 (xac nhan qua PPC that): 1 so bao cao dung KHOANG TRANG lam
+// dau phan cach hang nghin thay vi dau "." (vd "3 331 514 267 301" thay vi
+// "3.331.514.267.301"), bi tach thanh nhieu token RIENG BIET boi vong lap
+// tren, khong token nao la "manh" (khong co dau phan cach/am/du 4 chu so) nen
+// roi vao nhanh "khong chac chan" o duoi, tra ve chuoi tho - lam MOI chi tieu
+// doc tu bang nay = null. KHAC HAN voi bug MBS da neu tren (2 so THAT SU
+// DOC LAP, MOI so DA TU no co dau "." rieng, chi vo tinh dung canh nhau) -
+// phan biet bang dieu kien BAT BUOC: khong token nao duoc co dau "."/","
+// (neu co, chac chan la 1 so DA HOAN CHINH doc lap, khong duoc ghep tiep) VA
+// nhom DAU 1-3 chu so, cac nhom SAU dung 3 chu so (dung quy tac nhom hang
+// nghin chuan, giong cach extractIntegerDigits da kiem chung cho dau ".").
+function looksLikeSpaceGroupedNumber(tokens: string[]): boolean {
+  if (tokens.length < 2) return false;
+  if (tokens.some((t) => /[.,]/.test(t))) return false;
+  const core = tokens.map((t) => t.replace(/^\(/, '').replace(/\)$/, '').replace(/^-/, ''));
+  if (!/^\d{1,3}$/.test(core[0])) return false;
+  return core.slice(1).every((t) => /^\d{3}$/.test(t));
+}
+
+// Ghep cac token da xac nhan la 1 so duy nhat (looksLikeSpaceGroupedNumber)
+// thanh 1 chuoi dang "." chuan - tai su dung nguyen logic am/dau ngoac +
+// extractIntegerDigits co san ben duoi thay vi viet lai rieng.
+function joinSpaceGroupedNumber(tokens: string[]): string {
+  const first = tokens[0];
+  const last = tokens[tokens.length - 1];
+  const sign = first.startsWith('-') ? '-' : '';
+  const openParen = first.startsWith('(') ? '(' : '';
+  const closeParen = last.endsWith(')') ? ')' : '';
+  const core = tokens.map((t) => t.replace(/^\(/, '').replace(/\)$/, '').replace(/^-/, ''));
+  return `${sign}${openParen}${core.join('.')}${closeParen}`;
+}
 
 // Tham chieu thuyet minh dang "32(a)"/"8(b)" - hay bi Mistral dinh LIEN vao o
 // gia tri ke ben (thay vi tach rieng cot Thuyet minh, thuong de trong) khi
@@ -191,6 +244,8 @@ function parseNumericCell(value: string): string | number | null {
     numericToken = strongTokens[0];
   } else if (numberLikeTokens.length === 1) {
     numericToken = numberLikeTokens[0];
+  } else if (looksLikeSpaceGroupedNumber(numberLikeTokens)) {
+    numericToken = joinSpaceGroupedNumber(numberLikeTokens);
   } else {
     return trimmed;
   }
@@ -716,7 +771,23 @@ function findCashFlowEndingByFinancingSectionOrder(lines: string[], searchFromIn
 // con rui ro khop nham nhu lan dau thu (2026-07-14).
 const NOTES_SECTION_TITLE_MARKERS = [['THUYET MINH', 'BAO CAO TAI CHINH']];
 
+// SUA 2026-07-22 (xac nhan qua NCT that): cau dan chieu lap lai o CUOI MOI
+// TRANG ("Các Thuyết minh đính kèm là bộ phận hợp thành của Báo cáo tài
+// chính"/bien the "...la bo phan khong the tach roi cua...") CUNG chua ca 2
+// token 'THUYET MINH' va 'BAO CAO TAI CHINH' nhu tieu de that, va la 1 CAU
+// NGAN (<80 ky tu, khong bat dau bang "|") nen lot qua looksLikeHeadingLine -
+// bi hieu NHAM la tieu de that cua muc Thuyet minh, khien findNotesSectionStartIndex
+// (phuong an du phong CUOI CUNG khi ca 2 phuong an chinh xac hon deu that bai -
+// dung o cac bao cao bi OCR cut ngang truoc khi toi LCTT/Thuyet minh that, vd
+// NCT) cat pham vi bang NGAY SAU dong dau tien co ca 2 tu khoa, xoa mat BCDKT/
+// KQKD dang doc dang do. Loai truong hop nay bang tu khoa DAC TRUNG RIENG cua
+// cau dan chieu (khong bao gio xuat hien trong 1 dong TIEU DE that, vd "Thuyết
+// minh báo cáo tài chính quý 2..."): "DINH KEM" (dinh kem) va "BO PHAN" (bo
+// phan hop thanh/khong the tach roi).
+const NOTES_SECTION_DISCLAIMER_EXCLUDE_MARKERS = ['DINH KEM', 'BO PHAN'];
+
 function isNotesSectionTitleHeadingLine(normalizedLine: string): boolean {
+  if (NOTES_SECTION_DISCLAIMER_EXCLUDE_MARKERS.some((m) => normalizedLine.includes(m))) return false;
   return NOTES_SECTION_TITLE_MARKERS.some((tokens) => tokens.every((t) => normalizedLine.includes(t)));
 }
 
@@ -996,10 +1067,35 @@ const EQUITY_CHANGES_COLUMN_MARKERS = ['SO DU DAU NAM', 'SO DU DAU KY', 'TANG GI
 // nguyen nhan can pham vi). Chan bang nay TRUOC KHI cham diem theo nhan dong -
 // dung CAU TRUC COT (bat bien theo luat) thay vi co gang liet ke them tru
 // (dung tinh than "uu tien tin hieu cau truc" da chot truoc do).
+// SUA 2026-07-22 (xac nhan qua AGR that, mau CTCK Thong tu 210): BCDKT THAT
+// (standalone, khong phai bang bien dong VCSH) dung dung ten cot "SỐ DƯ CUỐI
+// KỲ"/"SỐ DƯ ĐẦU NĂM" thay vi "Số cuối kỳ"/"Số đầu năm" thuong gap - trung
+// vo tinh 2/5 EQUITY_CHANGES_COLUMN_MARKERS, bi loai NHAM khoi ca 3 bang
+// chinh (balanceSheet VA offBalanceSheet cua AGR deu bi mat trang vi cung 1
+// nguyen nhan). Them tin hieu NOI DUNG de phan biet AN TOAN: bang bien dong
+// VCSH (dang "dong la tung quy/von, cot la thoi gian/su kien") KHONG BAO GIO
+// co dong "TAI SAN NGAN HAN"/"TONG CONG TAI SAN" (2 neo TAI SAN mot chieu,
+// chi BCDKT that moi co, khong lien quan gi den von/quy) - neu co it nhat 1
+// trong 2 neo nay o COT NHAN, chac chan la BCDKT that du trung cot, KHONG
+// duoc loai.
 function isEquityChangesStatementTable(table: ParsedTable): boolean {
   const columnText = table.columns.map((c) => normalizeLabelText(String(c ?? ''))).join(' | ');
   const matches = EQUITY_CHANGES_COLUMN_MARKERS.reduce((count, marker) => count + (columnText.includes(marker) ? 1 : 0), 0);
-  return matches >= 2;
+  if (matches < 2) return false;
+  const labelIndex = table.labelIndex;
+  const labelText = table.rows.map((row) => normalizeLabelText(String(row[labelIndex] ?? ''))).join(' | ');
+  // "TAI SAN QUAN LY THEO CAM KET" - dong tieu de rieng cua bang "Cac chi
+  // tieu ngoai BCTHTC" (CTCK, Thong tu 210) - AGR con bi mat trang bang nay
+  // vi CUNG trung marker cot voi bang BCDKT that o tren, dung lai chinh
+  // marker da co san (OFF_BALANCE_SHEET_CONTENT_MARKERS) thay vi lap lai.
+  if (
+    labelText.includes('TAI SAN NGAN HAN') ||
+    labelText.includes('TONG CONG TAI SAN') ||
+    labelText.includes('TAI SAN QUAN LY THEO CAM KET')
+  ) {
+    return false;
+  }
+  return true;
 }
 
 // SUA 2026-07-17 (phan hoi nguoi dung, xac nhan qua ABW/ATS/CTS/GEE/NTC/UDJ/VPD
@@ -1044,10 +1140,23 @@ function isCoverPageOrSummaryTable(table: ParsedTable): boolean {
   );
   if (sectionNameMatches >= 2) return true;
 
-  const hasTangGiam = combinedText.includes('TANG GIAM') || combinedText.includes('TANG/GIAM');
-  const hasPercentChangeWording = combinedText.includes('TY LE') && hasTangGiam;
+  // SUA 2026-07-22 (xac nhan qua BTP that): "TANG GIAM"/"CHENH LECH" LA TU
+  // VUNG BINH THUONG trong 1 bang LCTT (phuong phap gian tiep) THAT SU - vd
+  // "Tăng, giảm các khoản phải thu"/"Tăng giảm hàng tồn kho" (dong dieu chinh
+  // von luu dong, hau nhu bat buoc co) VA "Lãi, lỗ CHÊNH LỆCH tỷ giá hối đoái
+  // do đánh giá lại..." (dong dieu chinh ty gia, rat pho bien voi cong ty co
+  // giao dich ngoai te) - CA HAI deu la NOI DUNG DONG (row), khong phai TEN
+  // COT nhu vi du "highlight table" that su ("Tổng doanh thu | Kỳ này | Kỳ
+  // trước | Chênh lệch | Tỷ lệ tăng/giảm" - o do 2 cum tu nay la TEN COT).
+  // Truoc day cham diem tren combinedText (gom CA rows), khien 1 bang LCTT
+  // that (co ca 2 dong tren) bi hieu NHAM la bang tom tat, xoa mat toan bo
+  // LCTT. Doi sang CHI xet table.columns (dung dung tin hieu CAU TRUC ma vi
+  // du gom trong comment tren mo ta - TEN COT, khong phai noi dung dong).
+  const columnText = table.columns.map((cell) => normalizeLabelText(String(cell ?? ''))).join(' | ');
+  const hasTangGiam = columnText.includes('TANG GIAM') || columnText.includes('TANG/GIAM');
+  const hasPercentChangeWording = columnText.includes('TY LE') && hasTangGiam;
   const hasDifferenceWording =
-    combinedText.includes('CHENH LECH') && (hasTangGiam || combinedText.includes('SO VOI KY TRUOC') || combinedText.includes('CUNG KY'));
+    columnText.includes('CHENH LECH') && (hasTangGiam || columnText.includes('SO VOI KY TRUOC') || columnText.includes('CUNG KY'));
   // SUA 2026-07-18 (FTS that): bang "giai trinh bien dong loi nhuan" (bat
   // buoc theo Thong tu 96/2020/TT-BTC, cong bo kem BCTC) dung dung ten dong
   // "Loi nhuan truoc thue"/"Loi nhuan sau thue" GIONG HET KQKD that nhung la

@@ -96,7 +96,28 @@ export function findLabelColumnIndex(columns: string[], sampleRows?: (string | n
 // (110,120,200...) vao phep tong "cac muc con", sai hoan toan (vd "Tong cac
 // muc trong TS dai han (1680) khong khop dong TS dai han (200)" - ca 2 con so
 // deu la MA SO, khong phai gia tri tien that).
-const METADATA_COLUMN_MARKERS = ['STT', 'MA SO', 'MA CHI TIEU', 'THUYET MINH', 'TM'];
+// "CODE"/"NOTE"/"NOTES" them 2026-07-22 (xac nhan qua MCP that): mot so bao
+// cao Mistral OCR dich luon TEN COT sang tieng Anh nhung van GHEP CHUNG voi
+// ten Viet trong CUNG 1 cot (vd cot Ma so ghi rieng la "Code", cot Thuyet
+// minh ghi "Note") thay vi chi la 1 bien the viet tat tieng Viet nhu
+// "MA CHI TIEU" o tren - danh sach marker chi tieng Viet truoc day bo sot,
+// khien cot "Code" (chua chinh MA SO dang so: 100, 110, 111...) bi tinh NHAM
+// la cot gia tri, xem them looksLikeTextColumn duoi (xu ly truong hop cot
+// dich TEN CHI TIEU rieng, vd "ASSETS", ma marker ten cot khong the liet ke
+// het moi bien the).
+// "T.MINH" them 2026-07-22 (xac nhan qua BMC that): mot so cong ty viet tat
+// "Thuyet minh" thanh "T.minh" (giu dau cham giua, normalizeLabelText KHONG
+// xoa dau cham) - khong khop "THUYET MINH" (khac chu) VA khong khop "TM" (co
+// dau cham xen giua T va M, khong con la substring lien tuc "TM" nua) - lam
+// cot nay bi tinh nham la cot gia tri, day balanceSheetPeriodColumns doc lech
+// 1 cot (currentIndex tro vao chinh cot T.minh chua ma tham chieu thuyet
+// minh nhu "V.1"/"V.2", priorIndex tro vao cot "Cuoi quy" that).
+// "THUYET" (dung rieng, khong kem "MINH") them 2026-07-22 (xac nhan qua PTE
+// that): ten cot bi cut cut chi con "Thuyết" (mat han chu "minh") - khong
+// khop "THUYET MINH" (thieu tu thu 2). Them marker rieng chi can "THUYET" la
+// du (bao trum luon ca "THUYET MINH"/"T.MINH" da co, khong lam mat tac dung
+// 2 marker do, chi de lai cho ro lich su).
+const METADATA_COLUMN_MARKERS = ['STT', 'MA SO', 'MA CHI TIEU', 'THUYET MINH', 'THUYET', 'TM', 'T.MINH', 'CODE', 'NOTE'];
 
 export function isMetadataColumnName(columnName: string | undefined): boolean {
   if (!columnName) return false;
@@ -131,12 +152,67 @@ function isTableHeaderEchoLabel(label: string): boolean {
 // 100...) thay vi so lieu that. Trong MOI mau da doi chieu, cot gia tri LUON
 // nam SAU nhan (khong bao gio truoc) nen loai bo toan bo pham vi truoc
 // labelIndex la an toan.
+// SUA 2026-07-22 (xac nhan qua MCP that): mot so bao cao tach ban dich tieng
+// Anh cua TEN CHI TIEU thanh 1 COT RIENG (vd cols BCDKT = ["TÀI SẢN","ASSETS",
+// "Code","Thuyết minh/Note","30/06/2026","01/01/2026"]) thay vi ghep chung 1 o
+// nhu da so bao cao khac. Cot dich ("ASSETS") khong khop METADATA_COLUMN_MARKERS
+// (khong the liet ke het moi cach dich cua moi cong ty) nen truoc day bi tinh
+// NHAM la cot gia tri - balanceSheetPeriodColumns/incomeStatementPeriodColumns
+// (lib/analysis.ts) sau do doc SAI HOAN TOAN vi lay theo VI TRI trong danh
+// sach nay (da xac nhan that: MCP chi tieu "Tien" ra priorValue=230, dung la
+// MA SO dong "Cac khoan tuong duong tien" chu khong phai so tien). Thay vi
+// liet ke tung tu tieng Anh (vo tan, moi cong ty dich 1 kieu, di nguoc tinh
+// than feedback_prefer_structural_over_wording_fixes), dung tin hieu CAU
+// TRUC: 1 cot GIA TRI THAT luon la so/dau "-"/rong o hau het cac dong co du
+// lieu, khong bao gio la 1 cum chu (>=3 ky tu chu lien tiep, dung lai
+// LOOKS_LIKE_LABEL_PATTERN da co) - neu qua nua so o dang chuoi (khac
+// null/"-"/rong) cua 1 cot la dang cum chu nhu vay, day la cot nhan/dich,
+// khong phai cot gia tri.
+// SUA 2026-07-22 (xac nhan qua CSV that): cot STT khong dat ten KHONG PHAI
+// LUON nam TRUOC cot nhan nhu gia dinh ban dau o tren (MBS) - CSV co cot nhan
+// ("TÀI SẢN") o VI TRI DAU, roi MOI toi cot STT rong ("A -", "I-", "1."...) -
+// nam SAU labelIndex nen khong bi loai boi dieu kien "truoc labelIndex", va
+// cac token nay qua NGAN (<3 ky tu chu) de khop LOOKS_LIKE_LABEL_PATTERN, van
+// lot qua looksLikeTextColumn nhu 1 cot "gia tri". Them tin hieu CAU TRUC thu
+// 2: 1 token NGAN dang so La Ma/1 chu cai/1-2 chu so KEM dau gach ngang/cham/
+// ngoac (STT/de muc, khong bao gio la gia tri tien that) cung tinh la "khong
+// phai cot gia tri" giong cum chu.
+const ORDINAL_MARKER_PATTERN = /^[IVXLCDM]{1,4}\s*[-.)]?$|^[A-Za-z]\s*[-.)]?$|^\d{1,2}\s*[-.)]?$/;
+
+function looksLikeTextColumn(table: StatementTable, index: number): boolean {
+  let textCount = 0;
+  let sampleCount = 0;
+  for (const row of table.rows) {
+    const cell = row[index];
+    if (cell === null) continue; // rong: khong phai tin hieu, bo qua
+    if (typeof cell === 'string') {
+      const trimmed = cell.trim();
+      if (trimmed === '' || trimmed === '-') continue; // rong/dau "-": khong phai tin hieu, bo qua
+      sampleCount++;
+      if (LOOKS_LIKE_LABEL_PATTERN.test(trimmed) || ORDINAL_MARKER_PATTERN.test(trimmed)) textCount++;
+    } else {
+      // parseNumericCell da tra ve KIEU number (khong con la string) cho da
+      // so o gia tri hop le - PHAI tinh cac o nay vao mau (khong phai chi
+      // string) de mau khong bi non 1 vai chuoi le (vd "VND"/dong header
+      // "01/01/2026" bi lap lai giua bang do ngat trang) at TAT lan sang phia
+      // "toan la van ban" - da gap that (2026-07-22): bo qua o number lam mau
+      // chi con 3 o CHUOI (2 "VND" + 1 "01/01/2026"), ty le "VND" (2/3) vuot
+      // nguong 50% mot cach gia tao, loai NHAM ca cot gia tri that (39 o so
+      // hop le bi bo qua khong tinh).
+      sampleCount++;
+    }
+  }
+  if (sampleCount === 0) return false;
+  return textCount / sampleCount > 0.5;
+}
+
 export function valueColumnIndexes(table: StatementTable): number[] {
   const labelIndex = findLabelColumnIndex(table.columns, table.rows);
   const indexes: number[] = [];
   for (let i = 0; i < table.columns.length; i++) {
     if (i <= labelIndex) continue;
     if (isMetadataColumnName(table.columns[i])) continue;
+    if (looksLikeTextColumn(table, i)) continue;
     indexes.push(i);
   }
   return indexes;
