@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import type { DownloadedReport } from '@/lib/status';
 import { buildOriginalFileUrl } from '@/lib/original-file-url';
@@ -166,6 +166,31 @@ function MuteableHighlightCell({
     }
     document.addEventListener('mousedown', onClickOutside);
     return () => document.removeEventListener('mousedown', onClickOutside);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [armed]);
+
+  // O cot ngoai cung ben phai (yeu cau nguoi dung 2026-07-23 - bam tick thi 2
+  // nut lua chon bi che mat): popoverPos ban dau chi bam theo checkbox
+  // (rect.left/rect.bottom), khong biet truoc BE RONG popover (phu thuoc do
+  // dai nhan nut, vd "Ngung nhap nhay") nen o gan MEP PHAI/DUOI man hinh
+  // popover trang ra ngoai viewport va bi cat/che (khong co scroll ngang cho
+  // fixed position). Do rong/cao THAT SU chi biet duoc SAU KHI popover da
+  // render 1 lan - dung useLayoutEffect do luong sau lan render dau (truoc
+  // khi trinh duyet ve len man hinh, khong flash) va keo lai vao trong
+  // viewport neu tran.
+  useLayoutEffect(() => {
+    if (!armed) return;
+    const el = popoverElRef.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const margin = 4;
+    const maxLeft = window.innerWidth - rect.width - margin;
+    const maxTop = window.innerHeight - rect.height - margin;
+    const clampedLeft = Math.min(rect.left, Math.max(margin, maxLeft));
+    const clampedTop = Math.min(rect.top, Math.max(margin, maxTop));
+    if (clampedLeft !== rect.left || clampedTop !== rect.top) {
+      setPopoverPos({ top: clampedTop, left: clampedLeft });
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [armed]);
 

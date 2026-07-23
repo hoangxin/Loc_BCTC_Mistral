@@ -464,7 +464,7 @@ export async function runFetchPipeline(options: RunFetchPipelineOptions = {}): P
         // Chuan hoa dinh dang (pdf/docx/doc giu nguyen 1-1; zip/rar giai nen ->
         // co the ra NHIEU file/1 lan tai, VD vua co ban Hop nhat vua Rieng le
         // trong cung 1 zip) - xem lib/report-source.ts.
-        const { resolved, errors } = await resolveReportSourceFiles({ report, filePath });
+        const { resolved, errors, filingStructureWarnings } = await resolveReportSourceFiles({ report, filePath });
         for (const error of errors) {
           failedEntries.push({ idx: index, failed: { stockCode: report.stockCode, title: report.title, error } });
         }
@@ -585,7 +585,7 @@ export async function runFetchPipeline(options: RunFetchPipelineOptions = {}): P
               entryName: resolvedFile.entryName ?? null,
               periodYear: term.yearPeriod,
               periodSlug,
-              warnings: content.warnings,
+              warnings: [...filingStructureWarnings, ...content.warnings],
             },
           });
         }

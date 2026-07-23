@@ -169,7 +169,7 @@ async function downloadAndProcessCustomReport(fileUrl: string, companyNameGuess:
       lastUpdate: new Date(),
     };
 
-    const { resolved, errors } = await resolveReportSourceFiles({ report: fakeReportFile, filePath });
+    const { resolved, errors, filingStructureWarnings } = await resolveReportSourceFiles({ report: fakeReportFile, filePath });
     if (resolved.length === 0) {
       throw new Error(errors.join('; ') || 'Không nhận diện được định dạng file (chỉ hỗ trợ PDF/DOCX/DOC/ZIP/RAR)');
     }
@@ -213,7 +213,7 @@ async function downloadAndProcessCustomReport(fileUrl: string, companyNameGuess:
       entryName: resolvedFile.entryName ?? null,
       periodYear: year,
       periodSlug: `Q${quarter}`,
-      warnings: content.warnings,
+      warnings: [...filingStructureWarnings, ...content.warnings],
     };
   } finally {
     await cleanupDownloadedFile(filePath);
