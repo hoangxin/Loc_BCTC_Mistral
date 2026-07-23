@@ -422,3 +422,178 @@ Lê Quý Định
 Các thuyết minh kèm theo từ trang 8 đến trang 47 là bộ phận hợp thành các báo cáo tài chính này
 
 Trang 4
+
+CÔNG TY CỔ PHẦN XÂY LẬP THỪA THIÊN HUẾ
+Số 72, đường Phạm Văn Đồng, Thành phố Huế, Việt Nam
+
+BÁO CÁO TÀI CHÍNH HỢP NHẤT
+Báo cáo tài chính kết thúc ngày 30/06/2026
+
+# BÁO CÁO KẾT QUẢ HOẠT ĐỘNG KINH DOANH HỢP NHẤT
+Ngày 30 tháng 06 năm 2026
+
+Mẫu số B 02-DN/HN
+Ban hành theo Thông tư 43/2026/TT-BTC
+ngày 20/4/2026 của Bộ Tài chính
+
+|  Mã số | CHỈ TIÊU | Thuyết minh | Quý 2 năm 2026 | Quý 2 năm 2025 | Kỳ kế toán kết thúc ngày 30/6/2026 | Kỳ kế toán kết thúc ngày 30/6/2025  |
+| --- | --- | --- | --- | --- | --- | --- |
+|   |  |  | VND | VND | VND | VND  |
+|  01 | 1. Doanh thu bán hàng và cung cấp dịch vụ | VI.1 | 114.031.391.505 | 85.363.850.095 | 182.473.401.643 | 158.363.066.936  |
+|  02 | 2. Các khoản giảm trừ doanh thu |  | - | - | 25.878.182 | -  |
+|  10 | 3. Doanh thu thuần về bán hàng và cung cấp dịch vụ |  | 114.031.391.505 | 85.363.850.095 | 182.447.523.461 | 158.363.066.936  |
+|  11 | 4. Giá vốn hàng bán | VI.2 | 88.353.645.536 | 63.067.658.855 | 136.785.191.340 | 122.562.891.147  |
+|  20 | 5. Lợi nhuận gộp về bán hàng và cung cấp dịch vụ |  | 25.677.745.969 | 22.296.191.240 | 45.662.332.121 | 35.800.175.789  |
+|  22 | 6. Doanh thu hoạt động tài chính | VI.3 | 4.583.046.506 | 3.358.081.724 | 8.228.869.892 | 5.334.067.157  |
+|  23 | 7. Chi phí tài chính | VI.4 | 2.893.143 | 316.957.151 | 121.888.891 | 1.384.219.543  |
+|  24 | - Trong đó: Chi phí lãi vay |  | 2.893.143 | 316.957.151 | 121.888.891 | 1.384.219.543  |
+|  25 | 9. Chi phí bán hàng | VI.5 | 914.436.129 | 1.096.663.349 | 1.611.809.154 | 2.862.863.715  |
+|  26 | 10. Chi phí quản lý doanh nghiệp | VI.6 | 13.482.233.171 | 12.370.284.723 | 22.049.077.976 | 18.740.202.807  |
+|  27 | 8. Lãi/lỗ trong công ty liên doanh, liên kết |  | 10.909.828.800 | 9.098.728.587 | 14.582.608.800 | 16.840.678.587  |
+|  30 | 11. Lợi nhuận thuần từ hoạt động kinh doanh |  | 26.771.058.832 | 20.969.096.328 | 44.691.034.792 | 34.987.635.468  |
+|  31 | 12. Thu nhập khác | VI.7 | 2.896.792.128 | 1.289.798.101 | 2.915.032.132 | 1.841.763.660  |
+|  32 | 13. Chi phí khác | VI.8 | 276.671.115 | 1.699.655.225 | 709.538.325 | 2.597.212.572  |
+|  40 | 14. Lợi nhuận khác |  | 2.620.121.013 | (409.857.124) | 2.205.493.807 | (755.448.912)  |
+|  50 | 15. Tổng lợi nhuận kế toán trước thuế | VI.9 | 29.391.179.845 | 20.559.239.204 | 46.896.528.599 | 34.232.186.556  |
+|  51 | 16. Chi phí thuế TNDN hiện hành | VI.9 | 3.510.462.879 | 3.061.019.764 | 6.652.448.641 | 4.712.876.698  |
+|  52 | 17. Chi phí thuế TNDN hoãn lại | VI.9 | 544.525.256 | 392.435.297 | 304.493.831 | 614.975.189  |
+|  60 | 18. Lợi nhuận sau thuế TNDN | VI.9 | 25.336.191.710 | 17.105.784.143 | 39.939.586.127 | 28.904.334.669  |
+|  61 | 19. Lợi nhuận sau thuế của cổ đông công ty mẹ |  | 22.887.991.269 | 14.651.282.389 | 36.273.675.141 | 26.099.208.115  |
+|  62 | 20. Lợi nhuận sau thuế của cổ đông không kiểm soát |  | 2.448.200.441 | 2.454.501.754 | 3.665.910.986 | 2.805.126.554  |
+|  70 | 21. Lãi cơ bản trên cổ phiếu | VI.10 |  |  | 1.103 | 913  |
+|  71 | 22. Lãi suy giảm trên cổ phiếu | VI.11 |  |  | 1.103 | 913  |
+
+TP Huế, ngày 20 tháng 07 năm 2026
+
+Người lập biểu
+
+Kế toán trưởng
+
+Tổng giám đốc
+
+Lê Thị Khánh Văn
+
+Lê Thị Khánh Văn
+
+Lê Quý Định
+
+Các Thuyết minh kèm theo từ trang 8 đến trang 47 là bộ phận hợp thành của Báo cáo tài chính này
+
+Trang 5
+
+CÔNG TY CỔ PHẦN XÂY LẮP THỪA THIÊN HUẾ  
+Số 72, đường Phạm Văn Đồng, Thành phố Huế, Việt Nam
+
+**BÁO CÁO TÀI CHÍNH HỢP NHẤT**  
+Báo cáo tài chính kết thúc ngày 30/06/2026
+
+# **BÁO CÁO LƯU CHUYỂN TIỀN TỆ HỢP NHẤT**  
+Ngày 30 tháng 06 năm 2026
+
+Ban hành theo Thông tư số 43/2026/TT-BTC ngày 20/4/2026 của Bộ Tài chính
+
+|  CHỈ TIÊU | Mã số | Kỳ kế toán kết thúc ngày 30/06/2026 VND | Kỳ kế toán kết thúc ngày 30/06/2025 VND  |
+| --- | --- | --- | --- |
+|  **I. Lưu chuyển thuần từ hoạt động kinh doanh** |  |  |   |
+|  **1. Lợi nhuận trước thuế** | **01** | **46.896.528.599** | **34.232.186.556**  |
+|  **2. Điều chỉnh các khoản** |  |  |   |
+|  - Khấu hao TSCĐ và BĐSĐT | 02 | 12.605.512.000 | 12.523.375.484  |
+|  - Các khoản dự phòng | 03 | 2.001.032.957 | 3.624.354.858  |
+|  - Lãi, lỗ chênh lệch tỷ giá hối đoái do đánh giá lại các khoản mục tiền tệ có gốc ngoại tệ | 04 | - | (6.443.380)  |
+|  - Lãi, lỗ từ hoạt động đầu tư, tài chính | 05 | (8.228.869.892) | (5.340.143.434)  |
+|  - Chi phí đi vay | 06 | 121.888.891 | 1.384.219.543  |
+|  **3. Lợi nhuận từ hoạt động kinh doanh trước thay đổi vốn lưu động** | **08** | **53.396.092.555** | **46.417.549.627**  |
+|  - Tăng, giảm các khoản phải thu | 09 | 115.922.182.386 | (46.450.680.056)  |
+|  - Tăng, giảm hàng tồn kho | 10 | (158.455.424.954) | 46.622.091.120  |
+|  - Tăng/(giảm) các khoản phải trả (không kể lãi vay phải trả, thuế thu nhập doanh nghiệp phải nộp) | 11 | 31.410.051.051 | 45.177.957.438  |
+|  - Tăng, giảm chi phí chờ phân bổ | 12 | (349.547.291) | (310.200.251)  |
+|  - Chi phí đi vay đã trả | 14 | (121.888.891) | (1.395.654.944)  |
+|  - Thuế thu nhập doanh nghiệp đã nộp | 15 | (10.804.146.669) | (4.670.119.393)  |
+|  - Tiền chi khác từ hoạt động kinh doanh | 17 | (2.416.755.011) | (2.240.238.796)  |
+|  **Lưu chuyển tiền thuần từ hoạt động kinh doanh** | **20** | **28.580.563.176** | **83.150.704.745**  |
+|  **II. Lưu chuyển tiền từ hoạt động đầu tư** |  |  |   |
+|  1. Tiền chi để mua sắm, xây dựng TSCĐ & các tài sản dài hạn khác | 21 | (16.562.088.139) | (1.465.216.909)  |
+|  2. Tiền thu từ thanh lý, nhượng bán TSCĐ & các tài sản dài hạn khác | 22 | 578.409.185 | 868.181.818  |
+|  3. Tiền chi cho vay, mua các công cụ nợ | 23 | (128.080.000.000) | (142.500.000.000)  |
+|  4. Tiền thu hồi cho vay, bán lại công cụ nợ | 24 | 123.248.963.068 | 104.680.000.000  |
+|  5. Tiền thu lãi cho vay, cổ tức lợi nhuận được chia | 27 | 7.467.673.366 | 4.647.429.290  |
+|  **Lưu chuyển tiền thuần từ hoạt động đầu tư** | **30** | **(13.347.042.520)** | **(33.769.605.801)**  |
+|  **III. Lưu chuyển tiền từ hoạt động tài chính** |  |  |   |
+|  1. Tiền thu từ vay | 33 | 92.000.000 | -  |
+|  2. Tiền chi trả nợ gốc vay | 34 | (10.092.000.000) | (62.983.302.963)  |
+|  3. Cổ tức, lợi nhuận đã trả cho chủ sở hữu | 36 | (630.300.000) | (4.103.232.000)  |
+|  **Lưu chuyển thuần từ hoạt động tài chính** | **40** | **(10.630.300.000)** | **(67.086.534.963)**  |
+
+Các Thuyết minh kèm theo từ trang 8 đến trang 47 là bộ phận hợp thành của Báo cáo tài chính này
+
+Trang 6
+
+CÔNG TY CỔ PHẦN XÂY LẮP THỪA THIÊN HUẾ
+Số 72, đường Phạm Văn Đồng, Thành phố Huế, Việt Nam
+
+BÁO CÁO TÀI CHÍNH HỢP NHẤT
+Báo cáo tài chính kết thúc ngày 30/06/2026
+
+# BÁO CÁO LƯU CHUYỂN TIỀN TỆ HỢP NHẤT
+Ngày 30 tháng 06 năm 2026
+
+Mẫu số B 03-DN/HN
+Ban hành theo Thông tư số 43/2026/TT-BTC
+ngày 20/4/2026 của Bộ Tài chính
+
+|  Lưu chuyển tiền thuần trong kỳ | 50 | 4.603.220.656 | (17.705.436.019)  |
+| --- | --- | --- | --- |
+|  Tiền và tương đương tiền đầu kỳ | 60 | 47.688.390.921 | 94.723.266.713  |
+|  Ảnh hưởng của thay đổi tỷ giá hối đoái quy đổi ngoại | 61 | - | 215.246  |
+|  Tiền và tương đương tiền cuối kỳ | 70 | 52.291.611.577 | 77.018.045.940  |
+
+Người lập biểu: TP Huế, ngày 20 tháng 07 năm 2026
+Lê Thị Khánh Vân
+Kế toán trưởng: Tổng giám đốc
+Lê Thị Khánh Vân
+Lê Quý Định
+
+Các Thuyết minh kèm theo từ trang 8 đến trang 47 là bộ phận hợp thành của Báo cáo tài chính này
+
+Trang 7
+
+CÔNG TY CỔ PHẦN XÂY LẮP THỪA THIÊN HUẾ
+Số 72, đường Phạm Văn Đồng, Thành phố Huế, Việt Nam
+
+BÁO CÁO TÀI CHÍNH HỢP NHẤT
+Báo cáo tài chính kết thúc ngày 30/06/2026
+
+# THUYẾT MINH BÁO CÁO TÀI CHÍNH HỢP NHẤT
+
+(Các Thuyết minh này là bộ phận hợp thành và cần được đọc đồng thời với các Báo cáo tài chính)
+
+# I. ĐẶC ĐIỂM HOẠT ĐỘNG CỦA CÔNG TY
+
+# 1. Hình thức sở hữu vốn
+
+Công ty Cổ phần Xây Lắp Thừa Thiên Huế ("Công ty") được hình thành từ việc cổ phần hóa Công ty Xây Lắp Thừa Thiên Huế, một doanh nghiệp Nhà nước, theo Quyết định số 2660/QĐ-UBND ngày 23 tháng 12 năm 2010 của Ủy ban Nhân dân Tỉnh Thừa Thiên Huế. Công ty được cấp Giấy chứng nhận đăng ký doanh nghiệp lần đầu số 3300101156 do Sở Kế hoạch và Đầu tư Tỉnh Thừa Thiên Huế ngày 5 tháng 1 năm 2011 và Giấy chứng nhận đăng ký doanh nghiệp thay đổi lần thứ 14 vào ngày 16 tháng 07 năm 2025 do thay đổi vốn điều lệ của Công ty.
+
+Cổ phiếu của Công ty được chấp thuận niêm yết tại Sở Giao dịch Chứng khoán Thành phố Hồ Chí Minh ("HOSE") với mã giao dịch là "HUB" theo Quyết định số 523/QĐ-SGDHCM do HOSE cấp ngày 18 tháng 12 năm 2018.
+
+# 2. Lĩnh vực kinh doanh
+
+Lĩnh vực kinh doanh của Nhóm Công ty là xây dựng, sản xuất vật liệu xây dựng và kinh doanh bất động sản.
+
+# 3. Ngành nghề kinh doanh
+
+- Xây dựng các công trình dân dụng, các công trình công nghiệp, công cộng thể thao, giao thông, thủy lợi và hạ tầng kỹ thuật;
+- Tư vấn và giám sát thi công xây dựng và hoàn thiện các công trình dân dụng, công nghiệp, giao thông và thủy lợi;
+- Kinh doanh bất động sản, cơ sở hạ tầng khu công nghiệp và dân cư;
+- Sản xuất vật liệu xây dựng;
+- Kinh doanh và khai thác đá, cát, sỏi;
+- Sản xuất các sản phẩm từ gỗ.
+
+# 4. Chu kỳ sản xuất kinh doanh bình thường
+
+Chu kỳ sản xuất kinh doanh thông thường đối với các hoạt động của Nhóm Công ty là 12 tháng. Riêng đối với hoạt động xây lắp và hoạt động kinh doanh bất động sản thì chu kỳ kinh doanh có thể kéo dài quá 12 tháng.
+
+# 5. Đặc điểm hoạt động của doanh nghiệp trong kỳ có ảnh hưởng đến báo cáo tài chính
+
+Nhìn chung, nền kinh tế đã đi vào ổn định nên doanh thu hoạt động kinh doanh trong lĩnh vực xây dựng tăng hơn so với cùng kỳ năm trước. Tuy nhiên, do diễn biến giá cả xăng dầu thế giới và trong nước điều chỉnh tăng liên tục, dẫn đến chi phí nguyên vật liệu đưa vào sản xuất, thi công các công trình tăng rất lớn, làm ảnh hưởng đến hiệu quả kinh doanh của Nhóm Công ty trong sáu tháng đầu năm này và thời gian sắp đến.
+
+Trang 8

@@ -393,3 +393,183 @@ Từ 01/04/2026 đến 30/06/2026
 |  71 | 7.1 | Thu nhập khác | - | 2,177,424,657 | - | 2,177,424,657  |
 |  72 | 7.2 | Chi phí khác 32 | 631,123,594 | 16,362,200 | 1,105,506,928 | 54,465,548  |
 |  80 |  | **Cộng kết quả hoạt động khác** | **(631,123,594)** | **2,161,062,457** | **(1,105,506,928)** | **2,122,959,109**  |
+
+CÔNG TY CỔ PHẦN CHỨNG KHOÁN STANLEY BROTHERS
+
+Tầng 9 tòa nhà ROX Tower, số 54A,
+đường Nguyễn Chí Thanh, phường Láng, Hà Nội
+
+BÁO CÁO TÀI CHÍNH
+Cho kỳ kế toán từ ngày 01/04/2026 đến ngày 30/06/2026
+
+# BÁO CÁO KẾT QUẢ HOẠT ĐỘNG
+
+Từ 01/04/2026 đến 30/06/2026
+
+|  Mã số | CHỈ TIÊU | Thuyết minh | Quý II năm nay | Quý II năm trước | Lũy kế từ đầu năm đến quý này (năm nay) | Lũy kế từ đầu năm đến quý này (năm trước)  |
+| --- | --- | --- | --- | --- | --- | --- |
+|   |  |  | VND | VND | VND | VND  |
+|  90 | VIII. TỔNG LỢI NHUẬN KẾ TOÁN TRƯỚC THUẾ |  | 39,966,638,880 | (161,072,439) | 57,936,204,467 | (3,401,518,747)  |
+|  91 | 8.1 Lợi nhuận đã thực hiện |  | 39,966,638,880 | (161,072,439) | 57,936,204,467 | (3,401,518,747)  |
+|  92 | 0.1 Lợi nhuận chưa thực hiện |  | - | - | - | -  |
+|  100 | IX. CHI PHÍ THUẾ TNDN | 33 | - | - | - | -  |
+|  200 | X. LỢI NHUẬN KẾ TOÁN SAU THUẾ TNDN |  | 39,966,638,880 | (161,072,439) | 57,936,204,467 | (3,401,518,747)  |
+|  300 | XI. THU NHẬP (LỖ) TOÀN DIỆN KHÁC SAU THUẾ TNDN |  |  |  |  |   |
+|  301 | 11.1 Lãi/(Lỗ) từ đánh giá lại các tài sản tài chính sẵn sàng để bán |  | - | (4,258,709,870) | - | (4,248,556,300)  |
+|  400 | Tổng thu nhập toàn diện |  | - | (4,258,709,870) | - | (4,248,556,300)  |
+|  500 | XII. THU NHẬP THUẬN TRÊN CỔ PHIẾU PHỔ THÔNG |  |  |  |  |   |
+|  501 | 12.1 Lãi cơ bản trên cổ phiếu (Đồng/1 cổ phiếu) | 34 | 200 | (5) | 349 | (100)  |
+
+Người lập
+
+Kế toán trưởng
+kiểm Giám đốc Tài chính
+
+Lê Thị Lan Hương
+
+Trương Thị Lan Anh
+
+Hà Nội, ngày 20 tháng 07 năm 2026
+
+Tổng Giám đốc
+
+Nguyễn Tiến Dũng
+
+CÔNG TY CỔ PHẦN CHỨNG KHOÁN STANLEY BROTHERS
+
+BÁO CÁO TÀI CHÍNH
+
+Tầng 9 tòa nhà ROX Tower, số 54A,^{}[] đường Nguyễn Chí Thanh, phường Láng, Hà Nội
+
+Cho kỳ kế toán từ ngày 01/04/2026 đến ngày^{}[] 30/06/2026
+
+# **BÁO CÁO LƯU CHUYỂN TIỀN TỆ**  
+(Theo phương pháp gián tiếp)
+
+|  Mã số | CHỈ TIÊU | Thuyết minh | Lũy kế từ đầu năm đến quý này (năm nay) | Lũy kế từ đầu năm đến quý này (năm trước)  |
+| --- | --- | --- | --- | --- |
+|   |  |  | VND | VND  |
+|   | **I. Lưu chuyển tiền từ hoạt động kinh doanh** |  |  |   |
+|  01 | 1. *Lợi nhuận trước thuế thu nhập doanh nghiệp* |  | 57,936,204,467 | (3,401,518,747)  |
+|  02 | 2. *Điều chỉnh cho các khoản* |  | 2,897,483,661 | 603,662,820  |
+|  03 | - Khấu hao tài sản cố định |  | 304,529,872 | 660,798,536  |
+|  06 | - Chi phí lãi vay |  | 3,521,775,696 |   |
+|  07 | - Lãi, lỗ từ hoạt động đầu tư |  | (928,821,907) | (57,135,716)  |
+|  18 | 4. *Giảm các doanh thu phi tiền tệ* |  | - |   |
+|  19 | - Lãi đánh giá lại giá trị các tài sản tài chính ghi nhận thông qua lãi/lỗ FVTPL |  | - |   |
+|  30 | 3. *Lợi nhuận từ hoạt động kinh doanh trước thay đổi vốn lưu động* |  | (2,464,221,766,238) | (14,834,019,927)  |
+|  31 | - Tăng (giảm) tài sản tài chính ghi nhận thông qua lãi/lỗ FVTPL |  | (394,257,148,555) | -  |
+|  32 | - Tăng (giảm) các khoản đầu tư nắm giữ đến ngày đáo hạn (HTM) |  | (216,124,657,536) | -  |
+|  33 | - Tăng (giảm) các khoản cho vay |  | (300,002,471,371) | (14,699,548,151)  |
+|  34 | - Tăng (giảm) tài sản tài chính sẵn sàng để bán AFS |  | (1,473,781,328,123) | 23,775,600,000  |
+|  36 | - (-) Tăng, (+) giảm phải thu và dự thu cổ tức, tiền lãi các tài sản tài chính |  | (44,748,470,895) | (65,166,787)  |
+|  37 | - (-) Tăng, (+) giảm các khoản phải thu các dịch vụ công ty chứng khoán cung cấp |  | (219,851,559) | 36,578,781  |
+|  40 | - Tăng (giảm) các tài sản khác |  | (386,620,584) | (22,961,384,658)  |
+|  41 | - Tăng (giảm) chi phí phải trả (không bao gồm chi phí lãi vay) |  | 10,691,111 | (64,898,954)  |
+|  42 | - Tăng (giảm) chi phí trả trước |  | (2,498,975,722) | (880,981,344)  |
+|  44 | - Lãi vay đã trả |  | (673,177,745) | -  |
+|  45 | - Tăng, (giảm) phải trả cho người bán |  | (1,560,304,891) | 63,717,304  |
+|  46 | - Tăng, (giảm) các khoản trích nộp phúc lợi nhân viên |  | 4,700,131 | (6,263,000)  |
+|  47 | - Tăng, (giảm) thuế và các khoản phải nộp Nhà nước (không bao gồm thuế TNDN) |  | 2,817,380,709 | (7,342,097)  |
+|  48 | - Tăng, (giảm) phải trả người lao động |  | 543,704,096 | (16,933,134)  |
+|  50 | - Tăng, (giảm) phải trả, phải nộp khác |  | 17,253,966,685 | (29,397,887)  |
+|  51 | - Tiền thu khác từ hoạt động kinh doanh |  | 87,410,000 |   |
+|  52 | - Tiền chi khác cho hoạt động kinh doanh |  | (686,611,989) | 22,000,000  |
+|  60 | **Lưu chuyển tiền thuần từ hoạt động kinh doanh** |  | (2,403,388,078,110) | (17,631,875,854)  |
+|   | **II. Lưu chuyển tiền từ hoạt động đầu tư** |  |  |   |
+|  61 | 1. Tiền chi để mua sắm, xây dựng tài sản cố định, bất động sản đầu tư và các tài sản khác |  | (36,574,074) | -  |
+
+CÔNG TY CỔ PHẦN CHỨNG KHOÁN STANLEY BROTHERS
+
+Tầng 9 tòa nhà ROX Tower, số 54A,
+đường Nguyễn Chí Thanh, phường Láng, Hà Nội
+
+BÁO CÁO TÀI CHÍNH
+
+Cho kỳ kế toán từ ngày 01/04/2026 đến ngày
+30/06/2026
+
+# **BÁO CÁO LƯU CHUYỂN TIỀN TỆ**
+*(Theo phương pháp gián tiếp)*
+
+|  Mã số | CHỈ TIÊU | Thuyết minh | Lũy kế từ đầu năm đến quý này (năm nay) | Lũy kế từ đầu năm đến quý này (năm trước)  |
+| --- | --- | --- | --- | --- |
+|   |  |  | VND | VND  |
+|  65 | 2. Tiền thu về cổ tức và lợi nhuận được chia từ các khoản đầu tư tài chính dài hạn |  | 928,821,907 | 57,135,716  |
+|  70 | **Lưu chuyển tiền thuần từ hoạt động đầu tư** |  | **892,247,833** | **57,135,716**  |
+|   | **III. Lưu chuyển tiền từ hoạt động tài chính** |  |  |   |
+|  71 | 1. Tiền thu từ phát hành cổ phiếu, nhận vốn góp của chủ sở hữu |  | 1,661,000,000,000 | -  |
+|  73 | 2. Tiền vay gốc |  | 1,412,280,784,919 | -  |
+|  74 | 4. Tiền chi trả nợ gốc vay |  | (447,747,985,599) | -  |
+|  74.3 | 4.3 Tiền chi trả gốc nợ vay khác |  | (447,747,985,599) | -  |
+|  80 | **Lưu chuyển tiền thuần từ hoạt động tài chính** |  | **2,625,532,799,320** | **-**  |
+|  90 | **IV. Tăng (giảm) tiền thuần trong kỳ** |  | **223,036,969,043** | **(17,574,740,138)**  |
+|  101 | **V. Tiền và các khoản tương đương tiền đầu kỳ** |  | **100,677,600,323** | **170,278,224,918**  |
+|  101.1 | - Tiền |  | 100,677,600,323 | 170,278,224,918  |
+|  103 | **VI. Tiền và các khoản tương đương tiền cuối** | **4** | **323,714,569,366** | **152,703,484,780**  |
+|  103.1 | - Tiền |  | 323,714,569,366 | 152,703,484,780  |
+
+Hà Nội, Ngày 20 tháng 07 năm 2026
+
+Người lập
+
+Kế toán trưởng
+kiêm Giám đốc Tài chính
+
+General Director
+
+Lê Thị Lan Hương
+
+Trương Thị Lan Anh
+
+Nguyễn Tiến Dũng
+
+CÔNG TY CỔ PHẦN CHỨNG KHOÁN STANLEY BROTHERS
+
+Tầng 9 tòa nhà ROX Tower, số 54A,
+dường Nguyễn Chí Thanh, phường Láng, Hà Nội
+
+BÁO CÁO TÀI CHÍNH
+
+Cho kỳ kế toán từ ngày 01/04/2026 đến
+ngày 30/06/2026
+
+# PHẦN LƯU CHUYỂN TIỀN TỆ HOẠT ĐỘNG MÔI GIỚI, ỦY THÁC
+CỦA KHÁCH HÀNG
+
+|  Mã số | CHỈ TIÊU | Thuyết minh | Lũy kế từ đầu năm đến quý này (năm nay) VND | Lũy kế từ đầu năm đến quý này (năm trước) VND  |
+| --- | --- | --- | --- | --- |
+|  **I. Lưu chuyển tiền hoạt động môi giới, ủy thác của khách hàng**  |   |   |   |   |
+|  01 | 1. Tiền thu bán chứng khoán môi giới cho khách hàng |  | 14,904,708,044,457 | 306,308,476,610  |
+|  02 | 2. Tiền chi mua chứng khoán môi giới cho khách hàng |  | (14,334,914,256,110) | (431,563,017,530)  |
+|  07 | 3. Nhận tiền gửi để thanh toán giao dịch chứng khoán của khách hàng |  | 3,835,926,889,195 | 500,143,130,292  |
+|  08 | 4. Chi trả thanh toán giao dịch chứng khoán của khách hàng |  | (4,232,396,292,018) | (394,624,162,583)  |
+|  11 | 5. Chi trả phí lưu ký chứng khoán của khách hàng |  | (639,894,096) | (643,970,438)  |
+|  14 | 6. Tiền thu của Tổ chức phát hành chứng khoán |  | 10,183,813,442 | 10,736,460,957  |
+|  15 | 7. Tiền chi trả Tổ chức phát hành chứng khoán |  | (10,183,813,442) | (10,736,460,957)  |
+|  **20** | **Tăng/giảm tiền thuần trong kỳ** |  | **172,684,491,428** | **(20,379,543,649)**  |
+|  **30** | **II. Tiền và các khoản tương đương tiền đầu kỳ của khách hàng** |  | **21,565,152,112** | **45,059,858,808**  |
+|  31 | Tiền gửi ngân hàng đầu kỳ: |  | 21,565,152,112 | 45,059,858,808  |
+|  32 | - Tiền gửi của Nhà đầu tư về giao dịch chứng khoán theo phương thức công ty chứng khoán quản lý |  | 21,086,409,110 | 37,069,201,505  |
+|  34 | - Tiền gửi bù trừ và thanh toán giao dịch chứng khoán |  | 357,713,002 | 7,990,657,303  |
+|  35 | - Tiền gửi của Tổ chức phát hành |  | 121,030,000 | -  |
+|  **40** | **III. Tiền và các khoản tương đương tiền cuối kỳ của khách hàng** | **25** | **194,249,643,540** | **24,680,315,159**  |
+|  41 | Tiền gửi ngân hàng cuối kỳ: |  | 194,249,643,540 | 24,680,315,159  |
+|  42 | - Tiền gửi của Nhà đầu tư về giao dịch chứng khoán theo phương thức công ty chứng khoán quản lý |  | 162,830,864,275 | 23,392,778,212  |
+|  44 | - Tiền gửi bù trừ và thanh toán giao dịch chứng khoán |  | 31,418,779,265 | 637,036,947  |
+|  45 | - Tiền gửi của Tổ chức phát hành |  | - | 650,500,000  |
+
+Người lập
+
+Kế toán trưởng
+kiêm Giám đốc Tài chính
+
+Hà Nội, Ngày 20 tháng 07 năm 2026
+
+Tổng Giám đốc
+
+Lê Thị Lan Hương
+
+Trương Thị Lan Anh
+
+Nguyễn Tiến Dũng
