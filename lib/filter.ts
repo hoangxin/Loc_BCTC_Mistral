@@ -1,5 +1,6 @@
 import type { ReportFile } from './vietstock-reports';
 import { classifyStatementScope } from './statement-scope';
+import { normalizeLabelText } from './export/statement-shared';
 
 // Cho AI dung sau nay neu tieu chi loc can doc/phan loai noi dung (vd Qwen
 // dang duoc dung cho lib/digest.ts o 2 project loc_tin) - hien chua wire vao
@@ -42,6 +43,25 @@ function isNonStandardTickerLength(r: ReportFile): boolean {
   return r.stockCode.trim().length > 3;
 }
 
+// Bo qua ban "Thuyet minh BCTC" nop RIENG (tach khoi file BCTC chinh) - bug
+// that ART/MIG Q2/2026 (2026-07-23): Vietstock doi khi liet ke file "Thuyet
+// minh BCTC" (ten Vietstock dat, KHONG phai OCR/doan tu file) nhu 1 bao cao
+// RIENG BIET voi title "Thuyết minh BCTC quý...", cung ky/scope voi file BCTC
+// chinh - day KHONG PHAI 1 BCTC day du (chi la phan thuyet minh, khong co
+// BCDKT/KQKD/LCTT) nen luon ra 0 dong ca 3 bang + canh bao "khong doc duoc
+// dong nao" gay hieu nham la loi. TE HON: vi dung CHUNG identity key (ma+ky+
+// scope) voi ban BCTC chinh khi luu markdown (lib/ocr-markdown-store.ts),
+// script reparse-tu-markdown co the GHI DE nham markdown cua ban chinh bang
+// markdown cua ban Thuyet-minh-rieng nay (da xac nhan that ART: ban chinh tu
+// 70/39/37 dong bi doi thanh 0/0/0 sau 1 lan reparse). Loc tu VONG LOC nay
+// (dua tren TITLE do Vietstock cung cap, KHONG phai doan tu ten file - khac
+// han lop loc tu-khoa-ten-file da bi bo vi khop nham qua nhieu, xem lich su o
+// duoi) - BCTC that LUON bat dau bang "BCTC..." (chua bao gio gap "Thuyet
+// minh..." o dau title cho 1 BCTC day du that su).
+function isStandaloneNotesFiling(r: ReportFile): boolean {
+  return normalizeLabelText(r.title).startsWith('THUYET MINH');
+}
+
 // Ly do 1 report bi VONG LOC nay loai, hay null neu KHONG bi loai - dung
 // chung boi filterReports (chi can boolean) VA lib/pipeline.ts (can ly do CU
 // THE de ghi vao excludedReports, xem comment tai do) - tranh lap lai 3 dieu
@@ -57,6 +77,9 @@ export function filterExclusionReason(r: ReportFile): string | null {
   }
   if (isNonStandardTickerLength(r)) {
     return `Mã "${r.stockCode}" dài hơn 3 ký tự - là chứng chỉ quỹ/ETF, ngoài phạm vi phân tích`;
+  }
+  if (isStandaloneNotesFiling(r)) {
+    return 'Bản "Thuyết minh BCTC" nộp riêng (không phải BCTC đầy đủ) - đã có báo cáo BCTC chính cùng kỳ';
   }
   return null;
 }

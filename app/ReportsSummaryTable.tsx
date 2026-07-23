@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
+import { useEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import type { DownloadedReport } from '@/lib/status';
 import { buildOriginalFileUrl } from '@/lib/original-file-url';
@@ -250,6 +250,7 @@ export default function ReportsSummaryTable({
   allFilePaths,
   selectedFilePaths,
   currentGeneratedAt,
+  tabsSlot,
 }: {
   reports: DownloadedReport[];
   selected?: Set<string>;
@@ -264,6 +265,12 @@ export default function ReportsSummaryTable({
   allFilePaths?: string[];
   selectedFilePaths?: string[];
   currentGeneratedAt?: string;
+  // Tab nhom loai hinh DN (Ngan hang/Chung khoan/Bao hiem/Khac) - yeu cau
+  // nguoi dung 2026-07-23: ghep chung 1 dong voi o tim/Watchlist/Xuat/Xoa
+  // thay vi 2 dong rieng (BusinessTypeTabs truyen JSX cac nut tab vao day de
+  // render CHUNG trong .summary-actions, tiet kiem chieu cao). Tuy chon - bo
+  // qua neu khong truyen (component dung duoc o noi khac khong co tab nhom).
+  tabsSlot?: ReactNode;
 }) {
   const labels = useMemo(() => collectLabels(reports), [reports]);
   const [stockCodeQuery, setStockCodeQuery] = useState('');
@@ -313,6 +320,7 @@ export default function ReportsSummaryTable({
   return (
     <div className="report-table-wrapper" style={{ '--sticky-actions-height': `${actionsHeight}px` } as CSSProperties}>
       <div className="summary-actions" ref={actionsRef}>
+        {tabsSlot}
         <label className="field">
           <span className="field-label">Tìm theo Mã CK</span>
           <input
@@ -516,8 +524,12 @@ export default function ReportsSummaryTable({
                   }
                   const tier = item?.tier === 'level1' ? 'level1' : item?.tier === 'level2' ? 'level2' : null;
                   if (!tier) {
+                    // Hover xem so goc "hien tai/ky truoc" (yeu cau nguoi dung
+                    // 2026-07-23: MO RONG ra MOI o chi tieu, khong chi rieng o
+                    // dang highlight nhu truoc - xem formatCompareTooltip o
+                    // tren, da dung san cho MuteableHighlightCell duoi day).
                     return (
-                      <td key={label} className="pct-col">
+                      <td key={label} className="pct-col" title={formatCompareTooltip(item?.currentValue, item?.priorValue)}>
                         {formatPercent(item?.percentChange)}
                       </td>
                     );

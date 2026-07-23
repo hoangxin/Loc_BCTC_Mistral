@@ -998,3 +998,12 @@ tab "Ket qua") - nho hon tab chinh de phan biet cap do. */
   font-size: 13px;
   padding: 8px 14px;
 }
+
+/* Ghep chung dong voi .summary-actions (yeu cau nguoi dung 2026-07-23, xem
+   BusinessTypeTabs.tsx/ReportsSummaryTable.tsx tabsSlot) - bo margin-bottom/
+   border-bottom RIENG cua .sub-tabs (da la CON, dung border-bottom CHUNG cua
+   .summary-actions thay the) de khong bi 2 duong ke/khoang cach thua. */
+.sub-tabs-inline {
+  margin-bottom: 0;
+  border-bottom: none;
+}

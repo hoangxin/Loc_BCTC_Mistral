@@ -371,9 +371,26 @@ export async function runFetchPipeline(options: RunFetchPipelineOptions = {}): P
       const newExcludedAfterDownload = excludedEntries.sort((a, b) => a.idx - b.idx).map((e) => e.excluded);
       const newKeys = new Set(newReports.map(reportIdentityKey));
       const keptReports = previousStatus.reports.filter((r) => !newKeys.has(reportIdentityKey(r)));
+      const mergedReports = [...keptReports, ...newReports];
       const interruptedReports = matched
         .filter((_, idx) => !processedIndices.has(idx))
         .map((report) => ({ stockCode: report.stockCode, title: report.title }));
+      // Bug that D11 (2026-07-23): failed/excludedReports CONG DON qua cac lan
+      // chay (khong tu xoa, xem comment ExcludedReport o lib/status.ts) - nhung
+      // neu 1 bao cao THAT BAI/BI LOAI o 1 lan chay TRUOC do sau nay lai duoc
+      // tai/OCR THANH CONG (co mat trong `reports`), entry that bai/bi loai cu
+      // van con nguyen MAI MAI, khien UI hien "D11 bi loai vi khong phai tieng
+      // Viet" du D11 da co ket qua that hop le - gay nham lan nguoi dung di dieu
+      // tra 1 bug khong con ton tai. Loc bo entry failed/excluded co CUNG
+      // stockCode+title voi 1 bao cao da thanh cong trong `reports` (titles
+      // phan biet du theo scope, vd "BCTC Cong ty me..." vs "BCTC Hop nhat...",
+      // xem doi chieu that SD3/PTV/HUB/NVS - khong lo xoa nham loai tru co chu
+      // dich con dang dung, vd Rieng le trung lap voi Hop nhat cung ma).
+      const succeededKeys = new Set(mergedReports.map((r) => `${r.stockCode}::${r.title}`));
+      const failed = [...previousStatus.failed, ...newFailed].filter((f) => !succeededKeys.has(`${f.stockCode}::${f.title}`));
+      const excludedReports = [...previousStatus.excludedReports, ...excludedByFilter, ...newExcludedAfterDownload].filter(
+        (e) => !succeededKeys.has(`${e.stockCode}::${e.title}`)
+      );
       return {
         running,
         generatedAt: new Date().toISOString(),
@@ -382,10 +399,10 @@ export async function runFetchPipeline(options: RunFetchPipelineOptions = {}): P
         totalFound: allReports.length,
         totalMatched: matched.length,
         downloaded: downloadedCount,
-        failed: [...previousStatus.failed, ...newFailed],
+        failed,
         interruptedReports,
-        excludedReports: [...previousStatus.excludedReports, ...excludedByFilter, ...newExcludedAfterDownload],
-        reports: [...keptReports, ...newReports],
+        excludedReports,
+        reports: mergedReports,
         lastCustomSourceCheck: previousStatus.lastCustomSourceCheck,
       };
     }

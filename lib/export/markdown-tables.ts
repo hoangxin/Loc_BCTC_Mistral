@@ -1568,7 +1568,25 @@ function parseAllTablesInRange(lines: string[]): ParsedTable[] {
 // ky"). Regex CHI trich CAC DONG <tr>...</tr> HOAN CHINH (doi hoi ca the dong
 // "</tr>") - dong bi cat cut se KHONG khop, tu dong bi bo qua AN TOAN (mat 1
 // phan du lieu that bi Mistral cat, khong phai loi tach dong sai).
-const JSON_CAPTION_TABLE_START = /\[\{"box_2d":\s*\[[^\]]*\],\s*"label":\s*"table",\s*"caption":\s*"((?:[^"\\]|\\.)*)/g;
+//
+// BAT BUOC dau nhay dong "\"" NGAY SAU capture group (2026-07-23, bug that
+// NGHIEM TRONG NSH Q2/2026): truoc day pattern KHONG doi hoi dau dong dong
+// chuoi JSON, chi dua vao capture group tu dung LAI khi gap dau nhay bat ky
+// (thuong la dau nhay MO cua 1 khoi JSON-caption KHAC ngay sau do, hoac dau
+// nhay THAT cua chinh no). Neu tai lieu CHI CO DUY NHAT 1 khoi JSON-caption
+// (khong co khoi thu 2 nao de "vo tinh" cung cap dau nhay chan) VA Mistral
+// KHONG BAO GIO dong chuoi "caption" bang dau nhay that (OCR hong/cat cut
+// kieu khac BSL - khong phai cat giua <tr>, ma la KHONG BAO GIO dong chuoi),
+// capture group (?:[^"\\]|\\.)*  se AN TOAN "chay het" TOAN BO PHAN CON LAI
+// cua ca tai lieu (KQKD/LCTT/Thuyet minh...) den tan cuoi file, roi .replace()
+// XOA SACH toan bo doan do (thay bang vai dong bang nho trich duoc), lam MAT
+// TRANG hoan toan KQKD+LCTT that su (xac nhan that NSH: 49677 => 5092 ky tu
+// sau convert, IS/CF ve 0 dong dù markdown OCR goc co day du du lieu). Yeu
+// cau BAT BUOC dau nhay dong that (them "\"" cuoi pattern) dam bao: neu
+// KHONG tim thay dau nhay dong nao truoc EOF, ca regex KHONG KHOP GI CA (giu
+// nguyen 100% van ban goc, dung nguyen tac "khong trich duoc thi giu nguyen"
+// da co san o duoi) thay vi am tham "khop qua" den EOF.
+const JSON_CAPTION_TABLE_START = /\[\{"box_2d":\s*\[[^\]]*\],\s*"label":\s*"table",\s*"caption":\s*"((?:[^"\\]|\\.)*)"/g;
 
 function unescapeJsonCaptionString(s: string): string {
   return s.replace(/\\"/g, '"').replace(/\\\//g, '/').replace(/\\n/g, '\n').replace(/\\\\/g, '\\');

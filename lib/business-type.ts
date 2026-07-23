@@ -26,10 +26,21 @@ export const BUSINESS_TYPE_LABELS: Record<BusinessType, string> = {
 // "...-DNPNT"/"...-DNBH"). Day la tin hieu phap ly BAT BUOC phai co tren moi
 // BCTC (khong doan qua ten cong ty/nganh - khong co san trong du lieu
 // Vietstock, xem lib/vietstock-reports.ts) nen dung lam can cu chinh.
+// BAT BUOC \b (ranh gioi tu) quanh moi ma mau (2026-07-23, bug that SSM
+// Q2/2026 - CTCP Che tao ket cau Thep Vneco.SSM, mot cong ty thep BINH
+// THUONG, bi phan loai NHAM thanh 'bank' vi van ban co cau "Quyet dinh so
+// 973/QD/SSM-TCTDHC" - "TCTD" chi la 4 ky tu NAM TINH CO ben trong ma phong
+// ban "TCTDHC" (Kkong lien quan "to chuc tin dung"), khong phai ma mau phap
+// ly that. Pattern truoc day khop THO bat ky vi tri xuat hien substring nao,
+// khong phan biet duoc voi ma mau THAT (luon dung DOC LAP, vd "B02A/TCTD",
+// xem doi chieu that TIN - cong ty tai chinh that, "TCTD" luon dung ngay sau
+// dau "/" va ket thuc truoc dau cach/dau ngoac, khong bao gio dinh lien vao
+// chu khac). \b dua tren \w (chu/so/gach duoi) nen "/" truoc va " "/"("  sau
+// van tinh la ranh gioi day du - khong anh huong ma mau that nao.
 const FORM_CODE_RULES: { type: BusinessType; pattern: RegExp }[] = [
-  { type: 'securities', pattern: /CTCK/ },
-  { type: 'bank', pattern: /TCTD/ },
-  { type: 'insurance', pattern: /DNBH|DNPNT|DNTBH/ }, // DNBH=nhan tho, DNPNT=phi nhan tho, DNTBH=tai bao hiem
+  { type: 'securities', pattern: /\bCTCK\b/ },
+  { type: 'bank', pattern: /\bTCTD\b/ },
+  { type: 'insurance', pattern: /\b(DNBH|DNPNT|DNTBH)\b/ }, // DNBH=nhan tho, DNPNT=phi nhan tho, DNTBH=tai bao hiem
 ];
 
 // SUA 2026-07-14 (xac nhan qua PTI - Tong CTCP Bao hiem Buu dien - that): ma

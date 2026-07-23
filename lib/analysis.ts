@@ -6,6 +6,7 @@ import {
   findLabelColumnIndex,
   findRowByLabel,
   findArithmeticTotalRow,
+  compareHeaderRecency,
   type FinancialStatements,
   type StatementTable,
   type UnreliableCells,
@@ -1067,13 +1068,18 @@ function sumFindersAtColumn(
   return { value: sum, unreliable };
 }
 
-// BCDKT: cot gia tri dau tien LUON la ky nay (cuoi ky), cot thu hai LUON la
-// dau ky/dau nam - da verify qua du lieu OCR that (SJ1 va IDV), khong can do
-// text.
+// BCDKT: cot gia tri dau tien THUONG la ky nay (cuoi ky), cot thu hai THUONG
+// la dau ky/dau nam - da verify qua du lieu OCR that (SJ1 va IDV). SUA
+// 2026-07-23: KHONG con chi dua vao vi tri - doc tieu de qua compareHeaderRecency
+// (ngay thang/tu khoa CUOI-DAU, xem statement-shared.ts) truoc, CHI fallback
+// ve vi tri khi tieu de khong cho tin hieu ro rang nao (phong ngua truong
+// hop hiem gap bao cao dao nguoc thu tu 2 cot - user yeu cau 2026-07-23).
 export function balanceSheetPeriodColumns(table: StatementTable): { currentIndex: number; priorIndex: number } | null {
-  const [currentIndex, priorIndex] = valueColumnIndexes(table);
-  if (currentIndex === undefined || priorIndex === undefined) return null;
-  return { currentIndex, priorIndex };
+  const [firstIndex, secondIndex] = valueColumnIndexes(table);
+  if (firstIndex === undefined || secondIndex === undefined) return null;
+  const recency = compareHeaderRecency(table.columns[firstIndex] ?? '', table.columns[secondIndex] ?? '');
+  if (recency < 0) return { currentIndex: secondIndex, priorIndex: firstIndex };
+  return { currentIndex: firstIndex, priorIndex: secondIndex };
 }
 
 // KQKD: KHONG the dung vi tri co dinh - bao cao Quy co toi 4 cot gia tri
@@ -1094,9 +1100,16 @@ export function incomeStatementPeriodColumns(table: StatementTable): { currentIn
   });
   if (currentIndex !== undefined && priorIndex !== undefined) return { currentIndex, priorIndex };
 
-  const [fallbackCurrent, fallbackPrior] = valueIndexes;
-  if (fallbackCurrent === undefined || fallbackPrior === undefined) return null;
-  return { currentIndex: fallbackCurrent, priorIndex: fallbackPrior };
+  // SUA 2026-07-23: neu tu khoa "NAM NAY"/"NAM TRUOC" khong khop (vd bao cao
+  // dung DUNG NAM THAT thay vi chu "nay"/"truoc", xac nhan qua corpus that
+  // MIG/NTC/ABW/VRG...), thu compareHeaderRecency (ngay thang/nam so sanh
+  // duoc) TRUOC KHI fallback ve vi tri THUAN TUY - phong ngua truong hop hiem
+  // 2 cot bi dao nguoc thu tu (user yeu cau 2026-07-23).
+  const [fallbackFirst, fallbackSecond] = valueIndexes;
+  if (fallbackFirst === undefined || fallbackSecond === undefined) return null;
+  const recency = compareHeaderRecency(table.columns[fallbackFirst] ?? '', table.columns[fallbackSecond] ?? '');
+  if (recency < 0) return { currentIndex: fallbackSecond, priorIndex: fallbackFirst };
+  return { currentIndex: fallbackFirst, priorIndex: fallbackSecond };
 }
 
 export function computePercentChange(current: number | null, prior: number | null): number | null {

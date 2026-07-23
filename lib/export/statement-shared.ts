@@ -269,6 +269,73 @@ export function valueColumnIndexes(table: StatementTable): number[] {
   return indexes;
 }
 
+// SUA 2026-07-23 (theo yeu cau nguoi dung, phong ngua truoc khi gap that): 2
+// cot gia tri (ky nay/ky truoc, cuoi ky/dau ky) TRUOC DAY duoc gan "cot dau =
+// hien tai, cot sau = ky truoc" THUAN THEO VI TRI (xem balanceSheetPeriodColumns/
+// incomeStatementPeriodColumns o lib/analysis.ts) - DUNG voi TOAN BO mau da
+// doi chieu qua (SJ1/IDV/MIG/NTC/ABW...), nhung KHONG co gi dam bao 1 bao cao
+// trong tuong lai se KHONG dao nguoc thu tu 2 cot nay (vd "So dau ky" in
+// TRUOC "So cuoi ky") - neu xay ra, ca % thay doi LAN gia tri hien tai hien
+// thi cho nguoi dung se SAI HOAN TOAN ma khong co canh bao nao (hau qua rat
+// nghiem trong, du hiem gap). Them lop kiem tra CAU TRUC DOC LAP VOI VI TRI:
+// doc TIEU DE 2 cot, thu suy ra cot nao THUC SU moi hon qua (1) ngay thang cu
+// the trong tieu de (vd "30/06/2026" vs "01/01/2026", "Ngay 31 thang 03 nam
+// 2026") - nhieu bao cao dung DUNG NAM/QUY THAT thay vi chu "nay"/"truoc" (vd
+// MIG "Quy I nam 2026"/"Quy I nam 2025", xac nhan qua corpus that), roi moi
+// (2) tu khoa "CUOI"/"NAY" doi lap "DAU"/"TRUOC" khi khong co ngay thang ro
+// rang. Chi tra ve ket qua khi XAC DINH duoc load hon (so sanh ro rang, khac
+// nhau) - tra ve 0 (khong ro) khi ca 2 tieu de deu khong co tin hieu nao,
+// GIAO LAI cho vi tri lam phuong an cuoi cung (van dang dung tot cho hang
+// tram bao cao that da kiem chung, khong doi lam CHINH de tranh rui ro
+// regression tren dien rong, chi dung de SUA LAI khi phat hien RO RANG dao
+// nguoc).
+const DATE_DDMMYYYY_PATTERN = /(\d{1,2})[/-](\d{1,2})[/-](\d{4})/;
+const VIETNAMESE_LONG_DATE_PATTERN = /NGAY\s+(\d{1,2})\s+THANG\s+(\d{1,2})\s+NAM\s+(\d{4})/;
+const BARE_YEAR_PATTERN = /\b(20\d{2})\b/;
+const RECENT_PERIOD_MARKERS = ['CUOI KY', 'CUOI NAM', 'CUOI QUY', 'DU CUOI'];
+const EARLIER_PERIOD_MARKERS = ['DAU KY', 'DAU NAM', 'DAU QUY', 'DU DAU'];
+
+// "tier" (do CU THE) - CHI so sanh 2 tieu de CUNG 1 tier (vd ca 2 deu la
+// ngay thang day du DD/MM/YYYY, hoac ca 2 deu chi la nam tran trui) - so
+// sanh KHAC tier se SAI (da gap that DVM Q2/2026, 2026-07-23: 4 cot gia tri
+// theo thu tu [Quy nay, Luy ke nay, Quy truoc, Luy ke truoc] - KHAC cau truc
+// thuong gap [Quy nay, Quy truoc, Luy ke nay, Luy ke truoc]. 2 cot GIA TRI
+// DAU TIEN ("Quý 2/2026" - chi co NAM tran trui do khong khop du 3 phan
+// DD/MM/YYYY, va "Từ 01/01 đến 31/06/2026" - co NGAY THANG NAM day du) von
+// KHONG PHAI 1 cap hien-tai/ky-truoc (ca 2 deu la nam 2026, chi khac LOAI ky
+// bao cao - quy vs luy ke), nhung so sanh key tho (2026 vs 20260631) khien
+// tuong nham cot Luy ke "moi hon" chi vi ma hoa YYYYMMDD co gia tri lon hon
+// nam tran trui CUNG NAM do - loi ENCODING chu khong phai so sanh thoi gian
+// that. Gioi han so sanh o CUNG 1 tier tranh dung sai lech thang do nay.
+function extractHeaderPeriodSortKey(header: string): { tier: number; value: number } | null {
+  const normalized = normalizeLabelText(header);
+  const longDate = VIETNAMESE_LONG_DATE_PATTERN.exec(normalized);
+  if (longDate) return { tier: 1, value: Number(longDate[3]) * 10000 + Number(longDate[2]) * 100 + Number(longDate[1]) };
+  const shortDate = DATE_DDMMYYYY_PATTERN.exec(normalized);
+  if (shortDate) return { tier: 1, value: Number(shortDate[3]) * 10000 + Number(shortDate[2]) * 100 + Number(shortDate[1]) };
+  const bareYear = BARE_YEAR_PATTERN.exec(normalized);
+  if (bareYear) return { tier: 2, value: Number(bareYear[1]) };
+  return null;
+}
+
+// > 0 neu headerA moi hon (nen la "hien tai"), < 0 neu headerB moi hon, 0 neu
+// khong xac dinh duoc (giao lai cho vi tri).
+export function compareHeaderRecency(headerA: string, headerB: string): number {
+  const keyA = extractHeaderPeriodSortKey(headerA);
+  const keyB = extractHeaderPeriodSortKey(headerB);
+  if (keyA !== null && keyB !== null && keyA.tier === keyB.tier && keyA.value !== keyB.value) return keyA.value - keyB.value;
+
+  const normalizedA = normalizeLabelText(headerA);
+  const normalizedB = normalizeLabelText(headerB);
+  const aIsRecent = RECENT_PERIOD_MARKERS.some((m) => normalizedA.includes(m));
+  const aIsEarlier = EARLIER_PERIOD_MARKERS.some((m) => normalizedA.includes(m));
+  const bIsRecent = RECENT_PERIOD_MARKERS.some((m) => normalizedB.includes(m));
+  const bIsEarlier = EARLIER_PERIOD_MARKERS.some((m) => normalizedB.includes(m));
+  if (aIsRecent && bIsEarlier) return 1;
+  if (aIsEarlier && bIsRecent) return -1;
+  return 0;
+}
+
 // Tim cot "Ma so" trong bang - dung ma so (100, 200, 270...) de xac dinh dong
 // thay vi ten chi tieu, vi ten de bi nham voi dong con chau co ten tuong tu
 // (vd "Tai san ngan han KHAC" cung chua "TAI SAN NGAN HAN"). Ma so theo Thong
@@ -1046,8 +1113,26 @@ export function findArithmeticTotalRow(
 // khong qua buoc tim theo nhan nay). \b (ranh gioi tu) tranh mo rong nham 1
 // chuoi khac tinh co chua "LN"/"DT" lam chuoi con (vd se KHONG dung tay vao
 // giua 1 tu dai hon).
+// SUA 2026-07-23 (bug that PBP Q2/2026): mau KQKD (B02-DN, TT 99/2025) chen
+// them ngoac "(Lỗ)" NGAY SAU "Lợi nhuận"/"Tổng lợi nhuận"/"Thu nhập" o NHIEU
+// dong (du phong khi ket qua co the la so am) - vd chinh PBP dung CA 3 dong
+// "Lợi nhuận (lỗ) từ hoạt động kinh doanh", "Tổng lợi nhuận (lỗ) kế toán
+// trước thuế", "Lợi nhuận (lỗ) sau thuế TNDN" - dau ngoac nay CAT DUT chuoi
+// con lien tuc "LOI NHUAN SAU THUE" ma finder LNST doi hoi ("LOI NHUAN (LO)
+// SAU THUE" khong con chua "LOI NHUAN SAU THUE" nhu 1 substring), khien LNST
+// tra ve null/0 du dong that su ton tai voi gia tri hop le. Day la 1 mau NGOAC
+// THAY THE CO DINH theo mau bieu (khong phai van ban tu do), khac han cac
+// ngoac CONG THUC "(60=50-51-52)" hay dieu kien khac - AN TOAN de xoa vi CHI
+// khop dung 1 trong 2 tu "LO"/"LAI" don doc nam TRON trong 1 cap ngoac, khong
+// dung cho ngoac chua noi dung nao khac.
+const PARENTHETICAL_LOSS_ALTERNATIVE_MARKER = /\(\s*(LO|LAI)\s*\)/g;
+
 function expandLabelFinderAbbreviations(normalized: string): string {
-  return normalized.replace(/\bLNST\b/g, 'LOI NHUAN SAU THUE').replace(/\bLN\b/g, 'LOI NHUAN').replace(/\bDT\b/g, 'DOANH THU');
+  const withoutLossAlternative = normalized.replace(PARENTHETICAL_LOSS_ALTERNATIVE_MARKER, ' ').replace(/\s+/g, ' ').trim();
+  return withoutLossAlternative
+    .replace(/\bLNST\b/g, 'LOI NHUAN SAU THUE')
+    .replace(/\bLN\b/g, 'LOI NHUAN')
+    .replace(/\bDT\b/g, 'DOANH THU');
 }
 
 export function findRowByLabel(
