@@ -423,3 +423,187 @@ Mẫu B 02a-DN
 Báo cáo này phải được đọc cùng với Thuyết minh Báo cáo tài chính
 
 5
+
+20. Lãi suy giảm trên cổ
+
+71
+
+74
+
+639
+
+284
+
+755
+
+Lê Thị Kiều Vi
+Người lập
+
+Phạm Văn Tùng
+Kế toán trưởng
+
+Đắk Lắk, ngày 17 tháng 07 năm 2026
+
+Trương Hải Quang
+Giám đốc
+
+![img-0.jpeg](img-0.jpeg)
+
+Báo cáo này phải được đọc cùng với Thuyết minh Báo cáo tài chính
+
+6
+
+CÔNG TY CỔ PHẦN THỦY ĐIỆN BUÔN ĐÔN
+
+Số 23/2 đường Thủ Khoa Huân,
+
+Phường Thành Nhất, Tỉnh Đăk Lăk
+
+BÁO CÁO TÀI CHÍNH
+
+Quý II Năm tài chính 2026
+
+Mẫu B 03a-DN
+
+# BÁO CÁO LƯU CHUYỂN TIỀN TỆ
+
+(Theo phương pháp gián tiếp)
+
+QUÝ II NĂM 2026
+
+|  CHỈ TIÊU | Mã số | Thuyết minh | Lũy kế từ đầu năm đến cuối quý này (Năm nay) | Đơn vị tính: VND Lũy kế từ đầu năm đến cuối quý này (Năm trước)  |
+| --- | --- | --- | --- | --- |
+|  **I. Lưu chuyển tiền từ hoạt động kinh doanh** |  |  |  |   |
+|  *1. Lợi nhuận trước thuế* | 01 |  | 21.849.058.323 | 54.409.951.501  |
+|  *2. Điều chỉnh cho các khoản:* |  |  |  |   |
+|  - Khấu hao TSCĐ và BĐSĐT | 02 |  | 37.336.596.274 | 51.884.437.261  |
+|  - Các khoản dự phòng | 03 |  | - | -  |
+|  - Lãi, lỗ chênh lệch tỷ giá hối đoái do đánh giá lại các khoản mục tiền tệ có gốc ngoại tệ | 04 |  | - | -  |
+|  - Lãi, lỗ từ hoạt động đầu tư, tài chính | 05 |  | (75.822.804) | (203.353.503)  |
+|  - Chi phí đi vay | 06 |  | 4.919.753.287 | 8.056.397.954  |
+|  - Các khoản điều chỉnh khác | 07 |  | - | -  |
+|  *3. Lợi nhuận từ hoạt động kinh doanh trước thay đổi vốn lưu động* | 08 |  | 64.029.585.080 | 114.147.438.018  |
+|  - Tăng, giảm các khoản phải thu | 09 |  | 98.149.440.553 | (12.726.108.314)  |
+|  - Tăng, giảm hàng tồn kho | 10 |  | (711.829.721) | (1.667.488.080)  |
+|  - Tăng, giảm các khoản phải trả (không kể lãi vay phải trả, thuế thu nhập doanh nghiệp phải nộp) | 11 |  | (16.634.282.184) | (2.053.886.651)  |
+|  - Tăng, giảm chi phí chờ phân bổ | 12 |  | (862.110.125) | (1.206.773.772)  |
+|  - Tăng, giảm chứng khoán kinh doanh | 13 |  | - | -  |
+|  - Chi phí đi vay đã trả | 14 |  | (5.373.931.006) | (12.717.922.829)  |
+|  - Thuế thu nhập doanh nghiệp đã nộp | 15 |  | (8.245.414.348) | (4.814.520.031)  |
+|  - Tiền thu khác từ hoạt động kinh doanh | 16 |  | 40.000.000 | 50.000.000  |
+|  - Tiền chi khác cho hoạt động kinh doanh | 17 |  | (1.553.802.333) | (2.246.228.190)  |
+|  **Lưu chuyển tiền thuần từ hoạt động kinh doanh** | 20 |  | 128.837.655.916 | 76.761.444.746  |
+|  **II. Lưu chuyển tiền từ hoạt động đầu tư** |  |  |  |   |
+|  1. Tiền chi để mua sắm, xây dựng tài sản cố định và các tài sản dài hạn khác | 21 |  | (1.288.214.367) | (5.190.435.025)  |
+|  2. Tiền thu từ thanh lý, nhượng bán tài sản cố định và các tài sản dài hạn khác | 22 |  | - | -  |
+|  3. Tiền chi cho vay, mua các công cụ nợ của đơn vị khác | 23 |  | - | -  |
+|  4. Tiền thu hồi cho vay, bán lại các công cụ nợ của đơn vị khác | 24 |  | - | -  |
+|  5. Tiền chi đầu tư, góp vốn vào đơn vị khác | 25 |  | - | -  |
+|  6. Tiền thu hồi đầu tư, góp vốn vào đơn vị khác | 26 |  | - | -  |
+|  7. Tiền thu lãi cho vay, cổ tức và lợi nhuận được chia | 27 |  | 84.922.120 | 401.989.119  |
+|  **Lưu chuyển tiền thuần từ hoạt động đầu tư** | 30 |  | (1.203.292.247) | (4.788.445.906)  |
+
+Báo cáo này phải được đọc cùng với Thuyết minh Báo cáo tài chính
+
+7
+
+CÔNG TY CỔ PHẦN THỦY ĐIỆN BUÔN ĐÔN
+Số 23/2 đường Thủ Khoa Huân,
+Phường Thành Nhất, Tỉnh Đắk Lắk
+
+BÁO CÁO TÀI CHÍNH
+Quý II Năm tài chính 2026
+Báo cáo lưu chuyển tiền tệ (tiếp theo)
+
+|  CHỈ TIÊU | Mã số | Thuyết minh | Mẫu B 03-DN  |   |
+| --- | --- | --- | --- | --- |
+|   |   |   |  Lũy kế từ đầu năm đến cuối quý này (Năm nay) | Lũy kế từ đầu năm đến cuối quý này (Năm trước)  |
+|  **III. Lưu chuyển tiền từ hoạt động tài chính**  |   |   |   |   |
+|  1. Tiền thu từ phát hành cổ phiếu, nhận vốn chủ sở hữu | 31 |  | - |   |
+|  2. Tiền trả lại vốn góp cho các chủ sở hữu, mua lại cổ phiếu đã phát hành | 32 |  | - |   |
+|  3. Tiền thu từ đi vay | 33 |  | 49.988.041.519 | 202.011.183.575  |
+|  4. Tiền trả nợ gốc vay | 34 |  | (170.451.304.817) | (341.472.656.959)  |
+|  5. Tiền trả nợ gốc thuê tài chính | 35 |  |  |   |
+|  6. Cổ tức, lợi nhuận đã trả cho chủ sở hữu | 36 |  | (33.421.725.000) | -  |
+|  *Lưu chuyển tiền thuần từ hoạt động tài chính* | *40* |  | (153.884.988.298) | (139.461.473.384)  |
+|  **Lưu chuyển tiền thuần trong kỳ** | **50** |  | **(26.250.624.629)** | **(67.488.474.544)**  |
+|  **Tiền và tương đương tiền đầu kỳ** | **60** |  | **32.972.141.056** | **70.440.053.820**  |
+|  Ảnh hưởng của thay đổi tỷ giá hối đoái quy đổi ngoại tệ | 61 |  | - |   |
+|  **Tiền và tương đương tiền cuối kỳ** | **70** |  | **6.721.516.427** | **2.951.539.276**  |
+
+Phê duyệt, ngày 17 tháng 07 năm 2026
+
+Lê Thị Kiều Vi
+Người lập
+
+Phạm Văn Tùng
+Kế toán trưởng
+
+![img-0.jpeg](img-0.jpeg)
+
+Trương Hải Quang
+Giám Đốc
+
+Báo cáo này phải được đọc cùng với Thuyết minh Báo cáo tài chính
+
+8
+
+CÔNG TY CỔ PHẦN THỦY ĐIỆN BUÔN ĐÔN
+
+Số 23/2 đường Thủ Khoa Huân,
+
+Phường Thành Nhất, Tỉnh Đăk Lăk
+
+BÁO CÁO TÀI CHÍNH
+
+Quý II Năm tài chính 2026
+
+Mẫu B 03-DN
+
+# THUYẾT MINH BÁO CÁO TÀI CHÍNH
+
+## I. THÔNG TIN VỀ DOANH NGHIỆP
+
+### 1. Giấy phép hoạt động
+
+Công ty Cổ phần Thủy điện Buôn Đôn (tên viết tắt là: BDHC) hoạt động theo Giấy chứng nhận đăng ký kinh doanh số 6000884487 do Sở Kế hoạch và Đầu tư tỉnh Đăk Lăk cấp lần đầu ngày 20 tháng 5 năm 2009 và đăng ký thay đổi lần 12 theo Giấy chứng nhận đăng ký doanh nghiệp ngày 27 tháng 5 năm 2026. Thời gian hoạt động của Công ty là 50 năm kể từ ngày cấp giấy phép đầu tư.
+
+Vốn điều lệ thay đổi lần 12:
+
+668.509.750.000
+
+VND
+
+Ngành nghề kinh doanh của Công ty theo Giấy chứng nhận đầu tư như sau: Đầu tư xây dựng các dự án nguồn điện, sản xuất và kinh doanh điện năng; Tư vấn, quản lý dự án đầu tư xây dựng, tư vấn lập và thẩm định hồ sơ mời thầu, đánh giá hồ sơ dự thầu về thiết kế, xây dựng và mua sắm vật tư thiết bị; Trồng, chế biến, bán buôn cà phê. Trồng, chế biến, bán buôn sản phẩm cây lâu năm khác; Dịch vụ du lịch; Quản lý vận hành, bảo dưỡng sửa chữa, cải tạo các thiết bị điện, các công trình thủy công, kiến trúc của nhà máy thủy điện; Đào tạo phát triển nguồn nhân lực về quản lý vận hành, bảo dưỡng sửa chữa các nhà máy thủy điện; Thí nghiệm hiệu chỉnh thiết bị điện; Mua bán xuất nhập khẩu vật tư thiết bị; Nhận thầu xây lắp các công trình thủy lợi – thủy điện, công trình đường dây, trạm biến thế, các công trình xây dựng dân dụng, công nghiệp, các công trình giao thông; Sản xuất kinh doanh vật liệu xây dựng; Khai thác đá, cát, sỏi, đất sét; Trồng, chế biến, sản xuất, bán buôn cao su tổng hợp.
+
+Trụ sở chính của Công ty đặt tại Số 23/2 đường Thủ Khoa Huân,, Phường Thành Nhất, Tỉnh Đăk Lăk.
+
+### 2. Tình hình hoạt động
+
+Công ty là Chủ đầu tư Dự án Thủy điện Srepok 4A (theo Giấy chứng nhận đầu tư số 40121000095 do Ủy Ban Nhân Dân tỉnh Đăk Lăk chứng nhận lần đầu vào ngày 03 tháng 02 năm 2010 và chứng nhận thay đổi lần thứ bảy vào ngày 26 tháng 12 năm 2019).
+
+## II. NĂM TÀI CHÍNH, ĐƠN VỊ TIẾN TỆ SỬ DỤNG TRONG KẾ TOÁN, CHUẨN MỰC VÀ CHẾ ĐỘ KẾ TOÁN ÁP DỤNG
+
+### 1. Năm tài chính
+
+Năm tài chính của Công ty bắt đầu từ ngày 01 tháng 01 đến ngày 31 tháng 12 hàng năm.
+
+### 2. Đơn vị tiền tệ sử dụng trong kế toán
+
+Đơn vị tiền tệ sử dụng trong kế toán là Đồng Việt Nam (VND).
+
+### 3. Chuẩn mực và chế độ kế toán áp dụng
+
+Báo cáo tài chính của Công ty được lập và trình bày phù hợp với Chế độ Kế toán doanh nghiệp được ban hành theo Thông tư số 99/2025/TT-BTC ngày 22 tháng 12 năm 2014 của Bộ Tài chính và các Chuẩn mực kế toán có liên quan do Bộ Tài chính ban hành.
+
+Hội đồng quản trị và Ban Tổng Giám đốc đảm bảo đã tuân thủ yêu cầu của các chuẩn mực kế toán và Chế độ kế toán doanh nghiệp tại Việt Nam được ban hành theo Thông tư số 99/2025/TT-BTC ngày 22 tháng 12 năm 2025 của Bộ Tài Chính cũng như các Thông tư hướng dẫn thực hiện chuẩn mực và chế độ kế toán doanh nghiệp của Bộ Tài Chính trong việc lập Báo cáo Tài chính.
+
+## III. CÁC CHÍNH SÁCH KẾ TOÁN CHỦ YẾU
+
+### 1. Các thay đổi trong các chính sách kế toán và thuyết minh
+
+Các chính sách kế toán của Công ty sử dụng để lập báo cáo tài chính được áp dụng nhất quán với các chính sách kế toán đã được áp dụng để lập báo cáo tài chính.
+
+Thuyết minh này là một bộ phận hợp thành và phải được đọc cùng Báo cáo tài chính
+
+9

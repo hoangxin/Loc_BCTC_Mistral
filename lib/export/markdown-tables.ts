@@ -1174,7 +1174,28 @@ function isCoverPageOrSummaryTable(table: ParsedTable): boolean {
   // dong" lam ten cot (chi cong bo 1 dong "Don vi tinh" duy nhat ben ngoai
   // bang, khong co cot % rieng).
   const hasBienDongPercentWording = combinedText.includes('BIEN DONG') && combinedText.includes('%');
-  return hasPercentChangeWording || hasDifferenceWording || hasBienDongPercentWording;
+  // SUA 2026-07-23 (xac nhan qua CBI that): cong van "giai trinh bien dong ket
+  // qua SXKD" (mau rieng, DVT "Trieu dong", KHONG phai KQKD chuan) dung dong
+  // "Chỉ tiêu" trung ten voi KQKD that (Doanh thu ban hang/Gia von/Loi nhuan
+  // gop...) nhung THIEU rieng dong "Doanh thu thuan" (gop chung voi dong 1 vi
+  // khong co khoan giam tru) va don vi la TRIEU dong thay vi VND day du -> khi
+  // bi gop nham vao incomeStatement (dropRedundantDuplicateTables khong nhan
+  // ra day la ban trung lap vi it dong hon + so lieu khac scale), Doanh thu
+  // thuan bi mat hoan toan VA cac dong con lai bi lech scale ~10^6 lan so voi
+  // dong tu bang KQKD that, gay hang loat canh bao khong khop. Tin hieu CAU
+  // TRUC rieng cua mau nay (khong dua vao tu vung de tranh trung voi LCTT that
+  // nhu 2 tin hieu tren): dong "chu giai cot" ngay duoi tieu de bang ghi CONG
+  // THUC hieu chinh dang "N=N-N" (vd "5=1-2") cho cot chenh lech - KQKD/BCDKT
+  // chuan khong bao gio dat 1 O RIENG chi la 1 cong thuc so hoc nhu vay. PHAI
+  // khop TRON VEN CA O (^...$), khong phai substring: dong nhan chi tieu that
+  // (vd "Loi nhuan gop ve ban hang va cung cap dich vu (20 = 10-11)") cung
+  // CHUA cung dang cong thuc trong ngoac nhu 1 phan cua ten dai hon - neu chi
+  // do substring se khop nham CA bang KQKD that, xoa mat toan bo du lieu (da
+  // bat qua khi tu kiem chung bang rebuild-from-saved-markdown.ts).
+  const hasFormulaColumnLegend = [...table.columns, ...table.rows.flat()].some((cell) =>
+    /^\d+\s*=\s*\d+\s*[-+]\s*\d+$/.test(String(cell ?? '').trim())
+  );
+  return hasPercentChangeWording || hasDifferenceWording || hasBienDongPercentWording || hasFormulaColumnLegend;
 }
 
 // Dem so tu khoa dac trung cua tung bang xuat hien trong NHAN cac dong cua 1
@@ -1698,9 +1719,41 @@ function convertJsonCaptionTablesToMarkdown(markdown: string): string {
 // nua. Dung chung 1 logic voi diem chan cashFlow trong parseStatementsFromMarkdown
 // duoi (khong dinh nghia lai fuzzy-match rieng - Mistral OCR do chinh xac cao,
 // khop chuoi thang la du).
+// Tim dong NOI DUNG THAT dau tien (hang bang markdown that, khop 1 content
+// marker, KHONG nam trong 1 bang tom tat "%" - xem comment chi tiet tai noi
+// goi trong parseStatementsFromMarkdown) - dung CHUNG boi ca
+// containsNotesSectionMarker (quyet dinh KHI NAO dung OCR probe, financial-
+// statements.ts) LAN parseStatementsFromMarkdown (quyet dinh diem cat that).
+// SUA 2026-07-23 (bug that VUA Q2/2026): TRUOC DAY containsNotesSectionMarker
+// tu goi findCashFlowEndingIndex(lines, 0) - tim TU DAU van ban, KHONG co lop
+// bao ve nay - nen 1 trang "MUC LUC/NOI DUNG" liet ke ten cac bang (mau moi
+// Thong tu 99/2025, xem comment o parseStatementsFromMarkdown) co dong "BẢN
+// THUYẾT MINH BÁO CÁO TÀI CHÍNH" DUNG MOT MINH (khong phai hang bang) van bi
+// layer 3 (findNotesSectionStartIndex, chi doi hoi "trong nhu tieu de") nhan
+// nham la tieu de that, khien OCR PROBE DUNG NGAY sau 10 trang dau (tin la da
+// toi Thuyet minh) - trong khi BCDKT/KQKD/LCTT that con nam XA HON, chua ho
+// duoc OCR toi. Dung 2 ham gioi han CUNG 1 dieu kien nay dam bao nhat quan -
+// tranh tinh trang 1 ham co bao ve, ham kia thi khong.
+function findFirstContentLine(lines: string[], normalizedLines: string[]): number {
+  const tablesForFirstContentLine = parseAllTablesInRange(lines);
+  const isRowInsideComparisonSummaryTable = (lineIndex: number): boolean => {
+    const table = tablesForFirstContentLine.find((t) => lineIndex >= t.startLineIndex && lineIndex < t.endLineIndex);
+    return table !== undefined && table.columns.some((c) => c.includes('%'));
+  };
+  const allContentMarkers = CONTENT_MARKERS_BY_KEY.flatMap(({ markers }) => markers);
+  return lines.findIndex(
+    (line, i) =>
+      splitMarkdownRow(line) !== null &&
+      allContentMarkers.some((m) => matchesContentMarker(normalizedLines[i], m)) &&
+      !isRowInsideComparisonSummaryTable(i)
+  );
+}
+
 export function containsNotesSectionMarker(markdown: string): boolean {
   const lines = convertJsonCaptionTablesToMarkdown(markdown).split(/\r?\n/);
-  return findCashFlowEndingIndex(lines, 0) !== -1;
+  const normalizedLines = lines.map((l) => normalizeLabelText(l));
+  const firstContentLine = findFirstContentLine(lines, normalizedLines);
+  return findCashFlowEndingIndex(lines, firstContentLine === -1 ? 0 : firstContentLine) !== -1;
 }
 
 // Phat hien (KHONG sua) truong hop pha vo gia dinh THIET KE cua co che cat
@@ -1832,18 +1885,7 @@ export function parseStatementsFromMarkdown(rawMarkdown: string): FinancialState
   // bieu phap ly. Loai truoc CAC BANG co cot chua ky tu "%" (tin hieu on dinh
   // hon nhieu so voi tu khoa - moi bang so sanh deu BAT BUOC phai co cot % de
   // the hien muc dich cua no) khoi danh sach ung vien firstContentLine.
-  const tablesForFirstContentLine = parseAllTablesInRange(lines);
-  const isRowInsideComparisonSummaryTable = (lineIndex: number): boolean => {
-    const table = tablesForFirstContentLine.find((t) => lineIndex >= t.startLineIndex && lineIndex < t.endLineIndex);
-    return table !== undefined && table.columns.some((c) => c.includes('%'));
-  };
-  const allContentMarkers = CONTENT_MARKERS_BY_KEY.flatMap(({ markers }) => markers);
-  const firstContentLine = lines.findIndex(
-    (line, i) =>
-      splitMarkdownRow(line) !== null &&
-      allContentMarkers.some((m) => matchesContentMarker(normalizedLines[i], m)) &&
-      !isRowInsideComparisonSummaryTable(i)
-  );
+  const firstContentLine = findFirstContentLine(lines, normalizedLines);
   const cashFlowEndingIndex = findCashFlowEndingIndex(lines, firstContentLine === -1 ? 0 : firstContentLine);
   let notesLine = cashFlowEndingIndex !== -1 ? cashFlowEndingIndex + 1 : -1;
   if (process.env.DEBUG_PARSE) console.error('[debug]', { firstContentLine, cashFlowEndingIndex, notesLine, totalLines: lines.length, firstContentLineText: lines[firstContentLine], cutoffLineText: lines[notesLine] });

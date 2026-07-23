@@ -27,6 +27,17 @@ export interface ResolvedReportFile {
 export interface ResolveSourceResult {
   resolved: ResolvedReportFile[];
   errors: string[];
+  // SUA 2026-07-23 (bug that QHD Q2/2026, theo yeu cau nguoi dung: "khong sua
+  // gop file, chi canh bao"): mot so cong ty nop BCTC TACH RIENG tung bang
+  // thanh nhieu file PDF ngan (VD QHD: KQKD/LCTT/BCDKT moi bang 1 file 2-6
+  // trang) thay vi gop chung 1 file dai nhu da so - dropShortAncillaryPdfs
+  // (thiet ke cho truong hop THUONG GAP: van ban phu ngan di kem 1 BCTC day
+  // du) se LOAI NHAM toan bo cac file nay (vi tat ca deu <=SHORT_DOCUMENT_MAX_PAGES
+  // trang). Khong tu dong gop lai (rui ro cao, anh huong CA pipeline, xem thao
+  // luan voi nguoi dung) - chi phat hien VA canh bao khi cac file BI LOAI
+  // trung ten voi >=2 LOAI BANG KHAC NHAU (xem detectSplitFilingDropWarnings),
+  // de nguoi dung tu phat hien qua canh bao thay vi phai tu bao loi rieng.
+  filingStructureWarnings: string[];
 }
 
 const SUPPORTED_EXTRACT_EXTENSIONS = new Set(['.pdf', '.docx', '.doc']);
@@ -105,7 +116,33 @@ const ENGLISH_FINANCIAL_TERM_PATTERNS: RegExp[] = [
 // Viet, khac han file chi mo ta bang tieng Anh (PMP "..._en.pdf", CTS
 // "m88_..._financial_statements_in_quarter..." - khong co dau hieu tieng
 // Viet nao trong ten, van dung dung nhu cu, khong regress).
-const VIETNAMESE_FILENAME_INDICATOR_PATTERNS: RegExp[] = [/baocaotaichinh/i, /(^|[_-])vi([_.\-]|$)/i];
+// SUA 2026-07-23 (bug that QHD Q2/2026): cong cu dat ten file cua Vietstock
+// GHEP truc tiep tu tieng Anh cuoi cung voi token "vi" KHONG chen dau "_"/"-"
+// ngan cach (vd "...profit_or_lossvi_bao_cao_ket_qua...", "...q2_2026vi_thuyet_minh...")
+// - le trai cua "vi" la 1 chu cai/chu so thuong (tu "loss", so "2026"), khong
+// phai "_"/"-"/dau dau chuoi nhu pattern cu doi hoi, nen KHONG khop, file BCTC
+// that (tieng Viet) bi hieu nham la "chi tieng Anh" va bi loai boi
+// isEnglishVariantEntry - MAT CA 4 file that (KQKD/LCTT/BCDKT/Thuyet minh),
+// chi con sot lai van ban phu ngan. Nguyen nhan GOC giong het bug QTP/ND2
+// 2026-07-21 (thieu dau ngan cach o 1 phia cua token "vi") nhung o 1 VI TRI
+// khac - khong va tung truong hop rieng, noi long DIEU KIEN LE TRAI cho ca
+// chu cai/chu so (khong chi "_"/"-"/dau chuoi) - LE PHAI van giu nguyen
+// ("_"/"."/"-"/cuoi chuoi, bao ve khoi tu tieng Anh THAT co "vi" giua tu vd
+// "reviewed" - sau "vi" la "ewed", khong khop le phai nen an toan).
+//
+// 1 file khac trong CUNG zip QHD (BCDKT - "...cash_flowsbao_cao_tinh_hinh_tai_chinh...")
+// lai THIEU HAN token "vi" (loi cua chinh cong cu dat ten Vietstock, khong chi
+// thieu dau ngan cach), chi con "tai_chinh" (tai chinh) - cum tu XUAT HIEN
+// TRONG MOI thuat ngu BCTC tieng Viet (bao cao TAI CHINH, tinh hinh TAI
+// CHINH, thuyet minh bao cao TAI CHINH...) va KHONG BAO GIO xuat hien trong
+// ban dich tieng Anh (luon dich la "financial", khong giu nguyen "tai chinh")
+// - an toan de dung LAM ANCHOR RONG HON, cung 1 tinh than voi "baocaotaichinh"
+// da co san (chi la bien the CO dau "_" ngan cach giua tu, thay vi dinh lien).
+const VIETNAMESE_FILENAME_INDICATOR_PATTERNS: RegExp[] = [
+  /baocaotaichinh/i,
+  /tai_chinh/i,
+  /(^|[a-z0-9_-])vi([_.\-]|$)/i,
+];
 
 // Export: tai dung o lib/pdf-text.ts/report-extract.ts lam dieu kien PHU
 // (bilingual filename guard) cho buoc kiem tra ngon ngu theo NOI DUNG - xem
@@ -162,15 +199,59 @@ async function getPdfPageCount(filePath: string): Promise<number | null> {
 // (vd bao cao that su chi co 1 file rat ngan - khong co gi de so sanh thi giu
 // nguyen, an toan hon la doan bua). DOCX/DOC khong loc (chi PDF moi dem trang
 // duoc de bang pdf-lib o day).
-async function dropShortAncillaryPdfs(resolved: ResolvedReportFile[]): Promise<ResolvedReportFile[]> {
-  if (resolved.length <= 1) return resolved;
+//
+// Tra ve CA `dropped` (2026-07-23, phuc vu detectSplitFilingDropWarnings o
+// duoi - can biet CHINH XAC file nao bi loai de cham diem tin hieu "BCTC tach
+// file rieng" ma khong doi hanh vi loc).
+async function dropShortAncillaryPdfs(
+  resolved: ResolvedReportFile[]
+): Promise<{ kept: ResolvedReportFile[]; dropped: ResolvedReportFile[] }> {
+  if (resolved.length <= 1) return { kept: resolved, dropped: [] };
   const withPages = await Promise.all(
     resolved.map(async (r) => ({ r, pages: r.format === 'pdf' ? await getPdfPageCount(r.filePath) : null }))
   );
   const hasLongDoc = withPages.some((x) => x.pages !== null && x.pages > SHORT_DOCUMENT_MAX_PAGES);
-  if (!hasLongDoc) return resolved;
+  if (!hasLongDoc) return { kept: resolved, dropped: [] };
   const filtered = withPages.filter((x) => x.pages === null || x.pages > SHORT_DOCUMENT_MAX_PAGES).map((x) => x.r);
-  return filtered.length > 0 ? filtered : resolved;
+  if (filtered.length === 0) return { kept: resolved, dropped: [] };
+  const droppedSet = new Set(withPages.filter((x) => x.pages !== null && x.pages <= SHORT_DOCUMENT_MAX_PAGES).map((x) => x.r));
+  return { kept: filtered, dropped: [...droppedSet] };
+}
+
+// SUA 2026-07-23 (bug that QHD Q2/2026, theo yeu cau nguoi dung - xem
+// ResolveSourceResult.filingStructureWarnings): 4 ten CHINH THUC, BAT BUOC
+// theo VAS (Thong tu 200/2014 va cac ban tuong duong) cho 4 loai bao cao/bang
+// - ON DINH theo luat, khong doan theo cach 1 cong ty viet tat rieng, nen an
+// toan hon nhieu so voi 1 danh sach tu khoa tu do (khac han loai tu khoa da
+// bi bo o tren cho van ban phu). Gop CA ban tieng Anh (da co san trong
+// ENGLISH_FINANCIAL_TERM_PATTERNS) lan tieng Viet khong dau/co gach duoi.
+type StatementFileType = 'balanceSheet' | 'incomeStatement' | 'cashFlow';
+const FILENAME_STATEMENT_TYPE_PATTERNS: { type: StatementFileType; pattern: RegExp }[] = [
+  { type: 'balanceSheet', pattern: /balance[_-]?sheet|tinh[_-]?hinh[_-]?tai[_-]?chinh|can[_-]?doi[_-]?ke[_-]?toan/i },
+  { type: 'incomeStatement', pattern: /income[_-]?statement|profit[_-]?(and|or)[_-]?loss|ket[_-]?qua[_-]?hoat[_-]?dong[_-]?kinh[_-]?doanh/i },
+  { type: 'cashFlow', pattern: /cash[_-]?flow[_-]?statement|luu[_-]?chuyen[_-]?tien[_-]?te/i },
+];
+
+function classifyFilenameStatementType(name: string): StatementFileType | null {
+  return FILENAME_STATEMENT_TYPE_PATTERNS.find((p) => p.pattern.test(name))?.type ?? null;
+}
+
+// CHI canh bao (khong tu gop/sua - qua rui ro cho ca pipeline, xem thao luan
+// voi nguoi dung 2026-07-23) khi cac file BI LOAI boi dropShortAncillaryPdfs
+// khop >=2 LOAI BANG KHAC NHAU - 1 file phu that (giai trinh/cong van, xem
+// comment dropShortAncillaryPdfs) khong bao gio mang ten khop dung 2 loai
+// bang khac nhau CUNG LUC, chi 1 BCTC nop tach rieng tung bang moi tao ra
+// tinh huong nay.
+function detectSplitFilingDropWarnings(dropped: ResolvedReportFile[]): string[] {
+  if (dropped.length < 2) return [];
+  const typesFound = new Set(
+    dropped.map((r) => classifyFilenameStatementType(r.entryName ?? r.filePath)).filter((t): t is StatementFileType => t !== null)
+  );
+  if (typesFound.size < 2) return [];
+  const droppedNames = dropped.map((r) => r.entryName ?? basename(r.filePath)).join(', ');
+  return [
+    `CANH BAO: phat hien ${dropped.length} file ngan (<=${SHORT_DOCUMENT_MAX_PAGES} trang) trong nhom nay co ten khop NHIEU LOAI BANG BCTC khac nhau (${[...typesFound].join(', ')}) nhung da bi bo qua boi bo loc "van ban phu ngan" - co the day la 1 BCTC NOP TACH RIENG tung bang thanh nhieu file (khong gop chung 1 file nhu thuong le) chu khong phai van ban phu that. Can mo file zip/rar goc kiem tra tay neu ket qua ben duoi thieu/rong du lieu. Cac file bi bo qua: ${droppedNames}`,
+  ];
 }
 
 // SUA 2026-07-23 (bug that TCI Q2/2026): 1 nhom nhieu file (zip co ca BCTC
@@ -211,7 +292,7 @@ function extractZip(zipPath: string, report: ReportFile): ResolveSourceResult {
       .filter((entry) => !entry.isDirectory && SUPPORTED_EXTRACT_EXTENSIONS.has(extname(entry.entryName).toLowerCase()));
 
     if (allEntries.length === 0) {
-      return { resolved: [], errors: [`${report.stockCode}: file zip không chứa PDF/Word nào`] };
+      return { resolved: [], errors: [`${report.stockCode}: file zip không chứa PDF/Word nào`], filingStructureWarnings: [] };
     }
 
     const entries = pickPrimaryReportEntries(allEntries, (e) => e.entryName);
@@ -224,11 +305,12 @@ function extractZip(zipPath: string, report: ReportFile): ResolveSourceResult {
       zip.extractEntryTo(entry, destDir, false, true);
       resolved.push({ filePath: join(destDir, basename(entry.entryName)), format, report, entryName: entry.entryName });
     }
-    return { resolved, errors: [] };
+    return { resolved, errors: [], filingStructureWarnings: [] };
   } catch (error) {
     return {
       resolved: [],
       errors: [`${report.stockCode}: giải nén zip thất bại - ${error instanceof Error ? error.message : String(error)}`],
+      filingStructureWarnings: [],
     };
   }
 }
@@ -259,7 +341,7 @@ async function extractRar(rarPath: string, report: ReportFile): Promise<ResolveS
       (header) => !header.flags.directory && SUPPORTED_EXTRACT_EXTENSIONS.has(extname(header.name).toLowerCase())
     );
     if (allFileHeaders.length === 0) {
-      return { resolved: [], errors: [`${report.stockCode}: file rar không chứa PDF/Word nào`] };
+      return { resolved: [], errors: [`${report.stockCode}: file rar không chứa PDF/Word nào`], filingStructureWarnings: [] };
     }
     const fileHeaders = pickPrimaryReportEntries(allFileHeaders, (h) => h.name);
 
@@ -273,11 +355,12 @@ async function extractRar(rarPath: string, report: ReportFile): Promise<ResolveS
       if (!format) continue;
       resolved.push({ filePath: join(destDir, file.fileHeader.name), format, report, entryName: file.fileHeader.name });
     }
-    return { resolved, errors: [] };
+    return { resolved, errors: [], filingStructureWarnings: [] };
   } catch (error) {
     return {
       resolved: [],
       errors: [`${report.stockCode}: giải nén rar thất bại - ${error instanceof Error ? error.message : String(error)}`],
+      filingStructureWarnings: [],
     };
   }
 }
@@ -305,29 +388,38 @@ export async function cleanupDownloadedFile(filePath: string): Promise<void> {
 
 export async function resolveReportSourceFiles(result: DownloadResult): Promise<ResolveSourceResult> {
   const filePath = result.filePath;
-  if (!filePath) return { resolved: [], errors: [] };
+  if (!filePath) return { resolved: [], errors: [], filingStructureWarnings: [] };
 
   const ext = extname(filePath).toLowerCase();
   const format = extToFormat(ext);
   if (format) {
-    return { resolved: [{ filePath, format, report: result.report }], errors: [] };
+    return { resolved: [{ filePath, format, report: result.report }], errors: [], filingStructureWarnings: [] };
   }
 
   // dropShortAncillaryPdfs: lop phong ngua THU 2 (theo so trang, xem comment
   // o tren) - ap dung chung cho ca zip lan rar, sau khi da loc theo ten file.
   if (ext === '.zip') {
     const zipResult = extractZip(filePath, result.report);
-    const afterPageFilter = await dropShortAncillaryPdfs(zipResult.resolved);
-    return { resolved: deprioritizeStandaloneNotesFiles(afterPageFilter, (r) => r.entryName ?? r.filePath), errors: zipResult.errors };
+    const { kept, dropped } = await dropShortAncillaryPdfs(zipResult.resolved);
+    return {
+      resolved: deprioritizeStandaloneNotesFiles(kept, (r) => r.entryName ?? r.filePath),
+      errors: zipResult.errors,
+      filingStructureWarnings: detectSplitFilingDropWarnings(dropped),
+    };
   }
   if (ext === '.rar') {
     const rarResult = await extractRar(filePath, result.report);
-    const afterPageFilter = await dropShortAncillaryPdfs(rarResult.resolved);
-    return { resolved: deprioritizeStandaloneNotesFiles(afterPageFilter, (r) => r.entryName ?? r.filePath), errors: rarResult.errors };
+    const { kept, dropped } = await dropShortAncillaryPdfs(rarResult.resolved);
+    return {
+      resolved: deprioritizeStandaloneNotesFiles(kept, (r) => r.entryName ?? r.filePath),
+      errors: rarResult.errors,
+      filingStructureWarnings: detectSplitFilingDropWarnings(dropped),
+    };
   }
 
   return {
     resolved: [],
     errors: [`${result.report.stockCode}: định dạng file không hỗ trợ (${ext || '(không rõ)'})`],
+    filingStructureWarnings: [],
   };
 }

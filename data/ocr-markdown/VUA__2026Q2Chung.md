@@ -149,7 +149,7 @@ Bằng công văn này, Công ty Cổ phần Chứng khoán Stanley Brothers kí
 
 By this letter, Stanley Brothers Securities Incorporation respectfully explains the reasons for the fluctuation in profit after tax for Q2.2026 compared with Q2.2025 and makes information disclosure in accordance with applicable regulations.
 
-**Trân trọng!/ Sincerely yours!**
+Trân trọng!/ Sincerely yours!
 
 Nơi nhận/ Recipients:
 
@@ -302,7 +302,7 @@ Cho kỳ kế toán từ ngày 01/04/2026 đến ngày 30/06/2026
 |  021 | 1. Tài sản tài chính niêm yết/dăng ký giao dịch | 23 | 3,116,555,650,000 | 2,382,140,480,000  |
 |  021.1 | a. Tài sản tài chính giao dịch tự do chuyển nhượng |  | 2,269,028,190,000 | 1,949,786,480,000  |
 |  021.2 | b. Tài sản tài chính hạn chế chuyển nhượng |  | 150,100,000 | 50,000,000  |
-|  021.3 | c. Tài sản tài chính giao dịch cầm cố |  | 780,520,330,000 | 274,875,000,000  |
+|  021.3 | c. Tài sản tài chính giao dịch cấm cố |  | 780,520,330,000 | 274,875,000,000  |
 |  021.4 | d. Tài sản tài chính phong tỏa, tạm giữ |  | 66,857,030,000 | 157,429,000,000  |
 |  025 | 2. Tài sản tài chính được hưởng quyền của Nhà | 24 | 745,400,000 | -  |
 
