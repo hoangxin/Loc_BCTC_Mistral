@@ -173,6 +173,27 @@ async function dropShortAncillaryPdfs(resolved: ResolvedReportFile[]): Promise<R
   return filtered.length > 0 ? filtered : resolved;
 }
 
+// SUA 2026-07-23 (bug that TCI Q2/2026): 1 nhom nhieu file (zip co ca BCTC
+// that LAN 1 file "Thuyet minh BCTC" nop rieng, xem lib/filter.ts
+// isStandaloneNotesFiling ve boi canh Vietstock dat file nay - o day la ten
+// FILE trong zip, khac muc do "ten BAO CAO" o filter.ts) - neu file Thuyet
+// minh (thuong la .docx, KHONG bi loc boi dropShortAncillaryPdfs vi ham do
+// CHI dem trang duoc cho PDF) TINH CO dung TRUOC file BCTC that trong thu tu
+// zip.getEntries(), vong lap "dung ngay khi gap file co du lieu" o
+// lib/pipeline.ts se dung LAI o day (Thuyet minh van co the co 1 bang phu voi
+// du lieu that, vd bang thuyet minh chi tiet - khong RONG hoan toan) va
+// KHONG BAO GIO thu file BCTC that phia sau. Day sang CUOI danh sach (khong
+// LOAI HAN - van con la luoi an toan neu day THAT SU la file DUY NHAT trong
+// nhom) de file nghi la BCTC that luon duoc thu TRUOC.
+const STANDALONE_NOTES_FILENAME_MARKER = /thuyet[_-]?minh/i;
+
+function deprioritizeStandaloneNotesFiles<T>(resolved: T[], getName: (entry: T) => string): T[] {
+  if (resolved.length <= 1) return resolved;
+  const primary = resolved.filter((r) => !STANDALONE_NOTES_FILENAME_MARKER.test(getName(r)));
+  const deprioritized = resolved.filter((r) => STANDALONE_NOTES_FILENAME_MARKER.test(getName(r)));
+  return primary.length > 0 ? [...primary, ...deprioritized] : resolved;
+}
+
 function extToFormat(ext: string): ReportFileFormat | null {
   const normalized = ext.toLowerCase();
   if (normalized === '.pdf') return 'pdf';
@@ -296,11 +317,13 @@ export async function resolveReportSourceFiles(result: DownloadResult): Promise<
   // o tren) - ap dung chung cho ca zip lan rar, sau khi da loc theo ten file.
   if (ext === '.zip') {
     const zipResult = extractZip(filePath, result.report);
-    return { resolved: await dropShortAncillaryPdfs(zipResult.resolved), errors: zipResult.errors };
+    const afterPageFilter = await dropShortAncillaryPdfs(zipResult.resolved);
+    return { resolved: deprioritizeStandaloneNotesFiles(afterPageFilter, (r) => r.entryName ?? r.filePath), errors: zipResult.errors };
   }
   if (ext === '.rar') {
     const rarResult = await extractRar(filePath, result.report);
-    return { resolved: await dropShortAncillaryPdfs(rarResult.resolved), errors: rarResult.errors };
+    const afterPageFilter = await dropShortAncillaryPdfs(rarResult.resolved);
+    return { resolved: deprioritizeStandaloneNotesFiles(afterPageFilter, (r) => r.entryName ?? r.filePath), errors: rarResult.errors };
   }
 
   return {

@@ -784,7 +784,16 @@ const NOTES_SECTION_TITLE_MARKERS = [['THUYET MINH', 'BAO CAO TAI CHINH']];
 // cau dan chieu (khong bao gio xuat hien trong 1 dong TIEU DE that, vd "Thuyết
 // minh báo cáo tài chính quý 2..."): "DINH KEM" (dinh kem) va "BO PHAN" (bo
 // phan hop thanh/khong the tach roi).
-const NOTES_SECTION_DISCLAIMER_EXCLUDE_MARKERS = ['DINH KEM', 'BO PHAN'];
+//
+// THEM 2026-07-23 (xac nhan qua ORS that, CTCK mau B01-CTCK): bien the KHAC
+// cua CUNG 1 loai cau dan chieu cuoi trang - "Báo cáo này phải được đọc cùng
+// với bản thuyết minh Báo cáo tài chính" (khong dung "đính kèm"/"bộ phận" nhu
+// mau DN nen 2 tu khoa tren khong bat duoc) - CUNG chua ca 'THUYET MINH' va
+// 'BAO CAO TAI CHINH', CUNG la cau ngan lap lai sau MOI trang BCDKT/KQKD,
+// CUNG gay dung 1 hau qua (cat mat KQKD/LCTT con lai). Them tu khoa dac trung
+// rieng "PHAI DUOC DOC CUNG" (khong bao gio xuat hien trong 1 dong TIEU DE
+// that).
+const NOTES_SECTION_DISCLAIMER_EXCLUDE_MARKERS = ['DINH KEM', 'BO PHAN', 'PHAI DUOC DOC CUNG'];
 
 function isNotesSectionTitleHeadingLine(normalizedLine: string): boolean {
   if (NOTES_SECTION_DISCLAIMER_EXCLUDE_MARKERS.some((m) => normalizedLine.includes(m))) return false;
@@ -1809,12 +1818,60 @@ export function parseStatementsFromMarkdown(rawMarkdown: string): FinancialState
   // BCDKT/KQKD/LCTT). Yeu cau dong phai la hang bang that moi tinh, giong nguyen
   // tac da ap dung cho looksLikeHeadingLine/MAX_HEADING_LINE_LENGTH o tren (loai
   // cau van xuoi dai tinh co trung tu khoa).
+  // SUA 2026-07-23 (bug that ORS/IMP da biet tu truoc, xac nhan lai qua ORS
+  // Q2/2026): cong van "Giai trinh nguyen nhan bien dong ket qua kinh doanh"
+  // (mau van ban BAT BUOC theo Thong tu 96/2020/TT-BTC khi LNST doi >=10%)
+  // thuong tu dinh kem 1 bang tom tat NHO (STT/Khoan muc/Ky nay/Ky truoc/
+  // CHENH LECH/TY LE %) NGAY DAU tai lieu, TRUOC ca BCDKT/KQKD that - bang nay
+  // dung DUNG thuat ngu ke toan that (vd "Chi phi thue TNDN") nen VAN khop
+  // content marker binh thuong, khong the loai bang cach doan tu ngu khac (di
+  // nguoc feedback_prefer_structural_over_wording_fixes). Tin hieu CAU TRUC
+  // phan biet duoc: bang BCDKT/KQKD/LCTT THAT (mau B01-DN/B02-DN...) KHONG
+  // BAO GIO co cot "% thay doi"/"chenh lech" - do la so lieu TU TINH RIENG o
+  // tang phan tich cua he thong nay, khong bao gio xuat hien tren CHINH mau
+  // bieu phap ly. Loai truoc CAC BANG co cot chua ky tu "%" (tin hieu on dinh
+  // hon nhieu so voi tu khoa - moi bang so sanh deu BAT BUOC phai co cot % de
+  // the hien muc dich cua no) khoi danh sach ung vien firstContentLine.
+  const tablesForFirstContentLine = parseAllTablesInRange(lines);
+  const isRowInsideComparisonSummaryTable = (lineIndex: number): boolean => {
+    const table = tablesForFirstContentLine.find((t) => lineIndex >= t.startLineIndex && lineIndex < t.endLineIndex);
+    return table !== undefined && table.columns.some((c) => c.includes('%'));
+  };
   const allContentMarkers = CONTENT_MARKERS_BY_KEY.flatMap(({ markers }) => markers);
   const firstContentLine = lines.findIndex(
-    (line, i) => splitMarkdownRow(line) !== null && allContentMarkers.some((m) => matchesContentMarker(normalizedLines[i], m))
+    (line, i) =>
+      splitMarkdownRow(line) !== null &&
+      allContentMarkers.some((m) => matchesContentMarker(normalizedLines[i], m)) &&
+      !isRowInsideComparisonSummaryTable(i)
   );
   const cashFlowEndingIndex = findCashFlowEndingIndex(lines, firstContentLine === -1 ? 0 : firstContentLine);
-  const notesLine = cashFlowEndingIndex !== -1 ? cashFlowEndingIndex + 1 : -1;
+  let notesLine = cashFlowEndingIndex !== -1 ? cashFlowEndingIndex + 1 : -1;
+  if (process.env.DEBUG_PARSE) console.error('[debug]', { firstContentLine, cashFlowEndingIndex, notesLine, totalLines: lines.length, firstContentLineText: lines[firstContentLine], cutoffLineText: lines[notesLine] });
+
+  // SUA 2026-07-23 (yeu cau nguoi dung, sau khi WSS/ORS xac nhan van con mat
+  // KQKD du da PHAT HIEN duoc "thu tu bang khong chuan" tu 2026-07-22 - luc
+  // do CHU DINH CHI canh bao, KHONG tu sua vi so rui ro regression tren dien
+  // rong): trong tai lieu VI PHAM thu tu (LCTT xuat hien TRUOC KQKD, xem
+  // detectCashFlowBeforeOtherStatementsOrderViolation), diem ket thuc LCTT
+  // (cashFlowEndingIndex, gia dinh LCTT LUON la bang CUOI CUNG) khong con
+  // dang tin - no chi la diem ket thuc cua 1 bang o GIUA tai lieu, cat mat
+  // toan bo KQKD (va cac bang khac) nam SAU no. Vi vi pham nay da duoc PHAT
+  // HIEN RIENG, TIN CAY qua tin hieu CAU TRUC doc lap (so sanh vi tri neo
+  // BCDKT/KQKD/LCTT, khong phai doan tu ngu - xem ham do), an toan de dung
+  // LAM DIEU KIEN kich hoat 1 chien luoc mo rong diem cat CHI cho truong hop
+  // nay: tim tiep tieu de THAT cua Thuyet minh (findNotesSectionStartIndex,
+  // "Ban thuyet minh bao cao tai chinh") TU SAU diem cat hien tai - neu tim
+  // thay VA no nam XA HON, day moi la diem cat that su (dam bao KQKD dao
+  // nguoc thu tu van nam TRONG pham vi duoc parse). Khong doi hanh vi cho
+  // 99% tai lieu THUONG (khong vi pham thu tu) - chi mo rong o dung 1 nhanh
+  // hep, da duoc xac nhan RIENG BIET truoc do.
+  if (detectCashFlowBeforeOtherStatementsOrderViolation(rawMarkdown)) {
+    const searchFrom = notesLine !== -1 ? notesLine : firstContentLine === -1 ? 0 : firstContentLine;
+    const extendedNotesStart = findNotesSectionStartIndex(lines, searchFrom);
+    if (extendedNotesStart !== -1 && (notesLine === -1 || extendedNotesStart > notesLine)) {
+      notesLine = extendedNotesStart;
+    }
+  }
   const relevantLines = notesLine !== -1 ? lines.slice(0, notesLine) : lines;
 
   // Tim TAT CA bang markdown trong pham vi, roi gan MOI bang vao 1 trong 3

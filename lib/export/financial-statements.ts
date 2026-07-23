@@ -116,6 +116,48 @@ export function isEmptyParse(statements: FinancialStatements): boolean {
   );
 }
 
+// SUA 2026-07-23 (bug that NGHIEM TRONG QTP Q2/2026, phat hien qua yeu cau
+// nguoi dung): che do "onlyMissing" (lib/pipeline.ts, chi tai bao cao CHUA CO
+// trong cache) truoc day coi 1 bao cao la "DA CO" chi dua vao reportIdentityKey
+// TON TAI trong `reports[]`, KHONG can biet du lieu do co THAT SU doc duoc gi
+// khong - QTP bi loc nham file tieng Anh (bug da sua rieng, xem
+// hasVietnameseFilenameIndicator o lib/report-source.ts), chi con lai 2 file
+// van ban phu (giai trinh/cong bo thong tin, ca 3 bang deu RONG) duoc luu vao
+// cache - CA HAI LAN CHAY SAU DO (kem ca lan da sua xong bug loc file) deu
+// coi QTP la "da xong", KHONG BAO GIO fetch lai, nen bug van "tuong nhu da
+// sua" trong code nhung DU LIEU THAT van sai mai mai. Ham nay xac dinh 1 bao
+// cao co NEN duoc phep tai lai lan nua (dua vao chinh statements/warnings da
+// luu, KHONG can OCR) - CHI loai tru 2 truong hop biet CHAC CHAN se rong VINH
+// VIEN du tai lai bao nhieu lan (cong van dinh chinh THAT/thu tu bang sai
+// THAT - thuoc tinh cua chinh tai lieu goc, khong phai loi tam thoi), con lai
+// (bs/is/cf con thieu BAT KY bang nao - khong doi hoi CA 3 nhu isEmptyParse,
+// vi 1-2 bang thieu cung da la dau hieu fetch chua day du) deu duoc phep thu
+// lai o lan chay sau, PHONG truong hop 1 fix code moi (nhu cac fix Q2/2026 da
+// gap: JSON-caption chay tran, ngoac (Lo), loc file tieng Anh...) se sua
+// duoc neu duoc chay lai.
+const KNOWN_PERMANENTLY_INCOMPLETE_WARNING_MARKERS = ['CONG VAN DINH CHINH', 'THU TU BANG KHONG CHUAN'];
+
+export function isKnownPermanentlyIncompleteWarning(warnings: string[]): boolean {
+  return warnings.some((w) => {
+    const normalized = normalizeLabelText(w);
+    return KNOWN_PERMANENTLY_INCOMPLETE_WARNING_MARKERS.some((m) => normalized.includes(m));
+  });
+}
+
+export function hasIncompleteCoreStatements(statements: FinancialStatements): boolean {
+  return (
+    statements.balanceSheet.rows.length === 0 ||
+    statements.incomeStatement.rows.length === 0 ||
+    statements.cashFlow.rows.length === 0
+  );
+}
+
+// Dung boi lib/pipeline.ts (che do onlyMissing) de quyet dinh 1 bao cao DA CO
+// trong cache co nen bi loai khoi "da xong" (cho phep tai lai) hay khong.
+export function shouldRetryIncompleteReport(statements: FinancialStatements, warnings: string[]): boolean {
+  return hasIncompleteCoreStatements(statements) && !isKnownPermanentlyIncompleteWarning(warnings);
+}
+
 async function dumpMarkdownForEmptyParse(filePath: string, attempt: number, markdown: string): Promise<void> {
   try {
     await mkdir(EMPTY_PARSE_DEBUG_DIR, { recursive: true });
@@ -288,7 +330,6 @@ export async function extractFinancialStatementsWithOcrProbe(
     const collected: MistralOcrPage[] = [];
     let cursor = 0;
     let checkedLanguage = false;
-    let stoppedNoTablesInFirstBlock = false;
 
     while (cursor < totalPages && collected.length < MAX_PROBE_PAGES) {
       const step = collected.length === 0 ? INITIAL_PROBE_BATCH_SIZE : EXPAND_STEP;
@@ -321,33 +362,29 @@ export async function extractFinancialStatementsWithOcrProbe(
         if (nonVietnamesePageCount > collected.length / 2) {
           throw new NonVietnameseContentError('Noi dung khong phai tieng Viet (phat hien sau lo OCR dau tien)');
         }
-        // Bao cao dang dac biet (vd bao cao QUY dau tu, xem FUEVN100 Q2/2026,
-        // 2026-07-18 - phan Thuyet minh danh muc dai HANG CHUC trang nam
-        // TRUOC ca 3 bang chinh, khac han cau truc thong thuong "3 bang roi
-        // toi Thuyet minh"): thiet ke ca he thong (INITIAL_PROBE_BATCH_SIZE,
-        // xem comment tren) dua tren gia dinh da kiem chung qua nhieu bao cao
-        // that - CA 3 bang chinh luon nam TRON trong 10 trang dau. Neu lo dau
-        // nay parse ra 0 dong CA 3 bang, mo rong them (toi da 5 lan, 2
-        // trang/lan) gan nhu chac chan cung khong tim thay gi (bang that con
-        // nam xa hon ve sau, sau ca chuc trang thuyet minh) - dung NGAY thay
-        // vi ton them cac lan goi OCR mo rong vo ich (moi lan la 1 lan goi
-        // Mistral rieng - nhanh batch la 1 batch job rieng, co the tre neu
-        // hang doi Mistral nghen, xem MAX_POLL_DURATION_MS trong lib/ai/
-        // mistral-ocr-batch.ts; nhanh sync khong co rui ro nay nhung van ton
-        // round-trip khong can thiet). Ket qua van di qua buildResultFromMarkdown
-        // nhu binh thuong, tu nhien duoc gan canh bao "CANH BAO: ca 3 bang
-        // chinh...rong" (isEmptyParse o duoi) de nguoi dung biet can xem tay.
-        if (isEmptyParse(parseStatementsFromMarkdown(markdownSoFar))) {
-          stoppedNoTablesInFirstBlock = true;
-          break;
-        }
       }
       if (containsNotesSectionMarker(markdownSoFar)) break;
     }
 
-    const stopReason = stoppedNoTablesInFirstBlock
-      ? `khong thay bang nao trong ${collected.length} trang dau`
-      : collected.length >= MAX_PROBE_PAGES
+    // SUA 2026-07-23 (bug that SD6 Q2/2026 - xac nhan qua doi chieu that):
+    // TRUOC DAY dung them 1 dieu kien "dung NGAY neu lo 10 trang dau parse ra
+    // 0 dong ca 3 bang" (thiet ke rieng cho bao cao QUY DAU TU dai hang chuc
+    // trang nhu FUEVN100, gia dinh "da rong thi chac chan van con rong o xa
+    // hon"). Dieu kien do gio KHONG CON CAN THIET: bao cao quy dau tu (ma CK
+    // dai hon 3 ky tu) da bi loc HOAN TOAN truoc khi toi day tu lib/filter.ts
+    // (isNonStandardTickerLength, 2026-07-18) - nen KHONG CON tai lieu nao
+    // dang thuc su dai hang chuc trang toi duoc day nua. Voi 1 bao cao BINH
+    // THUONG (<=3 ky tu ma CK, thuong 20-60 trang), 10 trang dau rong hoan
+    // toan van CO THE chi la do cong van/giai trinh/muc luc dai hon binh
+    // thuong (xac nhan that SD6: BCDKT that nam SAU trang 10 mot chut, van
+    // trong tam voi MAX_PROBE_PAGES=20) - dung som o day XOA MAT ca 3 bang
+    // that thay vi doi den het 20 trang. Bo dieu kien nay, de MAX_PROBE_PAGES
+    // (van gioi han cung 20 trang, khong doi) la tran duy nhat - chi phi toi
+    // da tang khong dang ke (them toi da 10 trang OCR cho truong hop hiem con
+    // lai thuc su rong het ca tai lieu), doi lay loi ich lon hon nhieu (khong
+    // con cat oan cac bao cao binh thuong co bang nam hoi tre hon 10 trang).
+    const stopReason =
+      collected.length >= MAX_PROBE_PAGES
         ? 'cham tran 20 trang'
         : collected.length === totalPages
           ? 'het file'

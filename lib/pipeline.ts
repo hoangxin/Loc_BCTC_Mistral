@@ -7,7 +7,7 @@ import { filterReports, filterExclusionReason } from './filter';
 import { downloadOne } from './download';
 import { resolveReportSourceFiles, cleanupDownloadedFile, type ResolvedReportFile } from './report-source';
 import { extractReportContent, type ReportContentResult } from './report-extract';
-import { isEmptyParse } from './export/financial-statements';
+import { isEmptyParse, shouldRetryIncompleteReport } from './export/financial-statements';
 import { computeAnalysisRows } from './analysis';
 import { classifyStatementScope } from './statement-scope';
 import { saveProductionOcrMarkdown } from './ocr-markdown-store';
@@ -281,9 +281,27 @@ export async function runFetchPipeline(options: RunFetchPipelineOptions = {}): P
       const idSet = new Set(options.selectedFileInfoIds);
       scopedReports = allReports.filter((r) => idSet.has(r.fileInfoID));
     } else if (options.onlyMissing) {
+      // SUA 2026-07-23 (bug that NGHIEM TRONG QTP Q2/2026): TRUOC DAY coi 1
+      // bao cao la "DA CO" (bo qua vinh vien khoi moi lan chay sau, ke ca sau
+      // khi code fix duoc ap dung) chi dua vao reportIdentityKey TON TAI,
+      // KHONG can biet du lieu do co doc duoc gi khong - QTP bi loc nham file
+      // that (bug rieng, da sua o lib/report-source.ts) chi con lai 2 van ban
+      // phu RONG ca 3 bang duoc luu vao cache, khien MOI lan chay incremental
+      // sau (ke ca sau khi bug loc file da duoc sua) van coi QTP la "xong",
+      // khong bao gio tai lai - fix code "tuong nhu hoat dong" nhung du lieu
+      // that khong bao gio duoc lam moi. Loai khoi existingKeys (cho phep tai
+      // lai) bat ky bao cao nao con THIEU BANG (xem shouldRetryIncompleteReport,
+      // lib/export/financial-statements.ts - chi tru 2 truong hop biet CHAC
+      // se rong VINH VIEN du tai may lan (cong van dinh chinh/thu tu bang sai
+      // THAT cua chinh tai lieu goc) de tranh vong lap tai lai vo ich mai mai.
       const existingKeys = new Set(
         previousStatus.reports
-          .filter((r) => r.periodYear === term.yearPeriod && r.periodSlug === periodSlug)
+          .filter(
+            (r) =>
+              r.periodYear === term.yearPeriod &&
+              r.periodSlug === periodSlug &&
+              !shouldRetryIncompleteReport(r.statements, r.warnings)
+          )
           .map(reportIdentityKey)
       );
       scopedReports = allReports.filter((r) => !existingKeys.has(`${r.stockCode}::${term.yearPeriod}-${periodSlug}::${r.title}`));

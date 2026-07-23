@@ -251,6 +251,33 @@ function looksLikeTextColumn(table: StatementTable, index: number): boolean {
       // nguong 50% mot cach gia tao, loai NHAM ca cot gia tri that (39 o so
       // hop le bi bo qua khong tinh).
       sampleCount++;
+      // SUA 2026-07-23 (bug that HGM Q2/2026): 1 SO bao cao co them 1 cot STT
+      // "an danh" (ten cot rong "") NAM GIUA cot nhan va cot Ma so, danh so
+      // TUNG NHOM con (I/1/2, II/1/2/3...) - phan La Ma (chu, "I"/"II") duoc
+      // ORDINAL_MARKER_PATTERN (nhanh string o tren) bat dung, nhung phan A-
+      // rap (so, "1"/"2"/"3") lai bi parseNumericCell CHUYEN THANH kieu number
+      // TU TRUOC KHI toi day - roi vao nhanh else nay, CHI duoc tinh vao
+      // sampleCount ma KHONG duoc tinh vao textCount (vi nhanh else khong
+      // kiem tra gi ca), lam ty le textCount/sampleCount tut xuong duoi
+      // nguong 50% MOT CACH GIA TAO (that: HGM cot nay co 78/128 dong khac
+      // rong, nhung phan lon la so A-rap 1-2 chu so bi tinh nham "gia tri
+      // that", khien ca cot bi coi la cot gia tri, doc nham gia tri that vao
+      // vi tri sai - lam metric "Tien" tra ve gia tri SAI/null). Ap dung DUNG
+      // NGUONG so \d{1,2} (0-99) nhu ORDINAL_MARKER_PATTERN da dung cho nhanh
+      // string - so nguyen KHONG AM, <=99 CUNG duoc tinh la "tin hieu STT",
+      // giong het nguyen tac da ap dung ben nhanh string, khong tao tieu
+      // chuan moi. An toan vi cot GIA TRI THAT cua BCDKT/KQKD/LCTT (so tien
+      // VND) khong bao gio la 1-2 chu so o CA MOT COT (chi 1 vai dong le co
+      // the nho, khong du de keo ca cot xuong duoi nguong 50% neu da so dong
+      // khac van la so tien lon).
+      // KHONG tinh "0" - "0" la GIA TRI THAT rat pho bien (nhieu dong BCDKT
+      // tuy chon, cong ty khong co muc do se ghi 0) khac han so La Ma/A-rap
+      // STT (LUON bat dau tu 1, khong bao gio co "0"). Da gap that (PXI/SMN/
+      // VPA/PTX Q2/2026, phat hien qua doi chieu regression sau khi them
+      // dieu kien tren): coi ca "0" la tin hieu STT khien 1 cot GIA TRI THAT
+      // (nhieu dong = 0 that su) bi loai NHAM, mat toan bo cac chi tieu doc
+      // tu cot do.
+      if (Number.isInteger(cell) && cell >= 1 && cell <= 30) textCount++;
     }
   }
   if (sampleCount === 0) return false;
