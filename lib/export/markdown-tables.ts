@@ -1028,6 +1028,18 @@ const ANCHOR_MARKERS_BY_KEY: Partial<Record<keyof FinancialStatements, ContentMa
     // lai khoan chi phi khong bang tien tu Loi nhuan truoc thue) - chua dung
     // token nay trong LCTT that. Cung ly do voi neo tren, BO du corpus chua bat
     // duoc.
+    //
+    // SUA 2026-07-25 (xac nhan qua CDO that, mau song ngu B02-DN kem Thong tu
+    // 99/2025): 1 trang KQKD duoc Mistral OCR ra HOAN TOAN bang tieng Anh
+    // ("CONSOLIDATED INCOME STATEMENT", "Net revenue from sales...", "Net
+    // profit after tax"...) trong khi BCDKT/LCTT cung tai lieu van ra dung
+    // tieng Viet - moi marker o tren deu tieng Viet nen diem = 0 tren bang nay,
+    // classifyTableByContent tra ve null, KQKD mat trang HOAN TOAN (0 dong).
+    // Them 1 neo tieng Anh CHUAN cua chinh mau dich TT99/2025 (khong doi giua
+    // cong ty, cung 1 ban dich chinh thuc) - "Net profit after tax" phan biet
+    // ro voi LCTT gian tiep (luon bat dau bang "Net profit BEFORE tax", khong
+    // bao gio "after tax").
+    ['NET PROFIT AFTER TAX'], // ma 60
   ],
   cashFlow: [
     // 3 muc chinh - "LUU CHUYEN TIEN" chi co o LCTT (moi loai hinh)
@@ -2075,6 +2087,26 @@ function alignRowToColumns(
 // bang, chi 1 trang le dung kieu khac la loi OCR cuc bo. Hoa nhau ve so lan
 // (vd insurance Phan I/Phan II - moi ben CHI xuat hien 1 lan) thi uu tien bo
 // RONG hon (giu dung hanh vi cu cho truong hop nay).
+// SUA 2026-07-25 (xac nhan qua PVB/GKM/PSN that): bang BCDKT nhieu trang, tieu
+// de cot ("TÀI SẢN"/"Mã số"/ngay thang) CHI lap lai o TRANG DAU MOI nua (TÀI
+// SẢN/NGUỒN VỐN), cac trang TIEP NOI khong lap lai tieu de nen bo cot cua
+// chung RONG HOAN TOAN ('','','','') - neu bang bi ngat qua NHIEU trang, so
+// luong fragment "rong" nay de dang ap dao ve SO LAN xuat hien so voi 1-2
+// fragment co tieu de THAT (chi xuat hien 1 lan/nua), khien "most common"
+// (thuan theo count) chon NHAM bo cot rong lam chuan cho CA bang gop - xoa mat
+// ten cot "Mã số" thuc su, lam valueColumnIndexes (khong con nhan ra cot Mã so
+// qua ten) tinh NHAM cot Mã so la 1 cot GIA TRI (cong don ca ma so 411-420 vao
+// tong "Von chu so huu", tao canh bao lech gia bia dat nhu "4155 khong khop
+// 400"). Khac han truong hop MBS (them 1 cot RONG xen GIUA 1 bo cot co ten -
+// do la 1 fragment LE, bat thuong, can giu logic "bo rong hon" cu de xu ly),
+// o day CA BO cot deu rong tron ven - khong mang tin hieu gi de "danh doi"
+// lay, nen uu tien BAT KY bo cot co it nhat 1 ten THAT truoc, chi quay ve so
+// count/do dai nhu cu KHI khong con bo nao co ten (an toan, khong doi hanh vi
+// cu cho truong hop do).
+function isAllBlankColumns(columns: string[]): boolean {
+  return columns.every((c) => !c || !c.trim());
+}
+
 function mostCommonColumns(tables: ParsedTable[]): { columns: string[]; labelIndex: number; maSoIndex: number } {
   const counts = new Map<string, { count: number; columns: string[]; labelIndex: number; maSoIndex: number }>();
   for (const table of tables) {
@@ -2083,13 +2115,17 @@ function mostCommonColumns(tables: ParsedTable[]): { columns: string[]; labelInd
     if (existing) existing.count++;
     else counts.set(key, { count: 1, columns: table.columns, labelIndex: table.labelIndex, maSoIndex: table.maSoIndex });
   }
+  const allEntries = [...counts.values()];
+  const namedEntries = allEntries.filter((entry) => !isAllBlankColumns(entry.columns));
+  const candidates = namedEntries.length > 0 ? namedEntries : allEntries;
+
   let best: { count: number; columns: string[]; labelIndex: number; maSoIndex: number } = {
     count: 0,
-    columns: tables[0].columns,
-    labelIndex: tables[0].labelIndex,
-    maSoIndex: tables[0].maSoIndex,
+    columns: candidates[0].columns,
+    labelIndex: candidates[0].labelIndex,
+    maSoIndex: candidates[0].maSoIndex,
   };
-  for (const entry of counts.values()) {
+  for (const entry of candidates) {
     if (entry.count > best.count || (entry.count === best.count && entry.columns.length > best.columns.length)) {
       best = entry;
     }

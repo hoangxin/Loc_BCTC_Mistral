@@ -11,30 +11,43 @@ const STORAGE_KEY = 'bctc-watchlist-v1';
 // thai nay bat ke tier goc la gi (vd 1 o level1 van bam len duoc 'blink').
 export type HighlightState = 'blink' | 'light' | 'off';
 
+// Danh dau THU CONG o o Ma CK (yeu cau nguoi dung 2026-07-25) - truoc day chi
+// co 1 trang thai boolean "da doc" (bôi xam). Nay them "Luu y" (bôi vang) ben
+// canh "Da xong" (bôi xam nhu cu), chon 1 trong 2 qua popup xac nhan giong
+// pattern MuteableHighlightCell. undefined = chua danh dau gi.
+export type ReportMarkState = 'note' | 'done';
+
 interface StoredState {
   codes: string[];
   highlightOverrides: [string, HighlightState][];
-  // Danh dau THU CONG "da doc xong" theo tung bao cao (yeu cau nguoi dung
-  // 2026-07-22) - key la filePath (giong highlightKey, KHONG phai stockCode:
-  // 1 ma CK co the co nhieu bao cao/ky doc lap nhau, danh dau rieng tung cai).
-  // Truong MOI, file cu (chua co truong nay) tu dong fallback ve mang rong qua
-  // Array.isArray check duoi, khong can bump STORAGE_KEY.
-  readFilePaths: string[];
+  // Danh dau THU CONG theo tung bao cao - key la filePath (giong highlightKey,
+  // KHONG phai stockCode: 1 ma CK co the co nhieu bao cao/ky doc lap nhau,
+  // danh dau rieng tung cai). Truong MOI (2026-07-25), thay the readFilePaths
+  // (boolean "da doc") bang trang thai co 2 gia tri (note/done).
+  reportMarks: [string, ReportMarkState][];
 }
 
 function loadStored(): StoredState {
-  if (typeof window === 'undefined') return { codes: [], highlightOverrides: [], readFilePaths: [] };
+  if (typeof window === 'undefined') return { codes: [], highlightOverrides: [], reportMarks: [] };
   try {
     const raw = window.localStorage.getItem(STORAGE_KEY);
-    if (!raw) return { codes: [], highlightOverrides: [], readFilePaths: [] };
+    if (!raw) return { codes: [], highlightOverrides: [], reportMarks: [] };
     const parsed = JSON.parse(raw);
+    const reportMarks: [string, ReportMarkState][] = Array.isArray(parsed.reportMarks)
+      ? parsed.reportMarks
+      : // Du lieu cu (truoc 2026-07-25) chi co readFilePaths: string[] (boolean
+        // "da doc xong") - quy doi moi filePath trong do thanh trang thai 'done'
+        // de khong mat danh dau cu cua nguoi dung khi nang cap.
+        Array.isArray(parsed.readFilePaths)
+        ? parsed.readFilePaths.map((filePath: string): [string, ReportMarkState] => [filePath, 'done'])
+        : [];
     return {
       codes: Array.isArray(parsed.codes) ? parsed.codes : [],
       highlightOverrides: Array.isArray(parsed.highlightOverrides) ? parsed.highlightOverrides : [],
-      readFilePaths: Array.isArray(parsed.readFilePaths) ? parsed.readFilePaths : [],
+      reportMarks,
     };
   } catch {
-    return { codes: [], highlightOverrides: [], readFilePaths: [] };
+    return { codes: [], highlightOverrides: [], reportMarks: [] };
   }
 }
 
@@ -46,11 +59,13 @@ interface WatchlistContextValue {
   // undefined = chua tung doi - dung tier tu nhien cua o (level1/level2).
   getHighlightOverride: (key: string) => HighlightState | undefined;
   setHighlightOverride: (key: string, state: HighlightState) => void;
-  // Danh dau "da doc xong" theo filePath (yeu cau nguoi dung 2026-07-22) - CHI
-  // luu tick THU CONG cua nguoi dung, khong lien quan gi den warnings/du lieu
-  // OCR - hoan toan client-local (localStorage), khong dong bo len server.
-  isReportRead: (filePath: string) => boolean;
-  toggleReportRead: (filePath: string) => void;
+  // Danh dau THU CONG theo filePath (yeu cau nguoi dung 2026-07-22, mo rong
+  // 2026-07-25 tu boolean sang 2 trang thai) - CHI luu tick THU CONG cua nguoi
+  // dung, khong lien quan gi den warnings/du lieu OCR - hoan toan client-local
+  // (localStorage), khong dong bo len server. undefined = chua danh dau gi.
+  getReportMark: (filePath: string) => ReportMarkState | undefined;
+  // state = null xoa danh dau (ve trang thai chua danh dau).
+  setReportMark: (filePath: string, state: ReportMarkState | null) => void;
 }
 
 const WatchlistContext = createContext<WatchlistContextValue | null>(null);
@@ -64,14 +79,14 @@ const WatchlistContext = createContext<WatchlistContextValue | null>(null);
 export function WatchlistProvider({ children }: { children: ReactNode }) {
   const [codes, setCodes] = useState<Set<string>>(() => new Set());
   const [overrides, setOverrides] = useState<Map<string, HighlightState>>(() => new Map());
-  const [readFilePaths, setReadFilePaths] = useState<Set<string>>(() => new Set());
+  const [reportMarks, setReportMarks] = useState<Map<string, ReportMarkState>>(() => new Map());
   const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
     const stored = loadStored();
     setCodes(new Set(stored.codes));
     setOverrides(new Map(stored.highlightOverrides));
-    setReadFilePaths(new Set(stored.readFilePaths));
+    setReportMarks(new Map(stored.reportMarks));
     setHydrated(true);
   }, []);
 
@@ -82,10 +97,10 @@ export function WatchlistProvider({ children }: { children: ReactNode }) {
     const state: StoredState = {
       codes: Array.from(codes),
       highlightOverrides: Array.from(overrides.entries()),
-      readFilePaths: Array.from(readFilePaths),
+      reportMarks: Array.from(reportMarks.entries()),
     };
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-  }, [codes, overrides, readFilePaths, hydrated]);
+  }, [codes, overrides, reportMarks, hydrated]);
 
   const addToWatchlist = useCallback((code: string) => {
     const normalized = code.trim().toUpperCase();
@@ -115,11 +130,11 @@ export function WatchlistProvider({ children }: { children: ReactNode }) {
     });
   }, []);
 
-  const toggleReportRead = useCallback((filePath: string) => {
-    setReadFilePaths((prev) => {
-      const next = new Set(prev);
-      if (next.has(filePath)) next.delete(filePath);
-      else next.add(filePath);
+  const setReportMark = useCallback((filePath: string, state: ReportMarkState | null) => {
+    setReportMarks((prev) => {
+      const next = new Map(prev);
+      if (state === null) next.delete(filePath);
+      else next.set(filePath, state);
       return next;
     });
   }, []);
@@ -132,10 +147,10 @@ export function WatchlistProvider({ children }: { children: ReactNode }) {
       removeFromWatchlist,
       getHighlightOverride: (key: string) => overrides.get(key),
       setHighlightOverride,
-      isReportRead: (filePath: string) => readFilePaths.has(filePath),
-      toggleReportRead,
+      getReportMark: (filePath: string) => reportMarks.get(filePath),
+      setReportMark,
     }),
-    [codes, overrides, readFilePaths, addToWatchlist, removeFromWatchlist, setHighlightOverride, toggleReportRead],
+    [codes, overrides, reportMarks, addToWatchlist, removeFromWatchlist, setHighlightOverride, setReportMark],
   );
 
   return <WatchlistContext.Provider value={value}>{children}</WatchlistContext.Provider>;

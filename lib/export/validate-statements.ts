@@ -522,7 +522,14 @@ function validateBalanceSheetSubtotals(table: StatementTable): ValidationIssue[]
 // nhan bang chu - dang tin cay hon vi khong phu thuoc cach viet tat tung
 // cong ty.
 export function findRevenueRow(table: StatementTable): (string | number | null)[] | null {
-  const byLabel = findRow(table, (label) => label.includes('DOANH THU THUAN') || label.includes('DT THUAN'));
+  // "NET REVENUE FROM SALES" them 2026-07-25 (xac nhan qua CDO that): 1 trang
+  // KQKD song ngu TT99/2025 duoc OCR ra hoan toan tieng Anh - xem comment o
+  // ANCHOR_MARKERS_BY_KEY.incomeStatement (lib/export/markdown-tables.ts) ve
+  // cung 1 boi canh.
+  const byLabel = findRow(
+    table,
+    (label) => label.includes('DOANH THU THUAN') || label.includes('DT THUAN') || label.includes('NET REVENUE FROM SALES')
+  );
   if (byLabel) return byLabel;
   const maSoIndex = findMaSoColumnIndex(table);
   return maSoIndex === null ? null : findRowByCode(table, maSoIndex, 10);

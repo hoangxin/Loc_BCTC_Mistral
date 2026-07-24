@@ -346,25 +346,36 @@ tren man hinh sieu rong (4K) de header/tabs khong bi keo dai qua muc doc duoc. *
   z-index: 3;
 }
 
-/* O Mã CK chuyen xam khi tick "Đã đọc" (yeu cau nguoi dung 2026-07-22) - CHI
-   rieng o Mã CK, KHONG dong bo mau sang cac o chi tieu % cung dong (yeu cau
-   ro rang cua nguoi dung). Selector 2 class (.stockcode-col.stockcode-col-read)
-   de chac chan thang duoc "background-color: inherit" o .stockcode-col (cung
-   file, cung 1 class don) bat ke thu tu khai bao trong file. */
+/* O Mã CK chuyen xam khi chon "Đã xong" (yeu cau nguoi dung 2026-07-22, mo
+   rong 2026-07-25 them lua chon "Lưu ý" bôi vang - xem .stockcode-col-note
+   duoi) - CHI rieng o Mã CK, KHONG dong bo mau sang cac o chi tieu % cung
+   dong (yeu cau ro rang cua nguoi dung). Selector 2 class
+   (.stockcode-col.stockcode-col-read) de chac chan thang duoc
+   "background-color: inherit" o .stockcode-col (cung file, cung 1 class don)
+   bat ke thu tu khai bao trong file. */
 .stockcode-col.stockcode-col-read {
   background-color: #d1d5db;
 }
 
-/* Tick "Đã đọc" nam TRONG o Mã CK (yeu cau nguoi dung 2026-07-22, chuyen tu
-   cot rieng vao day + thu nho con 1/2 kich thuoc checkbox mac dinh trinh
-   duyet ~13px). vertical-align dam bao thang hang voi chu Ma CK ben canh
-   (mac dinh baseline se lam checkbox lech xuong duoi so voi chu). !important
-   vi ".report-table input[type='checkbox']" (dung cho checkbox chon dong,
-   16px) co specificity CAO HON 1 class don (attribute+type selector), giong
-   ly do .pct-mute-checkbox o tren cung phai dung !important. */
+/* Lua chon "Lưu ý" (yeu cau nguoi dung 2026-07-25) - bôi vang o Mã CK, dung
+   chung mau voi cap highlight 1 (.pct-level1) de nhat quan y nghia mau vang
+   trong toan bang. */
+.stockcode-col.stockcode-col-note {
+  background-color: #fff3b0;
+}
+
+/* Tick nam TRONG o Mã CK (yeu cau nguoi dung 2026-07-22, chuyen tu cot rieng
+   vao day). Kich thuoc dong bo voi .pct-mute-checkbox (tick o cac o chi tieu %,
+   yeu cau nguoi dung 2026-07-25 - truoc do nho hon han, 7px so voi 10px, gay
+   lech kich thuoc giua 2 loai tick trong cung 1 bang). vertical-align dam bao
+   thang hang voi chu Ma CK ben canh (mac dinh baseline se lam checkbox lech
+   xuong duoi so voi chu). !important vi ".report-table input[type='checkbox']"
+   (dung cho checkbox chon dong, 16px) co specificity CAO HON 1 class don
+   (attribute+type selector), giong ly do .pct-mute-checkbox o tren cung phai
+   dung !important. */
 .read-inline-checkbox {
-  width: 7px !important;
-  height: 7px !important;
+  width: 10px !important;
+  height: 10px !important;
   margin: 0 4px 0 0 !important;
   vertical-align: middle;
   cursor: pointer;

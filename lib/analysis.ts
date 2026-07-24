@@ -356,19 +356,21 @@ const OTHER_METRICS: MetricDef[] = [
   {
     label: 'Lãi gộp',
     statement: 'incomeStatement',
-    finders: [byLabel(['LOI NHUAN GOP'])],
+    // "GROSS PROFIT" them 2026-07-25 (CDO that - xem comment o findRevenueRow,
+    // lib/export/validate-statements.ts, ve cung boi canh song ngu TT99/2025).
+    finders: [byLabelAny(['LOI NHUAN GOP', 'GROSS PROFIT'])],
     thresholds: { level1: 30, level2: 40 },
   },
   {
     label: 'CPBH',
     statement: 'incomeStatement',
-    finders: [byLabel(['CHI PHI BAN HANG'])],
+    finders: [byLabelAny(['CHI PHI BAN HANG', 'SELLING EXPENSE'])],
     thresholds: null,
   },
   {
     label: 'CPQLDN',
     statement: 'incomeStatement',
-    finders: [byLabel(['CHI PHI QUAN LY DOANH NGHIEP'])],
+    finders: [byLabelAny(['CHI PHI QUAN LY DOANH NGHIEP', 'GENERAL AND ADMINISTRATION EXPENSE'])],
     thresholds: null,
   },
   {
@@ -382,7 +384,12 @@ const OTHER_METRICS: MetricDef[] = [
     // thue" ("Lợi nhuận thuần sau thuế TNDN"), pha vo chuoi con lien tuc "LOI
     // NHUAN SAU THUE" - giong tinh than byLabelAny da dung cho cac chi tieu
     // khac o tren (vd "gop"/khong "gop").
-    finders: [byLabelAny(['LOI NHUAN SAU THUE', 'LOI NHUAN THUAN SAU THUE'], ['CO DONG'])],
+    // "NET PROFIT AFTER TAX" + loai "ATTRIBUTABLE" them 2026-07-25 (CDO that,
+    // ban dich TT99/2025): 2 dong con "...attributable to the parent
+    // company"/"...attributable to non-controlling interests" dong vai tro
+    // GIONG HET 2 dong "...cua co dong..." tieng Viet can loai, xem comment o
+    // findRevenueRow (lib/export/validate-statements.ts).
+    finders: [byLabelAny(['LOI NHUAN SAU THUE', 'LOI NHUAN THUAN SAU THUE', 'NET PROFIT AFTER TAX'], ['CO DONG', 'ATTRIBUTABLE'])],
     thresholds: { level1: 40, level2: 50 },
   },
 ];

@@ -8,7 +8,7 @@ import WarningBadge from './WarningBadge';
 import ExportSummaryButton from './ExportSummaryButton';
 import ClearResultsButton from './ClearResultsButton';
 import WatchlistButton from './WatchlistButton';
-import { useWatchlist, type HighlightState } from './WatchlistContext';
+import { useWatchlist, type HighlightState, type ReportMarkState } from './WatchlistContext';
 
 // Key trang thai highlight cho 1 o chi tieu (yeu cau nguoi dung 2026-07-18) -
 // theo filePath (khong phai stockCode) vi 1 ma CK co the co nhieu bao cao
@@ -258,6 +258,129 @@ function MuteableHighlightCell({
   );
 }
 
+const REPORT_MARK_OPTIONS: { state: ReportMarkState; label: string }[] = [
+  { state: 'note', label: 'Lưu ý' },
+  { state: 'done', label: 'Đã xong' },
+];
+
+// Tick THU CONG o o Ma CK, mo rong tu boolean "da doc" sang 2 trang thai (yeu
+// cau nguoi dung 2026-07-25): bam tick hien popup 2 lua chon "Lưu ý" (bôi vang
+// o Ma CK, class stockcode-col-note) va "Đã xong" (bôi xam, giu nguyen nhu
+// truoc, class stockcode-col-read). Bam lai dung trang thai dang co thi XOA
+// danh dau (ve lai binh thuong). Dung chung 1 pattern voi MuteableHighlightCell
+// o tren (tick chi la "dang cho xac nhan", popup qua Portal ra document.body
+// vi cung nam trong bang co sticky column/row) de nhat quan hanh vi + code.
+function ReportMarkCheckbox({
+  stockCode,
+  currentMark,
+  onSetMark,
+}: {
+  stockCode: string;
+  currentMark: ReportMarkState | undefined;
+  onSetMark: (state: ReportMarkState | null) => void;
+}) {
+  const [armed, setArmed] = useState(false);
+  const [popoverPos, setPopoverPos] = useState<{ top: number; left: number } | null>(null);
+  const checkboxRef = useRef<HTMLInputElement>(null);
+  const popoverElRef = useRef<HTMLDivElement | null>(null);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!armed) return;
+    function onClickOutside(e: MouseEvent) {
+      const target = e.target as Node;
+      if (checkboxRef.current?.contains(target)) return;
+      if (popoverElRef.current?.contains(target)) return;
+      clearArmTimeout();
+      setArmed(false);
+    }
+    document.addEventListener('mousedown', onClickOutside);
+    return () => document.removeEventListener('mousedown', onClickOutside);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [armed]);
+
+  useLayoutEffect(() => {
+    if (!armed) return;
+    const el = popoverElRef.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const margin = 4;
+    const maxLeft = window.innerWidth - rect.width - margin;
+    const maxTop = window.innerHeight - rect.height - margin;
+    const clampedLeft = Math.min(rect.left, Math.max(margin, maxLeft));
+    const clampedTop = Math.min(rect.top, Math.max(margin, maxTop));
+    if (clampedLeft !== rect.left || clampedTop !== rect.top) {
+      setPopoverPos({ top: clampedTop, left: clampedLeft });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [armed]);
+
+  function clearArmTimeout() {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
+  }
+
+  function handleCheckboxChange() {
+    if (armed) {
+      clearArmTimeout();
+      setArmed(false);
+      return;
+    }
+    const rect = checkboxRef.current?.getBoundingClientRect();
+    setPopoverPos(rect ? { top: rect.bottom + 4, left: rect.left } : null);
+    setArmed(true);
+    timeoutRef.current = setTimeout(() => {
+      timeoutRef.current = null;
+      setArmed(false);
+    }, MUTE_CONFIRM_TIMEOUT_MS);
+  }
+
+  function chooseMark(state: ReportMarkState) {
+    clearArmTimeout();
+    setArmed(false);
+    onSetMark(currentMark === state ? null : state);
+  }
+
+  return (
+    <>
+      <input
+        ref={checkboxRef}
+        type="checkbox"
+        className="read-inline-checkbox"
+        checked={armed}
+        onChange={handleCheckboxChange}
+        title={armed ? 'Chọn 1 trong 2 lựa chọn bên dưới (tự huỷ sau 5s)' : `Đánh dấu báo cáo ${stockCode}`}
+        aria-label={`Đánh dấu báo cáo ${stockCode}`}
+      />
+      {armed &&
+        popoverPos &&
+        typeof document !== 'undefined' &&
+        createPortal(
+          <div
+            ref={popoverElRef}
+            className="mute-confirm-popover"
+            style={{ top: popoverPos.top, left: popoverPos.left }}
+          >
+            {REPORT_MARK_OPTIONS.map((opt) => (
+              <button key={opt.state} type="button" className="mute-confirm-button" onClick={() => chooseMark(opt.state)}>
+                {currentMark === opt.state ? 'Bỏ đánh dấu' : opt.label}
+              </button>
+            ))}
+          </div>,
+          document.body,
+        )}
+    </>
+  );
+}
+
 // Checkbox chon bao cao (yeu cau nguoi dung 2026-07-17 - nut "Xuat Excel tong
 // hop"/"Xoa ket qua" tren tung tab "Ket qua {ky}" can chon dung vai bao cao
 // thay vi luon ap dung ca ky) - state SONG (Set<filePath>) song o component
@@ -300,7 +423,7 @@ export default function ReportsSummaryTable({
   const labels = useMemo(() => collectLabels(reports), [reports]);
   const [stockCodeQuery, setStockCodeQuery] = useState('');
   const [sortState, setSortState] = useState<SortState>(null);
-  const { isWatched, getHighlightOverride, setHighlightOverride, isReportRead, toggleReportRead } = useWatchlist();
+  const { isWatched, getHighlightOverride, setHighlightOverride, getReportMark, setReportMark } = useWatchlist();
 
   // O "Tim theo Ma CK" bi cuon mat khi keo xuong xem cac dong sau (yeu cau
   // nguoi dung 2026-07-22) - truoc day CHI co dong tieu de cot (thead) la
@@ -476,20 +599,25 @@ export default function ReportsSummaryTable({
                     </a>
                   </div>
                 </td>
-                <td className={`stockcode-col ${isReportRead(report.filePath) ? 'stockcode-col-read' : ''}`}>
-                  {/* Tick THU CONG "da doc xong" (yeu cau nguoi dung 2026-07-22,
-                  chuyen vao trong o Ma CK thay vi cot rieng - phan hoi ngay sau
-                  khi them cot) - hoan toan client-local (localStorage qua
-                  WatchlistContext), khong lien quan gi den du lieu/warnings tu
-                  server. Tick lam ca o Ma CK chuyen xam (class stockcode-col-read
-                  o tren). */}
-                  <input
-                    type="checkbox"
-                    className="read-inline-checkbox"
-                    checked={isReportRead(report.filePath)}
-                    onChange={() => toggleReportRead(report.filePath)}
-                    aria-label={`Đánh dấu đã đọc xong báo cáo ${report.stockCode}`}
-                    title="Đánh dấu đã đọc xong (chỉ lưu trên máy này)"
+                <td
+                  className={`stockcode-col ${
+                    getReportMark(report.filePath) === 'done'
+                      ? 'stockcode-col-read'
+                      : getReportMark(report.filePath) === 'note'
+                        ? 'stockcode-col-note'
+                        : ''
+                  }`}
+                >
+                  {/* Tick THU CONG (yeu cau nguoi dung 2026-07-22, chuyen vao
+                  trong o Ma CK thay vi cot rieng; mo rong 2026-07-25 tu 1
+                  trang thai boolean sang popup 2 lua chon "Lưu ý"/"Đã xong") -
+                  hoan toan client-local (localStorage qua WatchlistContext),
+                  khong lien quan gi den du lieu/warnings tu server. Xem
+                  ReportMarkCheckbox o tren cho chi tiet popup. */}
+                  <ReportMarkCheckbox
+                    stockCode={report.stockCode}
+                    currentMark={getReportMark(report.filePath)}
+                    onSetMark={(state) => setReportMark(report.filePath, state)}
                   />
                   {/* Ten cong ty hien qua tooltip hover (title) thay vi cot rieng
                   (yeu cau user 2026-07-07) - do dai ten cong ty thuong lam bang
