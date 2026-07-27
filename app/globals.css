@@ -147,7 +147,28 @@ tren man hinh sieu rong (4K) de header/tabs khong bi keo dai qua muc doc duoc. *
   color: var(--text);
 }
 
+/* Khung ngoai cua bang Ket qua (yeu cau nguoi dung 2026-07-27, thay the cho
+   co che sticky-dong-bo-chieu-cao cu bi loi khe ho/chong lan giua
+   .summary-actions va thead khi cuon - xem comment o .summary-actions duoi).
+   La flex-column CHIEM HET phan con lai (thay .report-table-wrapper lam viec
+   nay truoc day) chua 2 phan: .summary-actions (KHONG con cuon, dung yen phia
+   tren) + .report-table-wrapper (rieng phan cuon ben trong, chi bao table). */
+.report-table-panel {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
 .report-table-wrapper {
+  /* Giu nguyen background/border/border-radius (dung THANG, khong qua
+     .report-table-panel) cho FetchControls.tsx (.preview-table-wrapper dung
+     class nay MOT MINH, khong co .report-table-panel/.summary-actions bao
+     ngoai) - xem override bo vien DUP o .report-table-panel .report-table-wrapper
+     duoi khi class nay nam long trong panel (bang Ket qua). */
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 10px;
@@ -156,13 +177,24 @@ tren man hinh sieu rong (4K) de header/tabs khong bi keo dai qua muc doc duoc. *
      mat cac cot cuoi khi bang rong hon khung, yeu cau user 2026-07-08). */
   overflow-x: auto;
   /* Cuon doc RIENG ben trong wrapper (thay vi de trang ngoai cuon) - can thiet
-     de "position: sticky" tren th bam dung (xem comment o th duoi) VA de
-     wrapper chiem dung phan con lai cua man hinh qua .flex-col-fill (xem
-     Tabs.tsx) thay vi 1 con so px co dinh doan truoc, sai ngay khi cac dong
-     phia tren doi chieu cao. */
+     de "position: sticky" tren th bam dung (xem comment o th duoi). Chiem het
+     phan con lai CUA .report-table-panel (bang Ket qua) hoac cua
+     .preview-panel (bang xem truoc trong FetchControls.tsx, dung chung class
+     nay nhung khong co .summary-actions ben tren) qua flex: 1 1 auto;
+     min-height: 0 - khong con 1 con so px co dinh, sai ngay khi cac dong phia
+     tren doi chieu cao. */
   overflow-y: auto;
   flex: 1 1 auto;
   min-height: 0;
+}
+
+/* Bo vien/bo goc DUP khi .report-table-wrapper nam long trong
+   .report-table-panel (bang Ket qua, xem JSX ReportsSummaryTable.tsx) - vien
+   ngoai cung da do .report-table-panel dam nhiem, o day chi con la vung cuon
+   THUAN TUY ben trong no. */
+.report-table-panel .report-table-wrapper {
+  border: none;
+  border-radius: 0;
 }
 
 .report-table {
@@ -192,12 +224,15 @@ tren man hinh sieu rong (4K) de header/tabs khong bi keo dai qua muc doc duoc. *
      dung 2026-07-17) - report-table-wrapper da co san overflow-x: auto (o
      tren) nen no da la 1 scroll container, sticky o day tu dong bam theo
      truc doc khi cuon TRANG (khong can them max-height/overflow-y rieng).
-     top dung bien --sticky-actions-height (do dong tu ReportsSummaryTable.tsx
-     qua ResizeObserver, mac dinh 0px neu chua do kip) thay vi "top: 0" cu -
-     2026-07-22, xep NGAY DUOI .summary-actions (cung sticky, xem o do) thay
-     vi bi no de len khi ca 2 cung dong sticky. */
+     SUA 2026-07-27: quay lai "top: 0" don gian (bo bien --sticky-actions-height
+     dong bo qua ResizeObserver voi .summary-actions - JS-measured height lech
+     vai px so voi chieu cao render THAT, sinh khe ho/chong lan giua 2 thanh
+     sticky khi cuon). .summary-actions gio nam NGOAI .report-table-wrapper
+     (khong con sticky, xem .report-table-panel o tren) nen th o day la thu
+     DUY NHAT can sticky trong vung cuon, top: 0 la du, khong can biet chieu
+     cao thanh nao ca. */
   position: sticky;
-  top: var(--sticky-actions-height, 0px);
+  top: 0;
   z-index: 2;
 }
 
@@ -823,14 +858,15 @@ auto) cat mat du bam o hang dau/cuoi bang. */
   padding: 8px 14px;
   border-bottom: 1px solid var(--border);
   /* "Dong bang" o tim kiem/Watchlist/nut Xuat-Xoa khi cuon xuong xem cac
-     dong sau (yeu cau nguoi dung 2026-07-22) - truoc day chi co dong tieu
-     de cot (.report-table th duoi) la sticky, o tim kiem van cuon mat theo
-     noi dung bang. z-index cao hon .report-table th (2) de luon nam TREN no
-     khi ca 2 cung dong (khong bi chen). Nen mau dac (KHONG trong suot) de
-     che noi dung bang cuon qua ben duoi, giong tinh than thead da lam. */
-  position: sticky;
-  top: 0;
-  z-index: 3;
+     dong sau (yeu cau nguoi dung 2026-07-22). SUA 2026-07-27: KHONG con dung
+     position: sticky o day nua (bug that: dong bo chieu cao qua JS voi thead
+     ben duoi bang ResizeObserver bi lech vai px, sinh khe ho lo du lieu ra -
+     xem .report-table-panel o tren). Gio .summary-actions nam NGOAI vung cuon
+     (.report-table-wrapper, chi con bao table) nen KHONG BAO GIO cuon di ca,
+     khong can sticky/z-index gi nua. flex-shrink: 0 de dam bao no giu nguyen
+     kich thuoc tu nhien, khong bi flex-column cha (.report-table-panel) ep
+     nho lai khi thieu cho. */
+  flex-shrink: 0;
   background: var(--surface);
 }
 
