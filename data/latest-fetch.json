@@ -726138,43 +726138,43 @@
       "analysis": [
         {
           "label": "DT thuần",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 42.93697042800638,
+          "tier": "level2",
           "unreliable": false,
           "currentValue": 523617735871,
-          "priorValue": 0
+          "priorValue": 366327713749
         },
         {
           "label": "Lãi gộp",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 149.79564783407434,
+          "tier": "level2",
           "unreliable": false,
           "currentValue": 7603266817,
-          "priorValue": 0
+          "priorValue": 3043794751
         },
         {
           "label": "CPBH",
-          "percentChange": null,
+          "percentChange": 118235.8092045775,
           "tier": null,
           "unreliable": false,
           "currentValue": 1947353010,
-          "priorValue": 0
+          "priorValue": 1645616
         },
         {
           "label": "CPQLDN",
-          "percentChange": 32249.616544641056,
+          "percentChange": -66.97349852233133,
           "tier": null,
           "unreliable": false,
-          "currentValue": 3563028192,
-          "priorValue": -11082646
+          "currentValue": 3551945546,
+          "priorValue": 10754834412
         },
         {
           "label": "LNST",
-          "percentChange": 3453.360386608578,
+          "percentChange": 285.2665265475238,
           "tier": "level2",
           "unreliable": false,
-          "currentValue": 7937968460,
-          "priorValue": 223393284
+          "currentValue": 8161361665,
+          "priorValue": 2118367702
         },
         {
           "label": "Tiền",
@@ -726784,25 +726784,14 @@
             "Mã số",
             "CHỈ TIÊU",
             "Thuyết minh",
-            "Quý II năm 2026",
-            "",
-            "",
-            "",
-            "Lũy kế từ đầu năm đến cuối kỳ này",
-            ""
+            "Quý II năm 2026 Số đơn vị VND",
+            "Quý II năm 2026 Điều chỉnh VND",
+            "Quý II năm 2026 Năm nay VND",
+            "Quý II năm 2026 Năm trước VND",
+            "Lũy kế từ đầu năm đến cuối kỳ này Năm nay",
+            "Lũy kế từ đầu năm đến cuối kỳ này Năm trước"
           ],
           "rows": [
-            [
-              "Điều chỉnh VND",
-              "Số đơn vị VND",
-              null,
-              null,
-              null,
-              "Năm nay VND",
-              "Năm trước VND",
-              "Năm nay",
-              "Năm trước"
-            ],
             [
               "01",
               "1. Doanh thu bán hàng và cung cấp dịch vụ",
@@ -727269,7 +727258,7 @@
       "periodYear": 2026,
       "periodSlug": "Q2",
       "warnings": [
-        "\"\": Tong cac dong con cua \"Loi nhuan thuan tu hoat dong kinh doanh\" (245990810) khong khop chinh dong \"Loi nhuan thuan tu hoat dong kinh doanh\" (268156102) - co the do OCR gop/bia dong, can xem tay.",
+        "\"Quý II năm 2026 Điều chỉnh VND\": Tong cac dong con cua \"Loi nhuan thuan tu hoat dong kinh doanh\" (245990810) khong khop chinh dong \"Loi nhuan thuan tu hoat dong kinh doanh\" (268156102) - co the do OCR gop/bia dong, can xem tay.",
         "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 1 muc trong KQKD (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
       ]
     },

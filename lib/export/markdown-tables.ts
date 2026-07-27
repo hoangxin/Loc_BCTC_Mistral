@@ -140,13 +140,46 @@ function isSeparatorRow(cells: string[]): boolean {
 // (khong so lieu, khong nhan chi tieu that) o cac o khong trong - xem
 // parseAllTablesInRange (goi ham nay) de biet ly do can gop dong nay vao
 // header thay vi coi la dong du lieu.
+//
+// SUA 2026-07-27 (ABC that, nguoi dung phat hien tu doi chieu PDF goc): BCTC
+// co so lieu Quy DUOC DIEU CHINH lai (bao cao co dinh chinh trong CUNG 1 ky,
+// khac voi "cong van dinh chinh" 1 file rieng - xem project_correction_notice_filings)
+// them 2 cot phu vao CHINH nhom "Quy nay": "So don vi VND" (so nhu da bao cao
+// truoc dieu chinh) va "Dieu chinh VND" (chenh lech dieu chinh), TRUOC ca "Nam
+// nay VND"/"Nam truoc VND" - ca 2 thuat ngu nay la tu ngu ke toan chuan (Thong
+// tu 200) cho bao cao co dieu chinh, khong phai truong hop rieng le. Dieu kien
+// CU "MOI o deu la Nam nay/Nam truoc" bi 2 cot nay lam FAIL toan bo (that ra
+// day van la 1 dong tieu de phu, khong phai du lieu), khien dong nay bi coi
+// nham la DONG DU LIEU DAU TIEN, header khong duoc gop - tuong tu cac cot van
+// giu ten rong/nhom chung "Quy II nam 2026" cho CA 4 cot con, incomeStatementPeriodColumns
+// (lib/analysis.ts) khong con tim thay "NAM NAY"/"NAM TRUOC" trong ten cot nao
+// nua, roi vao fallback VI TRI SAI HOAN TOAN: currentIndex tro vao "So don vi"
+// (so TRUOC dieu chinh, khong phai so CHINH THUC), priorIndex tro vao "Dieu
+// chinh" (mot chenh lech nho, khong phai gia tri Quy II nam TRUOC that - da
+// xac nhan qua ABC, "Chi phi tai chinh": currentValue=5.225.582.170 (dung ra
+// la So don vi) lai duoc so sanh voi priorValue=-257.073.456 (dung ra la
+// Dieu chinh) thay vi Nam truoc VND that = 4.591.950.346).
+//
+// Sua CAU TRUC (khong phai vi tri): cho phep them 2 nhan tu vung chuan nay
+// ("SO DON VI", "DIEU CHINH") lam o phu trong dong tieu de phu, MIEN LA it
+// nhat 1 o van la "Nam nay"/"Nam truoc" that (dam bao van dung dong tieu de
+// phu KQKD Quy, khong khop nham 1 dong van ban khac). Sau khi gop, cot "Nam
+// nay VND"/"Nam truoc VND" van duoc nhan dien dung qua TEN COT (khong doi gi
+// o incomeStatementPeriodColumns), 2 cot "So don vi"/"Dieu chinh" tu nhien bi
+// loai vi ten khong chua "NAM NAY"/"NAM TRUOC".
 function looksLikePeriodSubHeaderRow(cells: string[]): boolean {
   const nonEmpty = cells.map((c) => c.trim()).filter((c) => c !== '');
   if (nonEmpty.length === 0) return false;
-  return nonEmpty.every((c) => {
-    const normalized = normalizeLabelText(c);
-    return normalized.includes('NAM NAY') || normalized.includes('NAM TRUOC');
-  });
+  const isKnownSubHeaderCell = (normalized: string) =>
+    normalized.includes('NAM NAY') ||
+    normalized.includes('NAM TRUOC') ||
+    normalized.includes('SO DON VI') ||
+    normalized.includes('DIEU CHINH');
+  const normalizedCells = nonEmpty.map((c) => normalizeLabelText(c));
+  return (
+    normalizedCells.every(isKnownSubHeaderCell) &&
+    normalizedCells.some((c) => c.includes('NAM NAY') || c.includes('NAM TRUOC'))
+  );
 }
 
 // KHONG cho phep khoang trang GIUA cac chu so nua (khac ban cu) - 1 con so
