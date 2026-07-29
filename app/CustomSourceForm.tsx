@@ -2,6 +2,8 @@
 
 import { useEffect, useRef, useState } from 'react';
 import type { OcrMode } from '@/lib/ocr-mode';
+import { getPreviousQuarter } from '@/lib/quarter';
+import type { StatementScope } from '@/lib/statement-scope';
 
 type Status = 'idle' | 'loading' | 'waiting' | 'not-found' | 'error';
 
@@ -13,6 +15,17 @@ const MAX_POLL_MS = 15 * 60 * 1000;
 export default function CustomSourceForm() {
   const [open, setOpen] = useState(false);
   const [url, setUrl] = useState('');
+  // Ma CK/Quy/Nam/Loai BCTC (yeu cau nguoi dung 2026-07-29): nguon rieng
+  // KHONG co danh sach ky/ma nhu Vietstock nen phai bat nguoi dung tu nhap,
+  // khong de app tu doan (getPreviousQuarter/classifyStatementScope o
+  // lib/custom-source.ts truoc day hay ra ket qua trong/sai) - Quy/Nam van
+  // moi san theo quy vua qua de do phai go tay khi trung truong hop thong
+  // thuong, nhung nguoi dung vAn co the sua.
+  const [stockCode, setStockCode] = useState('');
+  const previousQuarter = getPreviousQuarter();
+  const [quarter, setQuarter] = useState(String(previousQuarter.quarter));
+  const [year, setYear] = useState(String(previousQuarter.year));
+  const [statementScope, setStatementScope] = useState<StatementScope | ''>('');
   // Sync/batch (yeu cau nguoi dung 2026-07-21, xem lib/ocr-mode.ts va
   // FetchControls.tsx) - bam "Enter"/go phim Enter CHUA goi gi ca, chi mo 2
   // lua chon Batch/Sync, bam 1 trong 2 moi thuc su submit.
@@ -66,8 +79,20 @@ export default function CustomSourceForm() {
     }, POLL_INTERVAL_MS);
   }
 
+  const quarterNum = Number(quarter);
+  const yearNum = Number(year);
+  const formValid =
+    url.trim() !== '' &&
+    stockCode.trim() !== '' &&
+    Number.isInteger(quarterNum) &&
+    quarterNum >= 1 &&
+    quarterNum <= 4 &&
+    Number.isInteger(yearNum) &&
+    yearNum >= 2000 &&
+    statementScope !== '';
+
   async function submit(ocrMode: OcrMode) {
-    if (!url.trim()) return;
+    if (!formValid) return;
     setOcrChoiceOpen(false);
     setStatus('loading');
     setMessage('');
@@ -75,7 +100,14 @@ export default function CustomSourceForm() {
       const response = await fetch('/api/custom-source', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ url: url.trim(), ocrMode }),
+        body: JSON.stringify({
+          url: url.trim(),
+          ocrMode,
+          stockCode: stockCode.trim().toUpperCase(),
+          quarter: quarterNum,
+          year: yearNum,
+          statementScope,
+        }),
       });
       const data = await response.json();
 
@@ -113,12 +145,47 @@ export default function CustomSourceForm() {
         value={url}
         onChange={(e) => setUrl(e.target.value)}
         onKeyDown={(e) => {
-          if (e.key === 'Enter') setOcrChoiceOpen(true);
+          if (e.key === 'Enter' && formValid) setOcrChoiceOpen(true);
         }}
         disabled={busy}
       />
+      <input
+        type="text"
+        className="custom-source-input custom-source-input-narrow"
+        placeholder="Mã CK"
+        value={stockCode}
+        onChange={(e) => setStockCode(e.target.value.toUpperCase())}
+        maxLength={10}
+        disabled={busy}
+      />
+      <select className="custom-source-select" value={quarter} onChange={(e) => setQuarter(e.target.value)} disabled={busy} aria-label="Quý">
+        <option value="1">Quý 1</option>
+        <option value="2">Quý 2</option>
+        <option value="3">Quý 3</option>
+        <option value="4">Quý 4</option>
+      </select>
+      <input
+        type="number"
+        className="custom-source-input custom-source-input-narrow"
+        placeholder="Năm"
+        value={year}
+        onChange={(e) => setYear(e.target.value)}
+        disabled={busy}
+      />
+      <select
+        className="custom-source-select"
+        value={statementScope}
+        onChange={(e) => setStatementScope(e.target.value as StatementScope)}
+        disabled={busy}
+        aria-label="Loại báo cáo"
+      >
+        <option value="">-- Loại BCTC --</option>
+        <option value="Hợp nhất">Hợp nhất</option>
+        <option value="Riêng lẻ">Riêng lẻ</option>
+        <option value="Chung">Chung</option>
+      </select>
       {!ocrChoiceOpen ? (
-        <button className="trigger-button" onClick={() => setOcrChoiceOpen(true)} disabled={busy}>
+        <button className="trigger-button" onClick={() => setOcrChoiceOpen(true)} disabled={busy || !formValid} title={!formValid ? 'Điền đủ URL, Mã CK, Quý, Năm và Loại báo cáo' : undefined}>
           {busy ? 'Đang tìm...' : 'Enter'}
         </button>
       ) : (

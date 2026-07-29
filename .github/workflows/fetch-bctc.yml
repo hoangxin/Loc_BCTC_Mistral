@@ -35,6 +35,22 @@ on:
       customUrl:
         type: string
         default: ''
+      customStockCode:
+        description: 'mode=custom: Ma CK nguoi dung tu nhap (khong con doan/de trong)'
+        type: string
+        default: ''
+      customQuarter:
+        description: 'mode=custom: Quy (1-4) nguoi dung tu chon'
+        type: string
+        default: ''
+      customYear:
+        description: 'mode=custom: Nam nguoi dung tu chon'
+        type: string
+        default: ''
+      customStatementScope:
+        description: 'mode=custom: Hợp nhất / Riêng lẻ / Chung nguoi dung tu chon'
+        type: string
+        default: ''
       requestId:
         type: string
         default: ''
@@ -88,6 +104,10 @@ jobs:
           FETCH_REPORT_LIMIT: ${{ github.event.inputs.reportLimit }}
           FETCH_SELECTED_IDS: ${{ github.event.inputs.selectedIds }}
           FETCH_CUSTOM_URL: ${{ github.event.inputs.customUrl }}
+          FETCH_CUSTOM_STOCK_CODE: ${{ github.event.inputs.customStockCode }}
+          FETCH_CUSTOM_QUARTER: ${{ github.event.inputs.customQuarter }}
+          FETCH_CUSTOM_YEAR: ${{ github.event.inputs.customYear }}
+          FETCH_CUSTOM_STATEMENT_SCOPE: ${{ github.event.inputs.customStatementScope }}
           FETCH_REQUEST_ID: ${{ github.event.inputs.requestId }}
           FETCH_CLEAR_FILE_PATHS: ${{ github.event.inputs.clearFilePaths }}
           FETCH_OCR_MODE: ${{ github.event.inputs.ocrMode }}

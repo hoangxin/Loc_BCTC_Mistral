@@ -50,10 +50,13 @@ diện web hoặc bằng lệnh `npm run fetch`.
   rỗng), chờ tiêu chí thật của user** - khi có, chỉ cần sửa file này, không đụng UI/pipeline/export.
 - `lib/custom-source.ts` (`runCustomSourceCheck`) - nút "Thêm nguồn riêng": dùng Mistral chat
   (`lib/ai/mistral-chat.ts`, cùng `MISTRAL_API_KEY`) duyệt trang tối đa 4 bước nhảy (VD trang chủ ->
-  "Quan hệ cổ đông" -> "Báo cáo tài chính") để tự tìm link BCTC quý vừa kết thúc, rồi CHỈ trích 3 bảng
-  (không toàn văn, giống luồng Vietstock) - chạy trên GitHub Actions runner (xem mục dispatch dưới), LUÔN
-  ghi `FetchStatus.lastCustomSourceCheck` (kể cả không tìm thấy) qua `writeCustomSourceCheck` để
-  `app/CustomSourceForm.tsx` (polling) phân biệt được "chưa xong" với "xong nhưng không thấy".
+  "Quan hệ cổ đông" -> "Báo cáo tài chính") để tự tìm link BCTC, rồi CHỈ trích 3 bảng (không toàn văn,
+  giống luồng Vietstock) - chạy trên GitHub Actions runner (xem mục dispatch dưới), LUÔN ghi
+  `FetchStatus.lastCustomSourceCheck` (kể cả không tìm thấy) qua `writeCustomSourceCheck` để
+  `app/CustomSourceForm.tsx` (polling) phân biệt được "chưa xong" với "xong nhưng không thấy". Mã
+  CK/Quý/Năm/Loại BCTC (`CustomSourceOverrides`) do người dùng tự nhập trên form - **sửa 2026-07-29**:
+  trước đây app tự đoán (bỏ trống `stockCode`, `getPreviousQuarter()`, `classifyStatementScope()`) và hay
+  ra kết quả trống/sai vì website từng công ty không có quy ước chung như Vietstock để suy dựng chính xác.
 - `lib/summary-row.ts`, `lib/export/summary-excel.ts`/`summary-pdf.ts`, `app/api/export-summary` - bảng
   tổng hợp % nhiều công ty (build buffer, không ghi đĩa) từ đợt làm trước - vẫn giữ code, nhưng **hiện
   không còn nút nào trên UI gọi tới** (nút "Excel"/"PDF" mỗi dòng giờ trỏ vào `app/api/report-file`, xem
@@ -132,9 +135,11 @@ diện web hoặc bằng lệnh `npm run fetch`.
   sót báo cáo xuất hiện trước lần tải cuối nhưng chưa từng tải được, vd do timeout Mistral hoặc lần đó chỉ
   chọn tay 1 phần - xem `onlyMissing` ở `lib/pipeline.ts`) hoặc "số BCTC gần nhất" (kỳ khác), nút "Tải BCTC"
   - polling `app/api/fetch-status` (đổi `generatedAt` = xong, tự reload).
-- `app/CustomSourceForm.tsx` - nút "Thêm nguồn riêng" -> input link + Enter -> dispatch (không trả kết
-  quả ngay nữa) -> polling `app/api/fetch-status`, đối chiếu `lastCustomSourceCheck.requestId` (tự sinh
-  lúc gửi) để phân biệt "chưa xong" với "xong nhưng không thấy" (hiện "Chưa có").
+- `app/CustomSourceForm.tsx` - nút "Thêm nguồn riêng" -> input link + Mã CK + Quý/Năm + Loại BCTC (Hợp
+  nhất/Riêng lẻ/Chung, tất cả bắt buộc, xem sửa 2026-07-29 ở mục `lib/custom-source.ts` trên) + Enter ->
+  dispatch (không trả kết quả ngay nữa) -> polling `app/api/fetch-status`, đối chiếu
+  `lastCustomSourceCheck.requestId` (tự sinh lúc gửi) để phân biệt "chưa xong" với "xong nhưng không
+  thấy" (hiện "Chưa có").
 - `app/ReportsSummaryTable.tsx` - bảng STT/Mã CK/Sàn giao dịch/Tên tài liệu/Ngày cập nhật/Tên công
   ty/Loại BCTC/cột % động (rỗng cho tới khi `lib/analysis.ts` có tiêu chí thật) + 2 nút Excel/PDF mỗi
   dòng, LUÔN bật (không còn kiểm tra file có sẵn hay không - xem `app/api/report-file` dưới).

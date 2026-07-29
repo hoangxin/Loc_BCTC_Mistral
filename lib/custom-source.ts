@@ -2,12 +2,11 @@ import { createWriteStream } from 'fs';
 import { mkdir } from 'fs/promises';
 import { basename, extname, join } from 'path';
 import axios from 'axios';
-import { getPreviousQuarter } from './quarter';
 import { callMistralChat } from './ai/mistral-chat';
 import { resolveReportSourceFiles, cleanupDownloadedFile } from './report-source';
 import { extractReportContent } from './report-extract';
 import { computeAnalysisRows } from './analysis';
-import { classifyStatementScope } from './statement-scope';
+import type { StatementScope } from './statement-scope';
 import { normalizeLabelText } from './export/statement-shared';
 import { addCustomReport, writeCustomSourceCheck } from './pipeline';
 import type { ReportFile } from './vietstock-reports';
@@ -26,6 +25,19 @@ const MAX_PAGE_TEXT_CHARS = 6000;
 const REQUEST_TIMEOUT_MS = 15000;
 
 export type CustomSourceResult = { found: true; report: DownloadedReport } | { found: false; message: string };
+
+// Nguoi dung tu dien (form "Them nguon rieng", app/CustomSourceForm.tsx) thay
+// vi de trong/doan (2026-07-29, yeu cau nguoi dung sau khi phat hien Ma
+// CK/Loai BCTC luon bi de trong hoac doan sai tren cac bao cao qua nguon
+// rieng): website tung cong ty khong co quy uoc chung, khac Vietstock (co san
+// stockCode/ky that qua API) nen KHONG the tu suy ra chinh xac - de nguoi
+// dung nhap thang thay vi co doan qua AI/getPreviousQuarter.
+export interface CustomSourceOverrides {
+  stockCode: string;
+  quarter: number;
+  year: number;
+  statementScope: StatementScope;
+}
 
 interface PageLink {
   href: string;
@@ -149,7 +161,12 @@ async function downloadFile(fileUrl: string, destDir: string): Promise<string> {
 // bang (KHONG OCR toan van/ghi file xuat o day nua, xem lib/pipeline.ts va
 // lib/export/full-document.ts - OCR toan van gio la buoc RIENG, chi lam luc
 // user bam "Xuat" cho 1 bao cao cu the qua app/api/report-file).
-async function downloadAndProcessCustomReport(fileUrl: string, companyNameGuess: string | undefined, ocrMode: OcrMode): Promise<DownloadedReport> {
+async function downloadAndProcessCustomReport(
+  fileUrl: string,
+  companyNameGuess: string | undefined,
+  ocrMode: OcrMode,
+  overrides: CustomSourceOverrides
+): Promise<DownloadedReport> {
   const destDir = join(process.cwd(), 'data', 'reports', 'custom');
   const filePath = await downloadFile(fileUrl, destDir);
 
@@ -158,7 +175,7 @@ async function downloadAndProcessCustomReport(fileUrl: string, companyNameGuess:
   try {
     const fakeReportFile: ReportFile = {
       fileInfoID: 0,
-      stockCode: '',
+      stockCode: overrides.stockCode,
       exchange: '',
       companyName: companyNameGuess?.trim() || new URL(fileUrl).hostname,
       financeUrl: fileUrl,
@@ -193,8 +210,6 @@ async function downloadAndProcessCustomReport(fileUrl: string, companyNameGuess:
     if (!content) {
       throw new Error('Không tìm thấy bản tiếng Việt của BCTC trong file này (chỉ có bản dịch tiếng Anh hoặc nội dung không đọc được)');
     }
-    const { quarter, year } = getPreviousQuarter();
-
     return {
       source: 'custom',
       stockCode: fakeReportFile.stockCode,
@@ -202,7 +217,7 @@ async function downloadAndProcessCustomReport(fileUrl: string, companyNameGuess:
       companyName: fakeReportFile.companyName,
       title: fakeReportFile.title,
       lastUpdate: fakeReportFile.lastUpdate.toISOString(),
-      statementScope: classifyStatementScope({ metadataText: resolvedFile.entryName ?? '', contentText: content.fullText ?? undefined }),
+      statementScope: overrides.statementScope,
       businessType: content.businessType,
       analysis: computeAnalysisRows(content.statements, content.businessType, content.unreliableCells),
       statements: content.statements,
@@ -211,8 +226,8 @@ async function downloadAndProcessCustomReport(fileUrl: string, companyNameGuess:
       filePath: resolvedFile.filePath,
       format: resolvedFile.format,
       entryName: resolvedFile.entryName ?? null,
-      periodYear: year,
-      periodSlug: `Q${quarter}`,
+      periodYear: overrides.year,
+      periodSlug: `Q${overrides.quarter}`,
       warnings: [...filingStructureWarnings, ...content.warnings],
     };
   } finally {
@@ -220,8 +235,8 @@ async function downloadAndProcessCustomReport(fileUrl: string, companyNameGuess:
   }
 }
 
-async function browseForReport(startUrl: string, ocrMode: OcrMode): Promise<CustomSourceResult> {
-  const { quarter, year } = getPreviousQuarter();
+async function browseForReport(startUrl: string, ocrMode: OcrMode, overrides: CustomSourceOverrides): Promise<CustomSourceResult> {
+  const { quarter, year } = overrides;
   const visited = new Set<string>();
   let currentUrl = startUrl;
 
@@ -249,7 +264,7 @@ async function browseForReport(startUrl: string, ocrMode: OcrMode): Promise<Cust
         } catch {
           break;
         }
-        const report = await downloadAndProcessCustomReport(absoluteUrl, decision.companyNameGuess, ocrMode);
+        const report = await downloadAndProcessCustomReport(absoluteUrl, decision.companyNameGuess, ocrMode, overrides);
         return { found: true, report };
       }
 
@@ -279,8 +294,13 @@ async function browseForReport(startUrl: string, ocrMode: OcrMode): Promise<Cust
 // lastCustomSourceCheck (ke ca found:false) qua writeCustomSourceCheck, day la
 // cach DUY NHAT app/CustomSourceForm.tsx (polling app/api/fetch-status) biet
 // duoc "da chay xong" thay vi cho toi khi het thoi gian poll.
-export async function runCustomSourceCheck(url: string, requestId: string, ocrMode: OcrMode = DEFAULT_OCR_MODE): Promise<FetchStatus> {
-  const result = await browseForReport(url, ocrMode);
+export async function runCustomSourceCheck(
+  url: string,
+  requestId: string,
+  overrides: CustomSourceOverrides,
+  ocrMode: OcrMode = DEFAULT_OCR_MODE
+): Promise<FetchStatus> {
+  const result = await browseForReport(url, ocrMode, overrides);
 
   if (result.found) {
     addCustomReport(result.report);

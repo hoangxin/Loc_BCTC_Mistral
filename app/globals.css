@@ -849,6 +849,22 @@ auto) cat mat du bam o hang dau/cuoi bang. */
   min-width: 280px;
 }
 
+/* Ma CK/Nam (yeu cau nguoi dung 2026-07-29, xem app/CustomSourceForm.tsx) -
+   khac han link URL, khong can rong. */
+.custom-source-input-narrow {
+  min-width: 80px;
+}
+
+.custom-source-select {
+  font-family: inherit;
+  font-size: 13px;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: #fff;
+  color: var(--text);
+}
+
 .summary-actions {
   display: flex;
   align-items: center;

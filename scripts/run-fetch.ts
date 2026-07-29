@@ -3,6 +3,7 @@ import { join } from 'path';
 import { runFetchPipeline, clearResults } from '../lib/pipeline';
 import { runCustomSourceCheck } from '../lib/custom-source';
 import { parseOcrMode } from '../lib/ocr-mode';
+import type { StatementScope } from '../lib/statement-scope';
 
 // Khac voi `npm run dev`/`next start` (Next.js tu nap .env), chay thang qua
 // tsx (`npm run fetch`, hoac tren GitHub Actions runner - xem
@@ -42,7 +43,18 @@ async function main() {
     const url = process.env.FETCH_CUSTOM_URL;
     const requestId = process.env.FETCH_REQUEST_ID || '';
     if (!url) throw new Error('Thieu FETCH_CUSTOM_URL cho FETCH_MODE=custom');
-    const status = await runCustomSourceCheck(url, requestId, ocrMode);
+    // Nguoi dung tu dien Ma CK/Quy/Loai BCTC tren form (app/CustomSourceForm.tsx,
+    // yeu cau nguoi dung 2026-07-29) thay vi de app tu doan (getPreviousQuarter/
+    // classifyStatementScope) - website tung cong ty khong co quy uoc chung nen
+    // khong the tu suy dung, xem lib/custom-source.ts CustomSourceOverrides.
+    const stockCode = (process.env.FETCH_CUSTOM_STOCK_CODE || '').trim().toUpperCase();
+    const quarter = Number(process.env.FETCH_CUSTOM_QUARTER);
+    const year = Number(process.env.FETCH_CUSTOM_YEAR);
+    const statementScope = process.env.FETCH_CUSTOM_STATEMENT_SCOPE as StatementScope;
+    if (!stockCode || !quarter || !year || !statementScope) {
+      throw new Error('Thieu Ma CK/Quy/Nam/Loai BCTC cho FETCH_MODE=custom');
+    }
+    const status = await runCustomSourceCheck(url, requestId, { stockCode, quarter, year, statementScope }, ocrMode);
     console.log(`Nguon rieng ${url}: ${status.lastCustomSourceCheck?.found ? 'tim thay' : 'chua co'}`);
     return;
   }
