@@ -25,13 +25,20 @@ interface StoredState {
   // danh dau rieng tung cai). Truong MOI (2026-07-25), thay the readFilePaths
   // (boolean "da doc") bang trang thai co 2 gia tri (note/done).
   reportMarks: [string, ReportMarkState][];
+  // Noi dung ghi chu cho lua chon "Lưu ý" (yeu cau nguoi dung 2026-07-29) -
+  // nhap qua popup luc chon "Lưu ý" (xem NoteModal, ReportsSummaryTable.tsx),
+  // hien lai qua tooltip hover o Ma CK. Key giong reportMarks (filePath), luu
+  // TACH RIENG khoi reportMarks (khong xoa khi bo danh dau, de gia tri cu con
+  // do neu nguoi dung danh dau "Lưu ý" lai sau nay).
+  reportNotes: [string, string][];
 }
 
 function loadStored(): StoredState {
-  if (typeof window === 'undefined') return { codes: [], highlightOverrides: [], reportMarks: [] };
+  const empty: StoredState = { codes: [], highlightOverrides: [], reportMarks: [], reportNotes: [] };
+  if (typeof window === 'undefined') return empty;
   try {
     const raw = window.localStorage.getItem(STORAGE_KEY);
-    if (!raw) return { codes: [], highlightOverrides: [], reportMarks: [] };
+    if (!raw) return empty;
     const parsed = JSON.parse(raw);
     const reportMarks: [string, ReportMarkState][] = Array.isArray(parsed.reportMarks)
       ? parsed.reportMarks
@@ -45,9 +52,10 @@ function loadStored(): StoredState {
       codes: Array.isArray(parsed.codes) ? parsed.codes : [],
       highlightOverrides: Array.isArray(parsed.highlightOverrides) ? parsed.highlightOverrides : [],
       reportMarks,
+      reportNotes: Array.isArray(parsed.reportNotes) ? parsed.reportNotes : [],
     };
   } catch {
-    return { codes: [], highlightOverrides: [], reportMarks: [] };
+    return empty;
   }
 }
 
@@ -66,6 +74,10 @@ interface WatchlistContextValue {
   getReportMark: (filePath: string) => ReportMarkState | undefined;
   // state = null xoa danh dau (ve trang thai chua danh dau).
   setReportMark: (filePath: string, state: ReportMarkState | null) => void;
+  // Ghi chu cho lua chon "Lưu ý" (yeu cau nguoi dung 2026-07-29) - xem
+  // reportNotes o StoredState tren cho ly do tach rieng khoi reportMarks.
+  getReportNote: (filePath: string) => string | undefined;
+  setReportNote: (filePath: string, note: string) => void;
 }
 
 const WatchlistContext = createContext<WatchlistContextValue | null>(null);
@@ -80,6 +92,7 @@ export function WatchlistProvider({ children }: { children: ReactNode }) {
   const [codes, setCodes] = useState<Set<string>>(() => new Set());
   const [overrides, setOverrides] = useState<Map<string, HighlightState>>(() => new Map());
   const [reportMarks, setReportMarks] = useState<Map<string, ReportMarkState>>(() => new Map());
+  const [reportNotes, setReportNotes] = useState<Map<string, string>>(() => new Map());
   const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
@@ -87,6 +100,7 @@ export function WatchlistProvider({ children }: { children: ReactNode }) {
     setCodes(new Set(stored.codes));
     setOverrides(new Map(stored.highlightOverrides));
     setReportMarks(new Map(stored.reportMarks));
+    setReportNotes(new Map(stored.reportNotes));
     setHydrated(true);
   }, []);
 
@@ -98,9 +112,10 @@ export function WatchlistProvider({ children }: { children: ReactNode }) {
       codes: Array.from(codes),
       highlightOverrides: Array.from(overrides.entries()),
       reportMarks: Array.from(reportMarks.entries()),
+      reportNotes: Array.from(reportNotes.entries()),
     };
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-  }, [codes, overrides, reportMarks, hydrated]);
+  }, [codes, overrides, reportMarks, reportNotes, hydrated]);
 
   const addToWatchlist = useCallback((code: string) => {
     const normalized = code.trim().toUpperCase();
@@ -139,6 +154,14 @@ export function WatchlistProvider({ children }: { children: ReactNode }) {
     });
   }, []);
 
+  const setReportNote = useCallback((filePath: string, note: string) => {
+    setReportNotes((prev) => {
+      const next = new Map(prev);
+      next.set(filePath, note);
+      return next;
+    });
+  }, []);
+
   const value = useMemo<WatchlistContextValue>(
     () => ({
       watchlist: codes,
@@ -148,9 +171,11 @@ export function WatchlistProvider({ children }: { children: ReactNode }) {
       getHighlightOverride: (key: string) => overrides.get(key),
       setHighlightOverride,
       getReportMark: (filePath: string) => reportMarks.get(filePath),
+      getReportNote: (filePath: string) => reportNotes.get(filePath),
+      setReportNote,
       setReportMark,
     }),
-    [codes, overrides, reportMarks, addToWatchlist, removeFromWatchlist, setHighlightOverride, setReportMark],
+    [codes, overrides, reportMarks, reportNotes, addToWatchlist, removeFromWatchlist, setHighlightOverride, setReportMark, setReportNote],
   );
 
   return <WatchlistContext.Provider value={value}>{children}</WatchlistContext.Provider>;

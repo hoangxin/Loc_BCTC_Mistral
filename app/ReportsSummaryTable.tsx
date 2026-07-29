@@ -263,6 +263,60 @@ const REPORT_MARK_OPTIONS: { state: ReportMarkState; label: string }[] = [
   { state: 'done', label: 'Đã xong' },
 ];
 
+// Popup nhap/sua ghi chu cho lua chon "Lưu ý" (yeu cau nguoi dung 2026-07-29) -
+// tach rieng khoi popover xac nhan (armed) vi can 1 vung nhap text du rong,
+// dat giua man hinh (khong can tinh vi tri bam theo checkbox nhu popover kia -
+// don gian hon va khong lo tran/che o gan mep bang). Render qua Portal ra
+// document.body giong cac popup khac trong file nay.
+function NoteModal({
+  stockCode,
+  initialNote,
+  onSave,
+  onCancel,
+}: {
+  stockCode: string;
+  initialNote: string;
+  onSave: (note: string) => void;
+  onCancel: () => void;
+}) {
+  const [draft, setDraft] = useState(initialNote);
+
+  useEffect(() => {
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.key === 'Escape') onCancel();
+    }
+    document.addEventListener('keydown', onKeyDown);
+    return () => document.removeEventListener('keydown', onKeyDown);
+  }, [onCancel]);
+
+  if (typeof document === 'undefined') return null;
+
+  return createPortal(
+    <div className="note-modal-overlay" onMouseDown={(e) => { if (e.target === e.currentTarget) onCancel(); }}>
+      <div className="note-modal-box">
+        <div className="note-modal-title">Ghi chú cho {stockCode || 'báo cáo'}</div>
+        <textarea
+          className="note-modal-textarea"
+          value={draft}
+          onChange={(e) => setDraft(e.target.value)}
+          placeholder="Nhập ghi chú..."
+          rows={4}
+          autoFocus
+        />
+        <div className="note-modal-actions">
+          <button type="button" className="secondary-button" onClick={onCancel}>
+            Huỷ
+          </button>
+          <button type="button" className="trigger-button" onClick={() => onSave(draft.trim())}>
+            Xong
+          </button>
+        </div>
+      </div>
+    </div>,
+    document.body,
+  );
+}
+
 // Tick THU CONG o o Ma CK, mo rong tu boolean "da doc" sang 2 trang thai (yeu
 // cau nguoi dung 2026-07-25): bam tick hien popup 2 lua chon "Lưu ý" (bôi vang
 // o Ma CK, class stockcode-col-note) va "Đã xong" (bôi xam, giu nguyen nhu
@@ -270,17 +324,28 @@ const REPORT_MARK_OPTIONS: { state: ReportMarkState; label: string }[] = [
 // danh dau (ve lai binh thuong). Dung chung 1 pattern voi MuteableHighlightCell
 // o tren (tick chi la "dang cho xac nhan", popup qua Portal ra document.body
 // vi cung nam trong bang co sticky column/row) de nhat quan hanh vi + code.
+//
+// SUA 2026-07-29 (yeu cau nguoi dung): chon "Lưu ý" gio mo THEM 1 popup nhap
+// ghi chu (NoteModal o tren) thay vi danh dau ngay - luu ghi chu kem trang
+// thai QUA onSave, hien lai qua tooltip hover o Ma CK (xem cot Ma CK duoi day).
+// Them nut "Sửa ghi chú" (chi hien khi dang o trang thai 'note') de sua lai
+// ghi chu ma KHONG doi/xoa danh dau hien co.
 function ReportMarkCheckbox({
   stockCode,
   currentMark,
   onSetMark,
+  currentNote,
+  onSetNote,
 }: {
   stockCode: string;
   currentMark: ReportMarkState | undefined;
   onSetMark: (state: ReportMarkState | null) => void;
+  currentNote: string | undefined;
+  onSetNote: (note: string) => void;
 }) {
   const [armed, setArmed] = useState(false);
   const [popoverPos, setPopoverPos] = useState<{ top: number; left: number } | null>(null);
+  const [noteModalOpen, setNoteModalOpen] = useState(false);
   const checkboxRef = useRef<HTMLInputElement>(null);
   const popoverElRef = useRef<HTMLDivElement | null>(null);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -346,7 +411,30 @@ function ReportMarkCheckbox({
   function chooseMark(state: ReportMarkState) {
     clearArmTimeout();
     setArmed(false);
-    onSetMark(currentMark === state ? null : state);
+    if (currentMark === state) {
+      onSetMark(null);
+      return;
+    }
+    if (state === 'note') {
+      // "Lưu ý" gio can nhap ghi chu TRUOC khi thuc su danh dau (yeu cau nguoi
+      // dung 2026-07-29) - danh dau + luu ghi chu cung luc trong onSaveNote,
+      // xem duoi.
+      setNoteModalOpen(true);
+      return;
+    }
+    onSetMark(state);
+  }
+
+  function openEditNote() {
+    clearArmTimeout();
+    setArmed(false);
+    setNoteModalOpen(true);
+  }
+
+  function saveNote(note: string) {
+    onSetNote(note);
+    onSetMark('note');
+    setNoteModalOpen(false);
   }
 
   return (
@@ -374,9 +462,22 @@ function ReportMarkCheckbox({
                 {currentMark === opt.state ? 'Bỏ đánh dấu' : opt.label}
               </button>
             ))}
+            {currentMark === 'note' && (
+              <button type="button" className="mute-confirm-button" onClick={openEditNote}>
+                Sửa ghi chú
+              </button>
+            )}
           </div>,
           document.body,
         )}
+      {noteModalOpen && (
+        <NoteModal
+          stockCode={stockCode}
+          initialNote={currentNote ?? ''}
+          onSave={saveNote}
+          onCancel={() => setNoteModalOpen(false)}
+        />
+      )}
     </>
   );
 }
@@ -423,7 +524,7 @@ export default function ReportsSummaryTable({
   const labels = useMemo(() => collectLabels(reports), [reports]);
   const [stockCodeQuery, setStockCodeQuery] = useState('');
   const [sortState, setSortState] = useState<SortState>(null);
-  const { isWatched, getHighlightOverride, setHighlightOverride, getReportMark, setReportMark } = useWatchlist();
+  const { isWatched, getHighlightOverride, setHighlightOverride, getReportMark, setReportMark, getReportNote, setReportNote } = useWatchlist();
 
   // O "Tim theo Ma CK" bi cuon mat khi keo xuong xem cac dong sau (yeu cau
   // nguoi dung 2026-07-22) - truoc day CHI co dong tieu de cot (thead) la
@@ -614,16 +715,25 @@ export default function ReportsSummaryTable({
                     stockCode={report.stockCode}
                     currentMark={getReportMark(report.filePath)}
                     onSetMark={(state) => setReportMark(report.filePath, state)}
+                    currentNote={getReportNote(report.filePath)}
+                    onSetNote={(note) => setReportNote(report.filePath, note)}
                   />
                   {/* Ten cong ty hien qua tooltip hover (title) thay vi cot rieng
                   (yeu cau user 2026-07-07) - do dai ten cong ty thuong lam bang
                   qua rong, trong khi Ma CK + San giao dich la du de nhan dien
-                  nhanh, chi can xem ten day du khi thuc su can. */}
+                  nhanh, chi can xem ten day du khi thuc su can. SUA 2026-07-29:
+                  neu dang danh dau "Lưu ý" VA co ghi chu, them dong "Ghi chú:"
+                  vao SAU ten cong ty (title ho tro xuong dong qua \n) - yeu cau
+                  nguoi dung "hover chuot qua ma thi hien ghi chu len". */}
                   <a
                     href={report.financeUrl}
                     target="_blank"
                     rel="noreferrer"
-                    title={report.companyName}
+                    title={
+                      getReportMark(report.filePath) === 'note' && getReportNote(report.filePath)
+                        ? `${report.companyName}\nGhi chú: ${getReportNote(report.filePath)}`
+                        : report.companyName
+                    }
                     className={watched ? 'watchlist-code' : ''}
                   >
                     {report.stockCode || '—'}

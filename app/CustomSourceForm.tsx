@@ -15,13 +15,14 @@ const MAX_POLL_MS = 15 * 60 * 1000;
 export default function CustomSourceForm() {
   const [open, setOpen] = useState(false);
   const [url, setUrl] = useState('');
-  // Ma CK/Quy/Nam/Loai BCTC (yeu cau nguoi dung 2026-07-29): nguon rieng
+  // Ma CK/San GD/Quy/Nam/Loai BCTC (yeu cau nguoi dung 2026-07-29): nguon rieng
   // KHONG co danh sach ky/ma nhu Vietstock nen phai bat nguoi dung tu nhap,
   // khong de app tu doan (getPreviousQuarter/classifyStatementScope o
   // lib/custom-source.ts truoc day hay ra ket qua trong/sai) - Quy/Nam van
   // moi san theo quy vua qua de do phai go tay khi trung truong hop thong
   // thuong, nhung nguoi dung vAn co the sua.
   const [stockCode, setStockCode] = useState('');
+  const [exchange, setExchange] = useState('');
   const previousQuarter = getPreviousQuarter();
   const [quarter, setQuarter] = useState(String(previousQuarter.quarter));
   const [year, setYear] = useState(String(previousQuarter.year));
@@ -84,6 +85,7 @@ export default function CustomSourceForm() {
   const formValid =
     url.trim() !== '' &&
     stockCode.trim() !== '' &&
+    exchange !== '' &&
     Number.isInteger(quarterNum) &&
     quarterNum >= 1 &&
     quarterNum <= 4 &&
@@ -104,6 +106,7 @@ export default function CustomSourceForm() {
           url: url.trim(),
           ocrMode,
           stockCode: stockCode.trim().toUpperCase(),
+          exchange,
           quarter: quarterNum,
           year: yearNum,
           statementScope,
@@ -158,6 +161,13 @@ export default function CustomSourceForm() {
         maxLength={10}
         disabled={busy}
       />
+      <select className="custom-source-select" value={exchange} onChange={(e) => setExchange(e.target.value)} disabled={busy} aria-label="Sàn giao dịch">
+        <option value="">-- Sàn GD --</option>
+        <option value="HoSE">HoSE</option>
+        <option value="HNX">HNX</option>
+        <option value="UPCoM">UPCoM</option>
+        <option value="Khác">Khác</option>
+      </select>
       <select className="custom-source-select" value={quarter} onChange={(e) => setQuarter(e.target.value)} disabled={busy} aria-label="Quý">
         <option value="1">Quý 1</option>
         <option value="2">Quý 2</option>
@@ -185,7 +195,7 @@ export default function CustomSourceForm() {
         <option value="Chung">Chung</option>
       </select>
       {!ocrChoiceOpen ? (
-        <button className="trigger-button" onClick={() => setOcrChoiceOpen(true)} disabled={busy || !formValid} title={!formValid ? 'Điền đủ URL, Mã CK, Quý, Năm và Loại báo cáo' : undefined}>
+        <button className="trigger-button" onClick={() => setOcrChoiceOpen(true)} disabled={busy || !formValid} title={!formValid ? 'Điền đủ URL, Mã CK, Sàn GD, Quý, Năm và Loại báo cáo' : undefined}>
           {busy ? 'Đang tìm...' : 'Enter'}
         </button>
       ) : (

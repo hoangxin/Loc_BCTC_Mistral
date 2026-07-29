@@ -512,6 +512,56 @@ tren man hinh sieu rong (4K) de header/tabs khong bi keo dai qua muc doc duoc. *
   filter: brightness(1.1);
 }
 
+/* Popup nhap/sua ghi chu cho lua chon "Lưu ý" (yeu cau nguoi dung 2026-07-29,
+   xem NoteModal o app/ReportsSummaryTable.tsx) - overlay full man hinh + hop
+   thoai giua man hinh, khac han .mute-confirm-popover (khong bam theo vi tri
+   checkbox) vi can du cho cho textarea. */
+.note-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.note-modal-box {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 360px;
+  max-width: calc(100vw - 32px);
+  background: var(--surface);
+  border-radius: 8px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
+  padding: 16px;
+}
+
+.note-modal-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.note-modal-textarea {
+  font-family: inherit;
+  font-size: 13px;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  resize: vertical;
+  min-height: 80px;
+  color: var(--text);
+  background: #fff;
+}
+
+.note-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
 /* Watchlist (yeu cau nguoi dung 2026-07-18) - ma trong watchlist in dam hon +
    ca dong noi bat hon dong xung quanh bang mau nen + vien trai. Dat SAU cac
    rule pct-level1/2 trong file nay khong quan trong vi day la selector khac

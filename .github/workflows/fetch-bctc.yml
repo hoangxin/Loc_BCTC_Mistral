@@ -39,6 +39,10 @@ on:
         description: 'mode=custom: Ma CK nguoi dung tu nhap (khong con doan/de trong)'
         type: string
         default: ''
+      customExchange:
+        description: 'mode=custom: San giao dich (HoSE/HNX/UPCoM/Khac) nguoi dung tu chon'
+        type: string
+        default: ''
       customQuarter:
         description: 'mode=custom: Quy (1-4) nguoi dung tu chon'
         type: string
@@ -105,6 +109,7 @@ jobs:
           FETCH_SELECTED_IDS: ${{ github.event.inputs.selectedIds }}
           FETCH_CUSTOM_URL: ${{ github.event.inputs.customUrl }}
           FETCH_CUSTOM_STOCK_CODE: ${{ github.event.inputs.customStockCode }}
+          FETCH_CUSTOM_EXCHANGE: ${{ github.event.inputs.customExchange }}
           FETCH_CUSTOM_QUARTER: ${{ github.event.inputs.customQuarter }}
           FETCH_CUSTOM_YEAR: ${{ github.event.inputs.customYear }}
           FETCH_CUSTOM_STATEMENT_SCOPE: ${{ github.event.inputs.customStatementScope }}

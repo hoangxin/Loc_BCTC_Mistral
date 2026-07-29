@@ -48,13 +48,14 @@ async function main() {
     // classifyStatementScope) - website tung cong ty khong co quy uoc chung nen
     // khong the tu suy dung, xem lib/custom-source.ts CustomSourceOverrides.
     const stockCode = (process.env.FETCH_CUSTOM_STOCK_CODE || '').trim().toUpperCase();
+    const exchange = (process.env.FETCH_CUSTOM_EXCHANGE || '').trim();
     const quarter = Number(process.env.FETCH_CUSTOM_QUARTER);
     const year = Number(process.env.FETCH_CUSTOM_YEAR);
     const statementScope = process.env.FETCH_CUSTOM_STATEMENT_SCOPE as StatementScope;
-    if (!stockCode || !quarter || !year || !statementScope) {
-      throw new Error('Thieu Ma CK/Quy/Nam/Loai BCTC cho FETCH_MODE=custom');
+    if (!stockCode || !exchange || !quarter || !year || !statementScope) {
+      throw new Error('Thieu Ma CK/San GD/Quy/Nam/Loai BCTC cho FETCH_MODE=custom');
     }
-    const status = await runCustomSourceCheck(url, requestId, { stockCode, quarter, year, statementScope }, ocrMode);
+    const status = await runCustomSourceCheck(url, requestId, { stockCode, exchange, quarter, year, statementScope }, ocrMode);
     console.log(`Nguon rieng ${url}: ${status.lastCustomSourceCheck?.found ? 'tim thay' : 'chua co'}`);
     return;
   }

@@ -34,6 +34,7 @@ export type CustomSourceResult = { found: true; report: DownloadedReport } | { f
 // dung nhap thang thay vi co doan qua AI/getPreviousQuarter.
 export interface CustomSourceOverrides {
   stockCode: string;
+  exchange: string;
   quarter: number;
   year: number;
   statementScope: StatementScope;
@@ -176,7 +177,7 @@ async function downloadAndProcessCustomReport(
     const fakeReportFile: ReportFile = {
       fileInfoID: 0,
       stockCode: overrides.stockCode,
-      exchange: '',
+      exchange: overrides.exchange,
       companyName: companyNameGuess?.trim() || new URL(fileUrl).hostname,
       financeUrl: fileUrl,
       fileUrl,
