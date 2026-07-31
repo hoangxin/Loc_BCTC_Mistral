@@ -13,8 +13,15 @@
 // ".../QUY 2/MBS_Baocaotaichinh_Q2_2026/m88_20260706_vi_bctcq21783341183961hrasqjnq.pdf".
 // Neu KHONG phai tu zip/rar (entryName null - bao cao la 1 file PDF/DOCX/DOC
 // rieng le), fileUrl da la duong dan file that, dung thang khong can doi.
+//
+// SUA 2026-07-31: Vietstock bat dau gan query string cache-busting (?ver=...)
+// vao fileUrl (xem lib/download.ts cung ngay), khien fileUrl khong con ket
+// thuc bang ".zip"/".rar" nua ma la ".zip?ver=xxxxxxxx" - regex duoi khong
+// khop, `base` giu nguyen ca query string va noi entryName ngay sau no, tao
+// link hong. Bo query string/hash truoc khi cat duoi.
 export function buildOriginalFileUrl(report: { fileUrl: string; entryName: string | null }): string {
   if (!report.entryName) return report.fileUrl;
-  const base = report.fileUrl.replace(/\.(zip|rar)$/i, '');
+  const withoutQuery = report.fileUrl.replace(/[?#].*$/, '');
+  const base = withoutQuery.replace(/\.(zip|rar)$/i, '');
   return `${base}/${report.entryName}`;
 }

@@ -173,6 +173,16 @@ export function isMetadataColumnName(columnName: string | undefined): boolean {
   if (!columnName) return false;
   const normalized = normalizeLabelText(columnName);
   if (DATE_PREFIX_PATTERN.test(normalized)) return false;
+  // "MS" TRAN (vien tat "Ma so" khong co dau cham, khac "MSO" da co san trong
+  // METADATA_COLUMN_MARKERS) - xac nhan qua NHH/HII that (2026-07-30): dung
+  // .includes() cho chuoi 2 ky tu nay se qua de khop NHAM vao ten cot khac dai
+  // hon co chua "MS" ngau nhien, nen doi hoi EXACT MATCH rieng thay vi them
+  // vao mang marker dung chung .includes(). Thieu bien the nay khien cot "MS"
+  // (chua ma so, vd 210/220/250...) bi tinh NHAM la cot gia tri, cong don ma
+  // so lai thanh 1 "tong" gia tao roi bao sai lech voi dong tong TS dai han/
+  // Von chu so huu that (vd NHH: 210+220+250+260+270=1210 != ma so dong tong
+  // 200).
+  if (normalized === 'MS') return true;
   return METADATA_COLUMN_MARKERS.some((marker) => normalized.includes(marker));
 }
 
@@ -553,6 +563,12 @@ const KNOWN_EQUITY_DIRECT_CHILD_CONTENT = [
   // (thanh phan CUOI trong nhom) khoi tong "Von chu so huu" bao cao hop nhat.
   'LOI ICH CO DONG KHONG KIEM SOAT', // bao cao hop nhat
   'LOI ICH CUA CO DONG KHONG KIEM SOAT',
+  // NSC that (2026-07-30): dung ten cu "thieu so" thay vi "khong kiem soat"
+  // chuan cho CUNG 1 khai niem (loi ich cua co dong khong nam quyen kiem soat
+  // cong ty me) - thieu bien the nay khien dong "7. Lợi ích của cổ đông thiểu
+  // số" (thanh phan CUOI trong nhom) bi loai khoi tong "Von chu so huu".
+  'LOI ICH CUA CO DONG THIEU SO',
+  'LOI ICH CO DONG THIEU SO',
 ];
 
 function isKnownEquityDirectChildLabel(label: string): boolean {
@@ -645,6 +661,11 @@ const KNOWN_BALANCE_SHEET_LEVEL1_CONTENT = [
   'DU PHONG SUY GIAM GIA TRI TAI SAN DAI HAN', // CTCK (vd PHS "VI. Dự phòng suy giảm giá trị tài sản dài hạn")
   'TAI SAN DAI HAN KHAC',
   'TAI SAN SINH HOC DAI HAN', // Thong tu 99/2025
+  // NSC that (2026-07-30): TT99/2025 co CA bien the ngan han ("V. Tài sản
+  // sinh học ngắn hạn", nam trong TS ngan han) - truoc day chi liet ke bien
+  // the dai han, khien dong nay bi loai khoi tong "cac muc con cua TS ngan
+  // han", bao sai lech dung bang chinh gia tri dong nay (8,3 ty).
+  'TAI SAN SINH HOC NGAN HAN',
   // Duoi No phai tra
   'NO NGAN HAN',
   'NO PHAI TRA NGAN HAN',

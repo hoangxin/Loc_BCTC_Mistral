@@ -11,8 +11,22 @@ export interface DownloadResult {
 
 // File goc tren static2.vietstock.vn da co ten ro rang (vd
 // "CTD_Baocaotaichinh_Q3_2026_Hopnhat.pdf") - giu nguyen, chi doi thu muc dich.
+//
+// SUA 2026-07-31 (hang loat bao cao Q2/2026 loi "dinh dang file khong ho tro
+// (.pdf?ver=xxxxxxxx)"): Vietstock bat dau gan query string cache-busting
+// (?ver=...) vao fileUrl. `split('/').pop()` giu nguyen ca query string trong
+// ten file luu tren dia, khien extname() sau nay doc ra ".pdf?ver=xxxxxxxx"
+// thay vi ".pdf" va bi resolveReportSourceFiles (lib/report-source.ts) coi la
+// dinh dang khong nhan dien duoc. Dung `new URL().pathname` de chi lay phan
+// duong dan, bo query string/hash.
 function buildFileName(report: ReportFile): string {
-  const originalName = report.fileUrl.split('/').pop() || `${report.stockCode}${report.fileExt}`;
+  let pathname: string;
+  try {
+    pathname = new URL(report.fileUrl).pathname;
+  } catch {
+    pathname = report.fileUrl.split('?')[0].split('#')[0];
+  }
+  const originalName = pathname.split('/').pop() || `${report.stockCode}${report.fileExt}`;
   return decodeURIComponent(originalName);
 }
 
