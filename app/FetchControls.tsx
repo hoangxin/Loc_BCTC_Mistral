@@ -105,32 +105,36 @@ export default function FetchControls({
   // khi mount - xem app/api/report-terms, lib/vietstock-reports.ts
   // fetchReportTerms - tu "tinh tien" theo ngay hien tai vi day la du lieu
   // song, khong phai danh sach 8 quy tu sinh nhu truoc.
-  useEffect(() => {
-    let cancelled = false;
-    (async () => {
-      try {
-        const response = await fetch('/api/report-terms');
-        const data = await response.json();
-        if (cancelled) return;
-        if (!response.ok) {
-          setTermsError(data?.error || 'Không tải được danh sách kỳ báo cáo.');
-          return;
-        }
-        const list: ReportTerm[] = data.terms;
-        setTerms(list);
-        const defaultTerm =
-          list.find((t) => {
-            const quarter = isRegularQuarterTerm(t);
-            return quarter && quarter.quarter === previousQuarter.quarter && quarter.year === previousQuarter.year;
-          }) ?? list[0];
-        if (defaultTerm) setSelectedKey(termKey(defaultTerm));
-      } catch {
-        if (!cancelled) setTermsError('Không kết nối được tới server.');
+  //
+  // SUA 2026-07-31: tach thanh ham rieng (thay vi inline trong useEffect) de
+  // nut "Thử lại" goi lai duoc khi Vietstock 503 tam thoi - truoc day loi o
+  // day khong co cach thu lai ngoai reload ca trang (khac voi loadPreview da
+  // co san nut Thử lại).
+  const loadTerms = useCallback(async () => {
+    setTermsError('');
+    try {
+      const response = await fetch('/api/report-terms');
+      const data = await response.json();
+      if (!response.ok) {
+        setTermsError(data?.error || 'Không tải được danh sách kỳ báo cáo.');
+        return;
       }
-    })();
-    return () => {
-      cancelled = true;
-    };
+      const list: ReportTerm[] = data.terms;
+      setTerms(list);
+      const defaultTerm =
+        list.find((t) => {
+          const quarter = isRegularQuarterTerm(t);
+          return quarter && quarter.quarter === previousQuarter.quarter && quarter.year === previousQuarter.year;
+        }) ?? list[0];
+      if (defaultTerm) setSelectedKey(termKey(defaultTerm));
+    } catch {
+      setTermsError('Không kết nối được tới server.');
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    loadTerms();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -547,7 +551,14 @@ export default function FetchControls({
         </div>
       )}
 
-      {termsError && <span className="trigger-message trigger-message-error">{termsError}</span>}
+      {termsError && (
+        <div className="trigger-row">
+          <span className="trigger-message trigger-message-error">{termsError}</span>
+          <button className="secondary-button" onClick={loadTerms}>
+            Thử lại
+          </button>
+        </div>
+      )}
 
       {message && (
         <div className="trigger-row">

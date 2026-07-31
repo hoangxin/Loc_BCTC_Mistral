@@ -6,7 +6,46 @@ const REPORT_PAGE_URL = `${BASE_URL}/tai-lieu/bao-cao-tai-chinh.htm`;
 // on dinh, hardcode luon de khoi mat 1 request moi lan chay.
 const FINANCIAL_STATEMENT_DOC_TYPE_ID = 1;
 const PAGE_SIZE = 50;
-const USER_AGENT = 'Mozilla/5.0';
+// SUA 2026-07-31 (loi 503 hang loat khi goi tu GitHub Actions/Vercel, trong
+// khi tu may thuong/trinh duyet nguoi dung van goi binh thuong): UA cu chi la
+// chuoi "Mozilla/5.0" - qua ngan/chung chung so voi UA trinh duyet that (day
+// la dau hieu bot pho bien voi WAF/anti-bot), doi sang UA Chrome desktop day
+// du de giong request nguoi dung that hon.
+const USER_AGENT =
+  'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36';
+
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+// SUA 2026-07-31: cung 1 hien tuong "loi 503 tu Vietstock, xay ra dut quang
+// tam thoi tu server cloud" nhu da gap voi Mistral (xem POLL_TRANSIENT_RETRY
+// trong lib/ai/mistral-ocr-batch.ts) - retry NGAN cho loi 5xx/mat ket noi
+// truoc khi bo cuoc, thay vi de 1 lan 503 thoang qua lam sap ca pipeline
+// (truoc day khong retry, throw thang len lam GitHub Actions step that bai
+// ngay tu buoc dau, chua kip tai bao cao nao).
+const TRANSIENT_RETRY_ATTEMPTS = 3;
+const TRANSIENT_RETRY_DELAY_MS = 3000;
+
+function isTransientAxiosError(error: unknown): boolean {
+  if (!axios.isAxiosError(error)) return false;
+  if (error.response) return error.response.status >= 500 && error.response.status < 600;
+  return true; // loi mang/timeout/reset truoc khi co response - cung coi la tam thoi
+}
+
+async function withTransientRetry<T>(fn: () => Promise<T>): Promise<T> {
+  let lastError: unknown;
+  for (let attempt = 0; attempt < TRANSIENT_RETRY_ATTEMPTS; attempt++) {
+    try {
+      return await fn();
+    } catch (error) {
+      lastError = error;
+      if (!isTransientAxiosError(error)) throw error;
+      if (attempt < TRANSIENT_RETRY_ATTEMPTS - 1) await sleep(TRANSIENT_RETRY_DELAY_MS);
+    }
+  }
+  throw lastError;
+}
 
 export interface ReportTerm {
   yearPeriod: number;
@@ -37,9 +76,11 @@ interface Session {
 // nhau nhung phai gui kem nhau - phai GET 1 trang thuong truoc de lay cap
 // token nay.
 async function getSession(): Promise<Session> {
-  const response = await axios.get<string>(REPORT_PAGE_URL, {
-    headers: { 'User-Agent': USER_AGENT },
-  });
+  const response = await withTransientRetry(() =>
+    axios.get<string>(REPORT_PAGE_URL, {
+      headers: { 'User-Agent': USER_AGENT },
+    })
+  );
 
   const setCookie = (response.headers['set-cookie'] as string[] | undefined) || [];
   const cookieHeader = setCookie.map((cookie) => cookie.split(';')[0]).join('; ');
@@ -57,13 +98,15 @@ async function postForm<T>(session: Session, path: string, form: Record<string, 
     Object.fromEntries(Object.entries(form).map(([key, value]) => [key, String(value)]))
   ).toString();
 
-  const response = await axios.post<T>(`${BASE_URL}${path}`, body, {
-    headers: {
-      'User-Agent': USER_AGENT,
-      Cookie: session.cookieHeader,
-      'content-type': 'application/x-www-form-urlencoded',
-    },
-  });
+  const response = await withTransientRetry(() =>
+    axios.post<T>(`${BASE_URL}${path}`, body, {
+      headers: {
+        'User-Agent': USER_AGENT,
+        Cookie: session.cookieHeader,
+        'content-type': 'application/x-www-form-urlencoded',
+      },
+    })
+  );
 
   return response.data;
 }
