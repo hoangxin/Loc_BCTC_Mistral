@@ -183,7 +183,21 @@ export function isMetadataColumnName(columnName: string | undefined): boolean {
   // Von chu so huu that (vd NHH: 210+220+250+260+270=1210 != ma so dong tong
   // 200).
   if (normalized === 'MS') return true;
-  return METADATA_COLUMN_MARKERS.some((marker) => normalized.includes(marker));
+  // SUA 2026-08-07 (VNZ that, phan hoi nguoi dung): cot GIA TRI THAT (ngay/ky)
+  // co the mang chu thich hoi to dang "(Đã điều chỉnh lại – Thuyết minh số
+  // 30)" khi ky truoc duoc dieu chinh lai - chu thich nay CHUA "THUYET MINH"
+  // nhung KHONG lam cot do tro thanh cot "Thuyet minh" that su, no chi TRICH
+  // DAN 1 so chu thich cu the ngay TRONG ten cot ky/ngay dai hon. Truoc day
+  // marker "THUYET MINH" khop nham ca 2 cot gia tri nay, lam valueColumnIndexes
+  // chi con 1 cot (BCDKT) hoac thieu cot "cung ky nam truoc" (KQKD) - BCDKT
+  // tra ve null toan bo (balanceSheetPeriodColumns can 2 cot), KQKD lai dung
+  // nham cot "Luy ke nam nay" lam "cung ky nam truoc" (fallback vi tri). Bo
+  // phan trong ngoac don TRUOC KHI doi chieu marker de "THUYET MINH"/"TM" chi
+  // kich hoat khi do la Y NGHIA CHINH cua ten cot (vd cot "Thuyết minh" that
+  // su, khong ngoac don), khong phai 1 chu thich phu chen giua ten cot khac.
+  const withoutParenthetical = normalized.replace(/\([^)]*\)/g, '').trim();
+  const textToCheck = withoutParenthetical || normalized;
+  return METADATA_COLUMN_MARKERS.some((marker) => textToCheck.includes(marker));
 }
 
 // "Chi tieu" la TEN CUA CHINH cot nhan (khong phai 1 dong du lieu that) - co

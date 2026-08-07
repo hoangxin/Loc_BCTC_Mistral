@@ -233,6 +233,33 @@ function findNguyenGiaTscdHuuHinh(table: StatementTable): Row | null {
 // lai lan 2 (xem findRevenueRow o do).
 const findDoanhThuThuan: RowFinder = (table) => findRevenueRow(table);
 
+// SUA 2026-08-07 (phan hoi nguoi dung, xac nhan qua VNZ that): "LNST" hien
+// tren tab Ket qua PHAI la LNST cua co dong cong ty me (NPATMI) - day la cach
+// hieu pho bien khi noi "LNST" 1 co phieu (co so tinh EPS, khop cach
+// Vietstock/CafeF hien thi), KHONG phai LNST hop nhat TONG (gom ca phan cua
+// co dong khong kiem soat). Bao cao Hop nhat co CA 2 dong rieng - "Loi nhuan
+// (lo) sau thue TNDN" (tong) VA "Loi nhuan sau thue cua co dong cong ty me"
+// (phan cong ty me, VNZ that: 477 ty vs dong tong 466 ty) - uu tien dong
+// "cua cong ty me" khi co, CHI fallback ve dong tong khi khong tim thay dong
+// nay (bao cao Rieng le - khong tach co dong thieu so, dong tong DA CHINH LA
+// LNST cua chu so huu duy nhat, khong co gi sai khi dung no). Tai dung 2 bien
+// the wording da xac minh qua corpus that o SECURITIES_METRICS "LNST Công Ty
+// Mẹ" (["LOI NHUAN","PHAN BO","CHU SO HUU"] / ["LOI NHUAN SAU THUE","CO
+// DONG","CONG TY ME"]) thay vi doan lai tu dau.
+function findLnstCongTyMe(table: StatementTable): Row | null {
+  const parentRow =
+    findRowByLabel(table, (label) => label.includes('LOI NHUAN') && label.includes('PHAN BO') && label.includes('CHU SO HUU')) ??
+    findRowByLabel(table, (label) => label.includes('LOI NHUAN SAU THUE') && label.includes('CO DONG') && label.includes('CONG TY ME'));
+  if (parentRow) return parentRow;
+  return findRowByLabel(
+    table,
+    (label) =>
+      (label.includes('LOI NHUAN SAU THUE') || label.includes('LOI NHUAN THUAN SAU THUE') || label.includes('NET PROFIT AFTER TAX')) &&
+      !label.includes('CO DONG') &&
+      !label.includes('ATTRIBUTABLE')
+  );
+}
+
 // 21 chi tieu tang truong nguoi dung yeu cau (2026-07-08), danh cho
 // businessType === 'other' (doanh nghiep thuong, Thong tu 200/2014 hoac
 // 99/2025). Cac cot BCDKT gop ca ngan+dai han khi nguoi dung yeu cau gop (vd
@@ -376,20 +403,10 @@ const OTHER_METRICS: MetricDef[] = [
   {
     label: 'LNST',
     statement: 'incomeStatement',
-    // Loai 2 dong con "...cua co dong khong kiem soat"/"...cua co dong cua
-    // cong ty me" (bao cao Hop nhat) - ca 2 deu chua "LOI NHUAN SAU THUE" nhu
-    // dong tong that su, phai loai rieng bang tu khoa "CO DONG".
-    // Them bien the "LOI NHUAN THUAN SAU THUE" 2026-07-22 (xac nhan qua BSQ
-    // that): mot so cong ty chen them chu "thuan" giua "loi nhuan" va "sau
-    // thue" ("Lợi nhuận thuần sau thuế TNDN"), pha vo chuoi con lien tuc "LOI
-    // NHUAN SAU THUE" - giong tinh than byLabelAny da dung cho cac chi tieu
-    // khac o tren (vd "gop"/khong "gop").
-    // "NET PROFIT AFTER TAX" + loai "ATTRIBUTABLE" them 2026-07-25 (CDO that,
-    // ban dich TT99/2025): 2 dong con "...attributable to the parent
-    // company"/"...attributable to non-controlling interests" dong vai tro
-    // GIONG HET 2 dong "...cua co dong..." tieng Viet can loai, xem comment o
-    // findRevenueRow (lib/export/validate-statements.ts).
-    finders: [byLabelAny(['LOI NHUAN SAU THUE', 'LOI NHUAN THUAN SAU THUE', 'NET PROFIT AFTER TAX'], ['CO DONG', 'ATTRIBUTABLE'])],
+    // Uu tien dong "cua co dong cong ty me" (NPATMI), fallback ve dong tong
+    // khi bao cao khong tach co dong thieu so (Rieng le) - xem comment day du
+    // o findLnstCongTyMe.
+    finders: [findLnstCongTyMe],
     thresholds: { level1: 40, level2: 50 },
   },
 ];
