@@ -828,7 +828,28 @@ const NOTES_SECTION_TITLE_MARKERS = [['THUYET MINH', 'BAO CAO TAI CHINH']];
 // that).
 const NOTES_SECTION_DISCLAIMER_EXCLUDE_MARKERS = ['DINH KEM', 'BO PHAN', 'PHAI DUOC DOC CUNG'];
 
+// THEM 2026-08-10 (xac nhan qua SHE that): 1 bien the GARBLED khac cua CUNG 1
+// cau dan chieu cuoi trang - OCR doc sai "...phai duoc DOC CUNG ban thuyet
+// minh..." thanh "...phai duoc CONG BANG BANG thuyet minh..." - khong khop
+// bat ky marker chu nao o tren (dua het vao dung cum tu). Them tung bien the
+// garbled rieng le se khong bao gio het (di nguoc feedback_prefer_structural_over_wording_fixes).
+// Tin hieu CAU TRUC on dinh hon: MOI bien the cau dan chieu da gap (Q2/2026
+// corpus: "...phai duoc doc cung...", "...duoc doc kem voi...", bien the
+// garbled cua SHE) DEU bat dau bang "Bao cao nay" - khong co TIEU DE THAT nao
+// cua muc Thuyet minh lai bat dau bang cum tu nay (tieu de that luon la "(Ban)
+// Thuyet minh bao cao tai chinh...", khong bao gio la "Bao cao nay..."). Dung
+// prefix nay CHAN CA LOP bien the, khong chi 1 cai da biet.
+const NOTES_SECTION_DISCLAIMER_EXCLUDE_PREFIX = 'BAO CAO NAY';
+
 function isNotesSectionTitleHeadingLine(normalizedLine: string): boolean {
+  // Bo dau nhan manh markdown ("*"/"_") va khoang trang O DAU truoc khi kiem
+  // tra prefix - cau dan chieu thuong duoc OCR in nghieng ca cau (vd
+  // "*Báo cáo này phải được...*"), neu khong bo se khong con khop
+  // startsWith("BAO CAO NAY") vi con "*" chen truoc (xac nhan qua chinh SHE:
+  // 1 lan lap KHONG in nghieng, 1 lan lap SAU do LAI in nghieng "*Báo cáo này
+  // phải được được cùng...*" - can xu ly ca 2 dang).
+  const withoutEmphasis = normalizedLine.replace(/^[*_\s]+/, '');
+  if (withoutEmphasis.startsWith(NOTES_SECTION_DISCLAIMER_EXCLUDE_PREFIX)) return false;
   if (NOTES_SECTION_DISCLAIMER_EXCLUDE_MARKERS.some((m) => normalizedLine.includes(m))) return false;
   return NOTES_SECTION_TITLE_MARKERS.some((tokens) => tokens.every((t) => normalizedLine.includes(t)));
 }

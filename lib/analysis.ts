@@ -1129,7 +1129,65 @@ export function incomeStatementPeriodColumns(table: StatementTable): { currentIn
   // MIG/NTC/ABW/VRG...), thu compareHeaderRecency (ngay thang/nam so sanh
   // duoc) TRUOC KHI fallback ve vi tri THUAN TUY - phong ngua truong hop hiem
   // 2 cot bi dao nguoc thu tu (user yeu cau 2026-07-23).
-  const [fallbackFirst, fallbackSecond] = valueIndexes;
+  //
+  // SUA 2026-08-10 (xac nhan qua TAH that): khi bao cao co CA 4 cot gia tri
+  // (Quy nay/Luy ke nay/Quy truoc/Luy ke truoc) VA dung DUNG NAM THAT thay vi
+  // chu "nay"/"truoc" (nen khoi NAM NAY/NAM TRUOC ngay tren khong khop), lay
+  // THANG 2 cot DAU cua valueIndexes lam fallback la SAI: cot 1+2 la "Quy 2
+  // nam 2026"/"Luy ke den cuoi quy 2 nam 2026" - CUNG 1 nam, khac LOAI ky (quy
+  // vs luy ke), khong phai cap hien tai/ky truoc that. compareHeaderRecency
+  // tra ve 0 (ca 2 cung nam 2026, khong phan biet duoc) nen giu nguyen vi tri
+  // goc -> LNST Quy 2/2026 bi so sanh nham voi Luy ke 6 thang dau 2026 thay vi
+  // Quy 2/2025. Uu tien cap cot "KHONG luy ke" (chi Quy don thuan, loai het
+  // cot chua "LUY KE") truoc khi lay 2 cot dau - dam bao ghep dung QUY voi
+  // QUY, LUY KE voi LUY KE khi so sanh theo vi tri/recency.
+  //
+  // CHAN 2026-08-10 (xac nhan qua CTR that, PHAT HIEN qua regression tren toan
+  // corpus TRUOC KHI ghi cache - xem feedback_check_inflight_run_before_pushing_data_json
+  // ve tinh than "kiem tra truoc khi day"): bo loc "LUY KE" o tren chi AN TOAN
+  // khi CA 4 tieu de cot la van ban THAT rieng cho tung cot. CTR dung dang
+  // "banner": 1 dong tieu de CHUNG "Số liệu lũy kế từ đầu năm đến cuối kỳ" phu
+  // tren CA 4 cot gia tri (table.columns cua 3/4 cot la CHUOI RONG ""), con TEN
+  // RIENG tung cot ("Quý II/2026"/"Quý II/2025"...) nam o 1 DONG DU LIEU rieng
+  // ben duoi (giong kieu SHE, xem comment isNotesSectionTitleHeadingLine o
+  // markdown-tables.ts) - khong phai header that. Khi do, cot mang banner
+  // "chua chu LUY KE" o TREN lai la cot QUY (khong phai luy ke that), con cac
+  // cot RONG "" (khong chua "LUY KE" vi khong co chu gi) duoc coi la
+  // "khong luy ke" oan, chon nham cap 2 cot [4,5] (Quy2025 + Luy ke 2026) lam
+  // hien tai/ky truoc - dao lon hoan toan gia tri hien thi. Chi kich hoat bo
+  // loc khi TAT CA cot gia tri co tieu de KHONG RONG (moi cot co van ban rieng
+  // that su) - dam bao dung dung truong hop TAH (4 tieu de day du, khac nhau),
+  // tranh hoan toan truong hop banner/rong nhu CTR.
+  const allValueHeadersNonEmpty = valueIndexes.every((i) => normalizeLabelText(table.columns[i] ?? '') !== '');
+  const nonCumulativeIndexes = allValueHeadersNonEmpty
+    ? valueIndexes.filter((i) => !normalizeLabelText(table.columns[i] ?? '').includes('LUY KE'))
+    : [];
+
+  // CHAN 2026-08-10 (xac nhan qua FTM that, PHAT HIEN CUNG dot regression voi
+  // CTR): tieu de "khong rong" khong dam bao la van ban PHAN BIET duoc nam/ky -
+  // FTM dung tieu de banner LAP LAI y het nhau ("Quy II"/"Luy ke"/"Quy II"/
+  // "Luy ke", khong nam thang gi ca), ten cot THAT (kem nam ro rang) lai nam o
+  // 1 DONG DU LIEU rieng ben duoi (giong CTR/SHE). Cap "khong luy ke" loc duoc
+  // ([idx Quy II dau, idx Quy II sau]) THIEU tin hieu de compareHeaderRecency
+  // phan biet chieu (2 tieu de y het "Quy II") -> recency=0 -> code cu
+  // (truoc do) mac dinh giu vi tri [fallbackFirst=hien tai], nhung o day
+  // fallbackFirst LAI la cot NAM CU HON (theo thu tu that trong file - xac
+  // nhan qua FTM: cot 2025 dung TRUOC cot 2026, nguoc voi da so bao cao) ->
+  // gan sai chieu hien tai/ky truoc, dao nguoc dau %. Vi KHONG CO tin hieu nao
+  // (ca chu "nay"/"truoc" LAN nam/ngay thang) de xac dinh chieu that su cho
+  // CHINH cap da loc, an toan hon la BO qua uu tien loc "LUY KE" trong truong
+  // hop nay (quay ve vi tri THO tren toan bo valueIndexes nhu code cu, KHONG
+  // tu suy doan chieu) - chi giu uu tien loc khi no THAT SU giup
+  // compareHeaderRecency ra ket qua RO RANG (recency != 0), tranh doi tu "sai
+  // 1 kieu" (cu, tron quy+luy ke) sang "sai kieu khac" (moi, dung cap quy
+  // nhung dao chieu).
+  const filteredRecency =
+    nonCumulativeIndexes.length >= 2
+      ? compareHeaderRecency(table.columns[nonCumulativeIndexes[0]] ?? '', table.columns[nonCumulativeIndexes[1]] ?? '')
+      : 0;
+  const candidateIndexes = nonCumulativeIndexes.length >= 2 && filteredRecency !== 0 ? nonCumulativeIndexes : valueIndexes;
+
+  const [fallbackFirst, fallbackSecond] = candidateIndexes;
   if (fallbackFirst === undefined || fallbackSecond === undefined) return null;
   const recency = compareHeaderRecency(table.columns[fallbackFirst] ?? '', table.columns[fallbackSecond] ?? '');
   if (recency < 0) return { currentIndex: fallbackSecond, priorIndex: fallbackFirst };
