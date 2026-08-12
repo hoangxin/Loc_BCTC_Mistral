@@ -1,198 +1,146 @@
 CÔNG TY
 CỔ PHẦN
 CƠ KHÍ
-XÂY DỰNG
+XÂY
+DỰNG
 AMECC
 
 Digitally signed by CÔNG
-TY CỔ PHẦN CƠ KHÍ XÂY
+TY CỔ PHẦN CƠ KHÍ
+XÂY DỰNG AMECC
+DN: C=VN, L=HA/
+PHÒNG, CN=CÔNG TY
+CỔ PHẦN CƠ KHÍ XÂY
 DỰNG AMECC
-DN: C=VN, L=HÀI PHÒNG,
-CN=CÔNG TY CỔ PHẦN
-CƠ KHÍ XÂY DỰNG
-AMECC
-OID:0.9.2342.19200300.100
--1.1-MST.0200786983.
-E=INFO@LISEMCO2.COM
+OID:0.3.2342.19200300.1
+00.1.1-MST.0200786983.
+E=INFO@LISEMCO2.CO
+M
 Reason: I am the author of
 this document
 Location:
-Date: 2026-07-30 10:23:24
-Foxit PhantomPDF Version:
-9.0.0
+Date: 2026-08-10 13:29:10
+Foxit PhantomPDF
+Version: 9.0.0
 
 # CÔNG TY CỔ PHẦN CƠ KHÍ XÂY DỰNG AMECC
-## BÁO CÁO TÀI CHÍNH HỢP NHẤT
+
+# BÁO CÁO TÀI CHÍNH HỢP NHẤT
 
 QUÝ 2 NĂM 2026
 
-CÔNG TY CỔ PHẦN CƠ KHÍ XÂY DỰNG AMECC  
- Km35 - Quốc lộ 10 - Xã An Quang - Tp. Hải Phòng
+CÔNG TY CỔ PHẦN CƠ KHÍ XÂY DỰNG AMECC
 
-Mẫu số B 01a-DN/HN  
- (Kèm theo Thông tư số 43/2026/TT-BTC  
- ngày 20 tháng 04 năm 2026 của Bộ trưởng Bộ Tài chính)
+Km35 - Quốc lộ 10 - Xã An Quang - Tp. Hải Phòng
 
-## BÁO CÁO TÌNH HÌNH TÀI CHÍNH HỢP NHẤT
+Mẫu số B 01a-DN/HN
+
+(Kèm theo Thông tư số 43/2026/TT-BTC
+
+ngày 20 tháng 04 năm 2026 của Bộ trưởng Bộ Tài chính)
+
+# BÁO CÁO TÌNH HÌNH TÀI CHÍNH HỢP NHẤT
 
 Tại ngày 30 tháng 6 năm 2026
 
-(Áp dụng cho doanh nghiệp đáp ứng giá định hoạt động liên tục)
+(Áp dụng cho doanh nghiệp đáp ứng giả định hoạt động liên tục)
 
 Đơn vị tính: VND
 
 |  TÀI SẢN | Mã số | TM | 30/06/2026 | 01/01/2026 (Đã phân loại lại)  |
 | --- | --- | --- | --- | --- |
 |  1 | 2 | 3 | 4 | 5  |
-|  **A - TÀI SẢN NGẮN HẠN** | **100** | **3** | **3.350.136.215.656** | **2.732.688.762.275**  |
-|  **I. Tiền và các khoản tương đương tiền** | **110** |  | **265.160.002.462** | **430.907.716.918**  |
-|  1. Tiền | 111 |  | 260.155.775.580 | 421.244.379.702  |
-|  2. Các khoản tương đương tiền | 112 |  | 5.004.226.882 | 9.663.337.216  |
-|  **II. Đầu tư tài chính ngắn hạn** | **120** | **4** | **147.470.498.265** | **137.639.196.096**  |
-|  3. Đầu tư nắm giữ đến ngày đáo hạn ngắn hạn | 123 |  | 147.470.498.265 | 137.639.196.096  |
-|  **III. Các khoản phải thu ngắn hạn** | **130** |  | **903.002.153.313** | **966.457.557.483**  |
-|  1. Phải thu ngắn hạn của khách hàng | 131 | 5 | 452.163.262.034 | 744.954.949.656  |
-|  2. Trả trước cho người bán ngắn hạn | 132 | 6 | 111.526.594.161 | 91.399.756.234  |
-|  4. Phải thu theo tiến độ hợp đồng xây dựng | 134 | 7 | 251.497.224.681 | 148.895.550.000  |
-|  5. Phải thu ngắn hạn khác | 135 | 9 | 153.292.652.817 | 57.648.856.267  |
-|  6. Dự phòng phải thu ngắn hạn khó đòi (*) | 136 |  | (65.477.580.380) | (76.441.554.674)  |
-|  **IV. Hàng tồn kho** | **140** | **11** | **1.994.033.404.617** | **1.130.088.488.622**  |
-|  1. Hàng tồn kho | 141 |  | 1.994.033.404.617 | 1.130.088.488.622  |
-|  **VI. Tài sản ngắn hạn khác** | **160** |  | **40.470.156.999** | **67.595.803.156**  |
-|  1. Chi phí chờ phân bổ ngắn hạn | 161 | 16.a | 2.469.420.753 | 9.651.262.776  |
-|  2. Thuế GTGT được khấu trừ | 162 |  | 37.937.521.006 | 57.944.540.380  |
-|  3. Thuế và các khoản khác phải thu Nhà nước | 163 |  | 63.215.240 |   |
-|  **B - TÀI SẢN DÀI HẠN** | **200** |  | **1.304.213.389.029** | **1.178.567.546.283**  |
-|  **I. Các khoản phải thu dài hạn** | **210** |  | **32.211.172.036** | **25.068.924.036**  |
-|  5. Phải thu dài hạn khác | 215 | 9 | 32.211.172.036 | 25.068.924.036  |
-|  **II. Tài sản cố định** | **220** |  | **825.781.631.475** | **792.222.519.921**  |
-|  1. Tài sản cố định hữu hình | 221 | 13 | 371.790.161.811 | 384.835.882.829  |
-|  - Nguyên giá | 222 |  | 699.691.260.587 | 689.031.434.186  |
-|  - Giá trị hao mòn lũy kế (*) | 223 |  | (327.901.098.776) | (304.195.551.357)  |
-|  2. Tài sản cố định thuê tài chính | 224 | 14 | 421.749.720.607 | 374.560.073.171  |
-|  - Nguyên giá | 225 |  | 572.957.385.925 | 503.174.326.759  |
-|  - Giá trị hao mòn lũy kế (*) | 226 |  | (151.207.665.318) | (128.614.253.588)  |
-|  3. Tài sản cố định vô hình | 227 | 15 | 32.241.749.057 | 32.826.563.921  |
-|  - Nguyên giá | 228 |  | 51.915.915.419 | 51.660.915.419  |
-|  - Giá trị hao mòn lũy kế (*) | 229 |  | (19.674.166.362) | (18.834.351.498)  |
-|  **V. Tài sản dở dang dài hạn** | **250** |  | **123.811.394.858** | **84.385.862.550**  |
-|  2. Chi phí xây dựng cơ bản dở dang | 252 | 12 | 123.811.394.858 | 84.385.862.550  |
-|  **VI. Đầu tư tài chính dài hạn** | **260** | **4** | **295.014.121.691** | **249.970.728.222**  |
-|  2. Đầu tư vào công ty liên doanh, liên kết | 262 |  | 80.896.608.578 | 80.052.783.817  |
-|  3. Đầu tư góp vốn vào đơn vị khác | 263 |  | 169.117.944.405 | 169.117.944.405  |
-|  5. Đầu tư nắm giữ đến ngày đáo hạn dài hạn | 265 |  | 44.999.568.708 | 800.000.000  |
-|  **VII. Tài sản dài hạn khác** | **270** |  | **27.395.068.969** | **26.919.511.554**  |
-|  1. Chi phí chờ phân bổ dài hạn | 271 | 16.b | 16.321.953.554 | 15.846.396.139  |
-|  2. Tài sản thuế thu nhập hoãn lại | 272 |  | 11.073.115.415 | 11.073.115.415  |
-|  **TỔNG CỘNG TÀI SẢN (280 = 100 + 200)** | **280** |  | **4.654.349.604.685** | **3.911.256.308.558**  |
+|  **A - TÀI SẢN NGẮN HẠN** | **100** | **3** | **3,360,867,844,780** | **2,732,688,762,275**  |
+|  **I. Tiền và các khoản tương đương tiền** | **110** |  | **265,160,002,462** | **430,907,716,918**  |
+|  1. Tiền | 111 |  | 260,155,775,580 | 421,244,379,702  |
+|  2. Các khoản tương đương tiền | 112 |  | 5,004,226,882 | 9,663,337,216  |
+|  **II. Đầu tư tài chính ngắn hạn** | **120** | **4** | **147,470,498,265** | **137,639,196,096**  |
+|  3. Đầu tư nắm giữ đến ngày đáo hạn ngắn hạn | 123 |  | 147,470,498,265 | 137,639,196,096  |
+|  **III. Các khoản phải thu ngắn hạn** | **130** |  | **913,733,782,437** | **966,457,557,483**  |
+|  1. Phải thu ngắn hạn của khách hàng | 131 | 5 | 395,345,349,377 | 744,954,949,656  |
+|  2. Trả trước cho người bán ngắn hạn | 132 | 6 | 111,526,594,161 | 91,399,756,234  |
+|  4. Phải thu theo tiến độ hợp đồng xây dựng | 134 | 7 | 319,046,766,462 | 148,895,550,000  |
+|  5. Phải thu ngắn hạn khác | 135 | 9 | 153,292,652,817 | 57,648,856,267  |
+|  6. Dự phòng phải thu ngắn hạn khó đòi (*) | 136 |  | (65,477,580,380) | (76,441,554,674)  |
+|  **IV. Hàng tồn kho** | **140** | **11** | **1,994,033,404,617** | **1,130,088,488,622**  |
+|  1. Hàng tồn kho | 141 |  | 1,994,033,404,617 | 1,130,088,488,622  |
+|  **VI. Tài sản ngắn hạn khác** | **160** |  | **40,470,156,999** | **67,595,803,156**  |
+|  1. Chi phí chờ phân bổ ngắn hạn | 161 | 16.a | 2,469,420,753 | 9,651,262,776  |
+|  2. Thuế GTGT được khấu trừ | 162 |  | 37,937,521,006 | 57,944,540,380  |
+|  3. Thuế và các khoản khác phải thu Nhà nước | 163 |  | 63,215,240 |   |
+|  **B - TÀI SẢN DÀI HẠN** | **200** |  | **1,292,885,754,197** | **1,178,567,546,283**  |
+|  **I. Các khoản phải thu dài hạn** | **210** |  | **32,211,172,036** | **25,068,924,036**  |
+|  5. Phải thu dài hạn khác | 215 | 9 | 32,211,172,036 | 25,068,924,036  |
+|  **II. Tài sản cố định** | **220** |  | **825,781,631,475** | **792,222,519,921**  |
+|  1. Tài sản cố định hữu hình | 221 | 13 | 371,790,161,811 | 384,835,882,829  |
+|  - Nguyên giá | 222 |  | 699,691,260,587 | 689,031,434,186  |
+|  - Giá trị hao mòn lũy kế (*) | 223 |  | (327,901,098,776) | (304,195,551,357)  |
+|  2. Tài sản cố định thuê tài chính | 224 | 14 | 421,749,720,607 | 374,560,073,171  |
+|  - Nguyên giá | 225 |  | 572,957,385,925 | 503,174,326,759  |
+|  - Giá trị hao mòn lũy kế (*) | 226 |  | (151,207,665,318) | (128,614,253,588)  |
+|  3. Tài sản cố định vô hình | 227 | 15 | 32,241,749,057 | 32,826,563,921  |
+|  - Nguyên giá | 228 |  | 51,915,915,419 | 51,660,915,419  |
+|  - Giá trị hao mòn lũy kế (*) | 229 |  | (19,674,166,362) | (18,834,351,498)  |
+|  **V. Tài sản dở dang dài hạn** | **250** |  | **123,811,394,858** | **84,385,862,550**  |
+|  2. Chi phí xây dựng cơ bản dở dang | 252 | 12 | 123,811,394,858 | 84,385,862,550  |
+|  **VI. Đầu tư tài chính dài hạn** | **260** | **4** | **295,014,121,691** | **249,970,728,222**  |
+|  2. Đầu tư vào công ty liên doanh, liên kết | 262 |  | 80,896,608,578 | 80,052,783,817  |
+|  3. Đầu tư góp vốn vào đơn vị khác | 263 |  | 169,117,944,405 | 169,117,944,405  |
+|  5. Đầu tư nắm giữ đến ngày đáo hạn dài hạn | 265 |  | 44,999,568,708 | 800,000,000  |
+|  **VII. Tài sản dài hạn khác** | **270** |  | **16,067,434,137** | **26,919,511,554**  |
+|  1. Chi phí chờ phân bổ dài hạn | 271 | 16.b | 4,994,318,722 | 15,846,396,139  |
+|  2. Tài sản thuế thu nhập hoãn lại | 272 |  | 11,073,115,415 | 11,073,115,415  |
+|  **TỔNG CỘNG TÀI SẢN (280 = 100 + 200)** | **280** |  | **4,653,753,598,977** | **3,911,256,308,558**  |
 
 1
 
 |  NGUỒN VỐN | Mã số | TM | 30/06/2026 | 01/01/2026 (Đã phân loại lại)  |
 | --- | --- | --- | --- | --- |
 |  1 | 2 | 3 | 4 | 5  |
-|  **C - NỢ PHẢI TRẢ** | **300** |  | **3.739.907.957.323** | **3.049.011.429.187**  |
-|  **I. Nợ ngắn hạn** | **310** |  | **3.257.206.470.763** | **2.564.153.418.791**  |
-|  1. Phải trả người bán ngắn hạn | 311 | 18 | 209.234.087.129 | 303.436.187.109  |
-|  2. Người mua trả tiền trước ngắn hạn | 312 | 19 | 888.686.150.036 | 887.520.638.894  |
-|  4. Thuế và các khoản phải nộp Nhà nước ngắn hạn | 314 | 20 | 46.413.491.830 | 45.621.965.244  |
-|  5. Phải trả người lao động | 315 |  | 34.351.513.446 | 25.164.321.724  |
-|  6. Chi phí phải trả ngắn hạn | 316 | 21 | 42.347.451.616 | 79.085.302.517  |
-|  10. Phải trả ngắn hạn khác | 320 | 22.a | 19.369.573.655 | 19.961.325.927  |
-|  11. Vay và nợ thuê tài chính ngắn hạn | 321 | 17 | 2.016.791.632.469 | 1.203.357.647.376  |
-|  13. Quỹ khen thưởng, phúc lợi | 323 |  | 12.570.582 | 6.030.000  |
-|  **II. Nợ dài hạn** | **330** |  | **482.701.486.560** | **484.858.010.396**  |
-|  8. Phải trả dài hạn khác | 338 | 22.b | 73.358.968.505 | 78.858.968.505  |
-|  9. Vay và nợ thuê tài chính dài hạn | 339 | 17 | 409.342.518.055 | 405.999.041.891  |
-|  **D - VỐN CHỦ SỞ HỮU** | **400** | **23** | **914.441.647.362** | **862.244.879.371**  |
-|  1. Vốn góp của chủ sở hữu | 411 |  | 600.000.000.000 | 600.000.000.000  |
-|  - Cổ phiếu phổ thông có quyền biểu quyết | 411a |  | 600.000.000.000 | 600.000.000.000  |
-|  2. Thặng dư vốn cổ phần | 412 |  | (3.255.000.000) | (3.255.000.000)  |
-|  7. Chênh lệch tỷ giá hối đoái | 417 |  | 2.146.643.513 | 2.146.643.513  |
-|  8. Quỹ đầu tư phát triển | 418 |  | 228.740.477.767 | 191.841.738.018  |
-|  10. Lợi nhuận sau thuế chưa phân phối | 420 |  | 86.809.526.082 | 71.511.497.840  |
-|  - LNST chưa phân phối lũy kế đến cuối kỳ trước | 420a |  | 34.613.163.238 | 16.612.758.091  |
-|  - LNST chưa phân phối kỳ này | 420b |  | 52.196.362.844 | 54.898.739.749  |
-|  **TỔNG CỘNG NGUỒN VỐN (440 = 300 + 400)** | **440** |  | **4.654.349.604.685** | **3.911.256.308.558**  |
+|  **C - NỢ PHẢI TRẢ** | **300** |  | **3,739,311,951,615** | **3,049,011,429,187**  |
+|  **I. Nợ ngắn hạn** | **310** |  | **3,252,763,495,323** | **2,564,153,418,791**  |
+|  1. Phải trả người bán ngắn hạn | 311 | 18 | 221,927,210,657 | 303,436,187,109  |
+|  2. Người mua trả tiền trước ngắn hạn | 312 | 19 | 886,724,655,632 | 887,520,638,894  |
+|  4. Thuế và các khoản phái nộp Nhà nước ngắn hạn | 314 | 20 | 46,413,491,830 | 45,621,965,244  |
+|  5. Phải trả người lao động | 315 |  | 34,351,513,446 | 25,164,321,724  |
+|  6. Chi phí phải trả ngắn hạn | 316 | 21 | 42,347,451,616 | 79,085,302,517  |
+|  10. Phải trả ngắn hạn khác | 320 | 22.a | 19,369,573,655 | 19,961,325,927  |
+|  11. Vay và nợ thuê tài chính ngắn hạn | 321 | 17 | 2,001,617,027,905 | 1,203,357,647,376  |
+|  13. Quỹ khen thưởng, phúc lợi | 323 |  | 12,570,582 | 6,030,000  |
+|  **II. Nợ dài hạn** | **330** |  | **486,548,456,292** | **484,858,010,396**  |
+|  8. Phải trả dài hạn khác | 338 | 22.b | 73,358,968,505 | 78,858,968,505  |
+|  9. Vay và nợ thuê tài chính dài hạn | 339 | 17 | 413,189,487,787 | 405,999,041,891  |
+|  **D - VỐN CHỦ SỞ HỮU** | **400** | **23** | **914,441,647,362** | **862,244,879,371**  |
+|  1. Vốn góp của chủ sở hữu | 411 |  | 600,000,000,000 | 600,000,000,000  |
+|  - Cổ phiếu phổ thông có quyền biểu quyết | 411a |  | 600,000,000,000 | 600,000,000,000  |
+|  2. Thặng dư vốn cổ phần | 412 |  | (3,255,000,000) | (3,255,000,000)  |
+|  7. Chênh lệch tỷ giá hối đoái | 417 |  | 2,146,643,513 | 2,146,643,513  |
+|  8. Quỹ đầu tư phát triển | 418 |  | 228,740,477,767 | 191,841,738,018  |
+|  10. Lợi nhuận sau thuế chưa phân phối | 420 |  | 86,809,526,082 | 71,511,497,840  |
+|  - LNST chưa phân phối lũy kế đến cuối kỳ trước | 420a |  | 34,613,163,238 | 16,612,758,091  |
+|  - LNST chưa phân phối kỳ này | 420b |  | 52,196,362,844 | 54,898,739,749  |
+|  **TỔNG CỘNG NGUỒN VỐN (440 = 300 + 400)** | **440** |  | **4,653,753,598,977** | **3,911,256,308,558**  |
+
+Tp. Hải Phòng, ngày 29 tháng 07 năm 2026
 
 NGƯỜI LẬP
 (Ký, họ tên)
 
-Trần Trung Hoà
-
 KẾ TOÁN TRƯỞNG
 (Ký, họ tên)
 
-Nguyễn Hữu Phong
-
-Thứ Hai Phong ngày 29 tháng 07 năm 2026
 TỔNG GIÁM ĐỐC
 (Ký, họ tên, đóng dấu)
-
-Nguyễn Văn Thọ
-
-2
-
-CÔNG TY CỔ PHẦN CƠ KHÍ XÂY DỰNG AMECC
-Km35 - Quốc lộ 10 - Xã An Quang - Tp. Hải Phòng
-
-Mẫu số B 02a-DN/HN
-(Kèm theo Thông tư số 43/2026/TT-BTC
-ngày 20 tháng 04 năm 2026 của Bộ trưởng Bộ Tài chính)
-
-# BÁO CÁO KẾT QUẢ HOẠT ĐỘNG KINH TỔNG HỢP
-
-Quý 2 năm 2026
-
-Đơn vị tính: VND
-
-|  CHỈ TIÊU | Mã số | TM | Quý 2/2026 | Quý 2/2025  |
-| --- | --- | --- | --- | --- |
-|  (Đã phân loại lại)  |   |   |   |   |
-|  1 | 2 | 3 | 4 | 5  |
-|  1. Doanh thu bán hàng và cung cấp dịch vụ | 01 | 24 | 920.492.692.548 | 1.060.878.488.038  |
-|  2. Các khoản giảm trừ doanh thu | 02 |  |  |   |
-|  3. Doanh thu thuần về bán hàng và cung cấp dịch vụ (10 = 01 - 02) | 10 |  | 920.492.692.548 | 1.060.878.488.038  |
-|  4. Giá vốn hàng bán | 11 | 25 | 805.327.092.008 | 985.153.011.591  |
-|  5. Lợi nhuận gộp về bán hàng và cung cấp dịch vụ (20 = 10 - 11) | 20 |  | 115.165.600.540 | 75.725.476.447  |
-|  6. Lãi/lỗ của hoạt động bán, thanh lý bất động sản đầu tư | 21 |  |  |   |
-|  7. Doanh thu hoạt động tài chính | 22 | 26 | 8.699.871.429 | 4.789.000.266  |
-|  8. Chi phí tài chính | 23 | 27 | 40.586.797.211 | 22.269.619.931  |
-|  - Trong đó: Chi phí lãi vay | 24 |  | 40.586.797.211 | 21.854.637.933  |
-|  9. Chi phí bán hàng | 25 | 28 | 7.274.035.779 | 6.617.778.787  |
-|  10. Chi phí quản lý doanh nghiệp | 26 | 29 | 26.232.261.484 | 22.948.004.241  |
-|  11. Lãi chia từ công ty liên kết, liên doanh | 27 |  | 427.685.354 | 826.533.274  |
-|  12. Lợi nhuận thuần từ hoạt động kinh doanh {30 = 20 + 21 + 22 - (23+ 25 + 26)} | 30 |  | 50.200.062.849 | 29.505.607.028  |
-|  13. Thu nhập khác | 31 | 30 | 8.448.211.191 | 19.712.230.252  |
-|  14. Chi phí khác | 32 | 31 | 11.309.553.245 | 21.562.200.002  |
-|  15. Lợi nhuận khác (40 = 31 - 32) | 40 |  | (2.861.342.054) | (1.849.969.750)  |
-|  16. Tổng lợi nhuận kế toán trước thuế (50 = 30 + 40) | 50 |  | 47.338.720.795 | 27.655.637.278  |
-|  17. Chi phí thuế TNDN hiện hành | 51 | 32 | 12.398.783.837 | 5.659.195.193  |
-|  18. Chi phí thuế TNDN hoãn lại | 52 |  |  | 893.643.719  |
-|  19. Lợi nhuận sau thuế thu nhập doanh nghiệp (60 = 50 - 51 - 52) | 60 |  | 34.939.936.958 | 21.102.798.366  |
-|  20. Lãi cơ bản trên cổ phiếu (*) | 70 |  | 582 | 352  |
-|  21. Lãi suy giảm trên cổ phiếu (*) | 71 |  | 582 | 352  |
-
-NGƯỜI LẬP
-(Ký, họ tên)
 
 Trần Trung Hoà
 
-KẾ TOÁN TRƯỞNG
-(Ký, họ tên)
-
 Nguyễn Hữu Phong
-
-Tp. Hải Phòng, ngày 20 tháng 04 năm 2026
-
-TỔNG GIÁM ĐỐC
-(Ký, họ tên, đóng dấu)
 
 ![img-0.jpeg](img-0.jpeg)
 
 Nguyễn Văn Thọ
 
-3
+2
 
 CÔNG TY CỔ PHẦN CƠ KHÍ XÂY DỰNG AMECC
 Km35 - Quốc lộ 10 - Xã An Quang - Tp. Hải Phòng
@@ -211,28 +159,87 @@ Quý 2 năm 2026
 | --- | --- | --- | --- | --- | --- | --- |
 |   |   |   |   |   |  (Đã phân loại lại)  |   |
 |  1 | 2 | 3 | 4 | 5 | 4 | 5  |
-|  1. Doanh thu bán hàng và cung cấp dịch vụ | 01 | 24 | 920.492.692.548 | 1.060.878.488.038 | 1.612.680.482.597 | 1.613.908.178.844  |
+|  1. Doanh thu bán hàng và cung cấp dịch vụ | 01 | 24 | 920,492,692,548 | 1,060,878,488,038 | 1,612,680,482,597 | 1,613,908,178,844  |
 |  2. Các khoản giảm trừ doanh thu | 02 |  |  |  |  |   |
-|  3. Doanh thu thuần về bán hàng và cung cấp dịch vụ (10 = 01 - 02) | 10 |  | 920.492.692.548 | 1.060.878.488.038 | 1.612.680.482.597 | 1.613.908.178.844  |
-|  4. Giá vốn hàng bán | 11 | 25 | 805.327.092.008 | 985.153.011.591 | 1.429.480.389.186 | 1.487.152.334.555  |
-|  5. Lợi nhuận gộp về bán hàng và cung cấp dịch vụ (20 = 10 - 11) | 20 |  | 115.165.600.540 | 75.725.476.447 | 183.200.093.411 | 126.755.844.209  |
+|  3. Doanh thu thuần về bán hàng và cung cấp dịch vụ (10 = 01 - 02) | 10 |  | 920,492,692,548 | 1,060,878,488,038 | 1,612,680,482,597 | 1,613,908,178,844  |
+|  4. Giá vốn hàng bán | 11 | 25 | 805,327,092,008 | 985,153,011,591 | 1,429,480,389,186 | 1,487,152,334,555  |
+|  5. Lợi nhuận gộp về bán hàng và cung cấp dịch vụ (20 = 10 - 11) | 20 |  | 115,165,600,540 | 75,725,476,447 | 183,200,093,411 | 126,755,844,289  |
 |  6. Lãi/lỗ của hoạt động bán, thanh lý bất động sản đầu tư | 21 |  |  |  |  |   |
-|  7. Doanh thu hoạt động tài chính | 22 | 26 | 8.699.871.429 | 4.789.000.266 | 15.674.660.681 | 10.039.741.242  |
-|  8. Chi phí tài chính | 23 | 27 | 40.586.797.211 | 22.269.619.931 | 71.584.795.750 | 43.629.090.549  |
-|  - Trong đó: Chi phí lãi vay | 24 |  | 40.586.797.211 | 21.854.637.933 | 71.060.646.678 | 43.016.127.587  |
-|  9. Chi phí bán hàng | 25 | 28 | 7.274.035.779 | 6.617.778.787 | 9.009.387.897 | 12.930.197.316  |
-|  10. Chi phí quản lý doanh nghiệp | 26 | 29 | 26.232.261.484 | 22.948.004.241 | 46.772.305.985 | 40.695.400.085  |
-|  11. Lãi chia từ công ty liên kết, liên doanh | 27 |  | 427.685.354 | 826.533.274 | 843.419.614 | 826.533.274  |
-|  11. Lợi nhuận thuần từ hoạt động kinh doanh (30 = 20 + 21 + 22 - (23+ 25 + 26)) | 30 |  | 50.200.062.849 | 29.505.607.028 | 72.351.684.074 | 40.367.430.855  |
-|  12. Thu nhập khác | 31 | 30 | 8.448.211.191 | 19.712.230.252 | 9.277.721.217 | 19.808.607.569  |
-|  13. Chi phí khác | 32 | 31 | 11.309.553.245 | 21.562.200.002 | 13.331.014.258 | 22.112.308.050  |
-|  14. Lợi nhuận khác (40 = 31 - 32) | 40 |  | (2.861.342.054) | (1.849.969.750) | (4.053.293.041) | (2.303.700.481)  |
-|  15. Tổng lợi nhuận kế toán trước thuế (50 = 30 + 40) | 50 |  | 47.338.720.795 | 27.655.637.278 | 68.298.391.033 | 38.063.730.374  |
-|  16. Chi phí thuế TNDN hiện hành | 51 | 32 | 12.398.783.837 | 5.659.195.193 | 16.102.028.189 | 7.783.961.374  |
-|  17. Chi phí thuế TNDN hoãn lại | 52 |  |  | 893.643.719 |  | 893.643.719  |
-|  18. Lợi nhuận sau thuế thu nhập doanh nghiệp (60 = 50 - 51 - 52) | 60 |  | 34.939.936.958 | 21.102.798.366 | 52.196.362.844 | 29.386.125.281  |
-|  19. Lãi cơ bản trên cổ phiếu (*) | 70 |  | 582 | 352 | 870 | 490  |
-|  20. Lãi suy giảm trên cổ phiếu (*) | 71 |  | 582 | 352 | 870 | 490  |
+|  7. Doanh thu hoạt động tài chính | 22 | 26 | 8,699,871,429 | 4,789,000,266 | 15,674,660,681 | 10,039,741,242  |
+|  8. Chi phí tài chính | 23 | 27 | 40,586,797,211 | 22,269,619,931 | 71,584,795,750 | 43,629,090,549  |
+|  - Trong đó: Chi phí lãi vay | 24 |  | 38,071,736,285 | 21,854,637,933 | 68,545,585,752 | 43,016,127,587  |
+|  9. Chi phí bán hàng | 25 | 28 | 7,274,035,779 | 6,617,778,787 | 9,009,387,897 | 12,930,197,316  |
+|  10. Chi phí quản lý doanh nghiệp | 26 | 29 | 26,232,261,484 | 22,948,004,241 | 46,772,305,985 | 40,695,400,085  |
+|  11. Lãi chia từ công ty liên kết, liên doanh | 27 |  | 427,685,354 | 826,533,274 | 843,419,614 | 826,533,274  |
+|  12. Lợi nhuận thuần từ hoạt động kinh doanh (30 = 20 + 21 + 22 - (23+ 25 + 26)) | 30 |  | 50,200,062,849 | 29,505,607,028 | 72,351,684,074 | 40,367,430,855  |
+|  13. Thu nhập khác | 31 | 30 | 8,448,211,191 | 19,712,230,252 | 9,277,721,217 | 19,808,607,569  |
+|  14. Chi phí khác | 32 | 31 | 11,309,553,245 | 21,562,200,002 | 13,331,014,258 | 22,112,308,050  |
+|  15. Lợi nhuận khác (40 = 31 - 32) | 40 |  | (2,861,342,054) | (1,849,969,750) | (4,053,293,041) | (2,303,700,481)  |
+|  16. Tổng lợi nhuận kế toán trước thuế (50 = 30 + 40) | 50 |  | 47,338,720,795 | 27,655,637,278 | 68,298,391,033 | 38,063,730,374  |
+|  17. Chi phí thuế TNDN hiện hành | 51 | 32 | 12,398,783,837 | 5,659,195,193 | 16,102,028,189 | 7,783,961,374  |
+|  18. Chi phí thuế TNDN hoãn lại | 52 |  |  | 893,643,719 |  | 893,643,719  |
+|  19. Lợi nhuận sau thuế thu nhập doanh nghiệp (60 = 50 - 51 - 52) | 60 |  | 34,939,936,958 | 21,102,798,366 | 52,196,362,844 | 29,386,125,281  |
+|  20. Lãi cơ bản trên cổ phiếu (*) | 70 |  | 582 | 352 | 870 | 490  |
+|  21. Lãi suy giảm trên cổ phiếu (*) | 71 |  | 582 | 352 | 870 | 490  |
+
+Tp. Hải Phòng, ngày 29 tháng 07 năm 2026
+
+NGƯỜI LẬP
+(Ký, họ tên)
+
+Trần Trung Hoà
+
+KẾ TOÁN TRƯỞNG
+(Ký, họ tên)
+
+Nguyễn Hữu Phong
+
+![img-1.jpeg](img-1.jpeg)
+
+Nguyễn Văn Thọ
+
+CÔNG TY CỔ PHẦN CƠ KHÍ XÂY DỰNG AMECC
+Km35 - Quốc lộ 10 - Xã An Quang - Tp. Hải Phòng
+
+Mẫu số B 02a-DN/HN
+
+(Kèm theo Thông tư số 43/2026/TT-BTC
+ngày 20 tháng 04 năm 2026 của Bộ trưởng Bộ Tài chính)
+
+# BÁO CÁO KẾT QUẢ HOẠT ĐỘNG KINH TỔNG HỢP
+
+Quý 2 năm 2026
+
+Đơn vị tính: VND
+
+|  CHỈ TIÊU | Mã số | TM | Quý 2/2026 | Quý 2/2025  |
+| --- | --- | --- | --- | --- |
+|   |  |  | (Đã phân loại lại)  |   |
+|  1 | 2 | 3 | 4 | 5  |
+|  1. Doanh thu bán hàng và cung cấp dịch vụ | 01 | 24 | 920,492,692,548 | 1,060,878,488,038  |
+|  2. Các khoản giảm trừ doanh thu | 02 |  |  |   |
+|  3. Doanh thu thuần về bán hàng và cung cấp dịch vụ (10 = 01 - 02) | 10 |  | 920,492,692,548 | 1,060,878,488,038  |
+|  4. Giá vốn hàng bán | 11 | 25 | 805,327,092,008 | 985,153,011,591  |
+|  5. Lợi nhuận gộp về bán hàng và cung cấp dịch vụ (20 = 10 - 11) | 20 |  | 115,165,600,540 | 75,725,476,447  |
+|  6. Lãi/lỗ của hoạt động bán, thanh lý bất động sản đầu tư | 21 |  |  |   |
+|  7. Doanh thu hoạt động tài chính | 22 | 26 | 8,699,871,429 | 4,789,000,266  |
+|  8. Chi phí tài chính | 23 | 27 | 40,586,797,211 | 22,269,619,931  |
+|  - Trong đó: Chi phí lãi vay | 24 |  | 38,071,736,285 | 21,854,637,933  |
+|  9. Chi phí bán hàng | 25 | 28 | 7,274,035,779 | 6,617,778,787  |
+|  10. Chi phí quản lý doanh nghiệp | 26 | 29 | 26,232,261,484 | 22,948,004,241  |
+|  11. Lãi chia từ công ty liên kết, liên doanh | 27 |  | 427,685,354 | 826,533,274  |
+|  12. Lợi nhuận thuần từ hoạt động kinh doanh {30 = 20 + 21 + 22 - (23+ 25 + 26)} | 30 |  | 50,200,062,849 | 29,505,607,028  |
+|  13. Thu nhập khác | 31 | 30 | 8,448,211,191 | 19,712,230,252  |
+|  14. Chi phí khác | 32 | 31 | 11,309,553,245 | 21,562,200,002  |
+|  15. Lợi nhuận khác (40 = 31 - 32) | 40 |  | (2,861,342,054) | (1,849,969,750)  |
+|  16. Tổng lợi nhuận kế toán trước thuế (50 = 30 + 40) | 50 |  | 47,338,720,795 | 27,655,637,278  |
+|  17. Chi phí thuế TNDN hiện hành | 51 | 32 | 12,398,783,837 | 5,659,195,193  |
+|  18. Chi phí thuế TNDN hoãn lại | 52 |  |  | 893,643,719  |
+|  19. Lợi nhuận sau thuế thu nhập doanh nghiệp (60 = 50 - 51 - 52) | 60 |  | 34,939,936,958 | 21,102,798,366  |
+|  20. Lãi cơ bản trên cổ phiếu (*) | 70 |  | 582 | 352  |
+|  21. Lãi suy giảm trên cổ phiếu (*) | 71 |  | 582 | 352  |
+
+Tp. Hải Phòng, ngày 29 tháng 07 năm 2026
 
 NGƯỜI LẬP
 
@@ -244,11 +251,9 @@ KẾ TOÁN TRƯỞNG
 
 (Ký, họ tên)
 
+![img-2.jpeg](img-2.jpeg)
+
 Nguyễn Hữu Phong
-
-![img-1.jpeg](img-1.jpeg)
-
-Quý Hữu Phong, ngày 20 tháng 04 năm 2026
 
 TỔNG GIÁM ĐỐC
 
@@ -277,34 +282,36 @@ Quý 2 năm 2026
 | --- | --- | --- | --- | --- |
 |  1 | 2 | 3 | 4 | 5  |
 |  **I. Lưu chuyển tiền từ hoạt động kinh doanh** |  |  |  |   |
-|  **1. Lợi nhuận trước thuế** | **01** |  | **47.338.720.795** | **38.063.730.374**  |
-|  - Khấu hao TSCĐ và BĐSDT | 02 |  | 24.094.049.462 | 36.219.094.840  |
-|  - Các khoản dự phòng | 03 |  |  | 3.617.977.264  |
-|  - Lãi, lỗ từ hoạt động đầu tư, tài chính | 05 |  | (3.375.279.863) | (3.795.967.950)  |
-|  - Chi phí đi vay | 06 |  | 40.586.797.211 | 43.016.127.587  |
-|  **3. Lợi nhuận từ hoạt động kinh doanh trước thay đổi vốn lưu động** | **08** |  | **108.644.287.605** | **117.120.962.115**  |
-|  - Tăng, giảm các khoản phải thu | 09 |  | 208.750.881.836 | 139.131.957.375  |
-|  - Tăng, giảm hàng tồn kho | 10 |  | (473.058.389.708) | 74.793.668.995  |
-|  - Tăng, giảm các khoản phải trả (Không kể lãi vay phải trả, thuế thu nhập doanh nghiệp phải nộp) | 11 |  | (166.293.252.444) | (222.380.780.754)  |
-|  - Tăng, giảm chi phí chờ phân bổ | 12 |  | 4.535.694.755 | 3.202.219.181  |
-|  - Chi phí đi vay đã trả | 14 |  | (40.586.797.211) | (43.016.127.587)  |
-|  - Thuế thu nhập doanh nghiệp đã nộp | 15 |  | (7.503.293.717) | (9.500.000.000)  |
-|  - Tiền chi khác cho hoạt động kinh doanh | 17 |  | 12.570.582 | 37.212.491.334  |
-|  **Lưu chuyển tiền thuần từ hoạt động kinh doanh** | **20** |  | **(365.498.298.302)** | **96.564.390.659**  |
-|  1. Tiền chi để mua sắm, xây dựng TSCĐ và các tài sản dài hạn khác | 21 |  | (55.217.426.033) | (14.392.240.172)  |
-|  2. Tiền thu từ thanh lý, nhượng bán TSCĐ và các tài sản dài hạn khác | 22 |  |  | 92.950.000  |
-|  3. Tiền chi cho vay, mua các công cụ nợ của đơn vị khác | 23 |  | 29.771.481.856 | (43.330.061.170)  |
-|  4. Tiền thu hồi cho vay, bán lại các công cụ nợ của đơn vị khác | 24 |  | (25.646.948.101) | 10.460.497.807  |
-|  5. Tiền chi đầu tư góp vốn vào đơn vị khác | 25 |  | (427.685.354) |   |
-|  7. Tiền thu lãi cho vay, cổ tức và lợi nhuận được chia | 27 |  | 3.375.279.863 | 3.703.017.950  |
-|  **Lưu chuyển tiền thuần từ hoạt động đầu tư** | **30** |  | **(48.145.297.769)** | **(43.465.835.585)**  |
-|  3. Tiền thu từ đi vay | 33 |  | 806.360.072.790 | 1.151.958.673.420  |
-|  4. Tiền trả nợ gốc vay | 34 |  | (460.657.116.955) | (1.136.917.631.345)  |
-|  5. Tiền trả nợ gốc thuê tài chính | 35 |  | (22.679.053.232) | (34.651.671.409)  |
-|  **Lưu chuyển tiền thuần từ hoạt động tài chính** | **40** |  | **323.023.902.603** | **(19.610.629.334)**  |
-|  Lưu chuyển tiền thuần trong kỳ (50 = 20 + 30 + 40) | 50 |  | (90.619.693.468) | 33.487.925.740  |
-|  Tiền và tương đương tiền đầu kỳ | 60 |  | 355.779.695.930 | 186.363.602.406  |
-|  Tiền và tương đương tiền cuối kỳ (70 = 50 + 60 + 61) | 70 |  | 265.160.002.462 | 219.851.528.146  |
+|  **1. Lợi nhuận trước thuế** | **01** |  | **47,338,720,795** | **38,063,730,374**  |
+|  - Khấu hao TSCĐ và BĐSDT | 02 |  | 24,094,049,462 | 36,219,094,840  |
+|  - Các khoản dự phòng | 03 |  |  | 3,617,977,264  |
+|  - Lãi, lỗ từ hoạt động đầu tư, tài chính | 05 |  | (5,890,340,789) | (3,795,967,950)  |
+|  - Chi phí đi vay | 06 |  | 38,071,736,285 | 43,016,127,587  |
+|  **3. Lợi nhuận từ hoạt động kinh doanh trước thay đổi vốn lưu động** | **08** |  | **103,614,165,753** | **117,120,962,115**  |
+|  - Tăng, giảm các khoản phải thu | 09 |  | 198,019,252,712 | 139,131,957,375  |
+|  - Tăng, giảm hàng tồn kho | 10 |  | (473,058,389,708) | 74,793,668,995  |
+|  - Tăng, giảm các khoản phải trả (Không kể lãi vay phải trả, thuế thu nhập doanh nghiệp phải nộp) | 11 |  | (164,374,197,226) | (222,380,780,754)  |
+|  - Tăng, giảm chi phí chờ phân bổ | 12 |  | 15,863,329,587 | 3,202,219,181  |
+|  - Chi phí đi vay đã trả | 14 |  | (38,071,736,285) | (43,016,127,587)  |
+|  - Thuế thu nhập doanh nghiệp đã nộp | 15 |  | (7,503,293,717) | (9,500,000,000)  |
+|  - Tiền chi khác cho hoạt động kinh doanh | 17 |  | 12,570,582 | 37,212,491,334  |
+|  **Lưu chuyển tiền thuần từ hoạt động kinh doanh** | **20** |  | **(365,498,298,302)** | **96,564,390,659**  |
+|  1. Tiền chi để mua sắm, xây dựng TSCĐ và các tài sản dài hạn khác | 21 |  | (55,217,426,033) | (14,392,240,172)  |
+|  2. Tiền thu từ thanh lý, nhượng bán TSCĐ và các tài sản dài hạn khác | 22 |  |  | 92,950,000  |
+|  3. Tiền chi cho vay, mua các công cụ nợ của đơn vị khác | 23 |  | 29,771,481,856 | (43,330,061,170)  |
+|  4. Tiền thu hồi cho vay, bán lại các công cụ nợ của đơn vị khác | 24 |  | (25,646,948,101) | 10,460,497,807  |
+|  5. Tiền chi đầu tư góp vốn vào đơn vị khác | 25 |  | (427,685,354) |   |
+|  7. Tiền thu lãi cho vay, cổ tức và lợi nhuận được chia | 27 |  | 3,375,279,863 | 3,703,017,950  |
+|  **Lưu chuyển tiền thuần từ hoạt động đầu tư** | **30** |  | **(48,145,297,769)** | **(43,465,835,585)**  |
+|  3. Tiền thu từ đi vay | 33 |  | 806,360,072,790 | 1,151,958,673,420  |
+|  4. Tiền trả nợ gốc vay | 34 |  | (460,657,116,955) | (1,136,917,631,345)  |
+|  5. Tiền trả nợ gốc thuê tài chính | 35 |  | (22,679,053,232) | (34,651,671,409)  |
+|  **Lưu chuyển tiền thuần từ hoạt động tài chính** | **40** |  | **323,023,902,603** | **(19,610,629,334)**  |
+|  **Lưu chuyển tiền thuần trong kỳ (50 = 20 + 30 + 40)** | **50** |  | **(90,619,693,468)** | **33,487,925,740**  |
+|  Tiền và tương đương tiền đầu kỳ | 60 |  | 355,779,695,930 | 186,363,602,406  |
+|  Tiền và tương đương tiền cuối kỳ (70 = 50 + 60 + 61) | 70 |  | 265,160,002,462 | 219,851,528,146  |
+
+Tp. Hải Phòng ngày 29 tháng 07 năm 2026
 
 NGƯỜI LẬP
 
@@ -319,18 +326,19 @@ KẾ TOÁN TRƯỞNG
 Nguyễn Hữu Phong
 
 TỔNG GIÁM ĐỐC
+
 (Ký, họ tên, đóng dấu)
+
+![img-3.jpeg](img-3.jpeg)
 
 Nguyễn Văn Thọ
 
 5
 
 Công ty Cổ phần Cơ khí Xây dựng AMECC
-
 Km 35 quốc lộ 10, xã An Quang, Tp. Hải Phòng, Việt Nam
 
 Báo cáo tài chính hợp nhất
-
 cho kỳ báo cáo kết thúc ngày 30/06/2026
 
 # THUYẾT MINH BÁO CÁO TÀI CHÍNH HỢP NHẤT
@@ -339,7 +347,7 @@ Quý 2 năm 2026
 
 # 1. ĐẶC ĐIỂM HOẠT ĐỘNG CỦA DOANH NGHIỆP
 
-# Hình thức sở hữu vốn
+Hình thức sở hữu vốn
 
 Công ty Cổ phần Cơ khí Xây dựng AMECC (sau đây gọi tắt là "Công ty") tiền thân là Công ty Cổ phần LISEMCO 2, là doanh nghiệp được thành lập và hoạt động theo Giấy chứng nhận đăng ký doanh nghiệp số 0200786983 do Sở Kế hoạch và Đầu tư thành phố Hải Phòng cấp lần đầu ngày 01 tháng 02 năm 2008, đăng ký thay đổi lần thứ 21 ngày 30 tháng 03 năm 2023.
 
@@ -349,20 +357,20 @@ Vốn điều lệ của Công ty theo đăng ký là 600.000.000.000 VND, vốn
 
 Tổng số nhân viên của Công ty tại ngày 30 tháng 06 năm 2026 là: 1.756 người (tại ngày 01 tháng 01 năm 2026 là: 1.284 người).
 
-# Lĩnh vực kinh doanh
+Lĩnh vực kinh doanh
 
 Công ty hoạt động trong lĩnh vực sản xuất công nghiệp.
 
-# Ngành nghề kinh doanh
+Ngành nghề kinh doanh
 
 Hoạt động chính của Công ty là:
 
-Gia cong che tao ket cau thep va thiet bi;
-- San xuát san pham ma kém, nhung nong;
-- Xay dung va lap dat cac hang muc du an;
-Tong thau/Nha thau EPC cac du an dan dung va cong nghiep.
+- Gia công chế tạo kết cấu thép và thiết bị;
+- Sản xuất sản phẩm mạ kẽm, nhúng nóng;
+- Xây dựng và lắp đặt các hạng mục dự án;
+- Tổng thầu/Nhà thầu EPC các dự án dân dụng và công nghiệp.
 
-# Cấu trúc doanh nghiệp
+Cấu trúc doanh nghiệp
 
 |  Công ty có các đơn vị trực thuộc sau: | Địa chỉ | Hoạt động kinh doanh chính  |
 | --- | --- | --- |
@@ -385,10 +393,9 @@ Thông tin về các công ty con, công ty liên kết, công ty liên doanh c�
 
 # 2. CHẾ ĐỘ VÀ CHÍNH SÁCH KẾ TOÁN ÁP DỤNG TẠI CÔNG TY
 
-# 2.1. Kỳ kế toán, đơn vị tiền tệ sử dụng trong kế toán
+# 2.1. Kỷ kế toán, đơn vị tiền tệ sử dụng trong kế toán
 
-Kỳ kế toán năm của Công ty theo năm dương lịch bắt đầu từ ngày 01/01 và kết thúc vào ngày 31/12 hàng năm.
-
+Kỷ kế toán năm của Công ty theo năm dương lịch bắt đầu từ ngày 01/01 và kết thúc vào ngày 31/12 hàng năm.
 Đơn vị tiền tệ sử dụng trong ghi chép kế toán là Đồng Việt Nam (VND).
 
 6
@@ -429,7 +436,7 @@ Các ước tính và giả định có ảnh hưởng trọng yếu trong Báo 
 - Uoc tinh phan bo chi phi tra truc
 - Thoi gian hua dung uoc tinh cua tai san co dinh
 - Phan loai va du phong cac khoan dαu tu tai chinh
-- Uoc tinh thue thu nhap doanh nghiep.
+- Uoc tinh thue thu nhap doanh nghiép.
 
 Các ước tính và giả định thường xuyên được đánh giá dựa trên kinh nghiệm trong quá khứ và các yếu tố khác, bao gồm các giả định trong tương lai có ảnh hưởng trọng yếu tới Báo cáo tài chính riêng của Công ty và được Ban Tổng Giám đốc đánh giá là hợp lý.
 
@@ -448,11 +455,9 @@ Nợ phải trả tài chính của Công ty bao gồm các khoản vay, các kh
 7
 
 Công ty Cổ phần Cơ khí Xây dựng AMECC
-
 Km 35 quốc lộ 10, xã An Quang, Tp. Hải Phòng, Việt Nam
 
 Báo cáo tài chính hợp nhất
-
 cho kỳ báo cáo kết thúc ngày 30/06/2026
 
 # Giá trị sau ghi nhận ban đầu
@@ -466,7 +471,7 @@ Các giao dịch bằng ngoại tệ trong năm tài chính được quy đổi 
 Tỷ giá giao dịch thực tế khi đánh giá lại các khoản mục tiền tệ có gốc ngoại tệ tại thời điểm lập Báo cáo tài chính riêng được xác định theo nguyên tắc:
 
 - Doi voi khoan muc phan loai la tai san: ap dung ty gia mua ngoai t e cua ngan hang thuong mai noi Cong ty thuong xuyen co giao dich;
-- Doi voi tién gui ngoai t: ap dung ty gia mua cua chinh ngan hang noi Cong ty mo tai khoan ngoai t;
+- Doi voi tien gui ngoai t: ap dung ty gia mua cua chinh ngan hang noi Cong ty mo tai khoan ngoai t;
 - Doi voi khoan muc phan loai la no phai tra: ap dung ty gia ban ngoai t e cua ngan hang thuong mai noi Cong ty thuong xuyen co giao dich.
 
 Tất cả các khoản chênh lệch tỷ giá thực tế phát sinh trong năm và chênh lệch do đánh giá lại số dư các khoản mục tiền tệ có gốc ngoại tệ tại thời điểm lập Báo cáo tài chính được hạch toán vào kết quả hoạt động kinh doanh của năm tài chính.
@@ -487,27 +492,25 @@ Các khoản đầu tư góp vốn vào các đơn vị khác bao gồm: các kh
 
 Dự phòng giảm giá đầu tư được lập vào thời điểm cuối năm cụ thể như sau:
 
-- Doi voi cac khoan dau tu vao cong ty con va cong ty lien doanh lien ket: Du phong giam gia dau tu duoc lap khi don vi nhān dau tu phat sinh ló, can cu vao Bao cao tai chinh cua cong ty con, cong ty lien doanh, lien ket tai thoi diem trich lap du phong.
-- Doi voi khoan dau tu nam giu lau dai (khong phan loai la chung khoan kinh doanh) va khong co anh huong dang ke doi voi ben duoc dau tu: neu khoan dau tu vao co phiieu niem yet hoac gia tri hop ly cua khoan dau tu duoc xac dinh tin cay thi viec lap du phong dua tren gia tri thi truong cua co phiieu; neu khoan dau tu khong xac dinh duoc gia tri hop ly tai thoi diem bao cao thi viec lap du phong can cu vao Bao cao tai chinh tai thoi diem trich lap du phong cua ben duoc dau tu.
-- Doi voi cac khoan dau tu nam giur den ngay dao han: can cu kha nang thu hoi de lap du phong phai thu kho doi theo quy dinh cua phap luat.
+- Doi voi cac khoan dau tu vao cong ty con va cong ty lien doanh lien ket: Du phong giam gia dau tu duoc lap khi don vi nh an dau tu phat sinh l, can cu vao Bao cao tai chinh cua cong ty con, cong ty lien doanh, lien ket tai thoi diem trich lap du phong.
+- Doi voi khoan dau tu nam giu lau dai (khong phan loai la chung khoan kinh doanh) va khong co anh huong dang ke doi voi ben duoc dau tur: neu khoan dau tur vao co phiieu niem yet hoac gia tri hop ly cua khoan dau tur duoc xac dinh tin cay thi viec lap du phong dua tren gia tri thi truong cua co phiieu; neu khoan dau tur khong xac dinh duoc gia tri hop ly tai thoi diem bao cao thi viec lap du phong can cu vao Bao cao tai chinh tai thoi diem trich lap du phong cua ben duoc dau tur.
+- Doi voi cac khoan dau tu nam giu den ngay dao han: can cu kha nang thu hoi de lap du phong phai thu kho doi theo quy dinh cua phap luat.
 
 8
 
 Công ty Cổ phần Cơ khí Xây dựng AMECC
-
 Km 35 quốc lộ 10, xã An Quang, Tp. Hải Phòng, Việt Nam
 
 Báo cáo tài chính hợp nhất
-
 cho kỳ báo cáo kết thúc ngày 30/06/2026
 
-# 2.9. Các khoản nợ phải thu
+## 2.9. Các khoản nợ phải thu
 
 Các khoản phải thu được theo dõi chi tiết theo kỳ hạn phải thu, đối tượng phải thu, loại nguyên tệ phải thu, và các yếu tố khác theo nhu cầu quản lý của Công ty. Các khoản phải thu được phân loại là ngắn hạn và dài hạn trên báo cáo tài chính riêng căn cứ kỳ hạn còn lại của các khoản phải thu tại ngày báo cáo.
 
 Dự phòng nợ phải thu khó đòi được trích lập cho các khoản: nợ phải thu quá hạn thanh toán ghi trong hợp đồng kinh tế, các khế ước vay nợ, cam kết hợp đồng hoặc cam kết nợ và nợ phải thu chưa đến hạn thanh toán nhưng khó có khả năng thu hồi. Trong đó, việc trích lập dự phòng nợ phải thu quá hạn thanh toán được căn cứ vào thời gian trả nợ gốc theo hợp đồng mua bán ban đầu, không tính đến việc gia hạn nợ giữa các bên và nợ phải thu chưa đến hạn thanh toán nhưng khách nợ đã lâm vào tình trạng phá sản hoặc đang làm thủ tục giải thể, mất tích, bỏ trốn hoặc dự kiến mức tổn thất có thể xảy ra.
 
-# 2.10. Hàng tồn kho
+## 2.10. Hàng tồn kho
 
 Hàng tồn kho được ghi nhận ban đầu theo giá gốc bao gồm: chi phí mua, chi phí chế biến và các chi phí liên quan trực tiếp khác phát sinh để có được hàng tồn kho ở địa điểm và trạng thái tại thời điểm ghi nhận ban đầu. Sau ghi nhận ban đầu, tại thời điểm lập Báo cáo tài chính riêng nếu giá trị thuần có thể thực hiện được của hàng tồn kho thấp hơn giá gốc thì hàng tồn kho được ghi nhận theo giá trị thuần có thể thực hiện được.
 
@@ -521,11 +524,11 @@ Phương pháp xác định giá trị sản phẩm dở dang cuối kỳ: Chi p
 
 Dự phòng giảm giá hàng tồn kho được lập vào thời điểm cuối năm là số chênh lệch giữa giá gốc của hàng tồn kho lớn hơn giá trị thuần có thể thực hiện được.
 
-# 2.11. Tài sản cố định và Tài sản cố định thuê tài chính
+## 2.11. Tài sản cố định và Tài sản cố định thuê tài chính
 
 Tài sản cố định hữu hình, tài sản cố định vô hình được ghi nhận ban đầu theo giá gốc. Trong quá trình sử dụng, tài sản cố định hữu hình, tài sản cố định vô hình được ghi nhận theo nguyên giá, hao mòn luỹ kế và giá trị còn lại.
 
-# Giá trị sau ghi nhận ban đầu
+### Giá trị sau ghi nhận ban đầu
 
 Nếu các khoản chi phí này làm tăng lợi ích kinh tế trong tương lai dự tính thu được từ việc sử dụng tài sản cố định hữu hình vượt trên mức hoạt động tiêu chuẩn theo như đánh giá ban đầu thì các chi phí này được vốn hóa như một khoản nguyên giá tăng thêm của tài sản cố định hữu hình.
 
