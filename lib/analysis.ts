@@ -260,7 +260,8 @@ function findLnstCongTyMe(table: StatementTable): Row | null {
   );
 }
 
-// 21 chi tieu tang truong nguoi dung yeu cau (2026-07-08), danh cho
+// 22 chi tieu tang truong nguoi dung yeu cau (2026-07-08, them "DT Chua Thuc
+// Hien" 2026-08-17), danh cho
 // businessType === 'other' (doanh nghiep thuong, Thong tu 200/2014 hoac
 // 99/2025). Cac cot BCDKT gop ca ngan+dai han khi nguoi dung yeu cau gop (vd
 // "Trả trước người bán" = NH + DH) - CA 2 finder phai tim thay thi moi cong,
@@ -344,6 +345,28 @@ const OTHER_METRICS: MetricDef[] = [
     statement: 'balanceSheet',
     finders: [byLabelInLiabilitySection(['CHI PHI PHAI TRA'], 'short'), byLabelInLiabilitySection(['CHI PHI PHAI TRA'], 'long')],
     thresholds: BCDKT_THRESHOLDS,
+  },
+  // Them 2026-08-17 (yeu cau nguoi dung): gop "Doanh thu chua thuc hien ngan
+  // han" + "... dai han". CHI cho nhom 'other' (DN thuong) - nguoi dung chot ro
+  // KHONG ap dung cho bank/bao hiem/chung khoan, nen khong them vao 3 mang
+  // *_METRICS con lai. Nguong rieng 20/30 (khac BCDKT_THRESHOLDS 20/40) theo
+  // dung yeu cau: >=20% vang nhat (level1), >=30% vang dam + nhap nhay
+  // (level2 - UI/Excel tu ap mau theo tier, xem tierClassForState o
+  // app/ReportsSummaryTable.tsx).
+  //
+  // Dung byLabelInLiabilitySection (khoanh vung theo doan "No ngan han"/"No dai
+  // han") thay vi ep hau to "NGAN HAN"/"DAI HAN" vao chinh nhan - cung ly do da
+  // xac nhan qua MCH that (xem comment o findSectionBoundaryIndex): nhieu cong
+  // ty ghi gon "Doanh thu chua thuc hien" khong lap lai ky han, VI TRI trong
+  // bang moi la thu quyet dinh no la ngan hay dai han.
+  {
+    label: 'DT Chưa Thực Hiện',
+    statement: 'balanceSheet',
+    finders: [
+      byLabelInLiabilitySection(['DOANH THU CHUA THUC HIEN'], 'short'),
+      byLabelInLiabilitySection(['DOANH THU CHUA THUC HIEN'], 'long'),
+    ],
+    thresholds: { level1: 20, level2: 30 },
   },
   {
     label: 'Phải trả khác',
@@ -1276,8 +1299,8 @@ function buildAnalysisRows(statements: FinancialStatements, metrics: MetricDef[]
   });
 }
 
-// Dispatch theo businessType: 'other' dung 21 chi tieu (yeu cau user
-// 2026-07-08), 'insurance' dung 17 chi tieu rieng (yeu cau user 2026-07-10,
+// Dispatch theo businessType: 'other' dung 22 chi tieu (yeu cau user
+// 2026-07-08, +1 "DT Chua Thuc Hien" 2026-08-17), 'insurance' dung 17 chi tieu rieng (yeu cau user 2026-07-10,
 // mau B01/B02a-DNPNT), 'securities' dung 30 chi tieu rieng (yeu cau user
 // 2026-07-11, mau B01-CTCK/B02-CTCK), 'bank' dung 18 chi tieu rieng (yeu cau
 // user 2026-07-12, mau B02a/B03a-TCTD-HN).
