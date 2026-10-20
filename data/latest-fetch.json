@@ -1,6 +1,6 @@
 {
   "running": false,
-  "generatedAt": "2026-10-20T08:29:14.033Z",
+  "generatedAt": "2026-10-20T08:58:27.444Z",
   "periodLabel": "Quý 3/2026",
   "year": 2026,
   "totalFound": 254,
@@ -26391,15 +26391,6 @@
           ],
           "rows": [
             [
-              null,
-              null,
-              -1,
-              -2,
-              -3,
-              -4,
-              -5
-            ],
-            [
               "1. Doanh thu bán hàng và cung cấp dịch vụ",
               "01",
               null,
@@ -27873,11 +27864,11 @@
         },
         {
           "label": "LNST",
-          "percentChange": -26.79034022220943,
+          "percentChange": -26.790096674667147,
           "tier": null,
           "unreliable": false,
-          "currentValue": 50869,
-          "priorValue": 69484
+          "currentValue": 50869546639,
+          "priorValue": 69484515521
         },
         {
           "label": "Tiền",
@@ -28439,60 +28430,6 @@
           ],
           "rows": [
             [
-              "Tăng/giảm Increase/ decrease",
-              null,
-              null,
-              null,
-              null,
-              null,
-              "Tỷ lệ/ Proportion"
-            ],
-            [
-              "Tổng doanh thu Total revenue",
-              null,
-              null,
-              144082,
-              173327,
-              -29245,
-              "-16,87%"
-            ],
-            [
-              "Tổng chi phí Total cost",
-              null,
-              null,
-              80315,
-              86380,
-              -6064,
-              "-7,02%"
-            ],
-            [
-              "Lợi nhuận trước thuế Profit before tax",
-              null,
-              null,
-              63766,
-              86947,
-              -23180,
-              "-26,66%"
-            ],
-            [
-              "Chi phí thuế TNDN Corporate income tax expense",
-              null,
-              null,
-              12897,
-              17462,
-              -4565,
-              "-26,15%"
-            ],
-            [
-              "Lợi nhuận sau thuế TNDN Profit after corporate income tax",
-              null,
-              null,
-              50869,
-              69484,
-              -18614,
-              "-26,79%"
-            ],
-            [
               "1 Doanh thu bán hàng và cung cấp",
               "01",
               24,
@@ -28808,9 +28745,7 @@
       "entryName": null,
       "periodYear": 2026,
       "periodSlug": "Q2",
-      "warnings": [
-        "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 1 muc trong KQKD (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
-      ]
+      "warnings": []
     },
     {
       "source": "vietstock",
@@ -37850,11 +37785,11 @@
         },
         {
           "label": "Tổng TN Hoạt Động",
-          "percentChange": 46.504260862261596,
+          "percentChange": 38.20107855690519,
           "tier": "level2",
           "unreliable": false,
-          "currentValue": 17320623,
-          "priorValue": 11822607
+          "currentValue": 16473827,
+          "priorValue": 11920187
         },
         {
           "label": "CP Hoạt Động",
@@ -38884,11 +38819,11 @@
         },
         {
           "label": "Tổng TN Hoạt Động",
-          "percentChange": 49.78846083758206,
+          "percentChange": 43.74888287429771,
           "tier": "level2",
           "unreliable": false,
-          "currentValue": 24330631,
-          "priorValue": 16243328
+          "currentValue": 23483634,
+          "priorValue": 16336568
         },
         {
           "label": "CP Hoạt Động",
@@ -46471,13 +46406,6 @@
           ],
           "rows": [
             [
-              null,
-              null,
-              -1,
-              -2,
-              -3
-            ],
-            [
               "A. TÀI SẢN NGẮN HẠN",
               "100",
               null,
@@ -46714,13 +46642,6 @@
               "Thuyết minh",
               "Cuối kỳ",
               "Đầu kỳ"
-            ],
-            [
-              null,
-              null,
-              -1,
-              -2,
-              -3
             ],
             [
               "1. Chi phí chờ phân bổ dài hạn",
@@ -117521,11 +117442,11 @@
         },
         {
           "label": "LNST",
-          "percentChange": -100,
+          "percentChange": 33.33776481908963,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 53689672413
+          "currentValue": 53689672413,
+          "priorValue": 40265916026
         },
         {
           "label": "Tiền",
@@ -117675,14 +117596,6 @@
             "Số đầu năm"
           ],
           "rows": [
-            [
-              null,
-              -1,
-              null,
-              null,
-              -2,
-              -3
-            ],
             [
               "TÀI SẢN NGẮN HẠN",
               "A -",
@@ -117938,14 +117851,6 @@
               null,
               "-",
               "-"
-            ],
-            [
-              null,
-              -1,
-              null,
-              null,
-              -2,
-              -3
             ],
             [
               "TÀI SẢN DÀI HẠN",
@@ -118316,14 +118221,6 @@
               1854003342770
             ],
             [
-              null,
-              null,
-              null,
-              -1,
-              -2,
-              -3
-            ],
-            [
               "C - NỢ PHẢI TRẢ",
               null,
               "300",
@@ -118580,14 +118477,6 @@
               "-"
             ],
             [
-              null,
-              null,
-              null,
-              -1,
-              -2,
-              -3
-            ],
-            [
               "D - NGUỒN VỐN CHỦ SỞ HỮU",
               null,
               "400",
@@ -118728,42 +118617,6 @@
             "Lũy kế từ đầu năm đến cuối Quý này Năm trước"
           ],
           "rows": [
-            [
-              "Doanh thu và thu nhập khác",
-              null,
-              null,
-              null,
-              144250649452,
-              114416395636,
-              "Tăng 26,08%"
-            ],
-            [
-              "Tổng chi phí",
-              null,
-              null,
-              null,
-              77094339291,
-              64000208926,
-              "Tăng 20,46%"
-            ],
-            [
-              "Lợi nhuận sau thuế thu nhập doanh nghiệp",
-              null,
-              null,
-              null,
-              53689672413,
-              40265916026,
-              "Tăng 33,34%"
-            ],
-            [
-              null,
-              null,
-              -1,
-              -2,
-              -3,
-              -4,
-              -5
-            ],
             [
               "1. Doanh thu bán hàng và cung cấp dịch vụ",
               "01",
@@ -118964,13 +118817,6 @@
             "Lũy kế từ đầu năm đến cuối Quý này Năm trước"
           ],
           "rows": [
-            [
-              null,
-              null,
-              -1,
-              -2,
-              -3
-            ],
             [
               "I. LƯU CHUYỂN TIỀN TỪ HOẠT ĐỘNG KINH DOANH",
               "",
@@ -119272,11 +119118,7 @@
       "entryName": "4_szb_2026_7_20_92541e4_bctc_quy_2_2026_tv_signed.pdf",
       "periodYear": 2026,
       "periodSlug": "Q2",
-      "warnings": [
-        "\"Quý 2 Năm trước\": Loi nhuan sau thue (53689672413) khong khop Loi nhuan truoc thue - Chi phi thue TNDN (40265916026)",
-        "\"Lũy kế từ đầu năm đến cuối Quý này Năm nay\": Loi nhuan sau thue (40265916026) khong khop Loi nhuan truoc thue - Chi phi thue TNDN (95186677710)",
-        "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 2 muc trong KQKD (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
-      ]
+      "warnings": []
     },
     {
       "source": "vietstock",
@@ -140326,60 +140168,6 @@
             ""
           ],
           "rows": [
-            [
-              null,
-              "VND",
-              null,
-              null,
-              "VND",
-              "VND",
-              "%"
-            ],
-            [
-              null,
-              "TỔNG DOANH THU HOẠT ĐỘNG Total income",
-              null,
-              59792334165,
-              161287771412,
-              -101495437247,
-              "-63%"
-            ],
-            [
-              null,
-              "TỔNG CHI PHÍ HOẠT ĐỘNG Operating expenses",
-              null,
-              16928727374,
-              129384279355,
-              -112455551981,
-              "-87%"
-            ],
-            [
-              null,
-              "CHI PHÍ QUẢN LÝ G&A expenses",
-              null,
-              14032619259,
-              9532629618,
-              4499989641,
-              "47%"
-            ],
-            [
-              null,
-              "TỔNG CHI PHÍ TÀI CHÍNH Financial expenses",
-              null,
-              48722521950,
-              24648257222,
-              24074264728,
-              "98%"
-            ],
-            [
-              null,
-              "LỢI NHUẬN KẾ TOÁN SAU THUẾ TNDN Gain / (Loss) after tax",
-              null,
-              -3170343941,
-              -6832954081,
-              3662610140,
-              "54%"
-            ],
             [
               "Năm trước VND",
               "Năm nay VND",
@@ -175827,15 +175615,6 @@
           ],
           "rows": [
             [
-              null,
-              null,
-              -1,
-              -2,
-              -3,
-              -4,
-              -5
-            ],
-            [
               "1. Doanh thu bán hàng và cung cấp dịch vụ",
               "1",
               5,
@@ -176027,14 +175806,6 @@
             "Lũy kế từ đầu năm đến cuối quý này Năm Trước"
           ],
           "rows": [
-            [
-              null,
-              null,
-              -1,
-              -2,
-              -3,
-              -4
-            ],
             [
               "I. Lưu chuyển tiền từ hoạt động kinh doanh",
               "",
@@ -192251,11 +192022,11 @@
       "analysis": [
         {
           "label": "DT thuần",
-          "percentChange": -100,
-          "tier": null,
+          "percentChange": 41.84516819634607,
+          "tier": "level2",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 2675101915422
+          "currentValue": 2675101915422,
+          "priorValue": 1885930941066
         },
         {
           "label": "Lãi gộp",
@@ -192283,11 +192054,11 @@
         },
         {
           "label": "LNST",
-          "percentChange": -100,
-          "tier": null,
+          "percentChange": 66.3998019590274,
+          "tier": "level2",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 49037004437
+          "currentValue": 49037004437,
+          "priorValue": 29469388701
         },
         {
           "label": "Tiền",
@@ -192842,24 +192613,6 @@
           ],
           "rows": [
             [
-              "Doanh thu thuần",
-              null,
-              null,
-              null,
-              2675101915422,
-              1885930941066,
-              "42%"
-            ],
-            [
-              "Lợi nhuận sau thuế",
-              null,
-              null,
-              null,
-              49037004437,
-              29469388701,
-              "66%"
-            ],
-            [
               "1. Doanh thu bán hàng và cung cấp dịch vụ",
               "01",
               null,
@@ -193303,12 +193056,7 @@
       "warnings": [
         "\"Tại ngày 30/06/2026\": Tong cac muc trong Von chu so huu (301643468223) khong khop dong Von chu so huu (841922408223)",
         "\"Tại ngày 01/01/2026\": Tong cac muc trong Von chu so huu (198365306539) khong khop dong Von chu so huu (716644246539)",
-        "\"Quý II năm 2025\": Loi nhuan gop (98629592918) khong khop Doanh thu thuan - Gia von (887800567274)",
-        "\"Từ ngày 01/01/2026 đến 30/06/2026\": Loi nhuan gop (285467111375) khong khop Doanh thu thuan - Gia von (-3020887626891)",
-        "\"Quý II năm 2025\": Loi nhuan sau thue (49037004437) khong khop Loi nhuan truoc thue - Chi phi thue TNDN (29469388701)",
-        "\"Từ ngày 01/01/2026 đến 30/06/2026\": Loi nhuan sau thue (29469388701) khong khop Loi nhuan truoc thue - Chi phi thue TNDN (103278161685)",
-        "\"Từ ngày 01/01/2025 đến 30/06/2025\": Tong cac dong con cua \"Loi nhuan thuan tu hoat dong kinh doanh\" (43737425951) khong khop chinh dong \"Loi nhuan thuan tu hoat dong kinh doanh\" (63737425951) - co the do OCR gop/bia dong, can xem tay.",
-        "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 4 muc trong KQKD (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
+        "\"Từ ngày 01/01/2025 đến 30/06/2025\": Tong cac dong con cua \"Loi nhuan thuan tu hoat dong kinh doanh\" (43737425951) khong khop chinh dong \"Loi nhuan thuan tu hoat dong kinh doanh\" (63737425951) - co the do OCR gop/bia dong, can xem tay."
       ]
     },
     {
@@ -203767,6 +203515,7 @@
       "periodYear": 2026,
       "periodSlug": "Q2",
       "warnings": [
+        "CANH BAO: khong doc duoc dong nao cua Luu chuyen tien te (LCTT) - cac chi tieu lay tu bang nay se trong/bang 0, can mo file goc kiem tra tay.",
         "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 4 muc trong BCDKT (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
       ]
     },
@@ -205735,33 +205484,6 @@
           ],
           "rows": [
             [
-              "Q2/2026 Financial Statements",
-              null,
-              null,
-              null,
-              "Q2/2025 Financial Statements",
-              "Differences",
-              "%Dif 2026/2025"
-            ],
-            [
-              "Doanh thu thuần về bán hàng và cung cấp dịch vụ/ Net revenue from sales and services",
-              null,
-              null,
-              687847607079,
-              470718453682,
-              217129153397,
-              "46,13%"
-            ],
-            [
-              "Tổng lợi nhuận kế toán sau thuế/ Total accounting profit after tax",
-              null,
-              null,
-              16715870455,
-              2388017730,
-              14327852725,
-              "599,99%"
-            ],
-            [
               null,
               null,
               1,
@@ -206223,10 +205945,7 @@
       "entryName": null,
       "periodYear": 2026,
       "periodSlug": "Q2",
-      "warnings": [
-        "\"Lũy kế đầu năm đến kỳ báo cáo Năm nay\": Loi nhuan gop (87770194824) khong khop Doanh thu thuan - Gia von (-823880889696)",
-        "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 1 muc trong KQKD (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
-      ]
+      "warnings": []
     },
     {
       "source": "vietstock",
@@ -226856,6 +226575,7 @@
       "periodYear": 2026,
       "periodSlug": "Q2",
       "warnings": [
+        "CANH BAO: khong doc duoc dong nao cua Luu chuyen tien te (LCTT) - cac chi tieu lay tu bang nay se trong/bang 0, can mo file goc kiem tra tay.",
         "\"Năm nay\": Tong cac dong con cua \"Cong chi phi hoat dong\" (146013129096) khong khop chinh dong \"Cong chi phi hoat dong\" (147303922594) - co the do OCR gop/bia dong, can xem tay.",
         "\"\": Tong cac dong con cua \"Cong chi phi hoat dong\" (236248583576) khong khop chinh dong \"Cong chi phi hoat dong\" (239177876329) - co the do OCR gop/bia dong, can xem tay.",
         "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 1 muc trong KQKD (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
@@ -230276,24 +229996,6 @@
           ],
           "rows": [
             [
-              "Tổng doanh thu và thu nhập khác",
-              null,
-              null,
-              67814785109,
-              57657553215,
-              10157231894,
-              "17,6%"
-            ],
-            [
-              "Lợi nhuận sau thuế thu nhập doanh nghiệp",
-              null,
-              null,
-              30007124380,
-              31769317109,
-              -1762192729,
-              "(5,5%)"
-            ],
-            [
               null,
               null,
               1,
@@ -230804,9 +230506,7 @@
       "periodYear": 2026,
       "periodSlug": "Q2",
       "warnings": [
-        "\"Lũy kế từ đầu năm đến cuối quý này Năm nay\": Loi nhuan sau thue (-1762192729) khong khop Loi nhuan truoc thue - Chi phi thue TNDN (41618274532)",
-        "\"Lũy kế từ đầu năm đến cuối quý này Năm nay\": Tong cac dong con cua \"Loi nhuan khac\" (-6950522) khong khop chinh dong \"Loi nhuan khac\" (-7950522) - co the do OCR gop/bia dong, can xem tay.",
-        "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 1 muc trong KQKD (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
+        "\"Lũy kế từ đầu năm đến cuối quý này Năm nay\": Tong cac dong con cua \"Loi nhuan khac\" (-6950522) khong khop chinh dong \"Loi nhuan khac\" (-7950522) - co the do OCR gop/bia dong, can xem tay."
       ]
     },
     {
@@ -230853,11 +230553,11 @@
         },
         {
           "label": "LNST",
-          "percentChange": -45.78687967369137,
+          "percentChange": -45.7869278183393,
           "tier": null,
           "unreliable": false,
-          "currentValue": 31899,
-          "priorValue": 58840
+          "currentValue": 31898849515,
+          "priorValue": 58839774673
         },
         {
           "label": "Tiền",
@@ -231405,87 +231105,6 @@
           ],
           "rows": [
             [
-              "Chỉ tiêu",
-              null,
-              null,
-              "Năm 2026",
-              "Năm 2025",
-              "Chênh lệch tăng, giảm",
-              "Tỷ lệ tăng/ giảm (%)"
-            ],
-            [
-              "Kết quả sản xuất kinh doanh 6 tháng đầu năm",
-              null,
-              null,
-              null,
-              null,
-              null,
-              null
-            ],
-            [
-              "Chỉ tiêu",
-              null,
-              null,
-              "Năm 2026",
-              "Năm 2025",
-              "Chênh lệch tăng, giảm",
-              "Tỷ lệ tăng/ giảm (%)"
-            ],
-            [
-              "Doanh thu và thu nhập khác",
-              null,
-              null,
-              104091,
-              139412,
-              -35321,
-              "(25,34%)"
-            ],
-            [
-              "Tổng chi phí",
-              null,
-              null,
-              65676,
-              70366,
-              -4690,
-              "(6,67%)"
-            ],
-            [
-              "Lợi nhuận sau thuế TNDN",
-              null,
-              null,
-              31899,
-              58840,
-              -26941,
-              "(45,79%)"
-            ],
-            [
-              "Doanh thu và thu nhập khác",
-              null,
-              null,
-              204098,
-              206744,
-              -2646,
-              "(1,28%)"
-            ],
-            [
-              "Tổng chi phí",
-              null,
-              null,
-              121915,
-              121833,
-              82,
-              "0,07%"
-            ],
-            [
-              "Lợi nhuận sau thuế TNDN",
-              null,
-              null,
-              69476,
-              72038,
-              -2562,
-              "(3,56%)"
-            ],
-            [
               "1. Doanh thu bán hàng và cung cấp dịch vụ",
               "01",
               null,
@@ -231849,9 +231468,6 @@
       "periodYear": 2026,
       "periodSlug": "Q2",
       "warnings": [
-        "\"QUÝ II Năm nay\": Loi nhuan sau thue (31899) khong khop Loi nhuan truoc thue - Chi phi thue TNDN (31898849515)",
-        "\"QUÝ II Năm trước\": Loi nhuan sau thue (58840) khong khop Loi nhuan truoc thue - Chi phi thue TNDN (58839774673)",
-        "\"LŨY KẾ TỪ ĐẦU NĂM ĐẾN CUỐI QUÝ NÀY Năm nay\": Loi nhuan sau thue (-26941) khong khop Loi nhuan truoc thue - Chi phi thue TNDN (69475730055)",
         "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 1 muc trong KQKD (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
       ]
     },
@@ -234569,10 +234185,10 @@
         },
         {
           "label": "CP Quản lý",
-          "percentChange": 217.58680180624893,
-          "tier": "level2",
+          "percentChange": null,
+          "tier": null,
           "unreliable": false,
-          "currentValue": 8413047814,
+          "currentValue": null,
           "priorValue": 2649054610
         },
         {
@@ -235163,96 +234779,6 @@
             "Lũy kế từ đầu năm đến quý này (năm trước)"
           ],
           "rows": [
-            [
-              null,
-              "Doanh thu hoạt động / Operating revenue",
-              null,
-              67322907064,
-              2113830940,
-              65209076124,
-              "3.084,88%"
-            ],
-            [
-              null,
-              "Doanh thu HĐ tài chính / Financial income",
-              null,
-              491449000,
-              25559886,
-              465889114,
-              "1.822,74%"
-            ],
-            [
-              null,
-              "Thu nhập khác / Other income",
-              null,
-              0,
-              2161062457,
-              -2161062457,
-              "-100,00%"
-            ],
-            [
-              null,
-              "TỔNG DOANH THU / TOTAL REVENUE",
-              null,
-              67814356064,
-              4308453283,
-              63513902781,
-              "1.476,91%"
-            ],
-            [
-              null,
-              "Chi phí hoạt động / Operating expenses",
-              null,
-              15727241066,
-              1812471112,
-              13914769954,
-              "767,73%"
-            ],
-            [
-              null,
-              "Chi phí tài chính / Financial expenses",
-              null,
-              3076304710,
-              0,
-              3076304710,
-              "N/A"
-            ],
-            [
-              null,
-              "Chi phí quản lý CTCK / G&A expenses",
-              null,
-              8413047814,
-              2649054610,
-              5763993204,
-              "217,59%"
-            ],
-            [
-              null,
-              "Chi phí khác / Other expenses",
-              null,
-              631123594,
-              16362200,
-              614761394,
-              "3.756,03%"
-            ],
-            [
-              null,
-              "TỔNG CHI PHÍ / TOTAL EXPENSES",
-              null,
-              27847717184,
-              4461525722,
-              23386191462,
-              "524,17%"
-            ],
-            [
-              null,
-              "LNST / PROFIT AFTER TAX",
-              null,
-              39966638880,
-              -161072439,
-              40127711319,
-              "N/A (*)"
-            ],
             [
               "VND",
               "VND",
@@ -250030,13 +249556,6 @@
           ],
           "rows": [
             [
-              null,
-              null,
-              -1,
-              -2,
-              -3
-            ],
-            [
               "A - TÀI SẢN NGẮN HẠN",
               "100",
               null,
@@ -250217,13 +249736,6 @@
               "Thuyết minh",
               "Số cuối kì",
               "Số đầu năm"
-            ],
-            [
-              null,
-              null,
-              -1,
-              -2,
-              -3
             ],
             [
               "3. Dự phòng tổn thất tài sản sinh học ngắn hạn (*)",
@@ -250485,13 +249997,6 @@
               "Số đầu năm"
             ],
             [
-              null,
-              null,
-              -1,
-              -2,
-              -3
-            ],
-            [
               "- Giá trị hao mòn lũy kế (*)",
               "242",
               null,
@@ -250744,13 +250249,6 @@
               "Số đầu năm"
             ],
             [
-              null,
-              null,
-              -1,
-              -2,
-              -3
-            ],
-            [
               "1. Phải trả người bán dài hạn",
               "331",
               null,
@@ -250974,15 +250472,6 @@
           ],
           "rows": [
             [
-              null,
-              null,
-              -1,
-              -2,
-              -3,
-              -4,
-              -5
-            ],
-            [
               "1. Doanh thu bán hàng và cung cấp dịch vụ",
               "01",
               null,
@@ -251200,13 +250689,6 @@
             "Lũy kế từ đầu năm đến cuối quý Năm trước"
           ],
           "rows": [
-            [
-              null,
-              null,
-              -1,
-              -2,
-              -3
-            ],
             [
               "I. Lưu chuyển tiền từ hoạt động kinh doanh",
               "",
@@ -289444,11 +288926,11 @@
         },
         {
           "label": "LNST",
-          "percentChange": 23.619631901840492,
+          "percentChange": 23.52513009836306,
           "tier": null,
           "unreliable": false,
-          "currentValue": 403,
-          "priorValue": 326
+          "currentValue": 402997781475,
+          "priorValue": 326247607393
         },
         {
           "label": "Tiền",
@@ -289933,51 +289415,6 @@
           ],
           "rows": [
             [
-              "Số tiền/ Amount",
-              null,
-              null,
-              null,
-              null,
-              null,
-              "Tỷ lệ %/ Rate %"
-            ],
-            [
-              "Doanh thu, thu nhập khác *Revenue, Other Income*",
-              null,
-              null,
-              2901,
-              2119,
-              781,
-              "36,9%"
-            ],
-            [
-              "Tổng chi phí *Total expenses*",
-              null,
-              null,
-              2397,
-              1754,
-              642,
-              "36,6%"
-            ],
-            [
-              "Lợi nhuận trước thuế TNDN *Profit before corporate income tax*",
-              null,
-              null,
-              503,
-              364,
-              139,
-              "38,1%"
-            ],
-            [
-              "Lợi nhuận sau thuế TNDN *Profit after corporate income tax*",
-              null,
-              null,
-              403,
-              326,
-              76,
-              "23,5%"
-            ],
-            [
               "Năm 2026",
               "Năm 2025",
               null,
@@ -290334,12 +289771,7 @@
       "entryName": null,
       "periodYear": 2026,
       "periodSlug": "Q2",
-      "warnings": [
-        "\"Quý 2\": Loi nhuan sau thue (403) khong khop Loi nhuan truoc thue - Chi phi thue TNDN (-100793793267)",
-        "\"\": Loi nhuan sau thue (326) khong khop Loi nhuan truoc thue - Chi phi thue TNDN (-38489014200)",
-        "\"Lượng kế từ đầu năm đến cuối Quý 2\": Loi nhuan sau thue (76) khong khop Loi nhuan truoc thue - Chi phi thue TNDN (-144145903434)",
-        "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 1 muc trong KQKD (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
-      ]
+      "warnings": []
     },
     {
       "source": "vietstock",
@@ -309138,13 +308570,6 @@
           ],
           "rows": [
             [
-              null,
-              -1,
-              -2,
-              -3,
-              -4
-            ],
-            [
               "A. Tài sản ngắn hạn",
               100,
               null,
@@ -324911,87 +324336,6 @@
           ],
           "rows": [
             [
-              "Doanh thu",
-              null,
-              null,
-              367640136120,
-              292293333215,
-              75346802905,
-              "25.78%"
-            ],
-            [
-              "Doanh thu thực hiện",
-              null,
-              null,
-              338488178780,
-              265817822764,
-              72670356016,
-              null
-            ],
-            [
-              "Doanh thu đánh giá FVTPL",
-              null,
-              null,
-              29151957340,
-              26475510451,
-              2676446889,
-              null
-            ],
-            [
-              "Chi phí",
-              null,
-              null,
-              205795603702,
-              394405855548,
-              -188610251846,
-              "-47.82%"
-            ],
-            [
-              "Chi phí thực hiện",
-              null,
-              null,
-              197563298902,
-              385033355548,
-              -187470056646,
-              null
-            ],
-            [
-              "Chi phí đánh giá FVTPL",
-              null,
-              null,
-              8232304800,
-              9372500000,
-              -1140195200,
-              null
-            ],
-            [
-              "Lợi nhuận trước thuế",
-              null,
-              null,
-              161844532418,
-              -102112522333,
-              263957054751,
-              "258.50%"
-            ],
-            [
-              "Chi phí thuế TNDN",
-              null,
-              null,
-              32405180936,
-              3420602091,
-              28984578845,
-              null
-            ],
-            [
-              "Lợi nhuận sau thuế",
-              null,
-              null,
-              129439351482,
-              -105533124424,
-              234972475906,
-              "222.65%"
-            ],
-            [
               "Quý II",
               "Lũy kế từ đầu năm",
               null,
@@ -325457,6 +324801,7 @@
       "periodYear": 2026,
       "periodSlug": "Q2",
       "warnings": [
+        "CANH BAO: khong doc duoc dong nao cua Luu chuyen tien te (LCTT) - cac chi tieu lay tu bang nay se trong/bang 0, can mo file goc kiem tra tay.",
         "\"Năm 2026\": Tong cac dong con cua \"Cong doanh thu hoat dong\" (358188020078) khong khop chinh dong \"Cong doanh thu hoat dong\" (365688020078) - co the do OCR gop/bia dong, can xem tay.",
         "\"\": Tong cac dong con cua \"Cong doanh thu hoat dong\" (628722700442) khong khop chinh dong \"Cong doanh thu hoat dong\" (636222700442) - co the do OCR gop/bia dong, can xem tay.",
         "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 1 muc trong KQKD (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
@@ -345182,146 +344527,6 @@
               118447288447
             ],
             [
-              1,
-              "Bố trí cơ cấu tài sản và cơ cấu nguồn vốn",
-              null,
-              null,
-              null
-            ],
-            [
-              1,
-              "Bố trí cơ cấu tài sản",
-              null,
-              null,
-              null
-            ],
-            [
-              null,
-              "- Tài sản dài hạn/ Tổng tài sản",
-              null,
-              "52%",
-              "49%"
-            ],
-            [
-              null,
-              "- Tài sản ngắn hạn/ Tổng tài sản",
-              null,
-              "48%",
-              "51%"
-            ],
-            [
-              1,
-              "Bố trí cơ cấu nguồn vốn",
-              null,
-              null,
-              null
-            ],
-            [
-              null,
-              "- Nợ phải trả/ Tổng nguồn vốn",
-              null,
-              "37%",
-              "39%"
-            ],
-            [
-              null,
-              "- Nguồn vốn chủ sở hữu/ Tổng nguồn vốn",
-              null,
-              "63%",
-              "61%"
-            ],
-            [
-              2,
-              "Khả năng thanh toán",
-              null,
-              null,
-              null
-            ],
-            [
-              2,
-              "Khả năng thanh toán hiện hành",
-              null,
-              2,
-              2
-            ],
-            [
-              2,
-              "Khả năng thanh toán nợ ngắn hạn",
-              null,
-              1,
-              1
-            ],
-            [
-              2,
-              "Khả năng thanh toán nhanh",
-              null,
-              0,
-              0
-            ],
-            [
-              2,
-              "Khả năng thanh toán nợ dài hạn",
-              null,
-              239,
-              254
-            ],
-            [
-              3,
-              "Tỷ suất sinh lời",
-              null,
-              null,
-              null
-            ],
-            [
-              3,
-              "Tỷ suất lợi nhuận / Doanh thu thuần",
-              null,
-              null,
-              null
-            ],
-            [
-              null,
-              "- Tỷ suất lợi nhuận trước thuế / Doanh thu thuần",
-              null,
-              "12%",
-              "12%"
-            ],
-            [
-              null,
-              "- Tỷ suất lợi nhuận sau thuế / Doanh thu thuần",
-              null,
-              "9%",
-              "9%"
-            ],
-            [
-              3,
-              "Tỷ suất lợi nhuận / Tổng tài sản",
-              null,
-              null,
-              null
-            ],
-            [
-              null,
-              "- Tỷ suất lợi nhuận trước thuế / Tổng tài sản",
-              null,
-              "6%",
-              "5%"
-            ],
-            [
-              null,
-              "- Tỷ suất lợi nhuận sau thuế / Tổng tài sản",
-              null,
-              "5%",
-              "4%"
-            ],
-            [
-              3,
-              "Tỷ suất lợi nhuận sau thuế / Vốn chủ sở hữu",
-              null,
-              "8%",
-              "7%"
-            ],
-            [
               null,
               null,
               null,
@@ -358076,186 +357281,6 @@
           ],
           "rows": [
             [
-              null,
-              null,
-              null,
-              null,
-              2026,
-              2025,
-              null
-            ],
-            [
-              null,
-              null,
-              null,
-              "A",
-              1,
-              2,
-              "3=(1-2)"
-            ],
-            [
-              "1. Doanh thu bán hàng và CC dịch vụ/Revenue from sales of goods",
-              null,
-              null,
-              157925602053,
-              137312586176,
-              20613015877,
-              "15 %"
-            ],
-            [
-              "2. Các khoản giảm trừ doanh thu/ Revenue deductions",
-              null,
-              null,
-              "-",
-              "-",
-              "-",
-              null
-            ],
-            [
-              "3. Doanh thu thuần về bán hàng và cung cấp dịch vụ/ Net revenue",
-              null,
-              null,
-              157925602053,
-              137312586176,
-              20613015877,
-              "15 %"
-            ],
-            [
-              "4. Giá vốn hàng bán/ Cost of sales",
-              null,
-              null,
-              138950773140,
-              126177567783,
-              12773205357,
-              "10 %"
-            ],
-            [
-              "5. Lợi nhuận gộp về bán hàng và cung cấp dịch vụ/ Gross profit",
-              null,
-              null,
-              18974828913,
-              11135018393,
-              7839810520,
-              "70 %"
-            ],
-            [
-              "6. Lãi/lỗ của hoạt động bán, thanh lý bất động sản đầu tư/ Gain/loss from disposals of investment properties",
-              null,
-              null,
-              null,
-              null,
-              null,
-              null
-            ],
-            [
-              "7. Doanh thu hoạt động tài chính/ Financial income",
-              null,
-              null,
-              2685476112,
-              2620358126,
-              65117986,
-              "2 %"
-            ],
-            [
-              "8. Chi phí tài chính/ Financial expenses",
-              null,
-              null,
-              150280314,
-              40750684,
-              109529630,
-              "269%"
-            ],
-            [
-              "9. Chi phí bán hàng/ Selling expenses",
-              null,
-              null,
-              675051661,
-              913813372,
-              -238761711,
-              "-26 %"
-            ],
-            [
-              "10. Chi phí quản lý doanh nghiệp/ General and administration expenses",
-              null,
-              null,
-              4410996242,
-              4601371823,
-              -190375581,
-              "-4 %"
-            ],
-            [
-              "12. Lợi nhuận thuần từ hoạt động kinh doanh/ Net operating profit",
-              null,
-              null,
-              16423976808,
-              8199440640,
-              8224536168,
-              "100 %"
-            ],
-            [
-              "12. Thu nhập khác/ Other income",
-              null,
-              null,
-              267893531,
-              97526061,
-              170367470,
-              "175%"
-            ],
-            [
-              "13. Chi phí khác/ Other expenses",
-              null,
-              null,
-              "-",
-              "-",
-              "-",
-              "-"
-            ],
-            [
-              "14. Lợi nhuận khác/ Results of other activities",
-              null,
-              null,
-              267893531,
-              97526061,
-              170367470,
-              "175%"
-            ],
-            [
-              "15. Tổng lợi nhuận kế toán trước thuế/ Accounting profit before tax",
-              null,
-              null,
-              16691870339,
-              8296966701,
-              8394903638,
-              "101 %"
-            ],
-            [
-              "16. Chi phí thuế TNDN hiện hành/ Income tax expense - current",
-              null,
-              null,
-              3399839129,
-              1520173144,
-              1879665985,
-              "124 %"
-            ],
-            [
-              "17. Chi phí thuế TNDN hoãn lại/ Income tax expense - deferred",
-              null,
-              null,
-              36271348,
-              20476674,
-              15794674,
-              "77 %"
-            ],
-            [
-              "18. Lợi nhuận sau thuế thu nhập doanh nghiệp/ Net Profit after tax",
-              null,
-              null,
-              13255759862,
-              6756316883,
-              6499442979,
-              "96% %"
-            ],
-            [
               "2026 VND",
               "2025 VND",
               null,
@@ -358769,12 +357794,7 @@
       "periodYear": 2026,
       "periodSlug": "Q2",
       "warnings": [
-        "\"Quý 2\": Loi nhuan sau thue (13255759862) khong khop Loi nhuan truoc thue - Chi phi thue TNDN (9819649385)",
-        "\"\": Loi nhuan sau thue (6756316883) khong khop Loi nhuan truoc thue - Chi phi thue TNDN (5215667065)",
-        "\"Giai đoạn 6 tháng kết thúc ngày\": Loi nhuan sau thue (6499442979) khong khop Loi nhuan truoc thue - Chi phi thue TNDN (1081242019)",
-        "\"Giai đoạn 6 tháng kết thúc ngày\": Tong cac dong con cua \"Loi nhuan khac\" (372382927) khong khop chinh dong \"Loi nhuan khac\" (170367470) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Giai đoạn 6 tháng kết thúc ngày\": Tong cac dong con cua \"Tong loi nhuan ke toan truoc thue\" (25924002403) khong khop chinh dong \"Tong loi nhuan ke toan truoc thue\" (8394903638) - co the do OCR gop/bia dong, can xem tay.",
-        "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 3 muc trong BCDKT, 2 muc trong KQKD (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
+        "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 3 muc trong BCDKT, 1 muc trong KQKD (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
       ]
     },
     {
@@ -369400,6 +368420,7 @@
       "periodYear": 2026,
       "periodSlug": "Q2",
       "warnings": [
+        "CANH BAO: khong doc duoc dong nao cua Ket qua kinh doanh (KQKD) - cac chi tieu lay tu bang nay se trong/bang 0, can mo file goc kiem tra tay.",
         "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 7 muc trong BCDKT, 2 muc trong KQKD (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
       ]
     },
@@ -373108,78 +372129,6 @@
           ],
           "rows": [
             [
-              "Tuyệt đối",
-              null,
-              null,
-              null,
-              null,
-              null,
-              "Tăng/giảm(%)"
-            ],
-            [
-              "Tổng lợi nhuận kế toán trước thuế",
-              null,
-              null,
-              247730756206,
-              136189674010,
-              111541082196,
-              "82%"
-            ],
-            [
-              "Lợi nhuận HĐKD",
-              null,
-              null,
-              245009833103,
-              132261862571,
-              112747970532,
-              "85%"
-            ],
-            [
-              "- Lợi nhuận SXKD",
-              null,
-              null,
-              133910276006,
-              112832735450,
-              21077540556,
-              "19%"
-            ],
-            [
-              "- Lợi nhuận HĐTC",
-              null,
-              null,
-              111099557097,
-              19429127121,
-              91670429976,
-              "472%"
-            ],
-            [
-              "Lợi nhuận khác",
-              null,
-              null,
-              2720923103,
-              3927811439,
-              -1206888336,
-              "(31%)"
-            ],
-            [
-              "Chi phí thuế TNDN hiện hành",
-              null,
-              null,
-              31582898387,
-              27723829562,
-              3859068825,
-              "14%"
-            ],
-            [
-              "Lợi nhuận sau thuế TNDN",
-              null,
-              null,
-              215700066206,
-              108465844448,
-              107234221758,
-              "99%"
-            ],
-            [
               "1. Doanh thu bán hàng và cung cấp dịch vụ",
               "01",
               "V.24",
@@ -373680,12 +372629,7 @@
       "entryName": "2_sas_2026_7_22_5ad08d7_bctc_q2_20226_full_vie_sign.pdf",
       "periodYear": 2026,
       "periodSlug": "Q2",
-      "warnings": [
-        "\"Quý 2 Năm nay\": Loi nhuan sau thue (215700066206) khong khop Loi nhuan truoc thue - Chi phi thue TNDN (184117167819)",
-        "\"Quý 2 Năm trước\": Loi nhuan sau thue (108465844448) khong khop Loi nhuan truoc thue - Chi phi thue TNDN (80742014886)",
-        "\"Lũy kế từ đầu năm đến cuối kỳ này Năm nay\": Loi nhuan sau thue (107234221758) khong khop Loi nhuan truoc thue - Chi phi thue TNDN (40913813017)",
-        "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 1 muc trong KQKD (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
-      ]
+      "warnings": []
     },
     {
       "source": "vietstock",
@@ -386395,11 +385339,11 @@
         },
         {
           "label": "Tổng TN Hoạt Động",
-          "percentChange": 21.759106376258096,
-          "tier": "level1",
+          "percentChange": 17.2545291618611,
+          "tier": null,
           "unreliable": false,
-          "currentValue": 15010308,
-          "priorValue": 12327873
+          "currentValue": 14941781,
+          "priorValue": 12743031
         },
         {
           "label": "CP Hoạt Động",
@@ -399950,11 +398894,11 @@
         },
         {
           "label": "Lãi gộp",
-          "percentChange": -100,
+          "percentChange": 29.48508515550166,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 9097519050
+          "currentValue": 39952166415,
+          "priorValue": 30854647365
         },
         {
           "label": "CPBH",
@@ -401086,24 +400030,6 @@
           ],
           "rows": [
             [
-              "Lợi nhuận gộp về bán hàng và cung cấp dịch vụ tăng",
-              null,
-              null,
-              null,
-              9097519050,
-              "29%",
-              "Sản lượng nước thương phẩm tăng"
-            ],
-            [
-              "Doanh thu tài chính tăng",
-              null,
-              null,
-              null,
-              6764699488,
-              "133%",
-              "Quý 2/2025, Công ty CP Cấp nước BR-VT chỉ có tức 10% số tiền 5.068 tỷ, quý 2/2026 Công ty cổ phần cấp nước Châu Đức chỉ có tức 10% số tiền 11.8 tỷ"
-            ],
-            [
               null,
               null,
               1,
@@ -401606,10 +400532,7 @@
       "entryName": "2_pmw_2026_7_22_5af122f_vi_baocaotaichinh_q2_2026.pdf",
       "periodYear": 2026,
       "periodSlug": "Q2",
-      "warnings": [
-        "\"Quý 2 năm 2026 Năm trước\": Loi nhuan gop (9097519050) khong khop Doanh thu thuan - Gia von (30854647365)",
-        "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 3 muc trong KQKD (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
-      ]
+      "warnings": []
     },
     {
       "source": "vietstock",
@@ -434873,11 +433796,11 @@
         },
         {
           "label": "Tổng TN Hoạt Động",
-          "percentChange": 176.67147059389174,
+          "percentChange": 191.12057642724696,
           "tier": "level2",
           "unreliable": false,
-          "currentValue": 1773676545184,
-          "priorValue": 641076776502
+          "currentValue": 1789486897781,
+          "priorValue": 614689253416
         },
         {
           "label": "CP Hoạt Động",
@@ -445249,11 +444172,11 @@
         },
         {
           "label": "LNST",
-          "percentChange": null,
+          "percentChange": -10.735119502578817,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 11092661865,
+          "priorValue": 12426680911
         },
         {
           "label": "Tiền",
@@ -476377,13 +475300,6 @@
           ],
           "rows": [
             [
-              null,
-              null,
-              -1,
-              -2,
-              -3
-            ],
-            [
               "A . TÀI SẢN NGẮN HẠN",
               "100",
               null,
@@ -476753,15 +475669,6 @@
             "Luỹ kế từ đầu năm đến cuối quý này Năm trước"
           ],
           "rows": [
-            [
-              null,
-              null,
-              -1,
-              -2,
-              -3,
-              null,
-              null
-            ],
             [
               "1. Doanh thu bán hàng và cung cấp dịch vụ",
               "01",
@@ -493072,13 +491979,6 @@
           ],
           "rows": [
             [
-              null,
-              null,
-              -1,
-              -2,
-              -3
-            ],
-            [
               "A. TÀI SẢN NGẮN HẠN",
               "100",
               null,
@@ -493364,13 +492264,6 @@
               "Thuyết minh",
               "SỐ CUỐI QUÝ II/2026",
               "SỐ ĐẦU NĂM 2026"
-            ],
-            [
-              null,
-              null,
-              -1,
-              -2,
-              -3
             ],
             [
               "3. Tài sản cố định vô hình",
@@ -493693,13 +492586,6 @@
               "Thuyết minh",
               "SỐ CUỐI QUY II/2026",
               "SỐ ĐẦU NĂM 2026"
-            ],
-            [
-              null,
-              null,
-              -1,
-              -2,
-              -3
             ],
             [
               "6. Phải trả nội bộ dài hạn",
@@ -494107,13 +492993,6 @@
             "Lũy kế 6 tháng năm 2025"
           ],
           "rows": [
-            [
-              null,
-              null,
-              -1,
-              -2,
-              -3
-            ],
             [
               "I. Lưu chuyển tiền từ hoạt động sản xuất, kinh doanh",
               "",
@@ -495510,42 +494389,6 @@
           ],
           "rows": [
             [
-              null,
-              null,
-              null,
-              null,
-              -1,
-              -2,
-              "(3)=(1)-(2)"
-            ],
-            [
-              "Chi phí tài chính",
-              null,
-              null,
-              1432687145,
-              2358206320,
-              -925519175,
-              "(39,25%)"
-            ],
-            [
-              "Chi phí quản lý doanh nghiệp",
-              null,
-              null,
-              1295108980,
-              3004972010,
-              -1709863030,
-              "(56,90%)"
-            ],
-            [
-              "Lợi nhuận sau thuế TNDN",
-              null,
-              null,
-              1531408374,
-              519316849,
-              1012091525,
-              "194,89%"
-            ],
-            [
               "1. Doanh thu bán hàng và cung cấp dịch vụ",
               1,
               null,
@@ -496048,9 +494891,7 @@
       "periodSlug": "Q2",
       "warnings": [
         "\"Số cuối kỳ\": Tong cac muc trong Von chu so huu (199690710801) khong khop dong Von chu so huu (195570858719)",
-        "\"Số đầu năm\": Tong cac muc trong Von chu so huu (219904879563) khong khop dong Von chu so huu (196060745081)",
-        "\"Số lũy kế từ đầu năm đến cuối quý này Năm nay\": Loi nhuan sau thue (1012091525) khong khop Loi nhuan truoc thue - Chi phi thue TNDN (2797496038)",
-        "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 1 muc trong KQKD (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
+        "\"Số đầu năm\": Tong cac muc trong Von chu so huu (219904879563) khong khop dong Von chu so huu (196060745081)"
       ]
     },
     {
@@ -497181,11 +496022,11 @@
         },
         {
           "label": "LNST",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 196.31025456960376,
+          "tier": "level2",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 26458389740,
+          "priorValue": -27472038007
         },
         {
           "label": "LNST Công Ty Mẹ",
@@ -508834,11 +507675,11 @@
       "analysis": [
         {
           "label": "DT thuần",
-          "percentChange": null,
+          "percentChange": -29.07305251388617,
           "tier": null,
           "unreliable": false,
-          "currentValue": null,
-          "priorValue": 563
+          "currentValue": 562874714464,
+          "priorValue": 793597827644
         },
         {
           "label": "Lãi gộp",
@@ -508866,11 +507707,11 @@
         },
         {
           "label": "LNST",
-          "percentChange": null,
+          "percentChange": -42.50053522137002,
           "tier": null,
           "unreliable": false,
-          "currentValue": null,
-          "priorValue": 4
+          "currentValue": 4084955233,
+          "priorValue": 7104336099
         },
         {
           "label": "Tiền",
@@ -509936,213 +508777,6 @@
           ],
           "rows": [
             [
-              "Sản lượng tiêu thụ",
-              null,
-              null,
-              "Tấn",
-              44788,
-              71756,
-              "-37,6%"
-            ],
-            [
-              "Đạm Phú Mỹ",
-              null,
-              null,
-              "\"",
-              19630,
-              42609,
-              "-53,9%"
-            ],
-            [
-              "NPK Phú Mỹ",
-              null,
-              null,
-              "\"",
-              12614,
-              12383,
-              "1,9%"
-            ],
-            [
-              "Phân bón thương hiệu Phú Mỹ",
-              null,
-              null,
-              "\"",
-              7408,
-              7178,
-              "3,2%"
-            ],
-            [
-              "Đạm Kebo Phú Mỹ",
-              null,
-              null,
-              "\"",
-              107,
-              1050,
-              "-89,7%"
-            ],
-            [
-              "Phân bón tự doanh",
-              null,
-              null,
-              "\"",
-              5027,
-              8533,
-              "-41,1%"
-            ],
-            [
-              "Đơn giá tiêu thụ",
-              null,
-              null,
-              "Triệu đồng/ Tấn",
-              12312,
-              10885,
-              "13,1%"
-            ],
-            [
-              "Đạm Phú Mỹ",
-              null,
-              null,
-              "\"",
-              13929,
-              10841,
-              "28,5%"
-            ],
-            [
-              "NPK Phú Mỹ",
-              null,
-              null,
-              "\"",
-              11983,
-              11579,
-              "3,5%"
-            ],
-            [
-              "Phân bón thương hiệu Phú Mỹ",
-              null,
-              null,
-              "\"",
-              10780,
-              9214,
-              "17,0%"
-            ],
-            [
-              "Đạm Kebo Phú Mỹ",
-              null,
-              null,
-              "\"",
-              15037,
-              11997,
-              "25,3%"
-            ],
-            [
-              "Phân bón tự doanh",
-              null,
-              null,
-              "\"",
-              9024,
-              11368,
-              "-20,6%"
-            ],
-            [
-              "Doanh thu thuần",
-              null,
-              null,
-              "Tỷ đồng",
-              563,
-              794,
-              "-29,1%"
-            ],
-            [
-              "Đạm Phú Mỹ",
-              null,
-              null,
-              "\"",
-              273,
-              461,
-              "-40,8%"
-            ],
-            [
-              "NPK Phú Mỹ",
-              null,
-              null,
-              "\"",
-              151,
-              143,
-              "5,4%"
-            ],
-            [
-              "Phân bón thương hiệu Phú Mỹ",
-              null,
-              null,
-              "\"",
-              79,
-              66,
-              "20,7%"
-            ],
-            [
-              "Đạm Kebo Phú Mỹ",
-              null,
-              null,
-              "\"",
-              1,
-              12,
-              "-87,1%"
-            ],
-            [
-              "Phân bón tự doanh",
-              null,
-              null,
-              "\"",
-              45,
-              97,
-              "-53,2%"
-            ],
-            [
-              "Dịch vụ, tài chính, khác",
-              null,
-              null,
-              "\"",
-              12,
-              13,
-              "-12,6%"
-            ],
-            [
-              "Giá vốn",
-              null,
-              null,
-              "\"",
-              543,
-              770,
-              "-29,5%"
-            ],
-            [
-              "Chi phí",
-              null,
-              null,
-              "\"",
-              15,
-              15,
-              "-3,9%"
-            ],
-            [
-              "Lợi nhuận trước thuế",
-              null,
-              null,
-              "\"",
-              5,
-              8,
-              "-42,5%"
-            ],
-            [
-              "Lợi nhuận sau thuế",
-              null,
-              null,
-              "\"",
-              4,
-              7,
-              "-42,5%"
-            ],
-            [
               "1. Doanh thu bán hàng và cung cấp dịch vụ",
               "01",
               "VII.1",
@@ -510664,13 +509298,7 @@
       "entryName": "1_pmb_2026_7_20_2c3debb_vi_baocaotaichinh_q2_2026.pdf",
       "periodYear": 2026,
       "periodSlug": "Q2",
-      "warnings": [
-        "\"Quý 2 Năm trước\": Loi nhuan gop (23564504780) khong khop Doanh thu thuan - Gia von (-770033322301)",
-        "\"Lũy kế từ đầu năm đến cuối tháng này Năm nay\": Loi nhuan gop (52536025135) khong khop Doanh thu thuan - Gia von (-1345846690237)",
-        "\"Quý 2 Năm trước\": Loi nhuan sau thue (4) khong khop Loi nhuan truoc thue - Chi phi thue TNDN (-1776084020)",
-        "\"Lũy kế từ đầu năm đến cuối tháng này Năm nay\": Loi nhuan sau thue (7) khong khop Loi nhuan truoc thue - Chi phi thue TNDN (-4568311170)",
-        "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 4 muc trong KQKD (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
-      ]
+      "warnings": []
     },
     {
       "source": "vietstock",
@@ -545065,6 +543693,8 @@
       "periodYear": 2026,
       "periodSlug": "Q2",
       "warnings": [
+        "CANH BAO: khong doc duoc dong nao cua Ket qua kinh doanh (KQKD) - cac chi tieu lay tu bang nay se trong/bang 0, can mo file goc kiem tra tay.",
+        "CANH BAO: khong doc duoc dong nao cua Luu chuyen tien te (LCTT) - cac chi tieu lay tu bang nay se trong/bang 0, can mo file goc kiem tra tay.",
         "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 6 muc trong BCDKT, 2 muc trong KQKD (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
       ]
     },
@@ -600763,13 +599393,6 @@
           ],
           "rows": [
             [
-              null,
-              null,
-              -1,
-              -2,
-              -3
-            ],
-            [
               "A. TÀI SẢN NGẮN HẠN (100=110+120+130+140+150+160)",
               "100",
               null,
@@ -628664,11 +627287,11 @@
         },
         {
           "label": "Tổng TN Hoạt Động",
-          "percentChange": 2.636694365777876,
+          "percentChange": -1.6103663324058513,
           "tier": null,
           "unreliable": false,
-          "currentValue": 8849889,
-          "priorValue": 8622539
+          "currentValue": 9142900,
+          "priorValue": 9292544
         },
         {
           "label": "CP Hoạt Động",
@@ -635886,44 +634509,12 @@
           "columns": [
             "CHỈ TIÊU",
             "MÃ SỐ",
-            "Quý II năm 2026 Năm nay",
-            "Quý II năm 2026 Năm trước",
-            "So Sánh với cùng kỳ Năm nay",
-            "So Sánh với cùng kỳ Năm trước"
+            "QUÝ II năm 2026 Năm nay",
+            "QUÝ II năm 2026 Năm trước",
+            "Luỹ kế từ đầu năm đến cuối quý này Năm nay",
+            "Luỹ kế từ đầu năm đến cuối quý này Năm trước"
           ],
           "rows": [
-            [
-              "1. Doanh thu bán hàng và cung cấp dịch vụ",
-              "01",
-              134041163535,
-              120406781764,
-              13634381771,
-              "11,32%"
-            ],
-            [
-              "4. Giá vốn hàng hóa",
-              "11",
-              116868596556,
-              111719569241,
-              5149027315,
-              "4,61%"
-            ],
-            [
-              "5. Lợi nhuận gộp về bán hàng và cung cấp dịch vụ",
-              "20",
-              17172566979,
-              8687212523,
-              8485354456,
-              "97,68%"
-            ],
-            [
-              "18. Lợi nhuận sau thuế thu nhập doanh nghiệp",
-              "60",
-              9654972249,
-              2052988750,
-              7601983499,
-              "370,29%"
-            ],
             [
               "1. Doanh thu bán hàng và cung cấp dịch vụ",
               "01",
@@ -636395,8 +634986,7 @@
       "warnings": [
         "\"SỐ DƯ CUỐI KỲ 30/06/2026\": Tong cac muc trong TS ngan han (408759036098) khong khop dong TS ngan han (426321136192)",
         "\"SỐ DƯ ĐẦU KỲ 01/01/2026\": Tong cac muc trong TS ngan han (384639870699) khong khop dong TS ngan han (412316110662)",
-        "\"So Sánh với cùng kỳ Năm nay\": Loi nhuan sau thue (7601983499) khong khop Loi nhuan truoc thue - Chi phi thue TNDN (11565962055)",
-        "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 2 muc trong KQKD (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
+        "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 1 muc trong KQKD (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
       ]
     },
     {
@@ -643540,94 +642130,6 @@
           ],
           "rows": [
             [
-              "Tổng doanh thu",
-              null,
-              146999350362,
-              146515432789,
-              483917573,
-              "+ 0,33%"
-            ],
-            [
-              "- Doanh thu thuần BH&CCDV",
-              null,
-              132408110577,
-              141189391830,
-              -8781281253,
-              "- 6,22%"
-            ],
-            [
-              "- Doanh thu HĐTC",
-              null,
-              14591239785,
-              5117885845,
-              9473353940,
-              "+ 185,1%"
-            ],
-            [
-              "- Thu nhập khác",
-              null,
-              "-",
-              208155114,
-              -208155114,
-              "- 100%"
-            ],
-            [
-              "Tổng chi phí",
-              null,
-              92413654033,
-              72777985169,
-              19635668864,
-              "+ 26,98%"
-            ],
-            [
-              "- Giá vốn hàng bán",
-              null,
-              54513069702,
-              54321666558,
-              191403144,
-              "+ 0,35%"
-            ],
-            [
-              "- Chi phí tài chính",
-              null,
-              18892185197,
-              36132751,
-              18856052446,
-              "+ 52.185,49%"
-            ],
-            [
-              "- Chi phí bán hàng",
-              null,
-              10004161948,
-              8404440463,
-              1599721485,
-              "+ 19,03%"
-            ],
-            [
-              "- Chi phí QLDN",
-              null,
-              9004237186,
-              9983337990,
-              -979100804,
-              "- 9,81%"
-            ],
-            [
-              "- Chi phí khác",
-              null,
-              "-",
-              32407407,
-              -32407407,
-              "- 100%"
-            ],
-            [
-              "Lợi nhuận sau thuế",
-              null,
-              43602436609,
-              58926094728,
-              -15323658119,
-              "- 26,00%"
-            ],
-            [
               "1. Doanh thu bán hàng và cung cấp dịch vụ",
               "01",
               132408110577,
@@ -644200,11 +642702,7 @@
       "entryName": "2_szg_2026_7_22_3a366ff_vn_baocaotaichinh_q2_2026.pdf",
       "periodYear": 2026,
       "periodSlug": "Q2",
-      "warnings": [
-        "\"Lũy kế từ đầu năm đến cuối quý này Năm nay\": Loi nhuan gop (158902263982) khong khop Doanh thu thuan - Gia von (-8972684397)",
-        "\"Lũy kế từ đầu năm đến cuối quý này Năm nay\": Loi nhuan sau thue (-15323658119) khong khop Loi nhuan truoc thue - Chi phi thue TNDN (111547056289)",
-        "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 2 muc trong KQKD (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
-      ]
+      "warnings": []
     },
     {
       "source": "vietstock",
@@ -646364,33 +644862,6 @@
           ],
           "rows": [
             [
-              "Lợi nhuận sau thuế TNDN",
-              null,
-              null,
-              565641534,
-              235362204,
-              330279330,
-              "140,33%"
-            ],
-            [
-              "Chỉ tiêu",
-              null,
-              null,
-              "Q2.2026",
-              "Q2.2025",
-              "Tăng /Giảm",
-              "% tăng giảm"
-            ],
-            [
-              "Doanh thu từ hoạt động tài chính",
-              null,
-              null,
-              1755534640,
-              518847980,
-              1236659660,
-              "238,33%"
-            ],
-            [
               "Doanh thu bán hàng và cung cấp dịch vụ",
               "01",
               4,
@@ -646873,9 +645344,7 @@
       "periodSlug": "Q2",
       "warnings": [
         "\"30/06/2026\": Tong cac muc trong Von chu so huu (15667685621) khong khop dong Von chu so huu (110316275621)",
-        "\"01/01/2026\": Tong cac muc trong Von chu so huu (15024627785) khong khop dong Von chu so huu (109673217785)",
-        "\"Lũy kế từ đầu năm đến cuối quý này NĂM NAY\": Loi nhuan sau thue (330279330) khong khop Loi nhuan truoc thue - Chi phi thue TNDN (643057836)",
-        "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 1 muc trong KQKD (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
+        "\"01/01/2026\": Tong cac muc trong Von chu so huu (15024627785) khong khop dong Von chu so huu (109673217785)"
       ]
     },
     {
@@ -678380,10 +676849,10 @@
         },
         {
           "label": "Phải trả người bán",
-          "percentChange": 125.82180990976966,
+          "percentChange": 123.16234696527262,
           "tier": "level2",
           "unreliable": false,
-          "currentValue": 21726449144,
+          "currentValue": 21470580650,
           "priorValue": 9621058813
         },
         {
@@ -678412,10 +676881,10 @@
         },
         {
           "label": "Phải trả khác",
-          "percentChange": 4.47915293618908,
+          "percentChange": 6.774084916448027,
           "tier": null,
           "unreliable": false,
-          "currentValue": 11648677933,
+          "currentValue": 11904546427,
           "priorValue": 11149284432
         },
         {
@@ -678681,15 +677150,15 @@
               "B - TÀI SẢN DÀI HẠN (200=210+220+230+240+250+260+270)",
               "200",
               null,
-              152609403777,
-              175831913023
+              139166146533,
+              160921702093
             ],
             [
               "I. Các khoản phải thu dài hạn",
               "210",
               null,
-              29282340568,
-              30393694337
+              15839083324,
+              15483483407
             ],
             [
               "1. Phải thu dài hạn của khách hàng",
@@ -678709,8 +677178,8 @@
               "3. Vốn kinh doanh ở đơn vị trực thuộc",
               "213",
               null,
-              13443257244,
-              14910210930
+              "-",
+              "-"
             ],
             [
               "4. Phải thu nội bộ dài hạn",
@@ -678825,7 +677294,7 @@
               "-"
             ],
             [
-              "b) Sức vật nuôi cho sản phẩm định kỳ đến giai đoạn trưởng thành",
+              "b) Sức vật nuôi cho sản phẩm định kỳ đến giai đoạn trưởng thân",
               "233",
               null,
               "-",
@@ -678996,15 +677465,15 @@
               "TỔNG CỘNG TÀI SẢN (280=100+200)",
               "280",
               null,
-              230861518410,
-              201096299542
+              217418261166,
+              186186088612
             ],
             [
               "C - NỢ PHẢI TRẢ (300=310+330)",
               "300",
               null,
-              91105847312,
-              63254138990
+              77662590068,
+              48343928060
             ],
             [
               "I. Nợ ngắn hạn",
@@ -679017,7 +677486,7 @@
               "1. Phải trả người bán ngắn hạn",
               "311",
               null,
-              21726449144,
+              21470580650,
               9621058813
             ],
             [
@@ -679080,7 +677549,7 @@
               "10. Phải trả ngắn hạn khác",
               "320",
               null,
-              1931900948,
+              2187769442,
               1432507447
             ],
             [
@@ -679122,8 +677591,8 @@
               "II. Nợ dài hạn",
               "330",
               null,
-              26395238388,
-              27851981910
+              12951981144,
+              12941770980
             ],
             [
               "1. Phải trả người bán dài hạn",
@@ -679157,8 +677626,8 @@
               "5. Phải trả nội bộ về vốn kinh doanh",
               "335",
               null,
-              13443257244,
-              14910210930
+              "-",
+              "-"
             ],
             [
               "6. Phải trả dài hạn nội bộ",
@@ -679332,8 +677801,8 @@
               "TỔNG CỘNG NGUỒN VỐN (440=300+400)",
               "440",
               null,
-              230861518410,
-              201096299542
+              217418261166,
+              186186088612
             ]
           ]
         },
@@ -679448,7 +677917,7 @@
               5513471477
             ],
             [
-              "11. Lợi nhuận thuần từ hoạt động kinh doanh (30=20+21+22-(23+25+26))",
+              "11. Lợi nhuận thuần từ hoạt động kinh doanh (30=20+21+22- (23+25+26))",
               "30",
               null,
               -5844843124,
@@ -725543,12 +724012,6 @@
               null
             ],
             [
-              null,
-              null,
-              -1,
-              -2
-            ],
-            [
               "I. Lưu chuyển tiền từ hoạt động kinh doanh",
               "",
               null,
@@ -757072,10 +755535,10 @@
         },
         {
           "label": "LNST",
-          "percentChange": 198.98124044938524,
+          "percentChange": 319.8616562295836,
           "tier": "level2",
           "unreliable": false,
-          "currentValue": 19535241133,
+          "currentValue": 27433489421,
           "priorValue": 6533935408
         },
         {
@@ -785781,33 +784244,6 @@
           ],
           "rows": [
             [
-              null,
-              null,
-              null,
-              -2,
-              -3,
-              -4,
-              "(5) = (3) – (4)"
-            ],
-            [
-              null,
-              "Lợi nhuận trước thuế TNDN",
-              null,
-              366669742567,
-              332623188219,
-              34046554348,
-              "10,24%"
-            ],
-            [
-              null,
-              "Lợi nhuận sau thuế TNDN",
-              null,
-              328715474871,
-              298007523581,
-              30707951290,
-              "10,30%"
-            ],
-            [
               "VND",
               "VND",
               null,
@@ -786239,10 +784675,7 @@
       "entryName": null,
       "periodYear": 2026,
       "periodSlug": "Q2",
-      "warnings": [
-        "\"Lũy kế từ đầu năm đến cuối quý này Năm nay\": Loi nhuan sau thue (30707951290) khong khop Loi nhuan truoc thue - Chi phi thue TNDN (-31512816055)",
-        "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 1 muc trong KQKD (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
-      ]
+      "warnings": []
     },
     {
       "source": "vietstock",
@@ -796783,13 +795216,6 @@
           "rows": [
             [
               null,
-              null,
-              -1,
-              -2,
-              -3
-            ],
-            [
-              null,
               "Lưu chuyển tiền từ hoạt động kinh doanh",
               null,
               null,
@@ -801381,6 +799807,8 @@
       "periodYear": 2026,
       "periodSlug": "Q2",
       "warnings": [
+        "CANH BAO: khong doc duoc dong nao cua Bang can doi ke toan (BCDKT) - cac chi tieu lay tu bang nay se trong/bang 0, can mo file goc kiem tra tay.",
+        "CANH BAO: khong doc duoc dong nao cua Luu chuyen tien te (LCTT) - cac chi tieu lay tu bang nay se trong/bang 0, can mo file goc kiem tra tay.",
         "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 7 muc trong BCDKT, 2 muc trong KQKD (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
       ]
     },
@@ -808408,13 +806836,6 @@
           ],
           "rows": [
             [
-              null,
-              null,
-              -1,
-              -2,
-              -3
-            ],
-            [
               "A - TÀI SẢN NGẮN HẠN",
               "100",
               null,
@@ -808665,13 +807086,6 @@
               "TM",
               "SỐ CUỐI KỲ",
               "SỐ ĐẦU NĂM"
-            ],
-            [
-              null,
-              null,
-              -1,
-              -2,
-              -3
             ],
             [
               "C - NỢ PHẢI TRẢ",
@@ -819416,6 +817830,7 @@
       "periodYear": 2026,
       "periodSlug": "Q2",
       "warnings": [
+        "CANH BAO: khong doc duoc dong nao cua Bang can doi ke toan (BCDKT) - cac chi tieu lay tu bang nay se trong/bang 0, can mo file goc kiem tra tay.",
         "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 1 muc trong BCDKT (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
       ]
     },
@@ -864530,6 +862945,7 @@
       "periodYear": 2026,
       "periodSlug": "Q2",
       "warnings": [
+        "CANH BAO: khong doc duoc dong nao cua Ket qua kinh doanh (KQKD) - cac chi tieu lay tu bang nay se trong/bang 0, can mo file goc kiem tra tay.",
         "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 2 muc trong KQKD (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
       ]
     },
@@ -890784,11 +889200,11 @@
         },
         {
           "label": "LNST",
-          "percentChange": 35.50582503866925,
+          "percentChange": 35.86454808260555,
           "tier": null,
           "unreliable": false,
-          "currentValue": 1067429042194,
-          "priorValue": 787736646664
+          "currentValue": 1068063300734,
+          "priorValue": 786123617829
         },
         {
           "label": "Tiền",
@@ -934610,11 +933026,11 @@
         },
         {
           "label": "LNST",
-          "percentChange": null,
+          "percentChange": -164.76683129832006,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": -283029272213,
+          "priorValue": 436997250814
         },
         {
           "label": "Tiền",
@@ -956111,15 +954527,6 @@
               "Năm trước Last Year"
             ],
             [
-              null,
-              null,
-              -1,
-              -2,
-              -3,
-              -4,
-              -5
-            ],
-            [
               "1. Doanh thu bán hàng và cung cấp dịch vụ",
               "",
               null,
@@ -956553,13 +954960,6 @@
             "Lũy kế từ đầu năm đến cuối quý này Cumulative from the beginning of the year to the end of this quarter Năm trước Last Year"
           ],
           "rows": [
-            [
-              null,
-              null,
-              -1,
-              -2,
-              -3
-            ],
             [
               "I. Lưu chuyển tiền từ hoạt động kinh doanh:",
               "",
@@ -957967,11 +956367,11 @@
         },
         {
           "label": "Tổng TN Hoạt Động",
-          "percentChange": 51.000667767805716,
+          "percentChange": 51.390681783333314,
           "tier": "level2",
           "unreliable": false,
-          "currentValue": 1150989,
-          "priorValue": 762241
+          "currentValue": 1155176,
+          "priorValue": 763043
         },
         {
           "label": "CP Hoạt Động",
@@ -975542,43 +973942,43 @@
       "analysis": [
         {
           "label": "DT thuần",
-          "percentChange": 5.633912677213533,
+          "percentChange": null,
           "tier": null,
           "unreliable": false,
-          "currentValue": 609420,
-          "priorValue": 576917
+          "currentValue": null,
+          "priorValue": null
         },
         {
           "label": "Lãi gộp",
-          "percentChange": 22.294024871941602,
+          "percentChange": null,
           "tier": null,
           "unreliable": false,
-          "currentValue": 87620,
-          "priorValue": 71647
+          "currentValue": null,
+          "priorValue": null
         },
         {
           "label": "CPBH",
-          "percentChange": 31.856395072172578,
+          "percentChange": null,
           "tier": null,
           "unreliable": false,
-          "currentValue": 24938,
-          "priorValue": 18913
+          "currentValue": null,
+          "priorValue": null
         },
         {
           "label": "CPQLDN",
-          "percentChange": -23.5734552332913,
+          "percentChange": null,
           "tier": null,
           "unreliable": false,
-          "currentValue": 9697,
-          "priorValue": 12688
+          "currentValue": null,
+          "priorValue": null
         },
         {
           "label": "LNST",
-          "percentChange": 53.43407878731169,
-          "tier": "level2",
+          "percentChange": null,
+          "tier": null,
           "unreliable": false,
-          "currentValue": 32795,
-          "priorValue": 21374
+          "currentValue": null,
+          "priorValue": null
         },
         {
           "label": "Tiền",
@@ -975954,96 +974354,8 @@
           ]
         },
         "incomeStatement": {
-          "columns": [
-            "STT",
-            "Chỉ tiêu",
-            "Quý II Năm 2026",
-            "Quý II Năm 2025",
-            "Chênh lệch",
-            "Tỷ lệ %"
-          ],
-          "rows": [
-            [
-              1,
-              "Doanh thu thuần bán hàng và cung cấp dịch vụ",
-              609420,
-              576917,
-              33163,
-              "6%"
-            ],
-            [
-              2,
-              "Giá vốn hàng bán",
-              521800,
-              505270,
-              16530,
-              "3%"
-            ],
-            [
-              3,
-              "Lợi nhuận gộp về bán hàng và cung cấp dịch vụ",
-              87620,
-              71647,
-              15973,
-              "22%"
-            ],
-            [
-              4,
-              "Doanh thu hoạt động tài chính",
-              2394,
-              2484,
-              -89,
-              "-4%"
-            ],
-            [
-              5,
-              "Chi phí tài chính",
-              21311,
-              17514,
-              3797,
-              "22%"
-            ],
-            [
-              6,
-              "Chi phí bán hàng",
-              24938,
-              18913,
-              6025,
-              "32%"
-            ],
-            [
-              7,
-              "Chi phí quản lý doanh nghiệp",
-              9697,
-              12688,
-              -2992,
-              "-24%"
-            ],
-            [
-              8,
-              "Lợi nhuận sau thuế thu nhập doanh nghiệp",
-              32795,
-              21374,
-              11421,
-              "53%"
-            ],
-            [
-              1,
-              "Doanh thu thuần bán hàng và cung cấp dịch vụ",
-              591835,
-              557620,
-              34215,
-              "6%"
-            ],
-            [
-              2,
-              "Lợi nhuận sau thuế thu nhập doanh nghiệp",
-              31788,
-              21394,
-              10394,
-              "49%"
-            ]
-          ]
+          "columns": [],
+          "rows": []
         },
         "cashFlow": {
           "columns": [],
@@ -976062,9 +974374,8 @@
       "periodYear": 2026,
       "periodSlug": "Q2",
       "warnings": [
-        "\"Quý II Năm 2026\": Tong cac dong con cua \"Loi nhuan gop\" (70035) khong khop chinh dong \"Loi nhuan gop\" (87620) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Quý II Năm 2025\": Tong cac dong con cua \"Loi nhuan gop\" (52350) khong khop chinh dong \"Loi nhuan gop\" (71647) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Chênh lệch\": Tong cac dong con cua \"Loi nhuan gop\" (17685) khong khop chinh dong \"Loi nhuan gop\" (15973) - co the do OCR gop/bia dong, can xem tay.",
+        "CANH BAO: khong doc duoc dong nao cua Ket qua kinh doanh (KQKD) - cac chi tieu lay tu bang nay se trong/bang 0, can mo file goc kiem tra tay.",
+        "CANH BAO: khong doc duoc dong nao cua Luu chuyen tien te (LCTT) - cac chi tieu lay tu bang nay se trong/bang 0, can mo file goc kiem tra tay.",
         "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 7 muc trong BCDKT, 2 muc trong KQKD (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
       ]
     },
@@ -989518,6 +987829,7 @@
       "periodYear": 2026,
       "periodSlug": "Q2",
       "warnings": [
+        "CANH BAO: khong doc duoc dong nao cua Ket qua kinh doanh (KQKD) - cac chi tieu lay tu bang nay se trong/bang 0, can mo file goc kiem tra tay.",
         "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 2 muc trong KQKD (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
       ]
     },
@@ -990163,232 +988475,208 @@
         },
         "incomeStatement": {
           "columns": [
-            "Note",
-            "FY 2026",
-            "FY 2025",
-            "Increase (Decrease)",
-            "Ratio"
+            "Mã số",
+            "CHỈ TIÊU",
+            "Thuyết minh",
+            "Quý 2/2026",
+            "Quý 2/2025",
+            "6 tháng/Năm 2026",
+            "Đơn vị tính: VND 6 tháng/Năm 2025"
           ],
           "rows": [
             [
-              "Net revenue - Quarter 2",
-              191521709126,
-              188760934854,
-              2760774272,
-              "1%"
-            ],
-            [
-              "Net profit after tax- Quarter 2",
-              8704056810,
-              10526904433,
-              -1822847623,
-              "-17%"
-            ],
-            [
-              "Note",
-              "FY 2026",
-              "FY 2025",
-              "Increase (Decrease)",
-              "Ratio"
-            ],
-            [
-              "Net revenue - 6 months",
-              343207513679,
-              332050745284,
-              11156768395,
-              "3%"
-            ],
-            [
-              "Net profit after tax- 6 months",
-              9095900102,
-              11480760675,
-              -2384860573,
-              "-21%"
-            ],
-            [
-              "Net revenue - Quarter 2",
-              191618444629,
-              188760934854,
-              2857509775,
-              "2%"
-            ],
-            [
-              "Net profit after tax- Quarter 2",
-              10682667088,
-              11626833405,
-              -944166317,
-              "-8%"
-            ],
-            [
-              "Note",
-              "FY 2026",
-              "FY 2025",
-              "Increase (Decrease)",
-              "Ratio"
-            ],
-            [
-              "Net revenue - 6 months",
-              343304249182,
-              332050745284,
-              11253503898,
-              "3%"
-            ],
-            [
-              "Net profit after tax- 6 months",
-              11452870650,
-              12347391862,
-              -894521212,
-              "-7%"
-            ],
-            [
+              "01",
               "1. Doanh thu bán hàng",
+              "VI.1",
               191827929432,
               189569030757,
               344741450816,
               332949738728
             ],
             [
+              "02",
               "2. Các khoản giảm trừ doanh thu",
+              "VI.1",
               -209484803,
               -808095903,
               -1437201634,
               -898993444
             ],
             [
+              "3",
               "3. Doanh thu thuần về bán hàng",
+              "VI.1",
               191618444629,
               188760934854,
               343304249182,
               332050745284
             ],
             [
+              "4",
               "4. Giá vốn hàng bán",
+              "VI.2",
               -121371774239,
               -123955065226,
               -217235331390,
               -211199788135
             ],
             [
+              "5",
               "5. Lợi nhuận gộp về bán hàng",
+              null,
               70246670390,
               64805869628,
               126068917792,
               120850957149
             ],
             [
+              "6",
               "6. Doanh thu hoạt động tài chính",
+              "VI.3",
               13758287791,
               6936646545,
               22526070299,
               13638388145
             ],
             [
+              "7",
               "7. Chi phí tài chính",
+              "VI.4",
               -3490236221,
               -5118340129,
               -8425302961,
               -9431967903
             ],
             [
+              "",
               "Trong đó: Chi phí lãi vay",
+              null,
               -4031645168,
               -3255091162,
               -7354097386,
               -6120863276
             ],
             [
+              "25",
               "8. Chi phí bán hàng",
+              "VI.5",
               -41182770303,
               -34227052530,
               -80675048410,
               -70020596205
             ],
             [
+              "26",
               "9. Chi phí quản lý doanh nghiệp",
+              "VI.5",
               -22971854934,
               -21670877313,
               -42589691620,
               -43043102368
             ],
             [
+              "30",
               "10. Lợi nhuận thuần từ hoạt động kinh doanh",
+              null,
               16360096723,
               10726246201,
               16904945080,
               11993678818
             ],
             [
+              "31",
               "11. Thu nhập khác",
+              "VI.6",
               1088548067,
               1706398858,
               1664425234,
               2115680999
             ],
             [
+              "32",
               "12. Chi phí khác",
+              "VI.6",
               -1809791301,
               -166947301,
               -1857496105,
               -186632578
             ],
             [
+              "40",
               "13. Lợi nhuận khác",
+              null,
               -721243234,
               1539451557,
               -193070871,
               1929048421
             ],
             [
+              "50",
               "14. Tổng lợi nhuận kế toán trước thuế",
+              null,
               15638853489,
               12265697758,
               16711874209,
               13922727239
             ],
             [
+              "51",
               "15. Chi phí thuế thu nhập doanh nghiệp hiện hành",
+              null,
               -3029772603,
               495492978,
               -3029772603,
               "-"
             ],
             [
+              "52",
               "16. (Chi phí) thuế thu nhập hoãn lại",
+              "VI.8",
               -1642020211,
               -906854716,
               -1587655741,
               -977238259
             ],
             [
+              "60",
               "17. Lợi nhuận sau thuế thu nhập doanh nghiệp",
+              null,
               10967060675,
               11854336020,
               12094445865,
               12945488980
             ],
             [
+              "",
               "18. Lợi nhuận sau thuế của cổ đông công ty mẹ",
+              null,
               10682667088,
               11626833405,
               11452870650,
               12347391862
             ],
             [
+              "",
               "19. Lợi nhuận sau thuế của cổ đông không kiểm soát",
+              null,
               284393587,
               227502615,
               641575215,
               598097118
             ],
             [
+              "70",
               "20. Lãi cơ bản trên cổ phiếu",
+              "VIII.3",
               254,
               277,
               273,
               294
             ],
             [
+              "",
               "21. Lãi pha loãng trên cổ phiếu",
+              "VIII.3",
               254,
               277,
               273,
@@ -990631,10 +988919,10 @@
       "warnings": [
         "\"30/06/2026\": Tong cac muc trong TS ngan han (583473634430) khong khop dong TS ngan han (747347164182)",
         "\"01/01/2026\": Tong cac muc trong TS ngan han (609260069851) khong khop dong TS ngan han (765741410584)",
-        "\"FY 2026\": Loi nhuan sau thue (10967060675) khong khop Loi nhuan truoc thue - Chi phi thue TNDN (12609080886)",
-        "\"FY 2025\": Loi nhuan sau thue (11854336020) khong khop Loi nhuan truoc thue - Chi phi thue TNDN (11770204780)",
-        "\"Increase (Decrease)\": Loi nhuan sau thue (12094445865) khong khop Loi nhuan truoc thue - Chi phi thue TNDN (13682101606)",
-        "\"Ratio\": Loi nhuan sau thue (12945488980) khong khop Loi nhuan truoc thue - Chi phi thue TNDN (13922727239)"
+        "\"Quý 2/2026\": Loi nhuan sau thue (10967060675) khong khop Loi nhuan truoc thue - Chi phi thue TNDN (12609080886)",
+        "\"Quý 2/2025\": Loi nhuan sau thue (11854336020) khong khop Loi nhuan truoc thue - Chi phi thue TNDN (11770204780)",
+        "\"6 tháng/Năm 2026\": Loi nhuan sau thue (12094445865) khong khop Loi nhuan truoc thue - Chi phi thue TNDN (13682101606)",
+        "\"Đơn vị tính: VND 6 tháng/Năm 2025\": Loi nhuan sau thue (12945488980) khong khop Loi nhuan truoc thue - Chi phi thue TNDN (13922727239)"
       ]
     },
     {
@@ -994757,19 +993045,19 @@
         },
         {
           "label": "Tổng TN Hoạt Động",
-          "percentChange": 16.444801406751722,
+          "percentChange": 12.55385388660082,
           "tier": null,
           "unreliable": false,
-          "currentValue": 4945349,
-          "priorValue": 4246947
+          "currentValue": 5195182,
+          "priorValue": 4615730
         },
         {
           "label": "CP Hoạt Động",
-          "percentChange": 16.52220425312552,
+          "percentChange": -16.52220425312552,
           "tier": null,
           "unreliable": false,
-          "currentValue": 2043366,
-          "priorValue": 1753628
+          "currentValue": -2043366,
+          "priorValue": -1753628
         },
         {
           "label": "LN Thuần Trước Dự Phòng",
@@ -994781,11 +993069,11 @@
         },
         {
           "label": "CP Dự Phòng",
-          "percentChange": -6.111472165908451,
+          "percentChange": 10.122420514712612,
           "tier": null,
           "unreliable": false,
-          "currentValue": 774340,
-          "priorValue": 824744
+          "currentValue": 3151816,
+          "priorValue": 2862102
         },
         {
           "label": "LNTT",
@@ -995335,222 +993623,6 @@
             "Lũy kế từ đầu năm đến cuối quý này Năm trước Triệu VND (Đã soát xét)"
           ],
           "rows": [
-            [
-              1,
-              "Thu nhập lãi thuần",
-              null,
-              3634174,
-              3151325,
-              482849,
-              "15,32%"
-            ],
-            [
-              2,
-              "Lãi/lỗ thuần từ hoạt động dịch vụ",
-              null,
-              1131521,
-              988763,
-              142758,
-              "14,44%"
-            ],
-            [
-              3,
-              "Lãi/lỗ thuần từ hoạt động kinh doanh ngoại hối",
-              null,
-              249833,
-              368783,
-              -118950,
-              "-32,25%"
-            ],
-            [
-              4,
-              "Lãi/ lỗ thuần từ mua bán chứng khoán kinh doanh",
-              null,
-              -40972,
-              121,
-              -41093,
-              "-33961,16%"
-            ],
-            [
-              5,
-              "Lãi/lỗ thuần từ mua bán chứng khoán đầu tư",
-              null,
-              36225,
-              196,
-              36029,
-              "18382,14%"
-            ],
-            [
-              6,
-              "Lãi thuần từ hoạt động khác",
-              null,
-              184196,
-              106482,
-              77714,
-              "72,98%"
-            ],
-            [
-              7,
-              "Thu nhập từ góp vốn, mua cổ phần",
-              null,
-              205,
-              60,
-              145,
-              "241,67%"
-            ],
-            [
-              8,
-              "Chi phí hoạt động",
-              null,
-              2043366,
-              1753628,
-              289738,
-              "16,52%"
-            ],
-            [
-              9,
-              "Chi phí dự phòng rủi ro tín dụng",
-              null,
-              774340,
-              824744,
-              -50404,
-              "-6,11%"
-            ],
-            [
-              10,
-              "Tổng lợi nhuận trước thuế",
-              null,
-              2377476,
-              2037358,
-              340118,
-              "16,69%"
-            ],
-            [
-              11,
-              "Lợi nhuận sau thuế",
-              null,
-              1890968,
-              1629604,
-              261364,
-              "16,04%"
-            ],
-            [
-              "No.",
-              "Item",
-              null,
-              "The quarter ended 30 Jun 2026",
-              "The quarter ended 30 Jun 2025",
-              "Increase/ (Decrease)",
-              "% Increase/ (Decrease)"
-            ],
-            [
-              1,
-              "Net interest income",
-              null,
-              3634174,
-              3151325,
-              482849,
-              "15.32%"
-            ],
-            [
-              2,
-              "Net fee and commission income",
-              null,
-              1131521,
-              988763,
-              142758,
-              "14.44%"
-            ],
-            [
-              3,
-              "Net gain from foreign currencies trading",
-              null,
-              249833,
-              368783,
-              -118950,
-              "-32.25%"
-            ],
-            [
-              4,
-              "Net loss/ gain from held-for-trading securities",
-              null,
-              -40972,
-              121,
-              -41093,
-              "-33961.16%"
-            ],
-            [
-              5,
-              "Net gain from investment securities trading",
-              null,
-              36225,
-              196,
-              36029,
-              "18382.14%"
-            ],
-            [
-              6,
-              "Net other income",
-              null,
-              184196,
-              106482,
-              77714,
-              "72.98%"
-            ],
-            [
-              7,
-              "Income from capital contribution and equity investment",
-              null,
-              205,
-              60,
-              145,
-              "241.67%"
-            ],
-            [
-              8,
-              "Total operating expenses",
-              null,
-              2043366,
-              1753628,
-              289738,
-              "16.52%"
-            ],
-            [
-              "No.",
-              "Item",
-              null,
-              "The quarter ended 30 Jun 2026",
-              "The quarter ended 30 Jun 2025",
-              "Increase/ (Decrease)",
-              "% Increase/ (Decrease)"
-            ],
-            [
-              9,
-              "Allowance expenses for credit losses",
-              null,
-              774340,
-              824744,
-              -50404,
-              "-6.11%"
-            ],
-            [
-              10,
-              "Profit before tax",
-              null,
-              2377476,
-              2037358,
-              340118,
-              "16.69%"
-            ],
-            [
-              11,
-              "Profit after tax",
-              null,
-              1890968,
-              1629604,
-              261364,
-              "16.04%"
-            ],
             [
               1,
               "Thu nhập lãi và các khoản thu nhập tương tự",
@@ -996225,8 +994297,7 @@
       "periodYear": 2026,
       "periodSlug": "Q2",
       "warnings": [
-        "\"Lũy kế từ đầu năm đến cuối quý này Năm nay Triệu VND\": Loi nhuan sau thue (261364) khong khop Loi nhuan truoc thue - Chi phi thue TNDN (-569984)",
-        "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 1 muc trong BCDKT, 1 muc trong KQKD (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
+        "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 1 muc trong BCDKT (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
       ]
     },
     {
@@ -1016587,6 +1014658,8 @@
       "periodYear": 2026,
       "periodSlug": "Q2",
       "warnings": [
+        "CANH BAO: khong doc duoc dong nao cua Ket qua kinh doanh (KQKD) - cac chi tieu lay tu bang nay se trong/bang 0, can mo file goc kiem tra tay.",
+        "CANH BAO: khong doc duoc dong nao cua Luu chuyen tien te (LCTT) - cac chi tieu lay tu bang nay se trong/bang 0, can mo file goc kiem tra tay.",
         "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 2 muc trong KQKD (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
       ]
     },
@@ -1022533,13 +1020606,6 @@
           ],
           "rows": [
             [
-              -1,
-              null,
-              -2,
-              -3,
-              -4
-            ],
-            [
               null,
               "Lưu chuyển tiền từ hoạt động kinh doanh",
               null,
@@ -1022755,13 +1020821,6 @@
               null,
               null,
               "Năm trước"
-            ],
-            [
-              -1,
-              null,
-              -2,
-              -3,
-              -4
             ],
             [
               2,
@@ -1052771,11 +1050830,11 @@
         },
         {
           "label": "Tổng TN Hoạt Động",
-          "percentChange": 6.247396232435984,
+          "percentChange": 9.413747314665397,
           "tier": null,
           "unreliable": false,
-          "currentValue": 12652179,
-          "priorValue": 11908225
+          "currentValue": 12731260,
+          "priorValue": 11635887
         },
         {
           "label": "CP Hoạt Động",
@@ -1059320,15 +1057379,6 @@
           ],
           "rows": [
             [
-              null,
-              null,
-              -1,
-              -2,
-              -3,
-              -4,
-              -5
-            ],
-            [
               1,
               "Thu nhập lãi và các khoản thu nhập tương tự",
               "VI.14",
@@ -1063548,11 +1061598,11 @@
         },
         {
           "label": "Tổng TN Hoạt Động",
-          "percentChange": 31.639970659262822,
+          "percentChange": 47.15989253974758,
           "tier": "level2",
           "unreliable": false,
-          "currentValue": 1252657,
-          "priorValue": 951578
+          "currentValue": 1458175,
+          "priorValue": 990878
         },
         {
           "label": "CP Hoạt Động",
@@ -1074610,13 +1072660,6 @@
           ],
           "rows": [
             [
-              null,
-              null,
-              -1,
-              -2,
-              -3
-            ],
-            [
               "",
               "TÀI SẢN",
               null,
@@ -1074923,13 +1072966,6 @@
               "Thuyết minh",
               "30/06/2026 VND",
               "01/01/2026 VND"
-            ],
-            [
-              null,
-              null,
-              -1,
-              -2,
-              -3
             ],
             [
               "300",
@@ -1075367,13 +1073403,6 @@
             "Từ 01/01/2025 đến 30/06/2025"
           ],
           "rows": [
-            [
-              null,
-              null,
-              -1,
-              -2,
-              -3
-            ],
             [
               "",
               "I. Lưu chuyển tiền từ hoạt động kinh doanh",
@@ -1087525,11 +1085554,11 @@
       "analysis": [
         {
           "label": "DT thuần",
-          "percentChange": -100,
+          "percentChange": -6.280994870967644,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 486426
+          "currentValue": 486426247759,
+          "priorValue": 519026260564
         },
         {
           "label": "Lãi gộp",
@@ -1087557,11 +1085586,11 @@
         },
         {
           "label": "LNST",
-          "percentChange": -100,
+          "percentChange": 11.1003345523647,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 32327
+          "currentValue": 32326845231,
+          "priorValue": 29096982796
         },
         {
           "label": "Tiền",
@@ -1088186,33 +1086215,6 @@
           ],
           "rows": [
             [
-              "Báo cáo tài chính hợp nhất:",
-              null,
-              null,
-              null,
-              null,
-              null,
-              null
-            ],
-            [
-              "Doanh thu thuần về bán hàng và cung cấp dịch vụ",
-              null,
-              null,
-              null,
-              486426,
-              519026,
-              "93,72%"
-            ],
-            [
-              "Lợi nhuận sau thuế thu nhập doanh nghiệp",
-              null,
-              null,
-              null,
-              32327,
-              29097,
-              "111,10%"
-            ],
-            [
               "1. Doanh thu bán hàng và cung cấp dịch vụ",
               "01",
               26,
@@ -1088660,11 +1086662,10 @@
       "periodYear": 2026,
       "periodSlug": "Q2",
       "warnings": [
-        "\"Từ ngày 01/04/2025 đến ngày 30/6/2025\": Loi nhuan gop (131129598055) khong khop Doanh thu thuan - Gia von (-387896176083)",
-        "\"Lũy kế từ đầu năm đến ngày 30/6/2026\": Loi nhuan gop (223341934531) khong khop Doanh thu thuan - Gia von (-703369645007)",
-        "\"Từ ngày 01/04/2025 đến ngày 30/6/2025\": Loi nhuan sau thue (32327) khong khop Loi nhuan truoc thue - Chi phi thue TNDN (30808471774)",
-        "\"Lũy kế từ đầu năm đến ngày 30/6/2026\": Loi nhuan sau thue (29097) khong khop Loi nhuan truoc thue - Chi phi thue TNDN (64574462550)",
-        "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 4 muc trong KQKD (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
+        "\"Từ ngày 01/04/2026 đến ngày 30/6/2026\": Loi nhuan sau thue (32326845231) khong khop Loi nhuan truoc thue - Chi phi thue TNDN (31228256738)",
+        "\"Từ ngày 01/04/2025 đến ngày 30/6/2025\": Loi nhuan sau thue (29096982796) khong khop Loi nhuan truoc thue - Chi phi thue TNDN (30808471774)",
+        "\"Lũy kế từ đầu năm đến ngày 30/6/2026\": Loi nhuan sau thue (64439892350) khong khop Loi nhuan truoc thue - Chi phi thue TNDN (64574462550)",
+        "\"Lũy kế từ đầu năm đến ngày 30/6/2025\": Loi nhuan sau thue (67860002525) khong khop Loi nhuan truoc thue - Chi phi thue TNDN (67786889668)"
       ]
     },
     {
@@ -1093608,6 +1091609,7 @@
       "periodYear": 2026,
       "periodSlug": "Q2",
       "warnings": [
+        "CANH BAO: khong doc duoc dong nao cua Luu chuyen tien te (LCTT) - cac chi tieu lay tu bang nay se trong/bang 0, can mo file goc kiem tra tay.",
         "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 1 muc trong KQKD (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
       ]
     },
@@ -1102762,6 +1100764,8 @@
       "periodYear": 2026,
       "periodSlug": "Q2",
       "warnings": [
+        "CANH BAO: khong doc duoc dong nao cua Bang can doi ke toan (BCDKT) - cac chi tieu lay tu bang nay se trong/bang 0, can mo file goc kiem tra tay.",
+        "CANH BAO: khong doc duoc dong nao cua Ket qua kinh doanh (KQKD) - cac chi tieu lay tu bang nay se trong/bang 0, can mo file goc kiem tra tay.",
         "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 7 muc trong BCDKT, 2 muc trong KQKD (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
       ]
     },
@@ -1103893,24 +1101897,6 @@
           ],
           "rows": [
             [
-              "Lợi nhuận sau thuế thu nhập doanh nghiệp Quý 2/Profit after corporate income tax for Quarter 2",
-              null,
-              null,
-              678379029715,
-              360100899012,
-              318278130703,
-              "88,39%"
-            ],
-            [
-              "Lợi nhuận sau thuế thu nhập doanh nghiệp Giai đoạn 6 tháng kết thúc ngày 30 tháng 6/Profit after corporate income tax for the 6-month period ended June 30th",
-              null,
-              null,
-              1065812339635,
-              637050992268,
-              428761347367,
-              "67,30%"
-            ],
-            [
               "1. Doanh thu bán hàng và cung cấp dịch vụ",
               "01",
               null,
@@ -1104390,10 +1102376,7 @@
       "entryName": null,
       "periodYear": 2026,
       "periodSlug": "Q2",
-      "warnings": [
-        "\"Lấy kể từ đầu năm đến kỳ báo cáo Năm nay\": Loi nhuan sau thue (318278130703) khong khop Loi nhuan truoc thue - Chi phi thue TNDN (1065812339635)",
-        "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 1 muc trong KQKD (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
-      ]
+      "warnings": []
     },
     {
       "source": "vietstock",
@@ -1121527,43 +1119510,43 @@
       "analysis": [
         {
           "label": "DT thuần",
-          "percentChange": 4.47416006075989,
+          "percentChange": -100,
           "tier": null,
           "unreliable": false,
-          "currentValue": 142374832535,
-          "priorValue": 136277556529
+          "currentValue": 0,
+          "priorValue": 142374832535
         },
         {
           "label": "Lãi gộp",
-          "percentChange": 84.4257727112788,
-          "tier": "level2",
+          "percentChange": -100,
+          "tier": null,
           "unreliable": false,
-          "currentValue": 50598426585,
-          "priorValue": 27435659258
+          "currentValue": 0,
+          "priorValue": 50598426585
         },
         {
           "label": "CPBH",
-          "percentChange": 57.842682041656005,
+          "percentChange": -99.99999981574703,
           "tier": null,
           "unreliable": false,
-          "currentValue": 15196498540,
-          "priorValue": 9627623114
+          "currentValue": 28,
+          "priorValue": 15196498540
         },
         {
           "label": "CPQLDN",
-          "percentChange": 37.99764754518321,
+          "percentChange": -99.99999979293571,
           "tier": null,
           "unreliable": false,
-          "currentValue": 14005312067,
-          "priorValue": 10148949867
+          "currentValue": 29,
+          "priorValue": 14005312067
         },
         {
           "label": "LNST",
-          "percentChange": -89.12375270740512,
-          "tier": null,
+          "percentChange": 458.1974245619083,
+          "tier": "level2",
           "unreliable": false,
-          "currentValue": 2989800774,
-          "priorValue": 27489268068
+          "currentValue": 16688990920,
+          "priorValue": 2989800774
         },
         {
           "label": "Tiền",
@@ -1122623,10 +1120606,11 @@
         "\"Quý II năm 2025\": Loi nhuan sau thue (2989800774) khong khop Loi nhuan truoc thue - Chi phi thue TNDN (16688990920)",
         "\"Lũy kế từ đầu năm đến cuối quý này (Năm nay)\": Loi nhuan sau thue (27489268068) khong khop Loi nhuan truoc thue - Chi phi thue TNDN (2989800774)",
         "\"Đơn vị tính: VND Lũy kế từ đầu năm đến cuối quý này (Năm trước)\": Loi nhuan sau thue (27446477988) khong khop Loi nhuan truoc thue - Chi phi thue TNDN (27489268068)",
+        "\"Quý II năm 2026\": Tong cac dong con cua \"Loi nhuan sau thue thu nhap doanh nghiep\" (-32) khong khop chinh dong \"Loi nhuan sau thue thu nhap doanh nghiep\" (16688990920) - co the do OCR gop/bia dong, can xem tay.",
         "\"Quý II năm 2025\": Tong cac dong con cua \"Loi nhuan sau thue thu nhap doanh nghiep\" (16688990920) khong khop chinh dong \"Loi nhuan sau thue thu nhap doanh nghiep\" (2989800774) - co the do OCR gop/bia dong, can xem tay.",
         "\"Lũy kế từ đầu năm đến cuối quý này (Năm nay)\": Tong cac dong con cua \"Loi nhuan sau thue thu nhap doanh nghiep\" (2989800774) khong khop chinh dong \"Loi nhuan sau thue thu nhap doanh nghiep\" (27489268068) - co the do OCR gop/bia dong, can xem tay.",
         "\"Đơn vị tính: VND\": Tong cac dong con cua \"Loi nhuan sau thue thu nhap doanh nghiep\" (27446477988) khong khop chinh dong \"Loi nhuan sau thue thu nhap doanh nghiep\" (0) - co the do OCR gop/bia dong, can xem tay.",
-        "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 1 muc trong KQKD (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
+        "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 3 muc trong KQKD (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
       ]
     },
     {
@@ -1125535,145 +1123519,544 @@
         },
         {
           "label": "Tiền",
-          "percentChange": null,
+          "percentChange": -22.40041841453602,
           "tier": null,
           "unreliable": false,
-          "currentValue": null,
-          "priorValue": null
+          "currentValue": 182057084787,
+          "priorValue": 234610910352
         },
         {
           "label": "Phải thu khách hàng",
-          "percentChange": null,
+          "percentChange": -11.494460734548921,
           "tier": null,
           "unreliable": false,
-          "currentValue": null,
-          "priorValue": null
+          "currentValue": 21208517104,
+          "priorValue": 23962926253
         },
         {
           "label": "Trả trước người bán",
-          "percentChange": null,
+          "percentChange": 16.237781289602264,
           "tier": null,
           "unreliable": false,
-          "currentValue": null,
-          "priorValue": null
+          "currentValue": 10166822279,
+          "priorValue": 8746572901
         },
         {
           "label": "Phải thu khác",
-          "percentChange": null,
+          "percentChange": -56.89529269984285,
           "tier": null,
           "unreliable": false,
-          "currentValue": null,
-          "priorValue": null
+          "currentValue": 30226743526,
+          "priorValue": 70123996703
         },
         {
           "label": "Tồn kho",
-          "percentChange": null,
+          "percentChange": 7.85929461451966,
           "tier": null,
           "unreliable": false,
-          "currentValue": null,
-          "priorValue": null
+          "currentValue": 1026071023439,
+          "priorValue": 951305149089
         },
         {
           "label": "Nguyên giá tscđ hữu hình",
-          "percentChange": null,
+          "percentChange": 6.238945653943275,
           "tier": null,
           "unreliable": false,
-          "currentValue": null,
-          "priorValue": null
+          "currentValue": 100319295798,
+          "priorValue": 94427985124
         },
         {
           "label": "BĐS Đầu tư",
-          "percentChange": null,
+          "percentChange": -28.57142737725951,
           "tier": null,
           "unreliable": false,
-          "currentValue": null,
-          "priorValue": null
+          "currentValue": 546875027,
+          "priorValue": 765625025
         },
         {
           "label": "TS Dở dang",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 3011.3973496020467,
+          "tier": "level2",
           "unreliable": false,
-          "currentValue": null,
-          "priorValue": null
+          "currentValue": 99877059033,
+          "priorValue": 3210038700
         },
         {
           "label": "TS Thuế TN Hoãn lại",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 24.80060540704363,
+          "tier": "level1",
           "unreliable": false,
-          "currentValue": null,
-          "priorValue": null
+          "currentValue": 626969178,
+          "priorValue": 502376712
         },
         {
           "label": "Phải trả người bán",
-          "percentChange": null,
+          "percentChange": -35.09864175045971,
           "tier": null,
           "unreliable": false,
-          "currentValue": null,
-          "priorValue": null
+          "currentValue": 42622519366,
+          "priorValue": 65672769439
         },
         {
           "label": "Người mua trả trước",
-          "percentChange": null,
+          "percentChange": -41.273582203491145,
           "tier": null,
           "unreliable": false,
-          "currentValue": null,
-          "priorValue": null
+          "currentValue": 21328029718,
+          "priorValue": 36317607166
         },
         {
           "label": "Chi phí phải trả",
-          "percentChange": null,
+          "percentChange": -64.05178179478435,
           "tier": null,
           "unreliable": false,
-          "currentValue": null,
-          "priorValue": null
+          "currentValue": 447949147,
+          "priorValue": 1246095549
         },
         {
           "label": "DT Chưa Thực Hiện",
           "percentChange": null,
           "tier": null,
           "unreliable": false,
-          "currentValue": null,
-          "priorValue": null
+          "currentValue": 0,
+          "priorValue": 0
         },
         {
           "label": "Phải trả khác",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 57.827915129997685,
+          "tier": "level2",
           "unreliable": false,
-          "currentValue": null,
-          "priorValue": null
+          "currentValue": 148553656099,
+          "priorValue": 94123815788
         },
         {
           "label": "Dự phòng phải trả",
           "percentChange": null,
           "tier": null,
           "unreliable": false,
-          "currentValue": null,
-          "priorValue": null
+          "currentValue": 0,
+          "priorValue": 0
         },
         {
           "label": "Vay",
-          "percentChange": null,
+          "percentChange": 16.727685935986734,
           "tier": null,
           "unreliable": false,
-          "currentValue": null,
-          "priorValue": null
+          "currentValue": 497572708306,
+          "priorValue": 426267945189
         },
         {
           "label": "Vốn CSH",
           "percentChange": null,
           "tier": null,
           "unreliable": false,
-          "currentValue": null,
-          "priorValue": null
+          "currentValue": 0,
+          "priorValue": 0
         }
       ],
       "statements": {
         "balanceSheet": {
-          "columns": [],
-          "rows": []
+          "columns": [
+            "Chỉ tiêu",
+            "Mã số",
+            "Thuyết minh",
+            "Số cuối kỳ 30/06/2026",
+            "Số đầu năm 01/01/2026"
+          ],
+          "rows": [
+            [
+              "A - TÀI SẢN NGẮN HẠN",
+              "100",
+              null,
+              1258238426678,
+              1272408738112
+            ],
+            [
+              "I. Tiền và các khoản tương đương tiền",
+              "110",
+              "V.1",
+              32049854009,
+              33137306463
+            ],
+            [
+              "1. Tiền",
+              "111",
+              null,
+              29983151535,
+              33137306463
+            ],
+            [
+              "2. Các khoản tương đương tiền",
+              "112",
+              null,
+              2066702474,
+              null
+            ],
+            [
+              "II. Đầu tư tài chính ngắn hạn",
+              "120",
+              null,
+              150007230778,
+              201473603889
+            ],
+            [
+              "3. Đầu tư nắm giữ đến ngày đáo hạn",
+              "123",
+              "V.2a",
+              150007230778,
+              201473603889
+            ],
+            [
+              "III. Các khoản phải thu ngắn hạn",
+              "130",
+              null,
+              41940432909,
+              83368495857
+            ],
+            [
+              "1. Phải thu ngắn hạn của khách hàng",
+              "131",
+              "V.3",
+              21208517104,
+              23962926253
+            ],
+            [
+              "2. Trả trước cho người bán ngắn hạn",
+              "132",
+              "V.4",
+              10166822279,
+              8746572901
+            ],
+            [
+              "5. Phải thu ngắn hạn khác",
+              "135",
+              "V.5a",
+              10565093526,
+              50658996703
+            ],
+            [
+              "IV. Hàng tồn kho",
+              "140",
+              null,
+              1026071023439,
+              951305149089
+            ],
+            [
+              "1. Hàng tồn kho",
+              "141",
+              "V.6",
+              1026071023439,
+              951305149089
+            ],
+            [
+              "V. Tài sản sinh học",
+              "150",
+              null,
+              "-",
+              "-"
+            ],
+            [
+              "VI. Tài sản ngắn hạn khác",
+              "160",
+              null,
+              8169885543,
+              3124182814
+            ],
+            [
+              "1. Chi phí chờ phân bổ ngắn hạn",
+              "161",
+              null,
+              995846594,
+              508399624
+            ],
+            [
+              "2. Thuế GTGT được khấu trừ",
+              "162",
+              null,
+              7060393250,
+              2615783190
+            ],
+            [
+              "3. Thuế và các khoản khác phải thu Nhà nước",
+              "163",
+              "V.15",
+              113645699,
+              "-"
+            ],
+            [
+              "B - TÀI SẢN DÀI HẠN",
+              "200",
+              null,
+              386951076999,
+              266824957727
+            ],
+            [
+              "I. Các khoản phải thu dài hạn",
+              "210",
+              null,
+              19661650000,
+              19465000000
+            ],
+            [
+              "5. Phải thu dài hạn khác",
+              "215",
+              "V.5b",
+              19661650000,
+              19465000000
+            ],
+            [
+              "II. Tài sản cố định",
+              "220",
+              null,
+              29805134196,
+              26394367542
+            ],
+            [
+              "1. Tài sản cố định hữu hình",
+              "221",
+              "V.8",
+              29606800877,
+              26126034221
+            ],
+            [
+              "- Nguyên giá",
+              "222",
+              null,
+              100319295798,
+              94427985124
+            ],
+            [
+              "- Giá trị hao mòn lũy kế (*)",
+              "223",
+              null,
+              -70712494921,
+              -68301950903
+            ],
+            [
+              "3. Tài sản cố định vô hình",
+              "227",
+              null,
+              198333319,
+              268333321
+            ],
+            [
+              "- Nguyên giá",
+              "228",
+              null,
+              919000000,
+              919000000
+            ],
+            [
+              "- Giá trị hao mòn lũy kế (*)",
+              "229",
+              null,
+              -720666681,
+              -650666679
+            ],
+            [
+              "IV. Bất động sản đầu tư",
+              "240",
+              "V.9",
+              546875027,
+              765625025
+            ],
+            [
+              "- Nguyên giá",
+              "241",
+              null,
+              3500000000,
+              3500000000
+            ],
+            [
+              "- Giá trị hao mòn lũy kế (*)",
+              "242",
+              null,
+              -2953124973,
+              -2734374975
+            ],
+            [
+              "V. Tài sản dở dang dài hạn",
+              "250",
+              null,
+              99877059033,
+              3210038700
+            ],
+            [
+              "2. Chi phí xây dựng cơ bản dở dang",
+              "252",
+              "V.10",
+              99877059033,
+              3210038700
+            ],
+            [
+              "VI. Đầu tư tài chính dài hạn",
+              "260",
+              null,
+              228994852536,
+              211312612640
+            ],
+            [
+              "2. Đầu tư vào công ty liên doanh, liên kết",
+              "262",
+              "V.2b",
+              93823208699,
+              94712612640
+            ],
+            [
+              "3. Đầu tư góp vốn vào đơn vị khác",
+              "263",
+              "V.2c",
+              114800000000,
+              116600000000
+            ],
+            [
+              "5. Đầu tư nắm giữ đến ngày đáo hạn",
+              "265",
+              "V.2a",
+              20371643837,
+              "-"
+            ],
+            [
+              "VII. Tài sản dài hạn khác",
+              "270",
+              null,
+              8065506207,
+              5677313820
+            ],
+            [
+              "1. Chi phí chờ phân bổ dài hạn",
+              "271",
+              "V.7",
+              4992432311,
+              2522119315
+            ],
+            [
+              "2. Tài sản thuế thu nhập hoãn lại",
+              "272",
+              null,
+              626969178,
+              502376712
+            ],
+            [
+              "5. Lợi thế thương mại",
+              "279",
+              "V.11",
+              2446104718,
+              2652817793
+            ],
+            [
+              "TỔNG CỘNG TÀI SẢN (280 = 100 + 200)",
+              "280",
+              null,
+              1645189503677,
+              1539233695839
+            ],
+            [
+              "C - NỢ PHẢI TRẢ",
+              "300",
+              null,
+              767013643037,
+              647096305392
+            ],
+            [
+              "I. Nợ ngắn hạn",
+              "310",
+              null,
+              491414084849,
+              380481311594
+            ],
+            [
+              "1. Phải trả người bán ngắn hạn",
+              "311",
+              "V.12",
+              42622519366,
+              65672769439
+            ],
+            [
+              "2. Người mua trả tiền trước ngắn hạn",
+              "312",
+              "V.13",
+              21328029718,
+              36317607166
+            ],
+            [
+              "3. Phải trả cổ tức, lợi nhuận",
+              "313",
+              "V.14",
+              37079983200,
+              "-"
+            ],
+            [
+              "4. Thuế và các khoản phải nộp Nhà nước ngắn hạn",
+              "314",
+              "V.15",
+              15434113570,
+              19909287127
+            ],
+            [
+              "5. Phải trả người lao động",
+              "315",
+              null,
+              2487971677,
+              2610646321
+            ],
+            [
+              "6. Chi phí phải trả ngắn hạn",
+              "316",
+              "V.16",
+              447949147,
+              1246095549
+            ],
+            [
+              "9. Doanh thu chờ phân bổ ngắn hạn",
+              "319",
+              null,
+              70500000,
+              130954545
+            ],
+            [
+              "10. Phải trả ngắn hạn khác",
+              "320",
+              "V.17",
+              148553656099,
+              94123815788
+            ],
+            [
+              "11. Vay và nợ thuê tài chính ngắn hạn",
+              "321",
+              "V.18a",
+              222990640306,
+              160162940189
+            ],
+            [
+              "13. Quỹ khen thưởng, phúc lợi",
+              "323",
+              null,
+              398721766,
+              307195470
+            ],
+            [
+              "15. Giao dịch mua bán lại trái phiếu Chính",
+              "325",
+              null,
+              "-",
+              "-"
+            ],
+            [
+              "II. Nợ dài hạn",
+              "330",
+              null,
+              275599558188,
+              266614993798
+            ],
+            [
+              "9. Vay và nợ thuê tài chính dài hạn",
+              "339",
+              "V.18b",
+              274582068000,
+              266105005000
+            ]
+          ]
         },
         "incomeStatement": {
           "columns": [],
@@ -1125696,8 +1124079,9 @@
       "periodYear": 2026,
       "periodSlug": "Q2",
       "warnings": [
-        "CANH BAO: ca 3 bang chinh (BCDKT/KQKD/LCTT) deu khong doc duoc dong nao - can kiem tra tay.",
-        "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 7 muc trong BCDKT, 2 muc trong KQKD (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
+        "CANH BAO: khong doc duoc dong nao cua Ket qua kinh doanh (KQKD) - cac chi tieu lay tu bang nay se trong/bang 0, can mo file goc kiem tra tay.",
+        "CANH BAO: khong doc duoc dong nao cua Luu chuyen tien te (LCTT) - cac chi tieu lay tu bang nay se trong/bang 0, can mo file goc kiem tra tay.",
+        "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 4 muc trong BCDKT, 2 muc trong KQKD (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
       ]
     },
     {
@@ -1132345,96 +1130729,6 @@
             "Lũy kế từ đầu năm đến cuối quý II Năm trước"
           ],
           "rows": [
-            [
-              "Doanh thu bán hàng và cung cấp dịch vụ",
-              null,
-              null,
-              385972750,
-              4370376147133,
-              -4369990174383,
-              "-99,99%"
-            ],
-            [
-              "- Than nhiệt",
-              null,
-              null,
-              "-",
-              2738003390750,
-              -2738003390750,
-              "100,00%"
-            ],
-            [
-              "- Than cốc",
-              null,
-              null,
-              "-",
-              540445411364,
-              -540445411364,
-              "100,00%"
-            ],
-            [
-              "- Quặng sắt",
-              null,
-              null,
-              "-",
-              682507824120,
-              -682507824120,
-              "100,00%"
-            ],
-            [
-              "- Chuyển nhượng Bất động sản",
-              null,
-              null,
-              "-",
-              118268167724,
-              -118268167724,
-              "100,00%"
-            ],
-            [
-              "- Dịch vụ cho thuê văn phòng, dịch vụ khác, hàng hóa khác",
-              null,
-              null,
-              385972750,
-              291151353175,
-              -290765380425,
-              "-99,87%"
-            ],
-            [
-              "Doanh thu hoạt động tài chính",
-              null,
-              null,
-              69284913,
-              35440060814,
-              -35370775901,
-              "-99,80%"
-            ],
-            [
-              "Chi phí tài chính",
-              null,
-              null,
-              28218492930,
-              107348181853,
-              -79129688923,
-              "-73,71%"
-            ],
-            [
-              "Trong đó: Chi phí lãi vay",
-              null,
-              null,
-              28155222282,
-              84478935470,
-              -56323713188,
-              "-66,67%"
-            ],
-            [
-              "Lợi nhuận/(Lỗ) sau thuế thu nhập doanh nghiệp",
-              null,
-              null,
-              -34069136217,
-              26296371729,
-              -60365507946,
-              "229,56%"
-            ],
             [
               "Doanh thu bán hàng và cung cấp dịch vụ",
               "01",
@@ -1147148,6 +1145442,8 @@
       "periodYear": 2026,
       "periodSlug": "Q2",
       "warnings": [
+        "CANH BAO: khong doc duoc dong nao cua Bang can doi ke toan (BCDKT) - cac chi tieu lay tu bang nay se trong/bang 0, can mo file goc kiem tra tay.",
+        "CANH BAO: khong doc duoc dong nao cua Ket qua kinh doanh (KQKD) - cac chi tieu lay tu bang nay se trong/bang 0, can mo file goc kiem tra tay.",
         "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 7 muc trong BCDKT, 2 muc trong KQKD (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
       ]
     },
@@ -1156643,13 +1154939,6 @@
           ],
           "rows": [
             [
-              null,
-              null,
-              -1,
-              -2,
-              -3
-            ],
-            [
               "A - TÀI SẢN NGẮN HẠN",
               "100",
               null,
@@ -1156874,13 +1155163,6 @@
               "01/01/2026"
             ],
             [
-              null,
-              null,
-              -1,
-              -2,
-              -3
-            ],
-            [
               "II. Tài sản cố định",
               "220",
               null,
@@ -1157063,13 +1155345,6 @@
               "01/01/2026"
             ],
             [
-              null,
-              null,
-              -1,
-              -2,
-              -3
-            ],
-            [
               "C - NỢ PHẢI TRẢ",
               "300",
               null,
@@ -1157166,13 +1155441,6 @@
               "TM",
               "30/06/2026",
               "01/01/2026"
-            ],
-            [
-              null,
-              null,
-              -1,
-              -2,
-              -3
             ],
             [
               "II. Nợ dài hạn",
@@ -1174793,15 +1173061,6 @@
               null,
               2026,
               2025
-            ],
-            [
-              null,
-              null,
-              -1,
-              -2,
-              -3,
-              -4,
-              -5
             ],
             [
               "01",
@@ -1193071,11 +1191330,11 @@
         },
         {
           "label": "LNST",
-          "percentChange": null,
+          "percentChange": -120.74099314193415,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": -606237636293,
+          "priorValue": 2922895890975
         },
         {
           "label": "Tiền",
@@ -1208758,27 +1207017,27 @@
       "analysis": [
         {
           "label": "DT thuần",
-          "percentChange": -6.895773247215016,
+          "percentChange": -0.4304953079769888,
           "tier": null,
           "unreliable": false,
-          "currentValue": 112944567148,
-          "priorValue": 121309817059
+          "currentValue": 282442667381,
+          "priorValue": 283663826846
         },
         {
           "label": "Lãi gộp",
-          "percentChange": -11.759760293038518,
+          "percentChange": -6.742039551103645,
           "tier": null,
           "unreliable": false,
-          "currentValue": 26102703016,
-          "priorValue": 29581405380
+          "currentValue": 58654818091,
+          "priorValue": 62895240051
         },
         {
           "label": "CPBH",
-          "percentChange": 46.197383461082985,
+          "percentChange": 9.8741504439725,
           "tier": null,
           "unreliable": false,
-          "currentValue": 13916423133,
-          "priorValue": 9518927633
+          "currentValue": 26518520704,
+          "priorValue": 24135359042
         },
         {
           "label": "CPQLDN",
@@ -1208790,11 +1207049,11 @@
         },
         {
           "label": "LNST",
-          "percentChange": -12.72181068921186,
-          "tier": null,
+          "percentChange": 59.60506219312575,
+          "tier": "level2",
           "unreliable": false,
-          "currentValue": 6100257251,
-          "priorValue": 6989440660
+          "currentValue": 16132310870,
+          "priorValue": 10107643610
         },
         {
           "label": "Tiền",
@@ -1209345,174 +1207604,6 @@
           ],
           "rows": [
             [
-              null,
-              null,
-              -1,
-              -2,
-              -3,
-              "(4) = (2)-(3)"
-            ],
-            [
-              "1. BÁO CÁO TÀI CHÍNH RIÊNG",
-              null,
-              null,
-              null,
-              null,
-              null
-            ],
-            [
-              "Doanh thu thuần",
-              null,
-              112944567148,
-              121309817059,
-              -8365249911,
-              "-6.90%"
-            ],
-            [
-              "Giá vốn hàng bán",
-              null,
-              86841864132,
-              91728411679,
-              -4886547547,
-              "-5.33%"
-            ],
-            [
-              "Lợi nhuận gộp",
-              null,
-              26102703016,
-              29581405380,
-              -3478702364,
-              "-11.76%"
-            ],
-            [
-              "Doanh thu tài chính",
-              null,
-              572525183,
-              4023919165,
-              -3451393982,
-              "-85.77%"
-            ],
-            [
-              "Chi phí tài chính",
-              null,
-              2006570623,
-              8262893971,
-              -6256323348,
-              "-75.72%"
-            ],
-            [
-              "Chi phí bán hàng",
-              null,
-              13916423133,
-              9518927633,
-              4397495500,
-              "46.20%"
-            ],
-            [
-              "Chi phí quản lý",
-              null,
-              5857735409,
-              8570212840,
-              -2712477431,
-              "-31.65%"
-            ],
-            [
-              "Lợi nhuận trước thuế",
-              null,
-              6100257251,
-              7275992130,
-              -1175734879,
-              "-16.16%"
-            ],
-            [
-              "Lợi nhuận sau thuế",
-              null,
-              6100257251,
-              6989440660,
-              -889183409,
-              "-12.72%"
-            ],
-            [
-              "2. BÁO CÁO TÀI CHÍNH HỢP NHẤT",
-              null,
-              null,
-              null,
-              null,
-              null
-            ],
-            [
-              "Doanh thu thuần",
-              null,
-              282442667381,
-              283663826846,
-              -1221159465,
-              "-0.43%"
-            ],
-            [
-              "Giá vốn hàng bán",
-              null,
-              223787849290,
-              220768586795,
-              3019262495,
-              "1.37%"
-            ],
-            [
-              "Lợi nhuận gộp",
-              null,
-              58654818091,
-              62895240051,
-              -4240421960,
-              "-6.74%"
-            ],
-            [
-              "Doanh thu tài chính",
-              null,
-              1308246360,
-              3737299163,
-              -2429052803,
-              "-64.99%"
-            ],
-            [
-              "Chi phí tài chính",
-              null,
-              9715554774,
-              19951423531,
-              -10235868757,
-              "-51.30%"
-            ],
-            [
-              "Chi phí bán hàng",
-              null,
-              26518520704,
-              24135359042,
-              2383161662,
-              "9.87%"
-            ],
-            [
-              "Chi phí quản lý",
-              null,
-              7804903216,
-              9449110211,
-              -1644206995,
-              "-17.40%"
-            ],
-            [
-              "Lợi nhuận trước thuế",
-              null,
-              17575168128,
-              12387082849,
-              5188085279,
-              "41.88%"
-            ],
-            [
-              "Lợi nhuận sau thuế",
-              null,
-              16132310870,
-              10107643610,
-              6024667260,
-              "59.61%"
-            ],
-            [
               "Năm 2026",
               "Năm 2025",
               null,
@@ -1209868,15 +1207959,7 @@
       "entryName": "4_spc_2026_8_3_e7b58ee_vi_bctchopnhat_q2_2026.pdf",
       "periodYear": 2026,
       "periodSlug": "Q2",
-      "warnings": [
-        "\"Lũy kế từ đầu năm đến cuối quý này\": Loi nhuan gop (-3478702364) khong khop Doanh thu thuan - Gia von (-13251797458)",
-        "\"Quý 2/2026\": Loi nhuan sau thue (6100257251) khong khop Loi nhuan truoc thue - Chi phi thue TNDN (4657399993)",
-        "\"\": Loi nhuan sau thue (6989440660) khong khop Loi nhuan truoc thue - Chi phi thue TNDN (4996552891)",
-        "\"Lũy kế từ đầu năm đến cuối quý này\": Loi nhuan sau thue (-889183409) khong khop Loi nhuan truoc thue - Chi phi thue TNDN (-3273389390)",
-        "\"Lũy kế từ đầu năm đến cuối quý này\": Tong cac dong con cua \"Doanh thu thuan\" (525089881034) khong khop chinh dong \"Doanh thu thuan\" (-1221159465) - co the do OCR gop/bia dong, can xem tay.",
-        "\"Lũy kế từ đầu năm đến cuối quý này\": Tong cac dong con cua \"Loi nhuan gop\" (-422617655509) khong khop chinh dong \"Loi nhuan gop\" (103693384990) - co the do OCR gop/bia dong, can xem tay.",
-        "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 2 muc trong KQKD (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
-      ]
+      "warnings": []
     },
     {
       "source": "vietstock",
@@ -1210735,6 +1208818,8 @@
       "periodYear": 2026,
       "periodSlug": "Q2",
       "warnings": [
+        "CANH BAO: khong doc duoc dong nao cua Ket qua kinh doanh (KQKD) - cac chi tieu lay tu bang nay se trong/bang 0, can mo file goc kiem tra tay.",
+        "CANH BAO: khong doc duoc dong nao cua Luu chuyen tien te (LCTT) - cac chi tieu lay tu bang nay se trong/bang 0, can mo file goc kiem tra tay.",
         "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 4 muc trong BCDKT, 2 muc trong KQKD (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
       ]
     },
@@ -1255389,11 +1253474,11 @@
         },
         {
           "label": "LNST",
-          "percentChange": 30.402341557087393,
+          "percentChange": 33.22589076028291,
           "tier": null,
           "unreliable": false,
-          "currentValue": 25459832149,
-          "priorValue": 19524060569
+          "currentValue": 23760027621,
+          "priorValue": 17834392013
         },
         {
           "label": "Tiền",
@@ -1262933,15 +1261018,6 @@
               "Năm trước Last Year"
             ],
             [
-              null,
-              null,
-              -1,
-              -2,
-              -3,
-              -4,
-              -5
-            ],
-            [
               "1. Doanh thu bán hàng và cung cấp dịch vụ",
               "",
               null,
@@ -1263384,13 +1261460,6 @@
             "Lũy kế từ đầu năm đến cuối quý này Cumulative from the beginning of the year to the end of this quarter Năm trước Last Year"
           ],
           "rows": [
-            [
-              null,
-              null,
-              -1,
-              -2,
-              -3
-            ],
             [
               "I. Lưu chuyển tiền từ hoạt động kinh doanh:",
               "",
@@ -1266399,11 +1264468,11 @@
       "analysis": [
         {
           "label": "DT thuần",
-          "percentChange": -48.33096836363224,
-          "tier": null,
+          "percentChange": 93.53952809445339,
+          "tier": "level2",
           "unreliable": false,
-          "currentValue": 34280651110,
-          "priorValue": 66346610386
+          "currentValue": 66346610386,
+          "priorValue": 34280651110
         },
         {
           "label": "Lãi gộp",
@@ -1266431,11 +1264500,11 @@
         },
         {
           "label": "LNST",
-          "percentChange": 88.23370638950367,
-          "tier": "level2",
+          "percentChange": -749.8853021209087,
+          "tier": null,
           "unreliable": false,
-          "currentValue": -616558916,
-          "priorValue": -5240043606
+          "currentValue": -5240043606,
+          "priorValue": -616558916
         },
         {
           "label": "Tiền",
@@ -1267522,33 +1265591,6 @@
           ],
           "rows": [
             [
-              "Quý II/2025",
-              null,
-              null,
-              null,
-              "Quý II/2026",
-              null,
-              null
-            ],
-            [
-              "1. Doanh thu thuần",
-              null,
-              null,
-              34280651110,
-              66346610386,
-              32065959276,
-              "94%"
-            ],
-            [
-              "2. Lợi nhuận sau thuế TNDN",
-              null,
-              null,
-              -616558916,
-              -5240043606,
-              "- 4.623.484.690",
-              "-750%"
-            ],
-            [
               "- Doanh thu bán hàng và cung cấp dịch vụ (1)",
               1,
               6,
@@ -1268085,14 +1266127,7 @@
       "entryName": null,
       "periodYear": 2026,
       "periodSlug": "Q2",
-      "warnings": [
-        "\"Quý này năm nay\": Loi nhuan gop (6987229156) khong khop Doanh thu thuan - Gia von (-25078730120)",
-        "\"Quý này năm trước\": Loi nhuan gop (2281211776) khong khop Doanh thu thuan - Gia von (34347171052)",
-        "\"Số lũy kế từ đầu năm đến cuối quý này (Năm nay)\": Loi nhuan gop (17930343590) khong khop Doanh thu thuan - Gia von (-86304224128)",
-        "\"Quý này năm nay\": Loi nhuan sau thue (-616558916) khong khop Loi nhuan truoc thue - Chi phi thue TNDN (-5240043606)",
-        "\"Quý này năm trước\": Loi nhuan sau thue (-5240043606) khong khop Loi nhuan truoc thue - Chi phi thue TNDN (-616558916)",
-        "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 3 muc trong KQKD (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
-      ]
+      "warnings": []
     },
     {
       "source": "vietstock",
@@ -1281468,7 +1279503,9 @@
       "entryName": "3_agm_2026_8_3_d64d91a_cv_cbtt__agm_bctc_hop_nhat_quy_2__2026_tieng_viet_signed.pdf",
       "periodYear": 2026,
       "periodSlug": "Q2",
-      "warnings": []
+      "warnings": [
+        "CANH BAO: khong doc duoc dong nao cua Luu chuyen tien te (LCTT) - cac chi tieu lay tu bang nay se trong/bang 0, can mo file goc kiem tra tay."
+      ]
     },
     {
       "source": "vietstock",
@@ -1307239,15 +1305276,6 @@
           ],
           "rows": [
             [
-              null,
-              null,
-              -1,
-              -2,
-              -3,
-              -4,
-              -5
-            ],
-            [
               "1. Doanh thu bán hàng và cung cấp dịch vụ",
               "1",
               "VI.1",
@@ -1313261,11 +1311289,11 @@
         },
         {
           "label": "Lãi gộp",
-          "percentChange": null,
+          "percentChange": -6133.544219545271,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": -37412933016,
+          "priorValue": -600187176
         },
         {
           "label": "CPBH",
@@ -1313285,11 +1311313,11 @@
         },
         {
           "label": "LNST",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 746.1168815541085,
+          "tier": "level2",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 1568313501418,
+          "priorValue": -242729070574
         },
         {
           "label": "Tiền",
@@ -1372508,10 +1370536,10 @@
         },
         {
           "label": "LNST",
-          "percentChange": 38.08110418649552,
+          "percentChange": 38.237814510282135,
           "tier": null,
           "unreliable": false,
-          "currentValue": 33051260422,
+          "currentValue": 33088770795,
           "priorValue": 23936121178
         },
         {
@@ -1373130,51 +1371158,6 @@
           ],
           "rows": [
             [
-              null,
-              null,
-              null,
-              null,
-              null,
-              null,
-              "(3)=(1)-(2)"
-            ],
-            [
-              "BCTC Quý 2 năm 2026",
-              null,
-              null,
-              null,
-              null,
-              null,
-              null
-            ],
-            [
-              "Doanh thu bán hàng và cung cấp dịch vụ – BCTC của Công ty mẹ",
-              null,
-              null,
-              297457698262,
-              201492638637,
-              95965059625,
-              "47.63%"
-            ],
-            [
-              "Lợi nhuận sau thuế TNDN – BCTC của Công ty mẹ",
-              null,
-              null,
-              33051260422,
-              23936121178,
-              9115139244,
-              "38.08%"
-            ],
-            [
-              "Lợi nhuận sau thuế TNDN – BCTC hợp nhất",
-              null,
-              null,
-              33088770795,
-              23936121178,
-              9152649617,
-              "38.24%"
-            ],
-            [
               "1. Doanh thu bán hàng và cung cấp dịch vụ",
               "01",
               26,
@@ -1373597,11 +1371580,7 @@
       "entryName": "3_bmj_2026_8_4_d7c5f43_vi_baocaotaichinhhopnhat_q2_2026.pdf",
       "periodYear": 2026,
       "periodSlug": "Q2",
-      "warnings": [
-        "\"Quý 2 Năm nay\": Loi nhuan sau thue (33051260422) khong khop Loi nhuan truoc thue - Chi phi thue TNDN (33088770795)",
-        "\"Lũy kế từ đầu năm đến cuối kỳ báo cáo Năm nay\": Loi nhuan sau thue (9115139244) khong khop Loi nhuan truoc thue - Chi phi thue TNDN (44274705804)",
-        "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 1 muc trong KQKD (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
-      ]
+      "warnings": []
     },
     {
       "source": "vietstock",
@@ -1373647,11 +1371626,11 @@
         },
         {
           "label": "LNST",
-          "percentChange": -58.35721409869659,
+          "percentChange": -58.3729599324568,
           "tier": null,
           "unreliable": false,
-          "currentValue": 31231582383,
-          "priorValue": 74998782399
+          "currentValue": 31233843693,
+          "priorValue": 75032583730
         },
         {
           "label": "Tiền",
@@ -1391983,6 +1389962,7 @@
       "periodYear": 2026,
       "periodSlug": "Q2",
       "warnings": [
+        "CANH BAO: khong doc duoc dong nao cua Ket qua kinh doanh (KQKD) - cac chi tieu lay tu bang nay se trong/bang 0, can mo file goc kiem tra tay.",
         "\"30/06/2026\": Tong cac muc trong Von chu so huu (0) khong khop dong Von chu so huu (1558720666075)",
         "\"Đơn vị tính: VND 01/01/2026\": Tong cac muc trong Von chu so huu (0) khong khop dong Von chu so huu (1596698790799)",
         "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 2 muc trong KQKD (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
@@ -1419903,11 +1417883,11 @@
         },
         {
           "label": "Tiền",
-          "percentChange": -12.611801567805456,
+          "percentChange": null,
           "tier": null,
           "unreliable": false,
-          "currentValue": 690336403738,
-          "priorValue": 789965254031
+          "currentValue": null,
+          "priorValue": 690336403738
         },
         {
           "label": "Phải thu khách hàng",
@@ -1419927,43 +1417907,43 @@
         },
         {
           "label": "Phải thu khác",
-          "percentChange": 3.232162597436805,
+          "percentChange": null,
           "tier": null,
           "unreliable": false,
-          "currentValue": 83208758721,
-          "priorValue": 80603521836
+          "currentValue": null,
+          "priorValue": null
         },
         {
           "label": "Tồn kho",
-          "percentChange": -7.0226106714624565,
+          "percentChange": null,
           "tier": null,
           "unreliable": false,
-          "currentValue": 451329632951,
-          "priorValue": 485418698256
+          "currentValue": null,
+          "priorValue": 451329632951
         },
         {
           "label": "Nguyên giá tscđ hữu hình",
           "percentChange": null,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": null,
+          "priorValue": null
         },
         {
           "label": "BĐS Đầu tư",
           "percentChange": null,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": null,
+          "priorValue": null
         },
         {
           "label": "TS Dở dang",
           "percentChange": null,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": null,
+          "priorValue": null
         },
         {
           "label": "TS Thuế TN Hoãn lại",
@@ -1419975,67 +1417955,67 @@
         },
         {
           "label": "Phải trả người bán",
-          "percentChange": -1.1706153793076728,
-          "tier": null,
-          "unreliable": false,
-          "currentValue": 75029043866,
-          "priorValue": 75917748708
-        },
-        {
-          "label": "Người mua trả trước",
-          "percentChange": -7.46097486511962,
-          "tier": null,
-          "unreliable": false,
-          "currentValue": 102543785296,
-          "priorValue": 110811395675
-        },
-        {
-          "label": "Chi phí phải trả",
-          "percentChange": 4.358361568746697,
-          "tier": null,
-          "unreliable": false,
-          "currentValue": 19123410117,
-          "priorValue": 18324751203
-        },
-        {
-          "label": "DT Chưa Thực Hiện",
           "percentChange": -100,
           "tier": null,
           "unreliable": false,
           "currentValue": 0,
-          "priorValue": 94000000
+          "priorValue": 75029043866
+        },
+        {
+          "label": "Người mua trả trước",
+          "percentChange": -100,
+          "tier": null,
+          "unreliable": false,
+          "currentValue": 0,
+          "priorValue": 102543785296
+        },
+        {
+          "label": "Chi phí phải trả",
+          "percentChange": -100,
+          "tier": null,
+          "unreliable": false,
+          "currentValue": 0,
+          "priorValue": 19123410117
+        },
+        {
+          "label": "DT Chưa Thực Hiện",
+          "percentChange": null,
+          "tier": null,
+          "unreliable": false,
+          "currentValue": 0,
+          "priorValue": 0
         },
         {
           "label": "Phải trả khác",
-          "percentChange": 4.41144009669611,
+          "percentChange": -100,
           "tier": null,
           "unreliable": false,
-          "currentValue": 63321446527,
-          "priorValue": 60646080993
+          "currentValue": 0,
+          "priorValue": 63321446527
         },
         {
           "label": "Dự phòng phải trả",
-          "percentChange": 5.409481804615828,
+          "percentChange": -100,
           "tier": null,
           "unreliable": false,
-          "currentValue": 7030263390,
-          "priorValue": 6669479130
+          "currentValue": 0,
+          "priorValue": 7030263390
         },
         {
           "label": "Vay",
-          "percentChange": -25.08636578911936,
+          "percentChange": -100,
           "tier": null,
           "unreliable": false,
-          "currentValue": 650183508308,
-          "priorValue": 867910781738
+          "currentValue": 0,
+          "priorValue": 650183508308
         },
         {
           "label": "Vốn CSH",
-          "percentChange": 3.765694224458086,
+          "percentChange": -100,
           "tier": null,
           "unreliable": false,
-          "currentValue": 1673699618306,
-          "priorValue": 1612960459442
+          "currentValue": 0,
+          "priorValue": 1673699618306
         }
       ],
       "statements": {
@@ -1421326,7 +1419306,7 @@
       "periodYear": 2026,
       "periodSlug": "Q2",
       "warnings": [
-        "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 5 muc trong BCDKT (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
+        "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 9 muc trong BCDKT (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
       ]
     },
     {
@@ -1434708,6 +1432688,8 @@
       "periodYear": 2026,
       "periodSlug": "Q2",
       "warnings": [
+        "CANH BAO: khong doc duoc dong nao cua Bang can doi ke toan (BCDKT) - cac chi tieu lay tu bang nay se trong/bang 0, can mo file goc kiem tra tay.",
+        "CANH BAO: khong doc duoc dong nao cua Ket qua kinh doanh (KQKD) - cac chi tieu lay tu bang nay se trong/bang 0, can mo file goc kiem tra tay.",
         "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 7 muc trong BCDKT, 2 muc trong KQKD (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
       ]
     },
@@ -1455278,11 +1453260,11 @@
         },
         {
           "label": "LNST",
-          "percentChange": null,
+          "percentChange": 3.3596734529374435,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 141494022498,
+          "priorValue": 136894804106
         },
         {
           "label": "Tiền",
@@ -1466881,11 +1464863,11 @@
         },
         {
           "label": "Tổng TN Hoạt Động",
-          "percentChange": 13.305193445791893,
+          "percentChange": 9.663829116105251,
           "tier": null,
           "unreliable": false,
-          "currentValue": 22812794,
-          "priorValue": 20133935
+          "currentValue": 22083615,
+          "priorValue": 20137556
         },
         {
           "label": "CP Hoạt Động",
@@ -1481999,6 +1479981,7 @@
       "periodYear": 2026,
       "periodSlug": "Q3",
       "warnings": [
+        "CANH BAO: khong doc duoc dong nao cua Bang can doi ke toan (BCDKT) - cac chi tieu lay tu bang nay se trong/bang 0, can mo file goc kiem tra tay.",
         "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 7 muc trong BCDKT (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
       ]
     },
@@ -1506822,11 +1504805,11 @@
         },
         {
           "label": "LNST",
-          "percentChange": -100,
-          "tier": null,
+          "percentChange": 124.83370428442203,
+          "tier": "level2",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 3766464134
+          "currentValue": 3766464134,
+          "priorValue": 1675222203
         },
         {
           "label": "Tiền",
@@ -1507423,33 +1505406,6 @@
           ],
           "rows": [
             [
-              "Doanh thu bán hàng và cung cấp dịch vụ",
-              null,
-              null,
-              null,
-              145385816811,
-              30017456759,
-              "384,34%"
-            ],
-            [
-              "Lợi nhuận trước thuế",
-              null,
-              null,
-              null,
-              3766464134,
-              1675222203,
-              "124,83%"
-            ],
-            [
-              "Lợi nhuận sau thuế",
-              null,
-              null,
-              null,
-              3766464134,
-              1675222203,
-              "124,83%"
-            ],
-            [
               "Quý III/2026",
               "Quý III/2025",
               null,
@@ -1507864,9 +1505820,7 @@
       "entryName": null,
       "periodYear": 2026,
       "periodSlug": "Q3",
-      "warnings": [
-        "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 2 muc trong KQKD (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
-      ]
+      "warnings": []
     },
     {
       "source": "vietstock",
@@ -1524228,13 +1522182,6 @@
               null
             ],
             [
-              null,
-              null,
-              -1,
-              -2,
-              -3
-            ],
-            [
               "I. Lưu chuyển tiền từ hoạt động kinh doanh",
               "",
               null,
@@ -1538690,15 +1536637,6 @@
             "Lũy kế từ đầu năm đến cuối tháng này Năm trước"
           ],
           "rows": [
-            [
-              null,
-              null,
-              -1,
-              -2,
-              -3,
-              -4,
-              -5
-            ],
             [
               "1. Doanh thu bán hàng và cung cấp dịch vụ",
               "01",
@@ -1577278,11 +1575216,11 @@
         },
         {
           "label": "LNST",
-          "percentChange": -98.16018276183294,
+          "percentChange": -98.1600650201663,
           "tier": null,
           "unreliable": false,
-          "currentValue": 4977,
-          "priorValue": 270516
+          "currentValue": 4977323438,
+          "priorValue": 270516267833
         },
         {
           "label": "LNST Công Ty Mẹ",
@@ -1578080,42 +1576018,6 @@
             "Từ 1/1-30/09/2025"
           ],
           "rows": [
-            [
-              null,
-              "Số tiền (trđ)/ Amount (million dong)",
-              null,
-              null,
-              null,
-              null,
-              "Tỷ lệ/ Ratio (%)"
-            ],
-            [
-              null,
-              "Tổng doanh thu và thu nhập khác/ Total Revenue and other income",
-              null,
-              411269,
-              653645,
-              -242377,
-              "-37%"
-            ],
-            [
-              null,
-              "Tổng chi phí và chi phí khác/ Total Expenses and other expenses",
-              null,
-              404940,
-              315809,
-              89131,
-              "28%"
-            ],
-            [
-              null,
-              "Tổng lợi nhuận kế toán sau thuế TNDN/ Total profit after CIT",
-              null,
-              4977,
-              270516,
-              -265539,
-              "-98%"
-            ],
             [
               "",
               "I. DOANH THU HOẠT ĐỘNG",
@@ -1583648,11 +1581550,11 @@
         },
         {
           "label": "LNST",
-          "percentChange": 95.32710280373831,
+          "percentChange": 95.40080428174639,
           "tier": "level2",
           "unreliable": false,
-          "currentValue": 418,
-          "priorValue": 214
+          "currentValue": 418613274776,
+          "priorValue": 214233138044
         },
         {
           "label": "Tiền",
@@ -1584144,51 +1582046,6 @@
           ],
           "rows": [
             [
-              "Số tiền/ *Amount*",
-              null,
-              null,
-              null,
-              null,
-              null,
-              "Tỷ lệ %/ *Rate %*"
-            ],
-            [
-              "Doanh thu, thu nhập khác *Revenue, Other Income*",
-              null,
-              null,
-              2900,
-              1980,
-              920,
-              "46,5%"
-            ],
-            [
-              "Tổng chi phí *Total expenses*",
-              null,
-              null,
-              2376,
-              1740,
-              635,
-              "36,5%"
-            ],
-            [
-              "Lợi nhuận trước thuế TNDN *Profit before corporate income tax*",
-              null,
-              null,
-              524,
-              239,
-              284,
-              "119,1%"
-            ],
-            [
-              "Lợi nhuận sau thuế TNDN *Profit after corporate income tax*",
-              null,
-              null,
-              418,
-              214,
-              204,
-              "95,4%"
-            ],
-            [
               "Năm 2026",
               "Năm 2025",
               null,
@@ -1584551,12 +1582408,7 @@
       "entryName": null,
       "periodYear": 2026,
       "periodSlug": "Q3",
-      "warnings": [
-        "\"Quý 3\": Loi nhuan sau thue (418) khong khop Loi nhuan truoc thue - Chi phi thue TNDN (-105529365344)",
-        "\"\": Loi nhuan sau thue (214) khong khop Loi nhuan truoc thue - Chi phi thue TNDN (-24941912101)",
-        "\"Luỹ kế từ đầu năm đến cuối Quý 3\": Loi nhuan sau thue (204) khong khop Loi nhuan truoc thue - Chi phi thue TNDN (-225867035845)",
-        "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 1 muc trong KQKD (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
-      ]
+      "warnings": []
     },
     {
       "source": "vietstock",
@@ -1607677,11 +1605529,11 @@
         },
         {
           "label": "LNST",
-          "percentChange": -100,
-          "tier": null,
+          "percentChange": 100.56256596783726,
+          "tier": "level2",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 55638497749
+          "currentValue": 55638497749,
+          "priorValue": 27741217550
         },
         {
           "label": "Tiền",
@@ -1608088,14 +1605940,6 @@
               "-"
             ],
             [
-              null,
-              -1,
-              null,
-              null,
-              -2,
-              -3
-            ],
-            [
               "TÀI SẢN DÀI HẠN",
               "B -",
               "200",
@@ -1608464,14 +1606308,6 @@
               1854003342770
             ],
             [
-              null,
-              -1,
-              null,
-              null,
-              -2,
-              -3
-            ],
-            [
               "NỢ PHẢI TRẢ",
               "C -",
               "300",
@@ -1608728,14 +1606564,6 @@
               "-"
             ],
             [
-              null,
-              -1,
-              null,
-              null,
-              -2,
-              -3
-            ],
-            [
               "NGUỒN VỐN CHỦ SỞ HỮU",
               "D -",
               "400",
@@ -1608876,42 +1606704,6 @@
             "Lũy kế từ đầu năm đến cuối Quý này Năm trước"
           ],
           "rows": [
-            [
-              "Doanh thu và thu nhập khác",
-              null,
-              null,
-              null,
-              152036817328,
-              106603207711,
-              "Tăng 42,62%"
-            ],
-            [
-              "Tổng chi phí",
-              null,
-              null,
-              null,
-              86457275463,
-              71861069609,
-              "Tăng 20,31%"
-            ],
-            [
-              "Lợi nhuận sau thuế thu nhập doanh nghiệp",
-              null,
-              null,
-              null,
-              55638497749,
-              27741217550,
-              "Tăng 100,56%"
-            ],
-            [
-              null,
-              null,
-              -1,
-              -2,
-              -3,
-              -4,
-              -5
-            ],
             [
               "1. Doanh thu bán hàng và cung cấp dịch vụ",
               "01",
@@ -1609112,13 +1606904,6 @@
             "Lũy kế từ đầu năm đến cuối Quý này Năm trước"
           ],
           "rows": [
-            [
-              null,
-              null,
-              -1,
-              -2,
-              -3
-            ],
             [
               "I. LƯU CHUYỂN TIỀN TỪ HOẠT ĐỘNG KINH DOANH",
               "",
@@ -1609420,11 +1607205,7 @@
       "entryName": "2_szb_2026_10_19_04a8940_1__bctc_quy_3_2026_tv_signed.pdf",
       "periodYear": 2026,
       "periodSlug": "Q3",
-      "warnings": [
-        "\"Quý 3 Năm trước\": Loi nhuan sau thue (55638497749) khong khop Loi nhuan truoc thue - Chi phi thue TNDN (27741217550)",
-        "\"Lũy kế từ đầu năm đến cuối Quý này Năm nay\": Loi nhuan sau thue (27741217550) khong khop Loi nhuan truoc thue - Chi phi thue TNDN (150825175459)",
-        "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 2 muc trong KQKD (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
-      ]
+      "warnings": []
     },
     {
       "source": "vietstock",
