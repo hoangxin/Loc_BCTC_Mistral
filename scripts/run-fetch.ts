@@ -2,6 +2,7 @@ import { existsSync } from 'fs';
 import { join } from 'path';
 import { runFetchPipeline, clearResults } from '../lib/pipeline';
 import { runCustomSourceCheck } from '../lib/custom-source';
+import { reparseAllSavedMarkdown } from '../lib/reparse-cache';
 import { parseOcrMode } from '../lib/ocr-mode';
 import type { StatementScope } from '../lib/statement-scope';
 
@@ -27,6 +28,30 @@ const mode = process.env.FETCH_MODE || 'term';
 const ocrMode = parseOcrMode(process.env.FETCH_OCR_MODE);
 
 async function main() {
+  // mode=reparse (them 2026-10-20): BAO TRI, khong goi OCR, khong ton phi -
+  // doc lai toan bo data/ocr-markdown bang parser hien tai roi ghi lai
+  // data/latest-fetch.json. Dung sau khi sua code parser/analysis, de cac bao
+  // cao DA tai truoc do duoc tinh lai theo code moi.
+  //
+  // Vi sao phai di qua workflow thay vi chay o may roi push: data/latest-fetch.json
+  // da ~43MB, vuot gioi han blob cua GitHub REST API ("your input was too
+  // large to process", HTTP 422) nen may KHONG CAI git khong day len duoc.
+  // Dispatch "Fetch BCTC" voi mode=reparse la xong - KHONG can them workflow
+  // moi (sua .github/workflows/* doi token co scope `workflow`, token hien
+  // tai khong co). Buoc commit cuoi cua workflow do da commit san
+  // data/latest-fetch.json.
+  if (mode === 'reparse') {
+    const summary = reparseAllSavedMarkdown();
+    console.log(`Reparse: cap nhat ${summary.updated} bao cao, bo qua ${summary.skipped}.`);
+    if (summary.preserved.length > 0) {
+      console.log(`Giu nguyen (parse lai ra rong, khong ghi de du lieu that): ${summary.preserved.join(', ')}`);
+    }
+    console.log(
+      `Khu trung: failed ${summary.failedBefore} -> ${summary.failedAfter}, excludedReports ${summary.excludedBefore} -> ${summary.excludedAfter}.`
+    );
+    return;
+  }
+
   if (mode === 'clear') {
     // FETCH_CLEAR_FILE_PATHS: danh sach filePath can xoa RIENG (nut "Xoa bao
     // cao da chon" tren tung tab "Ket qua {ky}") - rong/khong co nghia xoa
