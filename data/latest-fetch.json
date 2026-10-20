@@ -1,11 +1,11 @@
 {
   "running": false,
-  "generatedAt": "2026-10-20T05:31:33.763Z",
+  "generatedAt": "2026-10-20T05:35:58.558Z",
   "periodLabel": "Quý 3/2026",
   "year": 2026,
   "totalFound": 223,
-  "totalMatched": 51,
-  "downloaded": 45,
+  "totalMatched": 6,
+  "downloaded": 0,
   "failed": [
     {
       "stockCode": "PSD",
@@ -61,6 +61,36 @@
       "stockCode": "FGL",
       "title": "BCTC quý 3 năm 2026",
       "error": "Mistral API loi (404) tai /v1/batch/jobs/580876a4-3e07-4aa6-a3cb-52fb1050b205: {\"detail\": \"Batch job not found\"}"
+    },
+    {
+      "stockCode": "HVT",
+      "title": "BCTC quý 3 năm 2026",
+      "error": "Request failed with status code 404"
+    },
+    {
+      "stockCode": "NNC",
+      "title": "BCTC quý 3 năm 2026",
+      "error": "Request failed with status code 404"
+    },
+    {
+      "stockCode": "VLA",
+      "title": "BCTC quý 3 năm 2026",
+      "error": "Request failed with status code 404"
+    },
+    {
+      "stockCode": "PMB",
+      "title": "BCTC quý 3 năm 2026",
+      "error": "Request failed with status code 404"
+    },
+    {
+      "stockCode": "NTC",
+      "title": "BCTC quý 3 năm 2026",
+      "error": "Request failed with status code 404"
+    },
+    {
+      "stockCode": "TCX",
+      "title": "BCTC quý 3 năm 2026",
+      "error": "Request failed with status code 404"
     },
     {
       "stockCode": "HVT",
