@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { BROWSER_USER_AGENT, withTransientRetry, type TransientRetryOptions } from './http';
 
 const BASE_URL = 'https://finance.vietstock.vn';
 const REPORT_PAGE_URL = `${BASE_URL}/tai-lieu/bao-cao-tai-chinh.htm`;
@@ -11,12 +12,13 @@ const PAGE_SIZE = 50;
 // chuoi "Mozilla/5.0" - qua ngan/chung chung so voi UA trinh duyet that (day
 // la dau hieu bot pho bien voi WAF/anti-bot), doi sang UA Chrome desktop day
 // du de giong request nguoi dung that hon.
-const USER_AGENT =
-  'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36';
-
-function sleep(ms: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
+// SUA 2026-10-20: hang so nay (va withTransientRetry duoi) da chuyen sang
+// lib/http.ts de DUNG CHUNG voi lib/download.ts + lib/custom-source.ts - 2
+// file do truoc day bi BO QUEN trong dot sua 2026-07-31 va van gui UA ngan,
+// gay 404 hang loat khi tai file tu static2.vietstock.vn (xem lib/http.ts).
+// const USER_AGENT =
+//   'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36';
+const USER_AGENT = BROWSER_USER_AGENT;
 
 // SUA 2026-07-31: cung 1 hien tuong "loi 503 tu Vietstock, xay ra dut quang
 // tam thoi tu server cloud" nhu da gap voi Mistral (xem POLL_TRANSIENT_RETRY
@@ -24,28 +26,10 @@ function sleep(ms: number): Promise<void> {
 // truoc khi bo cuoc, thay vi de 1 lan 503 thoang qua lam sap ca pipeline
 // (truoc day khong retry, throw thang len lam GitHub Actions step that bai
 // ngay tu buoc dau, chua kip tai bao cao nao).
-const TRANSIENT_RETRY_ATTEMPTS = 3;
-const TRANSIENT_RETRY_DELAY_MS = 3000;
-
-function isTransientAxiosError(error: unknown): boolean {
-  if (!axios.isAxiosError(error)) return false;
-  if (error.response) return error.response.status >= 500 && error.response.status < 600;
-  return true; // loi mang/timeout/reset truoc khi co response - cung coi la tam thoi
-}
-
-async function withTransientRetry<T>(fn: () => Promise<T>): Promise<T> {
-  let lastError: unknown;
-  for (let attempt = 0; attempt < TRANSIENT_RETRY_ATTEMPTS; attempt++) {
-    try {
-      return await fn();
-    } catch (error) {
-      lastError = error;
-      if (!isTransientAxiosError(error)) throw error;
-      if (attempt < TRANSIENT_RETRY_ATTEMPTS - 1) await sleep(TRANSIENT_RETRY_DELAY_MS);
-    }
-  }
-  throw lastError;
-}
+// SUA 2026-10-20: chuyen nguyen logic nay sang lib/http.ts (withTransientRetry)
+// de dung chung - KHONG doi hanh vi o day (van 3 lan, cach nhau 3s, chi retry
+// 5xx/loi mang, KHONG retry 404 vi 404 tu endpoint API /data/* la loi that).
+const API_RETRY: TransientRetryOptions = { attempts: 3, delaysMs: [3000], retryNotFound: false };
 
 export interface ReportTerm {
   yearPeriod: number;
@@ -76,10 +60,12 @@ interface Session {
 // nhau nhung phai gui kem nhau - phai GET 1 trang thuong truoc de lay cap
 // token nay.
 async function getSession(): Promise<Session> {
-  const response = await withTransientRetry(() =>
-    axios.get<string>(REPORT_PAGE_URL, {
-      headers: { 'User-Agent': USER_AGENT },
-    })
+  const response = await withTransientRetry(
+    () =>
+      axios.get<string>(REPORT_PAGE_URL, {
+        headers: { 'User-Agent': USER_AGENT },
+      }),
+    API_RETRY
   );
 
   const setCookie = (response.headers['set-cookie'] as string[] | undefined) || [];
@@ -98,14 +84,16 @@ async function postForm<T>(session: Session, path: string, form: Record<string, 
     Object.fromEntries(Object.entries(form).map(([key, value]) => [key, String(value)]))
   ).toString();
 
-  const response = await withTransientRetry(() =>
-    axios.post<T>(`${BASE_URL}${path}`, body, {
-      headers: {
-        'User-Agent': USER_AGENT,
-        Cookie: session.cookieHeader,
-        'content-type': 'application/x-www-form-urlencoded',
-      },
-    })
+  const response = await withTransientRetry(
+    () =>
+      axios.post<T>(`${BASE_URL}${path}`, body, {
+        headers: {
+          'User-Agent': USER_AGENT,
+          Cookie: session.cookieHeader,
+          'content-type': 'application/x-www-form-urlencoded',
+        },
+      }),
+    API_RETRY
   );
 
   return response.data;

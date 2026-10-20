@@ -253,6 +253,14 @@ const EXPAND_STEP = 2;
 // 99/2025) chua bao gio can toi 20 trang cho toi ca 3 bang chinh.
 const MAX_PROBE_PAGES = 20;
 
+// So trang CUOI tai lieu se OCR them khi vong lap tien da ket thuc ma ca 3
+// bang chinh VAN 0 dong (xem "DO PHAN DUOI" trong extractFinancialStatementsWithOcrProbe).
+// 8 trang la du rong cho ca 3 bang chinh (BCDKT thuong 2 trang + KQKD 1 +
+// LCTT 2 = ~5, cong du phong trang bia/chu ky) ma van la tran CUNG.
+// CHI tieu ton khi bao cao do von da hong hoan toan - bao cao doc duoc binh
+// thuong KHONG BAO GIO cham toi nhanh nay.
+const TAIL_PROBE_PAGES = 8;
+
 // Bao cao scan dai: KHONG con Tesseract do diem cat truoc (xem lich su bo
 // Tesseract 2026-07-07 - crash native "Create skia surface failed" tren tai
 // lieu nhieu trang, cong them ton them 1 vong OCR local rieng). Thay bang OCR
@@ -269,6 +277,25 @@ const MAX_PROBE_PAGES = 20;
 // re-parse tu markdown DA CO SAN tren dia (khong OCR that lan nao) khi CHI
 // code parser/validate doi, con markdown day du van con luu duoc tu lan OCR
 // truoc (xem CLAUDE.md - khong tu hand-roll lai logic parse rieng o script khac).
+// SUA 2026-10-20 (TMT Q2/2026): truoc day CHI co canh bao khi CA 3 bang deu
+// rong (isEmptyParse). Mat RIENG 1 bang thi hoan toan im lang - bao cao nhin
+// "sach" (0 canh bao) trong khi toan bo KQKD (hoac LCTT) khong co dong nao,
+// moi chi tieu doc tu bang do deu ra null/0 ma khong ai biet vi sao. Dung
+// tinh than da chot cho excludedReports (2026-07-21): KHONG de du lieu bien
+// mat am tham.
+const MAIN_STATEMENT_LABELS: { key: 'balanceSheet' | 'incomeStatement' | 'cashFlow'; label: string }[] = [
+  { key: 'balanceSheet', label: 'Bang can doi ke toan (BCDKT)' },
+  { key: 'incomeStatement', label: 'Ket qua kinh doanh (KQKD)' },
+  { key: 'cashFlow', label: 'Luu chuyen tien te (LCTT)' },
+];
+
+function missingStatementWarnings(statements: FinancialStatements): string[] {
+  return MAIN_STATEMENT_LABELS.filter(({ key }) => statements[key].rows.length === 0).map(
+    ({ label }) =>
+      `CANH BAO: khong doc duoc dong nao cua ${label} - cac chi tieu lay tu bang nay se trong/bang 0, can mo file goc kiem tra tay.`
+  );
+}
+
 export function buildResultFromMarkdown(markdown: string, statements: FinancialStatements, mismatches: TaggedGroupSumMismatch[]): ExtractFinancialStatementsResult {
   // Tinh businessType TRUOC (can truyen vao validateFinancialStatements de bo
   // qua dung kiem tra khong ap dung duoc cho tung loai hinh - xem comment tai
@@ -310,7 +337,7 @@ export function buildResultFromMarkdown(markdown: string, statements: FinancialS
         ]
       : isEmptyParse(statements)
         ? ['CANH BAO: ca 3 bang chinh (BCDKT/KQKD/LCTT) deu khong doc duoc dong nao - can kiem tra tay.', ...issues.map((issue) => issue.message)]
-        : issues.map((issue) => issue.message);
+        : [...missingStatementWarnings(statements), ...issues.map((issue) => issue.message)];
 
   return {
     statements,
@@ -327,22 +354,41 @@ export async function extractFinancialStatementsWithOcrProbe(
   ocrMode: OcrMode
 ): Promise<ExtractFinancialStatementsResult> {
   const { markdown, statements, mismatches } = await extractWithGroupCheckRetry(filePath, async () => {
-    const collected: MistralOcrPage[] = [];
-    let cursor = 0;
-    let checkedLanguage = false;
+    // SUA 2026-10-20: truoc day la 1 mang day DAN theo thu tu goi (chi dung
+    // duoc khi LUON di tien tu dau tai lieu). Doi sang Map "so trang 0-based
+    // -> markdown" de co the OCR THEM 1 DOAN O CUOI tai lieu (xem probe duoi)
+    // ma van rap lai dung THU TU TRANG GOC - thu tu sai se lam hong toan bo
+    // co che tim diem cat/noi bang cua parseStatementsFromMarkdown.
+    const collectedByPage = new Map<number, string>();
+    const markdownOfCollected = () =>
+      [...collectedByPage.entries()]
+        .sort((a, b) => a[0] - b[0])
+        .map(([, md]) => md)
+        .join('\n\n');
 
-    while (cursor < totalPages && collected.length < MAX_PROBE_PAGES) {
-      const step = collected.length === 0 ? INITIAL_PROBE_BATCH_SIZE : EXPAND_STEP;
-      const batchEnd = Math.min(cursor + step, totalPages);
-      const pagesZeroBased = Array.from({ length: batchEnd - cursor }, (_, i) => cursor + i);
+    const ocrPages = async (pagesZeroBased: number[]): Promise<MistralOcrPage[]> => {
       const { pages } =
         ocrMode === 'sync'
           ? await callMistralOcr(filePath, { pages: pagesZeroBased })
           : await callMistralOcrBatch(filePath, { pages: pagesZeroBased });
-      collected.push(...pages);
+      // Mistral nhan tai lieu DA CAT san dung cac trang nay (xem pdf-slice.ts)
+      // nen pages[i] tuong ung pagesZeroBased[i]. Neu so luong lech (chua gap,
+      // nhung khong gia dinh bua), rap tu trang dau cua lo de khong mat du lieu.
+      pages.forEach((p, i) => collectedByPage.set(pagesZeroBased[i] ?? pagesZeroBased[0] + i, p.markdown));
+      return pages;
+    };
+
+    let cursor = 0;
+    let checkedLanguage = false;
+
+    while (cursor < totalPages && collectedByPage.size < MAX_PROBE_PAGES) {
+      const step = collectedByPage.size === 0 ? INITIAL_PROBE_BATCH_SIZE : EXPAND_STEP;
+      const batchEnd = Math.min(cursor + step, totalPages);
+      const pagesZeroBased = Array.from({ length: batchEnd - cursor }, (_, i) => cursor + i);
+      const collected = await ocrPages(pagesZeroBased);
       cursor = batchEnd;
 
-      const markdownSoFar = collected.map((p) => p.markdown).join('\n\n');
+      const markdownSoFar = markdownOfCollected();
       // Chi kiem tra 1 lan, ngay sau lo DAU TIEN - du du lieu de ket luan
       // (xem VIETNAMESE_DIACRITIC_RATIO_THRESHOLD) VA dung som truoc khi ton
       // them cac lo mo rong tiep theo cho 1 tai lieu khong phai tieng Viet.
@@ -376,21 +422,45 @@ export async function extractFinancialStatementsWithOcrProbe(
     // dang thuc su dai hang chuc trang toi duoc day nua. Voi 1 bao cao BINH
     // THUONG (<=3 ky tu ma CK, thuong 20-60 trang), 10 trang dau rong hoan
     // toan van CO THE chi la do cong van/giai trinh/muc luc dai hon binh
-    // thuong (xac nhan that SD6: BCDKT that nam SAU trang 10 mot chut, van
-    // trong tam voi MAX_PROBE_PAGES=20) - dung som o day XOA MAT ca 3 bang
-    // that thay vi doi den het 20 trang. Bo dieu kien nay, de MAX_PROBE_PAGES
-    // (van gioi han cung 20 trang, khong doi) la tran duy nhat - chi phi toi
-    // da tang khong dang ke (them toi da 10 trang OCR cho truong hop hiem con
-    // lai thuc su rong het ca tai lieu), doi lay loi ich lon hon nhieu (khong
-    // con cat oan cac bao cao binh thuong co bang nam hoi tre hon 10 trang).
+    // thuong - dung som o day XOA MAT ca 3 bang that thay vi doi den het 20
+    // trang. Bo dieu kien nay, de MAX_PROBE_PAGES (van gioi han cung 20 trang,
+    // khong doi) la tran duy nhat.
+    //
+    // SUA 2026-10-20 (SD6 Q3/2026 - va cung giai thich nguyen nhan that cua
+    // SD6 Q2/2026, luc do ghi nham la "BCDKT nam SAU trang 10 mot chut"):
+    // ho so SD6 nop len Vietstock xep THUYET MINH LEN TRUOC, 3 bang chinh nam
+    // o CUOI - da kiem chung bang cach render that file Q3/2026 (25 trang):
+    // thuyet minh het o trang 20, BCDKT bat dau trang 21, 3 bang chinh chiem
+    // tron trang 21-25. Vong lap tien tu dau tai lieu KHONG BAO GIO toi duoc
+    // (tran 20 trang), nen bao cao luon ra 0 dong ca 3 bang.
+    //
+    // "DO PHAN DUOI": neu sau khi dung vong lap tien ma CA 3 BANG van 0 dong
+    // (tin hieu cau truc manh nhat co the co: pham vi da OCR chac chan la vo
+    // dung), OCR THEM TAI_PROBE_PAGES trang CUOI CUNG cua tai lieu roi rap
+    // lai dung thu tu trang. CHI chay cho bao cao von da hong hoan toan -
+    // bao cao binh thuong khong ton them 1 trang nao. Chi phi toi da tang
+    // them: TAIL_PROBE_PAGES trang/bao cao hong (xem hang so duoi).
+    if (collectedByPage.size < totalPages && isEmptyParse(parseStatementsFromMarkdown(markdownOfCollected()))) {
+      const tailStart = Math.max(0, totalPages - TAIL_PROBE_PAGES);
+      const tailPages = Array.from({ length: totalPages - tailStart }, (_, i) => tailStart + i).filter(
+        (page) => !collectedByPage.has(page)
+      );
+      if (tailPages.length > 0) {
+        console.log(
+          `[mistral-ocr] ${filePath}: 3 bang chinh van rong sau ${collectedByPage.size} trang dau - OCR them ${tailPages.length} trang cuoi (${tailStart + 1}-${totalPages})`
+        );
+        await ocrPages(tailPages);
+      }
+    }
+
     const stopReason =
-      collected.length >= MAX_PROBE_PAGES
-        ? 'cham tran 20 trang'
-        : collected.length === totalPages
+      collectedByPage.size >= MAX_PROBE_PAGES
+        ? `cham tran ${MAX_PROBE_PAGES} trang`
+        : collectedByPage.size === totalPages
           ? 'het file'
           : 'thay Thuyet minh';
-    console.log(`[mistral-ocr] ${filePath}: OCR ${collected.length} trang (tong cong, dung vi ${stopReason})`);
-    return collected.map((p) => p.markdown).join('\n\n');
+    console.log(`[mistral-ocr] ${filePath}: OCR ${collectedByPage.size} trang (tong cong, dung vi ${stopReason})`);
+    return markdownOfCollected();
   });
   return buildResultFromMarkdown(markdown, statements, mismatches);
 }

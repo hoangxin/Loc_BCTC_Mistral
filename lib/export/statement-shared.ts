@@ -254,9 +254,23 @@ function isTableHeaderEchoLabel(label: string): boolean {
 // phai cot gia tri" giong cum chu.
 const ORDINAL_MARKER_PATTERN = /^[IVXLCDM]{1,4}\s*[-.)]?$|^[A-Za-z]\s*[-.)]?$|^\d{1,2}\s*[-.)]?$/;
 
+// "So tien that": khong con la 1 so thu tu/ma so/tham chieu thuyet minh duoc
+// nua. Nguong 1.000 an toan cho CA don vi VND day du LAN cac bao cao trinh
+// bay theo trieu dong (ngan hang/CTCK) - STT/ma so/so thuyet minh cua BCTC
+// VN khong bao gio dat toi 4 chu so. So co phan thap phan cung chac chan la
+// gia tri (ma so/STT luon la so nguyen).
+function looksLikeMoneyAmount(cell: number): boolean {
+  return !Number.isInteger(cell) || Math.abs(cell) >= 1000;
+}
+
+// Du 3 o "so tien that" trong 1 cot la du ket luan - 1 cot STT/ma so khong
+// the co ngau nhien 3 so tien lon.
+const MIN_MONEY_CELLS_FOR_VALUE_COLUMN = 3;
+
 function looksLikeTextColumn(table: StatementTable, index: number): boolean {
   let textCount = 0;
   let sampleCount = 0;
+  let moneyCount = 0;
   for (const row of table.rows) {
     const cell = row[index];
     if (cell === null) continue; // rong: khong phai tin hieu, bo qua
@@ -302,9 +316,27 @@ function looksLikeTextColumn(table: StatementTable, index: number): boolean {
       // (nhieu dong = 0 that su) bi loai NHAM, mat toan bo cac chi tieu doc
       // tu cot do.
       if (Number.isInteger(cell) && cell >= 1 && cell <= 30) textCount++;
+      if (looksLikeMoneyAmount(cell)) moneyCount++;
     }
   }
   if (sampleCount === 0) return false;
+  // SUA 2026-10-20 (bug that VUA Q2/2026, phat hien qua regression toan corpus
+  // TRUOC KHI day len): dieu kien "so nguyen 1-30 = tin hieu STT" o tren chi
+  // dung khi ca cot do TOAN so nho. Cot gia tri that VAN co the chua nhieu o
+  // 1-30 (so tham chieu thuyet minh bi OCR day lan sang, dong "Lai co ban tren
+  // co phieu", dong gia tri thuc su nho...) - VUA co 16/24 o nhu vay, vuot
+  // nguong 50% va bi loai NHAM khoi danh sach cot gia tri, khien tang phan
+  // tich doc lech DUNG 1 COT (LNST quy nay lay nham so cua quy cung ky).
+  // Truoc do VUA chi "thoat" nho 10 dong cua 1 bang giai trinh lam loang mau -
+  // tuc la ket qua dung chi la MAY, dieu kien von da sai san.
+  //
+  // Chot bang 1 tin hieu CAU TRUC doi lap, khong the hoa: 1 cot STT/ma
+  // so/tham chieu KHONG BAO GIO chua so tien lon. Neu cot co tu
+  // MIN_MONEY_CELLS_FOR_VALUE_COLUMN o tro len la so tien that
+  // (looksLikeMoneyAmount), day CHAC CHAN la cot gia tri - khong xet ty le
+  // "giong STT" nua. Van giu nguyen hanh vi cu cho dung truong hop da thiet
+  // ke (HGM: cot STT an danh toan so 1-2 chu so, khong co so tien nao).
+  if (moneyCount >= MIN_MONEY_CELLS_FOR_VALUE_COLUMN) return false;
   return textCount / sampleCount > 0.5;
 }
 
@@ -1187,7 +1219,14 @@ export function findArithmeticTotalRow(
 // ngoac CONG THUC "(60=50-51-52)" hay dieu kien khac - AN TOAN de xoa vi CHI
 // khop dung 1 trong 2 tu "LO"/"LAI" don doc nam TRON trong 1 cap ngoac, khong
 // dung cho ngoac chua noi dung nao khac.
-const PARENTHETICAL_LOSS_ALTERNATIVE_MARKER = /\(\s*(LO|LAI)\s*\)/g;
+// SUA 2026-10-20 (bug that SHP Q2/2026, phat hien qua regression toan corpus):
+// bien the pho bien khong kem gi "(Lỗ)" la dang co GACH CHEO - "Lợi
+// nhuận/(lỗ) sau thuế thu nhập doanh nghiệp" (SHP dung cho ca 3 dong 30/50/60).
+// Mau cu xoa dung "(LO)" nhung DE LAI dau "/" -> "LOI NHUAN/ SAU THUE", van
+// khong chua "LOI NHUAN SAU THUE" nen LNST tiep tuc ra null/0. Nuot luon dau
+// "/" (va khoang trang quanh no) di kem cap ngoac - van la DUNG mau "ngoac
+// thay the co dinh" da mo ta o tren, khong noi rong sang loai ngoac khac.
+const PARENTHETICAL_LOSS_ALTERNATIVE_MARKER = /\s*\/?\s*\(\s*(LO|LAI)\s*\)/g;
 
 function expandLabelFinderAbbreviations(normalized: string): string {
   const withoutLossAlternative = normalized.replace(PARENTHETICAL_LOSS_ALTERNATIVE_MARKER, ' ').replace(/\s+/g, ' ').trim();

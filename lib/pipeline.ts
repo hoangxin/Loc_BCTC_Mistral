@@ -134,6 +134,27 @@ export function clearResults(filePaths?: string[]): FetchStatus {
 
 const CORRECTION_NOTICE_WARNING_PREFIX = 'CANH BAO: day co ve la CONG VAN DINH CHINH';
 
+// Khu trung cho 2 danh sach CONG DON qua nhieu lan chay (failed /
+// excludedReports - xem buildStatus trong runFetchPipeline). Khoa dinh danh
+// dung DUNG cap stockCode+title ma buildStatus van dung de doi chieu "da
+// thanh cong", GIU BAN CUOI CUNG (moi nhat) trong khi van giu nguyen THU TU
+// xuat hien dau tien - de danh sach tren UI khong nhay lung tung giua cac lan
+// chay. Khong dung cho `reports` (da co dedupeReportsWithinRun voi quy tac
+// uu tien rieng - cong van dinh chinh/scope/lastUpdate).
+function dedupeByIdentityKeepingLast<T extends { stockCode: string; title: string }>(items: T[]): T[] {
+  const latestByKey = new Map<string, T>();
+  for (const item of items) latestByKey.set(`${item.stockCode}::${item.title}`, item);
+  const seen = new Set<string>();
+  const result: T[] = [];
+  for (const item of items) {
+    const key = `${item.stockCode}::${item.title}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    result.push(latestByKey.get(key)!);
+  }
+  return result;
+}
+
 // Loc TRUNG LAP trong PHAM VI 1 LAN CHAY - khac han dedup o buildStatus duoi
 // (newKeys/keptReports, CHI so sanh report MOI voi report DA CO TU TRUOC).
 // Bug that phat hien 2026-07-21: VCI Q2/2026 co 2 fileInfoID KHAC NHAU tren
@@ -404,10 +425,26 @@ export async function runFetchPipeline(options: RunFetchPipelineOptions = {}): P
       // phan biet du theo scope, vd "BCTC Cong ty me..." vs "BCTC Hop nhat...",
       // xem doi chieu that SD3/PTV/HUB/NVS - khong lo xoa nham loai tru co chu
       // dich con dang dung, vd Rieng le trung lap voi Hop nhat cung ma).
+      // SUA 2026-10-20 (su co that: 6 bao cao Q3/2026 that bai 404 o 2 lan
+      // chay lien tiep -> UI hien DUNG 12 dong, moi ma 2 lan y het nhau; kem
+      // theo ca cac dong tu Quy 2/2026 tu thang 8 van con nguyen): phep gop
+      // `[...previousStatus.failed, ...newFailed]` chi loai entry da THANH
+      // CONG, KHONG he khu trung - nen 1 bao cao that bai lap lai qua N lan
+      // chay se de lai DUNG N dong giong het nhau, lam danh sach loi phinh
+      // mai va nguoi dung tuong la "loi N lan khac nhau". `reports` da co
+      // dedupeReportsWithinRun/reportIdentityKey tu lau, rieng failed/
+      // excludedReports thi khong - dung lo hong nhat quan kieu do. Khu trung
+      // theo CUNG 1 khoa dinh danh (stockCode::title) da dung ngay o tren de
+      // doi chieu "da thanh cong", GIU BAN MOI NHAT (thong diep loi cua lan
+      // chay gan nhat moi phan anh tinh trang hien tai).
       const succeededKeys = new Set(mergedReports.map((r) => `${r.stockCode}::${r.title}`));
-      const failed = [...previousStatus.failed, ...newFailed].filter((f) => !succeededKeys.has(`${f.stockCode}::${f.title}`));
-      const excludedReports = [...previousStatus.excludedReports, ...excludedByFilter, ...newExcludedAfterDownload].filter(
-        (e) => !succeededKeys.has(`${e.stockCode}::${e.title}`)
+      const failed = dedupeByIdentityKeepingLast(
+        [...previousStatus.failed, ...newFailed].filter((f) => !succeededKeys.has(`${f.stockCode}::${f.title}`))
+      );
+      const excludedReports = dedupeByIdentityKeepingLast(
+        [...previousStatus.excludedReports, ...excludedByFilter, ...newExcludedAfterDownload].filter(
+          (e) => !succeededKeys.has(`${e.stockCode}::${e.title}`)
+        )
       );
       return {
         running,

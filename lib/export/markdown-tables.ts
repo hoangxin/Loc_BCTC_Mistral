@@ -1261,7 +1261,54 @@ function isCoverPageOrSummaryTable(table: ParsedTable): boolean {
   const hasFormulaColumnLegend = [...table.columns, ...table.rows.flat()].some((cell) =>
     /^\d+\s*=\s*\d+\s*[-+]\s*\d+$/.test(String(cell ?? '').trim())
   );
-  return hasPercentChangeWording || hasDifferenceWording || hasBienDongPercentWording || hasFormulaColumnLegend;
+  // SUA 2026-10-20 (bug that SZB Q2 VA Q3/2026): cong van "giai trinh bien
+  // dong LNST" cua SZB dat ten cot la "STT | Nội dung | Quý 3/2026 | Quý
+  // 3/2025 | Tỷ lệ Chênh lệch" - KHONG khop bat ky tin hieu TU NGU nao o
+  // tren ("TY LE" co nhung khong di kem "TANG GIAM"; "CHENH LECH" co nhung
+  // khong di kem "SO VOI KY TRUOC"/"CUNG KY"), nen ca bang lot qua va bi
+  // classifyTableByContent gan vao incomeStatement. Hau qua dung nhu nguoi
+  // dung mo ta: 3 dong cua no (5 cot) bi alignRowToColumns can PHAI vao
+  // khung 7 cot cua KQKD that, day gia tri Quy nay sang DUNG O CUA Quy cung
+  // ky nam truoc -> LNST quy nay = 0 va LNST cung ky = so quy nay.
+  //
+  // Day la lan thu 4 phai them 1 bien the TU NGU cho cung 1 loai bang (FTS
+  // 2026-07-18, BTP/highlight 2026-07-22, CBI 2026-07-23) - dung han cach do
+  // (xem feedback_prefer_structural_over_wording_fixes) va chot bang tin hieu
+  // CAU TRUC bat bien: bang so sanh BAT BUOC phai co 1 cot ty le %, con mau
+  // bieu phap ly B01/B02/B03-DN thi KHONG BAO GIO co cot % (ty le la so TU
+  // TINH o tang phan tich cua he thong nay). Nhan dien qua CHINH GIA TRI
+  // trong cot (khong phai ten cot - SZB dat ten cot la "Tỷ lệ Chênh lệch",
+  // con FTS la "Biến động (%)": ten thi moi noi mot kieu, nhung O GIA TRI
+  // thi deu la "Tăng 100,56%"/"-12%"... deu co dau "%").
+  return (
+    hasPercentChangeWording ||
+    hasDifferenceWording ||
+    hasBienDongPercentWording ||
+    hasFormulaColumnLegend ||
+    hasPercentValueColumn(table)
+  );
+}
+
+// Bang co it nhat 1 COT (khong ke cot nhan) ma PHAN LON o co du lieu la 1 gia
+// tri phan tram ("42,62%", "Tăng 100,56%", "-12%"). Xem comment ket o
+// isCoverPageOrSummaryTable - tin hieu cau truc thay cho viec doi tu ngu ten
+// cot. Doi hoi "phan lon" (khong phai "co 1 o") de 1 o rac/chu thich le
+// khong du de loai nham ca 1 bang BCDKT/KQKD/LCTT that.
+function hasPercentValueColumn(table: ParsedTable): boolean {
+  const columnCount = Math.max(table.columns.length, ...table.rows.map((r) => r.length), 0);
+  for (let col = 0; col < columnCount; col++) {
+    if (col === table.labelIndex) continue;
+    let filled = 0;
+    let percent = 0;
+    for (const row of table.rows) {
+      const raw = String(row[col] ?? '').trim();
+      if (raw === '' || raw === '-') continue;
+      filled++;
+      if (raw.includes('%')) percent++;
+    }
+    if (filled >= 2 && percent > filled / 2) return true;
+  }
+  return false;
 }
 
 // Dem so tu khoa dac trung cua tung bang xuat hien trong NHAN cac dong cua 1
@@ -1406,6 +1453,26 @@ interface ParsedTable extends StatementTable {
   // diem cat, khong phai do lai tu dau bang 1 bo marker khac (co the hoa diem).
   startLineIndex: number;
   endLineIndex: number;
+}
+
+// Dong "danh so cot" cua mau bieu BCTC chuan (B01-DN/B02-DN/B03-DN deu co):
+// ngay duoi dong tieu de la 1 dong chi gom "(1) | (2) | (3) | ..." de doi
+// chieu voi cot "Ma so" trong cong thuc. KHONG PHAI du lieu - truoc day no
+// chay thang vao rawRows, parseNumericCell doc "(1)" theo quy uoc ke toan
+// "dau ngoac = so am" va de lai 1 dong rac [-1, -2, -3...] nam LAN giua du
+// lieu that (xac nhan qua SZB Q3/2026: ca 3 bang deu co 1 dong nhu vay).
+// Rat kho gay sai so lon nhung la rac that, lam nhieu cac buoc kiem tra
+// cheo/tong nhom phia sau va hien ra ca trong Excel xuat.
+//
+// Dieu kien RAT HEP de khong bao gio cham vao dong du lieu that: moi o khong
+// rong deu dung dang "(n)" voi n toi da 2 chu so, co it nhat 3 o nhu vay, va
+// cac n tang DUNG 1 don vi mot. Mot dong gia tri that khong the thoa ca 3.
+function isColumnNumberLegendRow(cells: string[]): boolean {
+  const filled = cells.map((c) => c.trim()).filter((c) => c !== '');
+  if (filled.length < 3) return false;
+  if (!filled.every((c) => /^\(\d{1,2}\)$/.test(c))) return false;
+  const numbers = filled.map((c) => Number(c.slice(1, -1)));
+  return numbers.every((n, idx) => idx === 0 || n === numbers[idx - 1] + 1);
 }
 
 // Tim TAT CA bang markdown ("header" + dong phan cach "---" + cac dong du
@@ -1569,6 +1636,10 @@ function parseAllTablesInRange(lines: string[]): ParsedTable[] {
       skipRun = 0;
       if (isSeparatorRow(rowCells)) {
         j++; // dong phan cach GIA chen giua bang (ngat trang) - bo qua, khong phai du lieu that
+        continue;
+      }
+      if (isColumnNumberLegendRow(rowCells)) {
+        j++; // dong danh so cot "(1) (2) (3)..." - xem isColumnNumberLegendRow
         continue;
       }
       rawRows.push(rowCells);
@@ -1804,7 +1875,11 @@ function findFirstContentLine(lines: string[], normalizedLines: string[]): numbe
   const tablesForFirstContentLine = parseAllTablesInRange(lines);
   const isRowInsideComparisonSummaryTable = (lineIndex: number): boolean => {
     const table = tablesForFirstContentLine.find((t) => lineIndex >= t.startLineIndex && lineIndex < t.endLineIndex);
-    return table !== undefined && table.columns.some((c) => c.includes('%'));
+    // SUA 2026-10-20: truoc day CHI xet TEN COT co dau "%" - bo lot dung
+    // truong hop SZB (ten cot la "Tỷ lệ Chênh lệch", dau "%" chi nam trong
+    // GIA TRI). Dung chung hasPercentValueColumn voi isCoverPageOrSummaryTable
+    // de 2 noi khong bao gio lech nhau (lo hong "sua 1 noi, quen noi kia").
+    return table !== undefined && (table.columns.some((c) => c.includes('%')) || hasPercentValueColumn(table));
   };
   const allContentMarkers = CONTENT_MARKERS_BY_KEY.flatMap(({ markers }) => markers);
   return lines.findIndex(
@@ -1815,11 +1890,32 @@ function findFirstContentLine(lines: string[], normalizedLines: string[]): numbe
   );
 }
 
+// SUA 2026-10-20 (bug that SD6 Q2 VA Q3/2026 - ca 3 bang deu 0 dong): khi
+// KHONG tim duoc dong noi dung that nao (firstContentLine === -1), 2 ham nay
+// truoc day lui ve tim tu dong 0 - tuc la BO HAN lop bao ve ma chinh comment
+// o tren dung de dung len. Voi SD6, ho so Vietstock xep THUYET MINH LEN
+// TRUOC 3 bang chinh, nen trong 10 trang OCR dau tien chi co cong van CBTT +
+// tieu de "# THUYẾT MINH BÁO CÁO TÀI CHÍNH": khong 1 bang chinh nao da xuat
+// hien, nhung tieu de do VAN duoc nhan la "da het 3 bang" -> (a) vong lap OCR
+// probe DUNG LUON o 10 trang, khong bao gio OCR toi cho co BCDKT/KQKD/LCTT
+// that; (b) parseStatementsFromMarkdown cat sach moi thu sau dong do.
+//
+// Ve mat logic: "diem ket thuc cua 3 bang chinh" KHONG THE nam truoc khi 3
+// bang chinh bat dau. firstContentLine === -1 nghia la CHUA co bang chinh nao
+// -> coi nhu CHUA thay Thuyet minh (probe cu mo rong tiep, toi da van la
+// MAX_PROBE_PAGES = 20 trang nen chi phi co tran cung), thay vi lui ve 0 va
+// ket luan nham. Truong hop tai lieu that su rong thi chi ton them toi da 10
+// trang OCR roi dung o tran - doi lay viec khong con cat oan ca bao cao.
+function findNotesCutoffIndex(lines: string[], firstContentLine: number): number {
+  if (firstContentLine === -1) return -1;
+  return findCashFlowEndingIndex(lines, firstContentLine);
+}
+
 export function containsNotesSectionMarker(markdown: string): boolean {
   const lines = convertJsonCaptionTablesToMarkdown(markdown).split(/\r?\n/);
   const normalizedLines = lines.map((l) => normalizeLabelText(l));
   const firstContentLine = findFirstContentLine(lines, normalizedLines);
-  return findCashFlowEndingIndex(lines, firstContentLine === -1 ? 0 : firstContentLine) !== -1;
+  return findNotesCutoffIndex(lines, firstContentLine) !== -1;
 }
 
 // Phat hien (KHONG sua) truong hop pha vo gia dinh THIET KE cua co che cat
@@ -1952,7 +2048,9 @@ export function parseStatementsFromMarkdown(rawMarkdown: string): FinancialState
   // hon nhieu so voi tu khoa - moi bang so sanh deu BAT BUOC phai co cot % de
   // the hien muc dich cua no) khoi danh sach ung vien firstContentLine.
   const firstContentLine = findFirstContentLine(lines, normalizedLines);
-  const cashFlowEndingIndex = findCashFlowEndingIndex(lines, firstContentLine === -1 ? 0 : firstContentLine);
+  // Xem findNotesCutoffIndex (SUA 2026-10-20, bug that SD6): khong con lui ve
+  // dong 0 khi chua tim duoc dong noi dung that nao.
+  const cashFlowEndingIndex = findNotesCutoffIndex(lines, firstContentLine);
   let notesLine = cashFlowEndingIndex !== -1 ? cashFlowEndingIndex + 1 : -1;
   if (process.env.DEBUG_PARSE) console.error('[debug]', { firstContentLine, cashFlowEndingIndex, notesLine, totalLines: lines.length, firstContentLineText: lines[firstContentLine], cutoffLineText: lines[notesLine] });
 

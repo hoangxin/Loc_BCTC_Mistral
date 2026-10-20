@@ -246,6 +246,17 @@ const findDoanhThuThuan: RowFinder = (table) => findRevenueRow(table);
 // the wording da xac minh qua corpus that o SECURITIES_METRICS "LNST Công Ty
 // Mẹ" (["LOI NHUAN","PHAN BO","CHU SO HUU"] / ["LOI NHUAN SAU THUE","CO
 // DONG","CONG TY ME"]) thay vi doan lai tu dau.
+// THU 2026-10-20 ROI BO (ghi lai de khong ai thu lai ma khong biet ket qua):
+// da thu noi long ve `label.includes('LOI NHUAN SAU THUE') && label.includes('CONG TY ME')`
+// (bo yeu cau co chu 'CO DONG') de bat them bien the "Lợi nhuận sau thuế của
+// CÔNG TY MẸ" - HIO/SPC viet kieu nay nen dong NPATMI that bi bo sot, roi ve
+// dong TONG. Chay regression toan corpus (scripts/_debug-corpus-regression-2026-10-20.ts,
+// 1.213 bao cao): LAM DOI LNST cua 298 bao cao, trong do co nhung truong hop
+// TE DI RO RANG (vd ACC Q2/2026: 1.245.824.446 -> 0) - noi long lam
+// findRowByLabel co nhieu dong khop hon nen findArithmeticTotalRow chon ra
+// dong khac han. KHONG danh doi 298 thay doi chua kiem chung lay 2 bao cao.
+// Can 1 cach khoanh vung chat hon (vd chi xet trong cap dong 61/62 lien nhau)
+// truoc khi dung lai - chua lam.
 function findLnstCongTyMe(table: StatementTable): Row | null {
   const parentRow =
     findRowByLabel(table, (label) => label.includes('LOI NHUAN') && label.includes('PHAN BO') && label.includes('CHU SO HUU')) ??

@@ -2,6 +2,7 @@ import { createWriteStream } from 'fs';
 import { mkdir } from 'fs/promises';
 import { basename, extname, join } from 'path';
 import axios from 'axios';
+import { BROWSER_DOWNLOAD_HEADERS, BROWSER_USER_AGENT } from './http';
 import { callMistralChat } from './ai/mistral-chat';
 import { resolveReportSourceFiles, cleanupDownloadedFile } from './report-source';
 import { extractReportContent } from './report-extract';
@@ -148,7 +149,10 @@ async function downloadFile(fileUrl: string, destDir: string): Promise<string> {
   const rawName = basename(new URL(fileUrl).pathname) || 'bctc';
   const filePath = join(destDir, `${Date.now()}-${decodeURIComponent(rawName)}`);
 
-  const response = await axios.get(fileUrl, { responseType: 'stream', headers: { 'User-Agent': 'Mozilla/5.0' }, timeout: REQUEST_TIMEOUT_MS });
+  // SUA 2026-10-20: dung CHUNG header trinh duyet voi lib/download.ts (xem
+  // lib/http.ts) - truoc day file nay van gui UA ngan 'Mozilla/5.0', dung cai
+  // da bi WAF/Cloudflare chan trong su co 404 Q3/2026.
+  const response = await axios.get(fileUrl, { responseType: 'stream', headers: BROWSER_DOWNLOAD_HEADERS, timeout: REQUEST_TIMEOUT_MS });
   await new Promise<void>((resolve, reject) => {
     const writer = createWriteStream(filePath);
     response.data.pipe(writer);
@@ -248,7 +252,7 @@ async function browseForReport(startUrl: string, ocrMode: OcrMode, overrides: Cu
 
       let html: string;
       try {
-        const response = await axios.get<string>(currentUrl, { headers: { 'User-Agent': 'Mozilla/5.0' }, timeout: REQUEST_TIMEOUT_MS });
+        const response = await axios.get<string>(currentUrl, { headers: { 'User-Agent': BROWSER_USER_AGENT }, timeout: REQUEST_TIMEOUT_MS });
         html = response.data;
       } catch (error) {
         console.error('custom-source: khong tai duoc trang', currentUrl, error);
