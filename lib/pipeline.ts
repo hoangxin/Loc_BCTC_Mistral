@@ -141,7 +141,7 @@ const CORRECTION_NOTICE_WARNING_PREFIX = 'CANH BAO: day co ve la CONG VAN DINH C
 // xuat hien dau tien - de danh sach tren UI khong nhay lung tung giua cac lan
 // chay. Khong dung cho `reports` (da co dedupeReportsWithinRun voi quy tac
 // uu tien rieng - cong van dinh chinh/scope/lastUpdate).
-function dedupeByIdentityKeepingLast<T extends { stockCode: string; title: string }>(items: T[]): T[] {
+export function dedupeByIdentityKeepingLast<T extends { stockCode: string; title: string }>(items: T[]): T[] {
   const latestByKey = new Map<string, T>();
   for (const item of items) latestByKey.set(`${item.stockCode}::${item.title}`, item);
   const seen = new Set<string>();
