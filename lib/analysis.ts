@@ -370,12 +370,25 @@ const OTHER_METRICS: MetricDef[] = [
   // xac nhan qua MCH that (xem comment o findSectionBoundaryIndex): nhieu cong
   // ty ghi gon "Doanh thu chua thuc hien" khong lap lai ky han, VI TRI trong
   // bang moi la thu quyet dinh no la ngan hay dai han.
+  //
+  // SUA 2026-10-21 (nguoi dung bao "o nay trong o hau het cac ma"): Thong tu
+  // 99/2025/TT-BTC DOI TEN chi tieu nay thanh "Doanh thu CHO PHAN BO" (ma 319
+  // ngan han / 337 dai han) - tu ky 2026 gan nhu ca san dung ten moi, nen
+  // finder chi bam ten cu bo sot. Do tren corpus markdown da luu: 1.157/1.217
+  // bao cao 'other' dung ten moi, trong do 90% bi trong (so 56,7% o nhom con
+  // dung ten cu - phan nay la trong THAT vi cong ty khong co chi tieu). Giu CA
+  // 2 cach goi (bao cao ky cu van phai doc duoc) va van khoanh vung theo doan
+  // No ngan/dai han. Bat buoc co ca 2 tu "DOANH THU" + "CHO PHAN BO" de khong
+  // khop nham "CHI PHI cho phan bo" (ten moi cua "Chi phi tra truoc", ma
+  // 161/271 - nam ben TAI SAN nen ngoai vung, nhung van chot chan cho chac).
   {
     label: 'DT Chưa Thực Hiện',
     statement: 'balanceSheet',
     finders: [
       byLabelInLiabilitySection(['DOANH THU CHUA THUC HIEN'], 'short'),
       byLabelInLiabilitySection(['DOANH THU CHUA THUC HIEN'], 'long'),
+      byLabelInLiabilitySection(['DOANH THU', 'CHO PHAN BO'], 'short'),
+      byLabelInLiabilitySection(['DOANH THU', 'CHO PHAN BO'], 'long'),
     ],
     thresholds: { level1: 20, level2: 30 },
   },

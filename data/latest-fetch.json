@@ -12710,11 +12710,11 @@
         },
         {
           "label": "Tổng TN Hoạt Động",
-          "percentChange": 9.532513676260642,
+          "percentChange": 9.299943691734107,
           "tier": null,
           "unreliable": false,
-          "currentValue": 4928709,
-          "priorValue": 4499768
+          "currentValue": 4899335,
+          "priorValue": 4482468
         },
         {
           "label": "CP Hoạt Động",
@@ -15920,11 +15920,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -1.5506864217123422,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 263659572679,
+          "priorValue": 267812504827
         },
         {
           "label": "Phải trả khác",
@@ -25433,7 +25433,7 @@
           "percentChange": null,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
+          "currentValue": 575454545,
           "priorValue": 0
         },
         {
@@ -28900,11 +28900,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": 16.03912483403397,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 5084514472582,
+          "priorValue": 4381724250208
         },
         {
           "label": "Phải trả khác",
@@ -31043,10 +31043,10 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": -96.61495460071478,
+          "percentChange": 13.457586202911342,
           "tier": null,
           "unreliable": false,
-          "currentValue": 141249674,
+          "currentValue": 4734307867,
           "priorValue": 4172755675
         },
         {
@@ -36858,11 +36858,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 3501.451132608589,
+          "tier": "level2",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 170250427,
+          "priorValue": 4727273
         },
         {
           "label": "Phải trả khác",
@@ -42522,11 +42522,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 3501.451132608589,
+          "tier": "level2",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 170250427,
+          "priorValue": 4727273
         },
         {
           "label": "Phải trả khác",
@@ -43634,11 +43634,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": 11.515151431045812,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 450000000,
+          "priorValue": 403532609
         },
         {
           "label": "Phải trả khác",
@@ -45200,11 +45200,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -88.10137301616896,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 192818888,
+          "priorValue": 1620513764
         },
         {
           "label": "Phải trả khác",
@@ -51103,11 +51103,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -13.19949983975745,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 7895816441,
+          "priorValue": 9096510304
         },
         {
           "label": "Phải trả khác",
@@ -59311,11 +59311,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -8.282635798763257,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 5412184949,
+          "priorValue": 5900938166
         },
         {
           "label": "Phải trả khác",
@@ -60846,11 +60846,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": 2.25907028794183,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 206449919991,
+          "priorValue": 201889103245
         },
         {
           "label": "Phải trả khác",
@@ -67535,7 +67535,7 @@
           "percentChange": null,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
+          "currentValue": 127849315,
           "priorValue": 0
         },
         {
@@ -75353,11 +75353,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -21.539949378246966,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 131131312,
+          "priorValue": 167131312
         },
         {
           "label": "Phải trả khác",
@@ -79067,11 +79067,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": 110.88239112937475,
+          "percentChange": 56.13835148018516,
           "tier": "level2",
           "unreliable": false,
-          "currentValue": 3493936755,
-          "priorValue": 1656817687
+          "currentValue": 5109603955,
+          "priorValue": 3272484887
         },
         {
           "label": "Phải trả khác",
@@ -82247,11 +82247,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -19.999999927272725,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 2200000002,
+          "priorValue": 2750000000
         },
         {
           "label": "Phải trả khác",
@@ -89068,11 +89068,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": 3.316874520191256,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 470070265952,
+          "priorValue": 454979177540
         },
         {
           "label": "Phải trả khác",
@@ -94660,11 +94660,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -100,
           "tier": null,
           "unreliable": false,
           "currentValue": 0,
-          "priorValue": 0
+          "priorValue": 429732227
         },
         {
           "label": "Phải trả khác",
@@ -96831,7 +96831,7 @@
           "percentChange": null,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
+          "currentValue": 75476433,
           "priorValue": 0
         },
         {
@@ -106294,11 +106294,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": 0,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 5000000000,
+          "priorValue": 5000000000
         },
         {
           "label": "Phải trả khác",
@@ -110484,11 +110484,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -100,
           "tier": null,
           "unreliable": false,
           "currentValue": 0,
-          "priorValue": 0
+          "priorValue": 261600000
         },
         {
           "label": "Phải trả khác",
@@ -114728,11 +114728,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": 4.999999070841884,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 203409942,
+          "priorValue": 193723756
         },
         {
           "label": "Phải trả khác",
@@ -117551,11 +117551,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": 9.274482919862164,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 838626214304,
+          "priorValue": 767449263447
         },
         {
           "label": "Phải trả khác",
@@ -124594,11 +124594,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -1.6201690707436225,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 19521770852,
+          "priorValue": 19843265299
         },
         {
           "label": "Phải trả khác",
@@ -130631,11 +130631,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -9.950796003443216,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 1514676435,
+          "priorValue": 1682054219
         },
         {
           "label": "Phải trả khác",
@@ -144655,11 +144655,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 20.811129233675572,
+          "tier": "level1",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 3290250819,
+          "priorValue": 2723466654
         },
         {
           "label": "Phải trả khác",
@@ -151211,11 +151211,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -2.246901209069045,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 22169896085,
+          "priorValue": 22679481632
         },
         {
           "label": "Phải trả khác",
@@ -169194,11 +169194,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -24.163227945936512,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 86578835499,
+          "priorValue": 114164716079
         },
         {
           "label": "Phải trả khác",
@@ -172370,11 +172370,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -8.20464450380232,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 12573982314,
+          "priorValue": 13697841515
         },
         {
           "label": "Phải trả khác",
@@ -173959,11 +173959,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": 0,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 2091875000,
+          "priorValue": 2091875000
         },
         {
           "label": "Phải trả khác",
@@ -175102,11 +175102,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 166.27697734979708,
+          "tier": "level2",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 826991763529,
+          "priorValue": 310575766542
         },
         {
           "label": "Phải trả khác",
@@ -180043,11 +180043,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -87.97964995980337,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 36482724,
+          "priorValue": 303508000
         },
         {
           "label": "Phải trả khác",
@@ -181133,11 +181133,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": 7.601765068170472,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 27275883000,
+          "priorValue": 25348917820
         },
         {
           "label": "Phải trả khác",
@@ -198657,11 +198657,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": 5.498437752803258,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 156019257862,
+          "priorValue": 147887742402
         },
         {
           "label": "Phải trả khác",
@@ -204957,11 +204957,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 100.62913402999104,
+          "tier": "level2",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 11840699560,
+          "priorValue": 5901784712
         },
         {
           "label": "Phải trả khác",
@@ -207257,11 +207257,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": 1.4597326552109229,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 1466214503,
+          "priorValue": 1445119620
         },
         {
           "label": "Phải trả khác",
@@ -219759,11 +219759,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": 0,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 174863637,
+          "priorValue": 174863637
         },
         {
           "label": "Phải trả khác",
@@ -220779,11 +220779,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -19.841395881068888,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 93849527201,
+          "priorValue": 117079792285
         },
         {
           "label": "Phải trả khác",
@@ -229056,11 +229056,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": 0,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 268367500,
+          "priorValue": 268367500
         },
         {
           "label": "Phải trả khác",
@@ -247213,7 +247213,7 @@
           "percentChange": null,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
+          "currentValue": null,
           "priorValue": 0
         },
         {
@@ -252800,11 +252800,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 27.641059357477264,
+          "tier": "level1",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 467798560,
+          "priorValue": 366495360
         },
         {
           "label": "Phải trả khác",
@@ -253890,11 +253890,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -38.00312861526247,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 6078149881,
+          "priorValue": 9803962273
         },
         {
           "label": "Phải trả khác",
@@ -255500,7 +255500,7 @@
           "percentChange": null,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
+          "currentValue": 189393939,
           "priorValue": 0
         },
         {
@@ -258198,11 +258198,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": 0,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 3213383825,
+          "priorValue": 3213383825
         },
         {
           "label": "Phải trả khác",
@@ -259814,11 +259814,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -28.57142857142857,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 450000000,
+          "priorValue": 630000000
         },
         {
           "label": "Phải trả khác",
@@ -271030,11 +271030,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -100,
           "tier": null,
           "unreliable": false,
           "currentValue": 0,
-          "priorValue": 0
+          "priorValue": 1200000000
         },
         {
           "label": "Phải trả khác",
@@ -275144,11 +275144,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": 9.159364144207023,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 46766187245,
+          "priorValue": 42842121344
         },
         {
           "label": "Phải trả khác",
@@ -276207,11 +276207,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -0.2927225718120495,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 602891822950,
+          "priorValue": 604661804535
         },
         {
           "label": "Phải trả khác",
@@ -278711,11 +278711,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 598.100541319499,
+          "tier": "level2",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 7498788309,
+          "priorValue": 1074170247
         },
         {
           "label": "Phải trả khác",
@@ -282910,11 +282910,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": -9.339142027503494,
+          "percentChange": -1.9022840882398215,
           "tier": null,
           "unreliable": false,
-          "currentValue": 21736142966,
-          "priorValue": 23975223103
+          "currentValue": 563602419969,
+          "priorValue": 574531644015
         },
         {
           "label": "Phải trả khác",
@@ -284506,11 +284506,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -23.066642373712064,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 1607370645,
+          "priorValue": 2089302605
         },
         {
           "label": "Phải trả khác",
@@ -285909,11 +285909,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": 6.4592862542834375,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 817398127,
+          "priorValue": 767803501
         },
         {
           "label": "Phải trả khác",
@@ -287964,11 +287964,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -2.083334046188693,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 103018794,
+          "priorValue": 105210684
         },
         {
           "label": "Phải trả khác",
@@ -289926,11 +289926,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -21.2890627161026,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 439636362,
+          "priorValue": 558545454
         },
         {
           "label": "Phải trả khác",
@@ -292688,11 +292688,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -1.1914810336109236,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 48037606214,
+          "priorValue": 48616866963
         },
         {
           "label": "Phải trả khác",
@@ -294337,7 +294337,7 @@
           "percentChange": null,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
+          "currentValue": 35874141442,
           "priorValue": 0
         },
         {
@@ -302864,11 +302864,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 352.76526644413457,
+          "tier": "level2",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 137681820,
+          "priorValue": 30409095
         },
         {
           "label": "Phải trả khác",
@@ -305746,11 +305746,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -100,
           "tier": null,
           "unreliable": false,
           "currentValue": 0,
-          "priorValue": 0
+          "priorValue": 20833331
         },
         {
           "label": "Phải trả khác",
@@ -308525,11 +308525,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -5.044881308889531,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 128575700,
+          "priorValue": 135406813
         },
         {
           "label": "Phải trả khác",
@@ -309672,11 +309672,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 300.91859981053,
+          "tier": "level2",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 3464510906,
+          "priorValue": 864143222
         },
         {
           "label": "Phải trả khác",
@@ -319430,11 +319430,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -0.17558579890016301,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 783699522885,
+          "priorValue": 785078008378
         },
         {
           "label": "Phải trả khác",
@@ -320544,11 +320544,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": 0,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 445293732,
+          "priorValue": 445293732
         },
         {
           "label": "Phải trả khác",
@@ -321540,11 +321540,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -84.24722674189788,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 414166663,
+          "priorValue": 2629166663
         },
         {
           "label": "Phải trả khác",
@@ -324963,7 +324963,7 @@
           "percentChange": null,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
+          "currentValue": 54000000,
           "priorValue": 0
         },
         {
@@ -326581,7 +326581,7 @@
           "percentChange": null,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
+          "currentValue": 274909110,
           "priorValue": 0
         },
         {
@@ -328322,11 +328322,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": 14.770810950759225,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 781502584510,
+          "priorValue": 680924512109
         },
         {
           "label": "Phải trả khác",
@@ -329938,7 +329938,7 @@
           "percentChange": null,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
+          "currentValue": 595402740,
           "priorValue": 0
         },
         {
@@ -333387,11 +333387,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": 0,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 144581819,
+          "priorValue": 144581819
         },
         {
           "label": "Phải trả khác",
@@ -357950,11 +357950,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -6.617914417354302,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 1324528876,
+          "priorValue": 1418397188
         },
         {
           "label": "Phải trả khác",
@@ -361230,11 +361230,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 142.76055151396457,
+          "tier": "level2",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 11083761338,
+          "priorValue": 4565717646
         },
         {
           "label": "Phải trả khác",
@@ -362910,7 +362910,7 @@
           "percentChange": null,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
+          "currentValue": 351000000,
           "priorValue": 0
         },
         {
@@ -366751,11 +366751,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 29.670641861169255,
+          "tier": "level1",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 3211759198,
+          "priorValue": 2476859181
         },
         {
           "label": "Phải trả khác",
@@ -371182,11 +371182,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 38.02526159388681,
+          "tier": "level2",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 3714226288,
+          "priorValue": 2690975728
         },
         {
           "label": "Phải trả khác",
@@ -374110,7 +374110,7 @@
           "percentChange": null,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
+          "currentValue": 1465200000,
           "priorValue": 0
         },
         {
@@ -375102,11 +375102,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 38.30700950571087,
+          "tier": "level2",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 8404574904,
+          "priorValue": 6076752678
         },
         {
           "label": "Phải trả khác",
@@ -384058,11 +384058,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -8.333333304135802,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 10465116284,
+          "priorValue": 11416490488
         },
         {
           "label": "Phải trả khác",
@@ -389084,11 +389084,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": 7.162402824728729,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 194741324022,
+          "priorValue": 181725417580
         },
         {
           "label": "Phải trả khác",
@@ -391674,11 +391674,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -59.132969438762714,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 30000000,
+          "priorValue": 73408808
         },
         {
           "label": "Phải trả khác",
@@ -394305,11 +394305,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 414.3377633333333,
+          "tier": "level2",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 308602658,
+          "priorValue": 60000000
         },
         {
           "label": "Phải trả khác",
@@ -403959,11 +403959,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 25.369525337660072,
+          "tier": "level1",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 169292665186,
+          "priorValue": 135034941490
         },
         {
           "label": "Phải trả khác",
@@ -406057,11 +406057,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": 3.302757362230424,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 8596286129,
+          "priorValue": 8321448864
         },
         {
           "label": "Phải trả khác",
@@ -407325,11 +407325,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 20.308715269532176,
+          "tier": "level1",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 253310000,
+          "priorValue": 210550000
         },
         {
           "label": "Phải trả khác",
@@ -414158,11 +414158,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 32.86137935519013,
+          "tier": "level2",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 366818182,
+          "priorValue": 276090903
         },
         {
           "label": "Phải trả khác",
@@ -418579,8 +418579,8 @@
           "label": "DT Chưa Thực Hiện",
           "percentChange": null,
           "tier": null,
-          "unreliable": false,
-          "currentValue": 0,
+          "unreliable": true,
+          "currentValue": 319,
           "priorValue": 0
         },
         {
@@ -421751,11 +421751,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": 1.8351231928501843,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 1380443801,
+          "priorValue": 1355567468
         },
         {
           "label": "Phải trả khác",
@@ -423955,7 +423955,7 @@
           "percentChange": null,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
+          "currentValue": 10136,
           "priorValue": 0
         },
         {
@@ -424963,7 +424963,7 @@
           "percentChange": null,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
+          "currentValue": 166666666,
           "priorValue": 0
         },
         {
@@ -426524,11 +426524,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 91.86589183118625,
+          "tier": "level2",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 269412776902,
+          "priorValue": 140417233272
         },
         {
           "label": "Phải trả khác",
@@ -429153,11 +429153,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -1.1054494610246965,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 635238418493,
+          "priorValue": 642339153200
         },
         {
           "label": "Phải trả khác",
@@ -431727,11 +431727,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -71.04294468839625,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 85818182,
+          "priorValue": 296363636
         },
         {
           "label": "Phải trả khác",
@@ -432671,11 +432671,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -3.7315769126485967,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 123681338151,
+          "priorValue": 128475500257
         },
         {
           "label": "Phải trả khác",
@@ -437303,11 +437303,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -1.6339120415959953,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 15319296716,
+          "priorValue": 15573758227
         },
         {
           "label": "Phải trả khác",
@@ -448442,11 +448442,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 478.1784263546672,
+          "tier": "level2",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 21962084317,
+          "priorValue": 3798495986
         },
         {
           "label": "Phải trả khác",
@@ -452640,11 +452640,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -0.08717435539769637,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 385940856,
+          "priorValue": 386277591
         },
         {
           "label": "Phải trả khác",
@@ -462418,11 +462418,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -13.636363708188284,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 9510075718,
+          "priorValue": 11011666630
         },
         {
           "label": "Phải trả khác",
@@ -463821,11 +463821,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 72.4795634528432,
+          "tier": "level2",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 115090904,
+          "priorValue": 66727270
         },
         {
           "label": "Phải trả khác",
@@ -464774,11 +464774,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -47.21795677920401,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 1377029301,
+          "priorValue": 2608897301
         },
         {
           "label": "Phải trả khác",
@@ -469124,8 +469124,8 @@
           "label": "DT Chưa Thực Hiện",
           "percentChange": null,
           "tier": null,
-          "unreliable": false,
-          "currentValue": 0,
+          "unreliable": true,
+          "currentValue": null,
           "priorValue": 0
         },
         {
@@ -473514,7 +473514,7 @@
           "percentChange": null,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
+          "currentValue": 656,
           "priorValue": 0
         },
         {
@@ -482582,11 +482582,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -100,
           "tier": null,
           "unreliable": false,
           "currentValue": 0,
-          "priorValue": 0
+          "priorValue": 943158685
         },
         {
           "label": "Phải trả khác",
@@ -484892,7 +484892,7 @@
           "percentChange": null,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
+          "currentValue": 319,
           "priorValue": 0
         },
         {
@@ -489207,7 +489207,7 @@
           "percentChange": null,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
+          "currentValue": 3174783552,
           "priorValue": 0
         },
         {
@@ -490230,11 +490230,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 22.176591428334508,
+          "tier": "level1",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 4056818205,
+          "priorValue": 3320454563
         },
         {
           "label": "Phải trả khác",
@@ -491934,11 +491934,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": 15.12207535027409,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 585662628,
+          "priorValue": 508731819
         },
         {
           "label": "Phải trả khác",
@@ -493449,11 +493449,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -0.1905284238388252,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 247640909,
+          "priorValue": 248113636
         },
         {
           "label": "Phải trả khác",
@@ -505160,11 +505160,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -40.00003600813784,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 6665156,
+          "priorValue": 11108600
         },
         {
           "label": "Phải trả khác",
@@ -507819,7 +507819,7 @@
           "percentChange": null,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
+          "currentValue": 925347222,
           "priorValue": 0
         },
         {
@@ -525303,11 +525303,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": 3.3094334288892524,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 55950855,
+          "priorValue": 54158515
         },
         {
           "label": "Phải trả khác",
@@ -533362,11 +533362,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -21.838988445419723,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 831751852,
+          "priorValue": 1064151852
         },
         {
           "label": "Phải trả khác",
@@ -538449,11 +538449,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": 2.0128957768658924,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 880328359179,
+          "priorValue": 862957915737
         },
         {
           "label": "Phải trả khác",
@@ -541141,11 +541141,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -6.036217303822937,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 6918138000,
+          "priorValue": 7362558000
         },
         {
           "label": "Phải trả khác",
@@ -550360,11 +550360,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -89.89082086534573,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 60000000,
+          "priorValue": 593520000
         },
         {
           "label": "Phải trả khác",
@@ -558033,11 +558033,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 20.789672039132583,
+          "tier": "level1",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 12934444740,
+          "priorValue": 10708237320
         },
         {
           "label": "Phải trả khác",
@@ -561882,7 +561882,7 @@
           "percentChange": null,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
+          "currentValue": 54000000,
           "priorValue": 0
         },
         {
@@ -562893,11 +562893,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -98.4977554347826,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 13820650,
+          "priorValue": 920000000
         },
         {
           "label": "Phải trả khác",
@@ -565414,11 +565414,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": 8.42192747767869,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 77691268359,
+          "priorValue": 71656416895
         },
         {
           "label": "Phải trả khác",
@@ -568547,11 +568547,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": 17.362309655869506,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 4483951509,
+          "priorValue": 3820606055
         },
         {
           "label": "Phải trả khác",
@@ -581351,11 +581351,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -41.178125403581106,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 1978312456,
+          "priorValue": 3363225789
         },
         {
           "label": "Phải trả khác",
@@ -585305,11 +585305,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -20.689655172413794,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 1955460000,
+          "priorValue": 2465580000
         },
         {
           "label": "Phải trả khác",
@@ -588201,11 +588201,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -2.387567393779531,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 17662344655,
+          "priorValue": 18094359687
         },
         {
           "label": "Phải trả khác",
@@ -590530,11 +590530,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -1.9371196004132822,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 23628656942,
+          "priorValue": 24095413928
         },
         {
           "label": "Phải trả khác",
@@ -593213,11 +593213,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -12.499978534651802,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 173753921,
+          "priorValue": 198575861
         },
         {
           "label": "Phải trả khác",
@@ -605219,11 +605219,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -9.629447681291097,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 7336331376,
+          "priorValue": 8118055260
         },
         {
           "label": "Phải trả khác",
@@ -607638,11 +607638,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": 4.761905260770978,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 20000000,
+          "priorValue": 19090909
         },
         {
           "label": "Phải trả khác",
@@ -609212,11 +609212,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": 0,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 60000000,
+          "priorValue": 60000000
         },
         {
           "label": "Phải trả khác",
@@ -611826,7 +611826,7 @@
           "percentChange": null,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
+          "currentValue": null,
           "priorValue": 0
         },
         {
@@ -614837,7 +614837,7 @@
           "percentChange": null,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
+          "currentValue": 17721294,
           "priorValue": 0
         },
         {
@@ -620758,11 +620758,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 200,
+          "tier": "level2",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 787500000,
+          "priorValue": 262500000
         },
         {
           "label": "Phải trả khác",
@@ -623898,11 +623898,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -18.00032698007111,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 3402195737,
+          "priorValue": 4149035736
         },
         {
           "label": "Phải trả khác",
@@ -624844,11 +624844,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -54.54545257242279,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 87962967,
+          "priorValue": 193518519
         },
         {
           "label": "Phải trả khác",
@@ -625972,11 +625972,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -79.99999861835744,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 37636365,
+          "priorValue": 188181812
         },
         {
           "label": "Phải trả khác",
@@ -628527,11 +628527,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -69.44474342695604,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 27021916929,
+          "priorValue": 88436229833
         },
         {
           "label": "Phải trả khác",
@@ -631123,11 +631123,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -80.52021047113146,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 95328711,
+          "priorValue": 489372387
         },
         {
           "label": "Phải trả khác",
@@ -636728,11 +636728,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -1.6535093337554891,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 44242728337,
+          "priorValue": 44986585731
         },
         {
           "label": "Phải trả khác",
@@ -641296,11 +641296,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": 5.951546482272474,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 3788386030732,
+          "priorValue": 3575583515778
         },
         {
           "label": "Phải trả khác",
@@ -647775,11 +647775,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -26.954489524134296,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 271862580,
+          "priorValue": 372182463
         },
         {
           "label": "Phải trả khác",
@@ -655626,11 +655626,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": 0.29199478619394764,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 865477707858,
+          "priorValue": 862957915737
         },
         {
           "label": "Phải trả khác",
@@ -664309,11 +664309,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -100,
           "tier": null,
           "unreliable": false,
           "currentValue": 0,
-          "priorValue": 0
+          "priorValue": 540000000
         },
         {
           "label": "Phải trả khác",
@@ -665458,11 +665458,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": 10.473218888831944,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 43980835356,
+          "priorValue": 39811309744
         },
         {
           "label": "Phải trả khác",
@@ -667490,11 +667490,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -41.87643298991445,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 17677010,
+          "priorValue": 30412810
         },
         {
           "label": "Phải trả khác",
@@ -670272,11 +670272,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 88.88888888888889,
+          "tier": "level2",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 1020000000,
+          "priorValue": 540000000
         },
         {
           "label": "Phải trả khác",
@@ -683970,11 +683970,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": 4.478158457509964,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 530242305,
+          "priorValue": 507514980
         },
         {
           "label": "Phải trả khác",
@@ -690265,11 +690265,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -100,
           "tier": null,
           "unreliable": false,
           "currentValue": 0,
-          "priorValue": 0
+          "priorValue": 60000000
         },
         {
           "label": "Phải trả khác",
@@ -697858,11 +697858,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": 0.6963881854874489,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 13570562207,
+          "priorValue": 13476711977
         },
         {
           "label": "Phải trả khác",
@@ -703009,11 +703009,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -60.93860114490261,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 48000000,
+          "priorValue": 122883464
         },
         {
           "label": "Phải trả khác",
@@ -708842,11 +708842,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": 1.234834210850693,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 229961000,
+          "priorValue": 227156000
         },
         {
           "label": "Phải trả khác",
@@ -718069,11 +718069,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": 1.4417398214772081,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 12864254203,
+          "priorValue": 12681421105
         },
         {
           "label": "Phải trả khác",
@@ -719111,11 +719111,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": 0,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 27181818,
+          "priorValue": 27181818
         },
         {
           "label": "Phải trả khác",
@@ -721740,11 +721740,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 255.86749877922017,
+          "tier": "level2",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 1108322005,
+          "priorValue": 311442323
         },
         {
           "label": "Phải trả khác",
@@ -727563,11 +727563,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -18.9571027419366,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 1381546510,
+          "priorValue": 1704710168
         },
         {
           "label": "Phải trả khác",
@@ -731316,11 +731316,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -21.933351218502615,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 265186935,
+          "priorValue": 339692992
         },
         {
           "label": "Phải trả khác",
@@ -735397,11 +735397,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 28.181562302696424,
+          "tier": "level1",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 95503033,
+          "priorValue": 74506061
         },
         {
           "label": "Phải trả khác",
@@ -742163,11 +742163,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -100,
           "tier": null,
           "unreliable": false,
           "currentValue": 0,
-          "priorValue": 0
+          "priorValue": 170958313
         },
         {
           "label": "Phải trả khác",
@@ -754103,7 +754103,7 @@
           "percentChange": null,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
+          "currentValue": null,
           "priorValue": 0
         },
         {
@@ -755644,11 +755644,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 142.56881720430107,
+          "tier": "level2",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 169191750,
+          "priorValue": 69750000
         },
         {
           "label": "Phải trả khác",
@@ -756673,11 +756673,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 559.7098459113124,
+          "tier": "level2",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 6444885348,
+          "priorValue": 976927264
         },
         {
           "label": "Phải trả khác",
@@ -761167,11 +761167,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -18.28065749543698,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 3324682960,
+          "priorValue": 4068416189
         },
         {
           "label": "Phải trả khác",
@@ -762310,11 +762310,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 141.23749712795484,
+          "tier": "level2",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 2413670448,
+          "priorValue": 1000537013
         },
         {
           "label": "Phải trả khác",
@@ -765204,11 +765204,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -50.813007330292805,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 66000000,
+          "priorValue": 134181816
         },
         {
           "label": "Phải trả khác",
@@ -766743,11 +766743,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 370.2632919318007,
+          "tier": "level2",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 30523577,
+          "priorValue": 6490742
         },
         {
           "label": "Phải trả khác",
@@ -767735,11 +767735,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 44.68504301132402,
+          "tier": "level2",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 142279618,
+          "priorValue": 98337475
         },
         {
           "label": "Phải trả khác",
@@ -770567,11 +770567,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 489.3479937915547,
+          "tier": "level2",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 1063237382,
+          "priorValue": 180409095
         },
         {
           "label": "Phải trả khác",
@@ -771624,11 +771624,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 132.34188693734103,
+          "tier": "level2",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 2431278681,
+          "priorValue": 1046422887
         },
         {
           "label": "Phải trả khác",
@@ -772601,11 +772601,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 850.967165569616,
+          "tier": "level2",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 6263234013,
+          "priorValue": 658617273
         },
         {
           "label": "Phải trả khác",
@@ -778806,11 +778806,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 1557.4940370091945,
+          "tier": "level2",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 3344241899,
+          "priorValue": 201764943
         },
         {
           "label": "Phải trả khác",
@@ -784830,11 +784830,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": 0.734988539018647,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 1840541366,
+          "priorValue": 1827112300
         },
         {
           "label": "Phải trả khác",
@@ -791187,11 +791187,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -61.39838192500723,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 1693043766815,
+          "priorValue": 4385939893830
         },
         {
           "label": "Phải trả khác",
@@ -792452,7 +792452,7 @@
           "percentChange": null,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
+          "currentValue": 304129629,
           "priorValue": 0
         },
         {
@@ -797990,7 +797990,7 @@
           "percentChange": null,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
+          "currentValue": 1560000000,
           "priorValue": 0
         },
         {
@@ -802025,9 +802025,9 @@
           "label": "DT Chưa Thực Hiện",
           "percentChange": null,
           "tier": null,
-          "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "unreliable": true,
+          "currentValue": 27736,
+          "priorValue": 26266
         },
         {
           "label": "Phải trả khác",
@@ -809520,11 +809520,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 295.14235144612354,
+          "tier": "level2",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 742011023503,
+          "priorValue": 187783218070
         },
         {
           "label": "Phải trả khác",
@@ -815950,11 +815950,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -7.302049892143465,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 93848011642,
+          "priorValue": 101240654764
         },
         {
           "label": "Phải trả khác",
@@ -817990,7 +817990,7 @@
           "percentChange": null,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
+          "currentValue": 2195327459,
           "priorValue": 0
         },
         {
@@ -820678,11 +820678,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": 16.80227723382621,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 174658403793,
+          "priorValue": 149533389185
         },
         {
           "label": "Phải trả khác",
@@ -826998,11 +826998,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -53.57823529411765,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 6313360000,
+          "priorValue": 13600000000
         },
         {
           "label": "Phải trả khác",
@@ -828087,11 +828087,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": 0,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 150000000,
+          "priorValue": 150000000
         },
         {
           "label": "Phải trả khác",
@@ -829174,11 +829174,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -33.50093262875383,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 199326518369,
+          "priorValue": 299743329115
         },
         {
           "label": "Phải trả khác",
@@ -833443,11 +833443,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 395.5983024630924,
+          "tier": "level2",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 3711073849,
+          "priorValue": 748806812
         },
         {
           "label": "Phải trả khác",
@@ -834839,11 +834839,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -5.625948447003675,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 39726139710,
+          "priorValue": 42094345910
         },
         {
           "label": "Phải trả khác",
@@ -841107,11 +841107,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": 3.6732599999999995,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 46652967,
+          "priorValue": 45000000
         },
         {
           "label": "Phải trả khác",
@@ -843897,11 +843897,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -1.7084480010062595,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 958393231167,
+          "priorValue": 975051478663
         },
         {
           "label": "Phải trả khác",
@@ -846071,7 +846071,7 @@
           "percentChange": null,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
+          "currentValue": 656,
           "priorValue": 0
         },
         {
@@ -850876,11 +850876,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -67.28008743525051,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 1317720116,
+          "priorValue": 4027272730
         },
         {
           "label": "Phải trả khác",
@@ -855936,11 +855936,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -6.537320810677212,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 75630000,
+          "priorValue": 80920000
         },
         {
           "label": "Phải trả khác",
@@ -857359,11 +857359,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 25.322270676362084,
+          "tier": "level1",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 624739069610,
+          "priorValue": 498506024698
         },
         {
           "label": "Phải trả khác",
@@ -858470,11 +858470,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": -100,
+          "percentChange": 0.7509424187831515,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 18869697588
+          "currentValue": 28319641066,
+          "priorValue": 28108561951
         },
         {
           "label": "Phải trả khác",
@@ -859496,11 +859496,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -11.083712279390467,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 5706724086,
+          "priorValue": 6418086306
         },
         {
           "label": "Phải trả khác",
@@ -860712,11 +860712,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -94.2400282379382,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 6236563,
+          "priorValue": 108274194
         },
         {
           "label": "Phải trả khác",
@@ -861660,11 +861660,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 199.57421817647923,
+          "tier": "level2",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 4080800000,
+          "priorValue": 1362200000
         },
         {
           "label": "Phải trả khác",
@@ -863102,11 +863102,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": 14.61211049106988,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 1955438270,
+          "priorValue": 1706135819
         },
         {
           "label": "Phải trả khác",
@@ -869062,11 +869062,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": -100,
-          "tier": null,
+          "percentChange": 48.54497180148467,
+          "tier": "level2",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 12087500060
+          "currentValue": 29295671678,
+          "priorValue": 19721752492
         },
         {
           "label": "Phải trả khác",
@@ -871785,11 +871785,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 28.954353716811827,
+          "tier": "level1",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 135665235,
+          "priorValue": 105204075
         },
         {
           "label": "Phải trả khác",
@@ -873107,11 +873107,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": 9.561488149704351,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 14552307879,
+          "priorValue": 13282320389
         },
         {
           "label": "Phải trả khác",
@@ -876014,11 +876014,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -13.32267830137468,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 5700284899,
+          "priorValue": 6576443281
         },
         {
           "label": "Phải trả khác",
@@ -877235,11 +877235,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -28.571244805925485,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 4442230,
+          "priorValue": 6219106
         },
         {
           "label": "Phải trả khác",
@@ -885777,11 +885777,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": 3.1514697023714393,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 167813,
+          "priorValue": 162686
         },
         {
           "label": "Phải trả khác",
@@ -888151,11 +888151,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 51.39051138553465,
+          "tier": "level2",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 425029545,
+          "priorValue": 280750452
         },
         {
           "label": "Phải trả khác",
@@ -892294,11 +892294,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": 0.8617601183843592,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 2574138926607,
+          "priorValue": 2552145554059
         },
         {
           "label": "Phải trả khác",
@@ -902605,11 +902605,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 44.05489818932543,
+          "tier": "level2",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 3936013382,
+          "priorValue": 2732300971
         },
         {
           "label": "Phải trả khác",
@@ -903612,11 +903612,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 219.9523661110124,
+          "tier": "level2",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 1030130265,
+          "priorValue": 321963634
         },
         {
           "label": "Phải trả khác",
@@ -906534,11 +906534,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -4.246248547157261,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 817172570,
+          "priorValue": 853410501
         },
         {
           "label": "Phải trả khác",
@@ -911286,11 +911286,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 4335.02593151832,
+          "tier": "level2",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 2257831343,
+          "priorValue": 50909090
         },
         {
           "label": "Phải trả khác",
@@ -912986,11 +912986,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 47.044634714762815,
+          "tier": "level2",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 378792727,
+          "priorValue": 257603909
         },
         {
           "label": "Phải trả khác",
@@ -915230,11 +915230,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": 4.84184746732134,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 14022972961749,
+          "priorValue": 13375358504742
         },
         {
           "label": "Phải trả khác",
@@ -916462,11 +916462,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": 10.055176011043908,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 338581802592,
+          "priorValue": 307647322792
         },
         {
           "label": "Phải trả khác",
@@ -917762,11 +917762,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -1.231143898768207,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 4766597787,
+          "priorValue": 4826012951
         },
         {
           "label": "Phải trả khác",
@@ -919032,11 +919032,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -3.4570839725049574,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 79265969656,
+          "priorValue": 82104387269
         },
         {
           "label": "Phải trả khác",
@@ -923325,11 +923325,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -39.9798832912292,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 8344811584,
+          "priorValue": 13903357810
         },
         {
           "label": "Phải trả khác",
@@ -926904,9 +926904,9 @@
           "label": "DT Chưa Thực Hiện",
           "percentChange": null,
           "tier": null,
-          "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "unreliable": true,
+          "currentValue": 28751547087,
+          "priorValue": 18539135344
         },
         {
           "label": "Phải trả khác",
@@ -929203,11 +929203,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -0.2807642073509681,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 15667154584,
+          "priorValue": 15711266196
         },
         {
           "label": "Phải trả khác",
@@ -935829,11 +935829,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": 19.650369461723276,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 9513703638,
+          "priorValue": 7951253039
         },
         {
           "label": "Phải trả khác",
@@ -937050,7 +937050,7 @@
           "percentChange": null,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
+          "currentValue": 189876116,
           "priorValue": 0
         },
         {
@@ -941715,11 +941715,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -5.962424725874231,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 483649465738,
+          "priorValue": 514315117471
         },
         {
           "label": "Phải trả khác",
@@ -943061,11 +943061,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 111.40971061954,
+          "tier": "level2",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 370643196,
+          "priorValue": 175319854
         },
         {
           "label": "Phải trả khác",
@@ -944266,11 +944266,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 1158.2385372122558,
+          "tier": "level2",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 1920924175,
+          "priorValue": 152667727
         },
         {
           "label": "Phải trả khác",
@@ -945483,11 +945483,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -39.34337328254373,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 1647685185,
+          "priorValue": 2716414140
         },
         {
           "label": "Phải trả khác",
@@ -946527,11 +946527,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -1.2342505193361184,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 4731413309,
+          "priorValue": 4790540581
         },
         {
           "label": "Phải trả khác",
@@ -947863,11 +947863,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -25.61538155123117,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 9355500,
+          "priorValue": 12577197
         },
         {
           "label": "Phải trả khác",
@@ -950341,7 +950341,7 @@
           "percentChange": null,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
+          "currentValue": 50000002,
           "priorValue": 0
         },
         {
@@ -955359,11 +955359,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -24.036156707212935,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 80061333,
+          "priorValue": 105394000
         },
         {
           "label": "Phải trả khác",
@@ -957462,11 +957462,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -10.82195893436574,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 28385562690,
+          "priorValue": 31830215545
         },
         {
           "label": "Phải trả khác",
@@ -958692,11 +958692,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -6.688819429748996,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 3039814211,
+          "priorValue": 3257717020
         },
         {
           "label": "Phải trả khác",
@@ -967164,11 +967164,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -19.368416404498873,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 895653929021,
+          "priorValue": 1110797889713
         },
         {
           "label": "Phải trả khác",
@@ -971353,7 +971353,7 @@
           "percentChange": null,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
+          "currentValue": -5,
           "priorValue": 0
         },
         {
@@ -974532,11 +974532,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -18.465502664694856,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 234677647,
+          "priorValue": 287826202
         },
         {
           "label": "Phải trả khác",
@@ -981799,11 +981799,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -66.66666605555555,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 36363637,
+          "priorValue": 109090909
         },
         {
           "label": "Phải trả khác",
@@ -982856,11 +982856,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": 0,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 7500000000,
+          "priorValue": 7500000000
         },
         {
           "label": "Phải trả khác",
@@ -986873,11 +986873,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -62.912603540102786,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 56565429771,
+          "priorValue": 152519279244
         },
         {
           "label": "Phải trả khác",
@@ -989078,11 +989078,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -28.27708755675813,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 2779135095,
+          "priorValue": 3874821867
         },
         {
           "label": "Phải trả khác",
@@ -992036,11 +992036,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -37.33682273066678,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 3245202513902,
+          "priorValue": 5178803015292
         },
         {
           "label": "Phải trả khác",
@@ -994456,7 +994456,7 @@
           "percentChange": null,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
+          "currentValue": 1387925479,
           "priorValue": 0
         },
         {
@@ -996070,11 +996070,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -0.8775475203706146,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 344583689724,
+          "priorValue": 347634346310
         },
         {
           "label": "Phải trả khác",
@@ -997269,11 +997269,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 104.95520803569711,
+          "tier": "level2",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 10144771082,
+          "priorValue": 4949750328
         },
         {
           "label": "Phải trả khác",
@@ -1000161,11 +1000161,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -47.444175898473816,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 324638714,
+          "priorValue": 617702642
         },
         {
           "label": "Phải trả khác",
@@ -1006107,11 +1006107,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -2.7447777213855313,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 37868083548,
+          "priorValue": 38936812503
         },
         {
           "label": "Phải trả khác",
@@ -1007300,11 +1007300,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -2.316859788530053,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 782344268,
+          "priorValue": 800899998
         },
         {
           "label": "Phải trả khác",
@@ -1008612,7 +1008612,7 @@
           "percentChange": null,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
+          "currentValue": 6026673967,
           "priorValue": 0
         },
         {
@@ -1009800,11 +1009800,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -2.360933169278941,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 853616406951,
+          "priorValue": 874257031185
         },
         {
           "label": "Phải trả khác",
@@ -1011463,11 +1011463,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -18.568247656665157,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 2257602688,
+          "priorValue": 2772386229
         },
         {
           "label": "Phải trả khác",
@@ -1024974,11 +1024974,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -18.36262429720719,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 729203,
+          "priorValue": 893222
         },
         {
           "label": "Phải trả khác",
@@ -1036265,11 +1036265,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 104.45585328356661,
+          "tier": "level2",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 16536366766,
+          "priorValue": 8087988923
         },
         {
           "label": "Phải trả khác",
@@ -1037925,11 +1037925,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": 1.6071298116157458,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 8228367907,
+          "priorValue": 8098219015
         },
         {
           "label": "Phải trả khác",
@@ -1038956,11 +1038956,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": 2.2250559292040695,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 6904295004,
+          "priorValue": 6754014406
         },
         {
           "label": "Phải trả khác",
@@ -1040249,7 +1040249,7 @@
           "percentChange": null,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
+          "currentValue": 65217391,
           "priorValue": 0
         },
         {
@@ -1067331,11 +1067331,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -100,
           "tier": null,
           "unreliable": false,
           "currentValue": 0,
-          "priorValue": 0
+          "priorValue": 97084713288
         },
         {
           "label": "Phải trả khác",
@@ -1072615,11 +1072615,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": 8.462932933128556,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 34029082099,
+          "priorValue": 31373927644
         },
         {
           "label": "Phải trả khác",
@@ -1073864,11 +1073864,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -21.312553454218204,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 1583956715,
+          "priorValue": 2012972570
         },
         {
           "label": "Phải trả khác",
@@ -1075430,11 +1075430,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -4.137931034482759,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 1677295625,
+          "priorValue": 1749696875
         },
         {
           "label": "Phải trả khác",
@@ -1098830,11 +1098830,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -12.244898612117916,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 131658252,
+          "priorValue": 150029172
         },
         {
           "label": "Phải trả khác",
@@ -1100922,11 +1100922,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -12.972830217430605,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 63695766948,
+          "priorValue": 73190668049
         },
         {
           "label": "Phải trả khác",
@@ -1102531,11 +1102531,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": 4.478158457509964,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 530242305,
+          "priorValue": 507514980
         },
         {
           "label": "Phải trả khác",
@@ -1104751,11 +1104751,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -100,
           "tier": null,
           "unreliable": false,
           "currentValue": 0,
-          "priorValue": 0
+          "priorValue": 9680000
         },
         {
           "label": "Phải trả khác",
@@ -1107215,11 +1107215,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 956.6837722242965,
+          "tier": "level2",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 315001575736,
+          "priorValue": 29810392098
         },
         {
           "label": "Phải trả khác",
@@ -1108358,11 +1108358,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -67.75044922720107,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 2363326817,
+          "priorValue": 7328247248
         },
         {
           "label": "Phải trả khác",
@@ -1109535,11 +1109535,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 23.605058870824678,
+          "tier": "level1",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 25870408846,
+          "priorValue": 20929894846
         },
         {
           "label": "Phải trả khác",
@@ -1110652,11 +1110652,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -66.66666663336663,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 333666667,
+          "priorValue": 1001000000
         },
         {
           "label": "Phải trả khác",
@@ -1111601,11 +1111601,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -6.432655588295195,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 457387587,
+          "priorValue": 488832498
         },
         {
           "label": "Phải trả khác",
@@ -1112796,9 +1112796,9 @@
           "label": "DT Chưa Thực Hiện",
           "percentChange": null,
           "tier": null,
-          "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "unreliable": true,
+          "currentValue": 656,
+          "priorValue": 8449284068
         },
         {
           "label": "Phải trả khác",
@@ -1118554,11 +1118554,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -6.620130022870441,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 135251823705,
+          "priorValue": 144840449808
         },
         {
           "label": "Phải trả khác",
@@ -1121996,11 +1121996,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": 12.507496647213989,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 1475336543,
+          "priorValue": 1311322878
         },
         {
           "label": "Phải trả khác",
@@ -1123620,11 +1123620,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -46.164526019314565,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 70500000,
+          "priorValue": 130954545
         },
         {
           "label": "Phải trả khác",
@@ -1125406,11 +1125406,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -100,
           "tier": null,
           "unreliable": false,
           "currentValue": 0,
-          "priorValue": 0
+          "priorValue": 46363636
         },
         {
           "label": "Phải trả khác",
@@ -1126923,11 +1126923,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -2.900791605545203,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 661266,
+          "priorValue": 681021
         },
         {
           "label": "Phải trả khác",
@@ -1129135,7 +1129135,7 @@
           "percentChange": null,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
+          "currentValue": 189363631,
           "priorValue": 0
         },
         {
@@ -1130240,8 +1130240,8 @@
           "label": "DT Chưa Thực Hiện",
           "percentChange": null,
           "tier": null,
-          "unreliable": false,
-          "currentValue": 0,
+          "unreliable": true,
+          "currentValue": 10000000,
           "priorValue": 0
         },
         {
@@ -1131308,11 +1131308,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 26.241075220057798,
+          "tier": "level1",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 677834686615,
+          "priorValue": 536936718444
         },
         {
           "label": "Phải trả khác",
@@ -1133667,11 +1133667,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 408.4510370089477,
+          "tier": "level2",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 245134768526,
+          "priorValue": 48212069734
         },
         {
           "label": "Phải trả khác",
@@ -1143647,11 +1143647,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -100,
           "tier": null,
           "unreliable": false,
           "currentValue": 0,
-          "priorValue": 0
+          "priorValue": 5000000
         },
         {
           "label": "Phải trả khác",
@@ -1151663,7 +1151663,7 @@
           "percentChange": null,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
+          "currentValue": 36818182,
           "priorValue": 0
         },
         {
@@ -1157278,11 +1157278,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -2.076268642714961,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 17078668582,
+          "priorValue": 17440786156
         },
         {
           "label": "Phải trả khác",
@@ -1158278,11 +1158278,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -4.724726502927896,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 3212658091,
+          "priorValue": 3371974672
         },
         {
           "label": "Phải trả khác",
@@ -1171004,11 +1171004,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 21.766004261346563,
+          "tier": "level1",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 150436364,
+          "priorValue": 123545455
         },
         {
           "label": "Phải trả khác",
@@ -1172471,11 +1172471,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -1.1092280906801868,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 1301481306325,
+          "priorValue": 1316079631291
         },
         {
           "label": "Phải trả khác",
@@ -1173692,11 +1173692,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -0.9289023398891415,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 117273756176,
+          "priorValue": 118373328797
         },
         {
           "label": "Phải trả khác",
@@ -1176566,11 +1176566,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -3.507745196304838,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 412250000,
+          "priorValue": 427236363
         },
         {
           "label": "Phải trả khác",
@@ -1179894,11 +1179894,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -4.646240811268329,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 2482245164,
+          "priorValue": 2603195915
         },
         {
           "label": "Phải trả khác",
@@ -1183248,11 +1183248,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": 2234.6962187754903,
-          "tier": "level2",
+          "percentChange": 5.874811539363896,
+          "tier": null,
           "unreliable": false,
-          "currentValue": 336141717,
-          "priorValue": 14397664
+          "currentValue": 5798414255,
+          "priorValue": 5476670202
         },
         {
           "label": "Phải trả khác",
@@ -1186138,11 +1186138,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -22.090142003563436,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 623244734,
+          "priorValue": 799956193
         },
         {
           "label": "Phải trả khác",
@@ -1187324,11 +1187324,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -80.16025393989916,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 376343116,
+          "priorValue": 1896914985
         },
         {
           "label": "Phải trả khác",
@@ -1188761,11 +1188761,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -100,
           "tier": null,
           "unreliable": false,
           "currentValue": 0,
-          "priorValue": 0
+          "priorValue": 240203462
         },
         {
           "label": "Phải trả khác",
@@ -1190296,11 +1190296,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 50.74828568,
+          "tier": "level2",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 7537414284,
+          "priorValue": 5000000000
         },
         {
           "label": "Phải trả khác",
@@ -1200939,11 +1200939,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -10.29397797955479,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 1259185794,
+          "priorValue": 1403680339
         },
         {
           "label": "Phải trả khác",
@@ -1204867,11 +1204867,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 22.06853265196566,
+          "tier": "level1",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 12859875698,
+          "priorValue": 10534963777
         },
         {
           "label": "Phải trả khác",
@@ -1206078,11 +1206078,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -11.200398962774512,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 1720999798,
+          "priorValue": 1938071543
         },
         {
           "label": "Phải trả khác",
@@ -1208976,11 +1208976,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": 0,
+          "percentChange": -3.447036838016098,
           "tier": null,
           "unreliable": false,
-          "currentValue": 581636434,
-          "priorValue": 581636434
+          "currentValue": 8145941547,
+          "priorValue": 8436759764
         },
         {
           "label": "Phải trả khác",
@@ -1210643,11 +1210643,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -1.5255512982990418,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 16637093128,
+          "priorValue": 16894832464
         },
         {
           "label": "Phải trả khác",
@@ -1211862,11 +1211862,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 20.878600756621875,
+          "tier": "level1",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 118507556907,
+          "priorValue": 98038491648
         },
         {
           "label": "Phải trả khác",
@@ -1213467,9 +1213467,9 @@
           "label": "DT Chưa Thực Hiện",
           "percentChange": null,
           "tier": null,
-          "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "unreliable": true,
+          "currentValue": 656,
+          "priorValue": 225957204233
         },
         {
           "label": "Phải trả khác",
@@ -1214626,11 +1214626,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -7.8282425557748185,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 827463916,
+          "priorValue": 897741281
         },
         {
           "label": "Phải trả khác",
@@ -1217435,11 +1217435,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -1.40887904783641,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 14163578182,
+          "priorValue": 14365977428
         },
         {
           "label": "Phải trả khác",
@@ -1219010,11 +1219010,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -8.454447547816326,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 19384785282,
+          "priorValue": 21175015894
         },
         {
           "label": "Phải trả khác",
@@ -1223746,11 +1223746,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -3.290914678745894,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 7251967761,
+          "priorValue": 7498745063
         },
         {
           "label": "Phải trả khác",
@@ -1224763,11 +1224763,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -64.65437840882163,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 22492667,
+          "priorValue": 63636360
         },
         {
           "label": "Phải trả khác",
@@ -1229819,11 +1229819,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 50.963444010313964,
+          "tier": "level2",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 7809335174,
+          "priorValue": 5172997493
         },
         {
           "label": "Phải trả khác",
@@ -1233386,11 +1233386,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -11.741839662539794,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 10237961250,
+          "priorValue": 11600016600
         },
         {
           "label": "Phải trả khác",
@@ -1235270,11 +1235270,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": 7.714723640661039,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 7258662900896,
+          "priorValue": 6738784314307
         },
         {
           "label": "Phải trả khác",
@@ -1239863,11 +1239863,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": 5.388857466218994,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 25908628091,
+          "priorValue": 24583839994
         },
         {
           "label": "Phải trả khác",
@@ -1242214,11 +1242214,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": 6.426162554618727,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 37802395610,
+          "priorValue": 35519833378
         },
         {
           "label": "Phải trả khác",
@@ -1243552,7 +1243552,7 @@
           "percentChange": null,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
+          "currentValue": 1123040000,
           "priorValue": 0
         },
         {
@@ -1244695,11 +1244695,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": 5.332513747659881,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 616083455,
+          "priorValue": 584893907
         },
         {
           "label": "Phải trả khác",
@@ -1248099,11 +1248099,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": 8.359715274900417,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 53342627064,
+          "priorValue": 49227359936
         },
         {
           "label": "Phải trả khác",
@@ -1249758,11 +1249758,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 81.0219308054516,
+          "tier": "level2",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 8158416806,
+          "priorValue": 4506866527
         },
         {
           "label": "Phải trả khác",
@@ -1253586,7 +1253586,7 @@
           "percentChange": null,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
+          "currentValue": 70567497,
           "priorValue": 0
         },
         {
@@ -1261950,11 +1261950,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -17.662381846868474,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 834008052,
+          "priorValue": 1012912531
         },
         {
           "label": "Phải trả khác",
@@ -1266282,11 +1266282,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -66.66672215357566,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 8009884,
+          "priorValue": 24029692
         },
         {
           "label": "Phải trả khác",
@@ -1267242,11 +1267242,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -88.13687427059483,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 166453000,
+          "priorValue": 1403112500
         },
         {
           "label": "Phải trả khác",
@@ -1271130,11 +1271130,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -3.173969237164605,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 26693005002,
+          "priorValue": 27568005000
         },
         {
           "label": "Phải trả khác",
@@ -1273512,11 +1273512,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -3.6383310152786152,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 4832713232,
+          "priorValue": 5015182160
         },
         {
           "label": "Phải trả khác",
@@ -1280625,11 +1280625,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": 7.459839034499172,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 108245402209,
+          "priorValue": 100731029547
         },
         {
           "label": "Phải trả khác",
@@ -1287224,11 +1287224,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": 17.302123544851465,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 57145590625,
+          "priorValue": 48716586621
         },
         {
           "label": "Phải trả khác",
@@ -1290389,11 +1290389,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -100,
           "tier": null,
           "unreliable": false,
           "currentValue": 0,
-          "priorValue": 0
+          "priorValue": 24211240
         },
         {
           "label": "Phải trả khác",
@@ -1292562,11 +1292562,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 35.78897523640759,
+          "tier": "level2",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 3583810954165,
+          "priorValue": 2639250313161
         },
         {
           "label": "Phải trả khác",
@@ -1297034,11 +1297034,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 116.21220713242491,
+          "tier": "level2",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 513156740,
+          "priorValue": 237339393
         },
         {
           "label": "Phải trả khác",
@@ -1298194,11 +1298194,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": 3.4916787061919203,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 29123317073,
+          "priorValue": 28140733088
         },
         {
           "label": "Phải trả khác",
@@ -1300895,11 +1300895,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": 19.64771961501393,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 5324304798,
+          "priorValue": 4449984350
         },
         {
           "label": "Phải trả khác",
@@ -1301940,11 +1301940,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -88.1928763876483,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 12289700,
+          "priorValue": 104087163
         },
         {
           "label": "Phải trả khác",
@@ -1304777,11 +1304777,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -40.85130579710145,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 3020132326,
+          "priorValue": 5106000000
         },
         {
           "label": "Phải trả khác",
@@ -1307461,11 +1307461,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 193.223624596671,
+          "tier": "level2",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 3563671233,
+          "priorValue": 1215342467
         },
         {
           "label": "Phải trả khác",
@@ -1310196,11 +1310196,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -9.73478757085433,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 23510687976,
+          "priorValue": 26046233475
         },
         {
           "label": "Phải trả khác",
@@ -1312611,11 +1312611,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -1.2396694220780935,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 31100474397,
+          "priorValue": 31490856921
         },
         {
           "label": "Phải trả khác",
@@ -1319383,11 +1319383,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": 0.46187919955220386,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 1035172847,
+          "priorValue": 1030413581
         },
         {
           "label": "Phải trả khác",
@@ -1320452,11 +1320452,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 28.37905444091835,
+          "tier": "level1",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 8886560770,
+          "priorValue": 6922126673
         },
         {
           "label": "Phải trả khác",
@@ -1323525,11 +1323525,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 31.946412723967192,
+          "tier": "level2",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 430127085,
+          "priorValue": 325986191
         },
         {
           "label": "Phải trả khác",
@@ -1325873,11 +1325873,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 52.11451315181016,
+          "tier": "level2",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 144381565,
+          "priorValue": 94916364
         },
         {
           "label": "Phải trả khác",
@@ -1327452,11 +1327452,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 20.55684380952336,
+          "tier": "level1",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 3309042436777,
+          "priorValue": 2744798496886
         },
         {
           "label": "Phải trả khác",
@@ -1328583,11 +1328583,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -57.923973891016544,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 36897422,
+          "priorValue": 87692269
         },
         {
           "label": "Phải trả khác",
@@ -1329990,11 +1329990,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -39.07749230007881,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 296887913,
+          "priorValue": 487320572
         },
         {
           "label": "Phải trả khác",
@@ -1332270,7 +1332270,7 @@
           "percentChange": null,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
+          "currentValue": 1034718848657,
           "priorValue": 0
         },
         {
@@ -1333799,11 +1333799,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": 5.896604157252846,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 233844764160,
+          "priorValue": 220823666652
         },
         {
           "label": "Phải trả khác",
@@ -1339920,11 +1339920,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -93.30559361702127,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 25170968,
+          "priorValue": 376000000
         },
         {
           "label": "Phải trả khác",
@@ -1340826,11 +1340826,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -100,
           "tier": null,
           "unreliable": false,
           "currentValue": 0,
-          "priorValue": 0
+          "priorValue": 3463059
         },
         {
           "label": "Phải trả khác",
@@ -1343049,11 +1343049,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": 0.5645120363948243,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 166990893,
+          "priorValue": 166053501
         },
         {
           "label": "Phải trả khác",
@@ -1344779,11 +1344779,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -2.626467304908906,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 342916641687,
+          "priorValue": 352166171028
         },
         {
           "label": "Phải trả khác",
@@ -1346207,11 +1346207,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 120.9079229265291,
+          "tier": "level2",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 33355384933,
+          "priorValue": 15099225275
         },
         {
           "label": "Phải trả khác",
@@ -1347431,11 +1347431,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -26.351674808653396,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 12414071696,
+          "priorValue": 16855877800
         },
         {
           "label": "Phải trả khác",
@@ -1360220,11 +1360220,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 30512.489400800387,
+          "tier": "level2",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 1926421917,
+          "priorValue": 6292928
         },
         {
           "label": "Phải trả khác",
@@ -1361422,11 +1361422,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -3.57020553836314,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 2556348265,
+          "priorValue": 2650994207
         },
         {
           "label": "Phải trả khác",
@@ -1362440,11 +1362440,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 150,
+          "tier": "level2",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 12729378750,
+          "priorValue": 5091751500
         },
         {
           "label": "Phải trả khác",
@@ -1374605,11 +1374605,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": 2.673761962947103,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 254660919446,
+          "priorValue": 248029208804
         },
         {
           "label": "Phải trả khác",
@@ -1380973,11 +1380973,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -100,
           "tier": null,
           "unreliable": false,
           "currentValue": 0,
-          "priorValue": 0
+          "priorValue": 590000000
         },
         {
           "label": "Phải trả khác",
@@ -1389005,11 +1389005,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -21.67173564863282,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 2328353671,
+          "priorValue": 2972558744
         },
         {
           "label": "Phải trả khác",
@@ -1393175,11 +1393175,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 703.4987589296145,
+          "tier": "level2",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 1117405275,
+          "priorValue": 139067455
         },
         {
           "label": "Phải trả khác",
@@ -1395480,11 +1395480,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -97.21364346820013,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 26363999,
+          "priorValue": 946181822
         },
         {
           "label": "Phải trả khác",
@@ -1396666,11 +1396666,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 28.354382335154572,
+          "tier": "level1",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 111790223158,
+          "priorValue": 87094979637
         },
         {
           "label": "Phải trả khác",
@@ -1398043,11 +1398043,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": 10.258441357890202,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 1933821320,
+          "priorValue": 1753898655
         },
         {
           "label": "Phải trả khác",
@@ -1404571,11 +1404571,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -1.6193762444773336,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 3712914420,
+          "priorValue": 3774030168
         },
         {
           "label": "Phải trả khác",
@@ -1405671,11 +1405671,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -42.786145759590575,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 360591761,
+          "priorValue": 630252525
         },
         {
           "label": "Phải trả khác",
@@ -1406904,11 +1406904,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": 14.324593081749972,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 2093543206,
+          "priorValue": 1831227341
         },
         {
           "label": "Phải trả khác",
@@ -1408071,11 +1408071,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 171.15887299895527,
+          "tier": "level2",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 1445992159,
+          "priorValue": 533263818
         },
         {
           "label": "Phải trả khác",
@@ -1411883,11 +1411883,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -22.238964092198444,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 340442893,
+          "priorValue": 437806530
         },
         {
           "label": "Phải trả khác",
@@ -1412878,11 +1412878,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -2.0117668692489503,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 12054680030,
+          "priorValue": 12302171031
         },
         {
           "label": "Phải trả khác",
@@ -1417888,11 +1417888,11 @@
         },
         {
           "label": "Tiền",
-          "percentChange": null,
+          "percentChange": -12.611801567805456,
           "tier": null,
           "unreliable": false,
-          "currentValue": null,
-          "priorValue": 690336403738
+          "currentValue": 690336403738,
+          "priorValue": 789965254031
         },
         {
           "label": "Phải thu khách hàng",
@@ -1417912,43 +1417912,43 @@
         },
         {
           "label": "Phải thu khác",
-          "percentChange": null,
+          "percentChange": 3.232162597436805,
           "tier": null,
           "unreliable": false,
-          "currentValue": null,
-          "priorValue": null
+          "currentValue": 83208758721,
+          "priorValue": 80603521836
         },
         {
           "label": "Tồn kho",
-          "percentChange": null,
+          "percentChange": -7.0226106714624565,
           "tier": null,
           "unreliable": false,
-          "currentValue": null,
-          "priorValue": 451329632951
+          "currentValue": 451329632951,
+          "priorValue": 485418698256
         },
         {
           "label": "Nguyên giá tscđ hữu hình",
           "percentChange": null,
           "tier": null,
           "unreliable": false,
-          "currentValue": null,
-          "priorValue": null
+          "currentValue": 0,
+          "priorValue": 0
         },
         {
           "label": "BĐS Đầu tư",
           "percentChange": null,
           "tier": null,
           "unreliable": false,
-          "currentValue": null,
-          "priorValue": null
+          "currentValue": 0,
+          "priorValue": 0
         },
         {
           "label": "TS Dở dang",
           "percentChange": null,
           "tier": null,
           "unreliable": false,
-          "currentValue": null,
-          "priorValue": null
+          "currentValue": 0,
+          "priorValue": 0
         },
         {
           "label": "TS Thuế TN Hoãn lại",
@@ -1417960,67 +1417960,67 @@
         },
         {
           "label": "Phải trả người bán",
-          "percentChange": -100,
+          "percentChange": -1.1706153793076728,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 75029043866
+          "currentValue": 75029043866,
+          "priorValue": 75917748708
         },
         {
           "label": "Người mua trả trước",
-          "percentChange": -100,
+          "percentChange": -7.46097486511962,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 102543785296
+          "currentValue": 102543785296,
+          "priorValue": 110811395675
         },
         {
           "label": "Chi phí phải trả",
-          "percentChange": -100,
+          "percentChange": 4.358361568746697,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 19123410117
+          "currentValue": 19123410117,
+          "priorValue": 18324751203
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -100,
           "tier": null,
           "unreliable": false,
           "currentValue": 0,
-          "priorValue": 0
+          "priorValue": 94000000
         },
         {
           "label": "Phải trả khác",
-          "percentChange": -100,
+          "percentChange": 4.41144009669611,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 63321446527
+          "currentValue": 63321446527,
+          "priorValue": 60646080993
         },
         {
           "label": "Dự phòng phải trả",
-          "percentChange": -100,
+          "percentChange": 5.409481804615828,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 7030263390
+          "currentValue": 7030263390,
+          "priorValue": 6669479130
         },
         {
           "label": "Vay",
-          "percentChange": -100,
+          "percentChange": -25.08636578911936,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 650183508308
+          "currentValue": 650183508308,
+          "priorValue": 867910781738
         },
         {
           "label": "Vốn CSH",
-          "percentChange": -100,
+          "percentChange": 3.765694224458086,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 1673699618306
+          "currentValue": 1673699618306,
+          "priorValue": 1612960459442
         }
       ],
       "statements": {
@@ -1419311,7 +1419311,7 @@
       "periodYear": 2026,
       "periodSlug": "Q2",
       "warnings": [
-        "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 9 muc trong BCDKT (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
+        "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 5 muc trong BCDKT (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
       ]
     },
     {
@@ -1419462,11 +1419462,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -39.23163387496914,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 215091290580,
+          "priorValue": 353952729513
         },
         {
           "label": "Phải trả khác",
@@ -1423700,11 +1423700,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": 6.149216091690322,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 193460906144,
+          "priorValue": 182253730425
         },
         {
           "label": "Phải trả khác",
@@ -1425942,11 +1425942,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 850.4840710307557,
+          "tier": "level2",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 383209611205,
+          "priorValue": 40317310188
         },
         {
           "label": "Phải trả khác",
@@ -1428310,11 +1428310,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -30.392524392281324,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 148824106245,
+          "priorValue": 213804774481
         },
         {
           "label": "Phải trả khác",
@@ -1432846,11 +1432846,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -100,
           "tier": null,
           "unreliable": false,
           "currentValue": 0,
-          "priorValue": 0
+          "priorValue": 347900000
         },
         {
           "label": "Phải trả khác",
@@ -1435468,11 +1435468,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 26.241075209255783,
+          "tier": "level1",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 677834686557,
+          "priorValue": 536936718444
         },
         {
           "label": "Phải trả khác",
@@ -1439678,11 +1439678,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -0.18560619079669707,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 5550899320,
+          "priorValue": 5561221291
         },
         {
           "label": "Phải trả khác",
@@ -1440903,11 +1440903,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 29.020829627001138,
+          "tier": "level1",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 10353514273,
+          "priorValue": 8024684311
         },
         {
           "label": "Phải trả khác",
@@ -1442001,11 +1442001,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -50.80349590956303,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 7093782288,
+          "priorValue": 14419281246
         },
         {
           "label": "Phải trả khác",
@@ -1443555,11 +1443555,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 93.27741256980778,
+          "tier": "level2",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 6972047361,
+          "priorValue": 3607274781
         },
         {
           "label": "Phải trả khác",
@@ -1449874,11 +1449874,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": 116.46319188527592,
+          "percentChange": 77.73540981367411,
           "tier": "level2",
           "unreliable": false,
-          "currentValue": 3586400449,
-          "priorValue": 1656817687
+          "currentValue": 5816364425,
+          "priorValue": 3272484887
         },
         {
           "label": "Phải trả khác",
@@ -1454387,11 +1454387,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -50.80349590956303,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 7093782288,
+          "priorValue": 14419281246
         },
         {
           "label": "Phải trả khác",
@@ -1457591,11 +1457591,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -22.086588677167892,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 435181817,
+          "priorValue": 558545454
         },
         {
           "label": "Phải trả khác",
@@ -1470056,11 +1470056,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -29.999999854545457,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 1925000004,
+          "priorValue": 2750000000
         },
         {
           "label": "Phải trả khác",
@@ -1476640,11 +1476640,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -1.9155380995644673,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 19463159992,
+          "priorValue": 19843265299
         },
         {
           "label": "Phải trả khác",
@@ -1487668,11 +1487668,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": 0,
+          "percentChange": -3.447036838016098,
           "tier": null,
           "unreliable": false,
-          "currentValue": 581636434,
-          "priorValue": 581636434
+          "currentValue": 8145941547,
+          "priorValue": 8436759764
         },
         {
           "label": "Phải trả khác",
@@ -1491506,11 +1491506,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": 4.761905260770978,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 20000000,
+          "priorValue": 19090909
         },
         {
           "label": "Phải trả khác",
@@ -1500653,11 +1500653,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 3098.6210020026347,
+          "tier": "level2",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 151207547,
+          "priorValue": 4727273
         },
         {
           "label": "Phải trả khác",
@@ -1501739,11 +1501739,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -68.00103957576955,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 55954546,
+          "priorValue": 174863637
         },
         {
           "label": "Phải trả khác",
@@ -1504914,11 +1504914,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": 0,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 20454545,
+          "priorValue": 20454545
         },
         {
           "label": "Phải trả khác",
@@ -1518985,11 +1518985,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -52.76334368490109,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 502669753,
+          "priorValue": 1064151852
         },
         {
           "label": "Phải trả khác",
@@ -1525166,11 +1525166,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -100,
           "tier": null,
           "unreliable": false,
           "currentValue": 0,
-          "priorValue": 0
+          "priorValue": 403532609
         },
         {
           "label": "Phải trả khác",
@@ -1528054,11 +1528054,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -2.3260296325685133,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 261583106605,
+          "priorValue": 267812504827
         },
         {
           "label": "Phải trả khác",
@@ -1530661,11 +1530661,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": 9.430205743396353,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 43565598162,
+          "priorValue": 39811309744
         },
         {
           "label": "Phải trả khác",
@@ -1533516,11 +1533516,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 65.87182232710346,
+          "tier": "level2",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 1273569659,
+          "priorValue": 767803501
         },
         {
           "label": "Phải trả khác",
@@ -1535680,7 +1535680,7 @@
           "percentChange": null,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
+          "currentValue": 287727272,
           "priorValue": 0
         },
         {
@@ -1537305,11 +1537305,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -54.181815668363356,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 9545454,
+          "priorValue": 20833331
         },
         {
           "label": "Phải trả khác",
@@ -1543452,11 +1543452,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 146.50944725210869,
+          "tier": "level2",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 559961000,
+          "priorValue": 227156000
         },
         {
           "label": "Phải trả khác",
@@ -1544566,11 +1544566,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": 7.1374205953102345,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 122313132037,
+          "priorValue": 114164716079
         },
         {
           "label": "Phải trả khác",
@@ -1546493,11 +1546493,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 479.682817168925,
+          "tier": "level2",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 6226780349,
+          "priorValue": 1074170247
         },
         {
           "label": "Phải trả khác",
@@ -1549339,11 +1549339,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 51.3856240804385,
+          "tier": "level2",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 218876089,
+          "priorValue": 144581819
         },
         {
           "label": "Phải trả khác",
@@ -1550322,7 +1550322,7 @@
           "percentChange": null,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
+          "currentValue": 80246076,
           "priorValue": 0
         },
         {
@@ -1551343,11 +1551343,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -100,
           "tier": null,
           "unreliable": false,
           "currentValue": 0,
-          "priorValue": 0
+          "priorValue": 1200000000
         },
         {
           "label": "Phải trả khác",
@@ -1556504,11 +1556504,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -42.857142857142854,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 360000000,
+          "priorValue": 630000000
         },
         {
           "label": "Phải trả khác",
@@ -1557597,11 +1557597,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -26.45248101838981,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 1237109146,
+          "priorValue": 1682054219
         },
         {
           "label": "Phải trả khác",
@@ -1559236,11 +1559236,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": -9.41656675435693,
+          "percentChange": -2.661795727060202,
           "tier": null,
           "unreliable": false,
-          "currentValue": 21717580215,
-          "priorValue": 23975223103
+          "currentValue": 559238785264,
+          "priorValue": 574531644015
         },
         {
           "label": "Phải trả khác",
@@ -1562606,11 +1562606,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 20.73490813648294,
+          "tier": "level1",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 276000000,
+          "priorValue": 228600000
         },
         {
           "label": "Phải trả khác",
@@ -1563628,11 +1563628,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": 1.255712558295641,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 460692408210,
+          "priorValue": 454979177540
         },
         {
           "label": "Phải trả khác",
@@ -1566663,11 +1566663,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 45.84985939007588,
+          "tier": "level2",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 6051362787,
+          "priorValue": 4149035736
         },
         {
           "label": "Phải trả khác",
@@ -1572721,11 +1572721,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -18.749967801977704,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 161342951,
+          "priorValue": 198575861
         },
         {
           "label": "Phải trả khác",
@@ -1580050,11 +1580050,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -55.23207241334108,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 4389030731,
+          "priorValue": 9803962273
         },
         {
           "label": "Phải trả khác",
@@ -1586693,11 +1586693,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -66.13303137609141,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 548818888,
+          "priorValue": 1620513764
         },
         {
           "label": "Phải trả khác",
@@ -1590556,10 +1590556,10 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": -61.455544890008454,
+          "percentChange": -26.582502532933468,
           "tier": null,
           "unreliable": false,
-          "currentValue": 1608365938,
+          "currentValue": 3063532792,
           "priorValue": 4172755675
         },
         {
@@ -1599787,7 +1599787,7 @@
           "percentChange": null,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
+          "currentValue": 13636363,
           "priorValue": 0
         },
         {
@@ -1605638,11 +1605638,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": 18.848747902145828,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 912103840391,
+          "priorValue": 767449263447
         },
         {
           "label": "Phải trả khác",
@@ -1607363,7 +1607363,7 @@
           "percentChange": null,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
+          "currentValue": 313374635,
           "priorValue": 0
         },
         {
@@ -1615250,7 +1615250,7 @@
           "percentChange": null,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
+          "currentValue": null,
           "priorValue": 0
         },
         {
@@ -1622754,11 +1622754,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": 0,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 5000000000,
+          "priorValue": 5000000000
         },
         {
           "label": "Phải trả khác",
@@ -1626432,11 +1626432,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": 2.7075239244018166,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 13841597178,
+          "priorValue": 13476711977
         },
         {
           "label": "Phải trả khác",
@@ -1634715,7 +1634715,7 @@
           "percentChange": null,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
+          "currentValue": 2934606481,
           "priorValue": 0
         },
         {
@@ -1636349,11 +1636349,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 20.13036194854409,
+          "tier": "level1",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 5263781201362,
+          "priorValue": 4381724250208
         },
         {
           "label": "Phải trả khác",
@@ -1640344,11 +1640344,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 40.000005951691016,
+          "tier": "level2",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 263454548,
+          "priorValue": 188181812
         },
         {
           "label": "Phải trả khác",
@@ -1645775,7 +1645775,7 @@
           "percentChange": null,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
+          "currentValue": 160363644,
           "priorValue": 0
         },
         {
@@ -1653200,11 +1653200,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -3.12500106928304,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 101922849,
+          "priorValue": 105210684
         },
         {
           "label": "Phải trả khác",
@@ -1655202,11 +1655202,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": 10.781383276780442,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 47461094650,
+          "priorValue": 42842121344
         },
         {
           "label": "Phải trả khác",
@@ -1657432,11 +1657432,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": 0,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 445293732,
+          "priorValue": 445293732
         },
         {
           "label": "Phải trả khác",
@@ -1661801,11 +1661801,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -4.07759149230735,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 51950152,
+          "priorValue": 54158515
         },
         {
           "label": "Phải trả khác",
@@ -1664105,11 +1664105,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -2.419631106557373,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 590031219423,
+          "priorValue": 604661804535
         },
         {
           "label": "Phải trả khác",
@@ -1667389,11 +1667389,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -98.28843106072168,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 45000000,
+          "priorValue": 2629166665
         },
         {
           "label": "Phải trả khác",
@@ -1676682,11 +1676682,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 151.18935260777042,
+          "tier": "level2",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 623235036,
+          "priorValue": 248113636
         },
         {
           "label": "Phải trả khác",
@@ -1685363,8 +1685363,8 @@
           "label": "DT Chưa Thực Hiện",
           "percentChange": null,
           "tier": null,
-          "unreliable": false,
-          "currentValue": 0,
+          "unreliable": true,
+          "currentValue": 319,
           "priorValue": 0
         },
         {
@@ -1687441,11 +1687441,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 128.23553522688104,
+          "tier": "level2",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 612510000,
+          "priorValue": 268367500
         },
         {
           "label": "Phải trả khác",
@@ -1691092,11 +1691092,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -2.019224747637154,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 1415939407,
+          "priorValue": 1445119620
         },
         {
           "label": "Phải trả khác",
@@ -1700234,7 +1700234,7 @@
           "percentChange": null,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
+          "currentValue": 351000000,
           "priorValue": 0
         },
         {
@@ -1707085,7 +1707085,7 @@
           "percentChange": null,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
+          "currentValue": 46337842393,
           "priorValue": 0
         },
         {
@@ -1708554,7 +1708554,7 @@
           "percentChange": null,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
+          "currentValue": 75757575,
           "priorValue": 0
         },
         {
@@ -1715618,11 +1715618,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -1.0213834764755998,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 70924530093,
+          "priorValue": 71656416895
         },
         {
           "label": "Phải trả khác",
@@ -1717071,7 +1717071,7 @@
           "percentChange": null,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
+          "currentValue": 319,
           "priorValue": 0
         },
         {
@@ -1718486,11 +1718486,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -98.42812656698229,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 27569067,
+          "priorValue": 1753898655
         },
         {
           "label": "Phải trả khác",
@@ -1720393,11 +1720393,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 171.89832515568122,
+          "tier": "level2",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 82681820,
+          "priorValue": 30409095
         },
         {
           "label": "Phải trả khác",
@@ -1721430,11 +1721430,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": 2.9028129338158926,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 1358720873,
+          "priorValue": 1320392353
         },
         {
           "label": "Phải trả khác",
@@ -1722507,11 +1722507,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -22.195847247216204,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 4727965936,
+          "priorValue": 6076752678
         },
         {
           "label": "Phải trả khác",
@@ -1723671,7 +1723671,7 @@
           "percentChange": null,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
+          "currentValue": 328950001,
           "priorValue": 0
         },
         {
@@ -1724561,11 +1724561,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 164.6117180383391,
+          "tier": "level2",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 512615759,
+          "priorValue": 193723756
         },
         {
           "label": "Phải trả khác",
@@ -1725660,11 +1725660,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 883.0684920460517,
+          "tier": "level2",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 37341817210,
+          "priorValue": 3798495986
         },
         {
           "label": "Phải trả khác",
@@ -1728679,11 +1728679,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 27.738950128832784,
+          "tier": "level1",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 7537796461,
+          "priorValue": 5900938166
         },
         {
           "label": "Phải trả khác",
@@ -1747542,11 +1747542,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -32.05826326257391,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 79546044247,
+          "priorValue": 117079792285
         },
         {
           "label": "Phải trả khác",
@@ -1754135,11 +1754135,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": 0,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 3213383825,
+          "priorValue": 3213383825
         },
         {
           "label": "Phải trả khác",
@@ -1755751,11 +1755751,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 150.61240045229448,
+          "tier": "level2",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 2165650072,
+          "priorValue": 864143222
         },
         {
           "label": "Phải trả khác",
@@ -1764631,11 +1764631,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
-          "tier": null,
+          "percentChange": 35.03771359192122,
+          "tier": "level2",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 3677707100,
+          "priorValue": 2723466654
         },
         {
           "label": "Phải trả khác",
@@ -1768433,11 +1768433,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -2.370567465561098,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 47464371332,
+          "priorValue": 48616866963
         },
         {
           "label": "Phải trả khác",
@@ -1770079,11 +1770079,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": -1.0044788832249483,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 777192065567,
+          "priorValue": 785078008378
         },
         {
           "label": "Phải trả khác",
@@ -1779443,11 +1779443,11 @@
         },
         {
           "label": "DT Chưa Thực Hiện",
-          "percentChange": null,
+          "percentChange": 11.929602176958602,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 762156097529,
+          "priorValue": 680924512109
         },
         {
           "label": "Phải trả khác",
@@ -1781143,7 +1781143,7 @@
           "percentChange": null,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
+          "currentValue": 6825690000,
           "priorValue": 0
         },
         {
@@ -1785453,7 +1785453,7 @@
           "percentChange": null,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
+          "currentValue": 495600000,
           "priorValue": 0
         },
         {
@@ -1789603,7 +1789603,7 @@
           "percentChange": null,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
+          "currentValue": 656,
           "priorValue": 0
         },
         {
