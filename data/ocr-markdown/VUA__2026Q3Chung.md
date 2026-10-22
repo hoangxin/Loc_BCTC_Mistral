@@ -1,73 +1,108 @@
-CÔNG TY CP CHỨNG KHOÁN
-STANLEY BROTHERS
-
-CỘNG HOÀ XÃ HỘI CHỦ NGHĨA VIỆT NAM
-Độc lập - Tự do - Hạnh phúc
-
-Số: 360.../2026/CV- SBSI
-
-Hà Nội, ngày 20 tháng 10 năm 2026
-
-# CÔNG BỐ THÔNG TIN TRÊN CÔNG THÔNG TIN ĐIỆN TỬ CỦA
-ỦY BAN CHỨNG KHOÁN NHÀ NƯỚC VÀ SỞ GIAO DỊCH CHỨNG KHOÁN
-
 CÔNG TY
 CỔ PHẦN
 CHỨNG
 KHOÁN
 STANLEY
 BROTHERS
-S
 
-Digitally signed by CÔNG TY
-CỔ PHẦN CHỨNG KHOÁN
-STANLEY BROTHERS
-DN: C=VN, S=HA NỘI, L=
+Digitally signed by: CÔNG
+TY CỔ PHẦN CHỨNG
+KHOÁN STANLEY
+BROTHERS
+DN: C=VN, S=HA-NÔI, L=
 Láng, CN=CÔNG TY CỔ
 PHẦN CHỨNG KHOÁN
 STANLEY BROTHERS,
-OID:0.9.2342.19000000.100,
-1.1=MS1:0005653780
+OID:0.9.2342.1B00000.1
+00.1.1=MSIT0305453780
 Reason: I am the author of
 this document
 Location:
-Date: 2026.10.20
-17:23:21
-+07'00'
-Foxit PDF Reader Version:
-2025.1.0
+Date: 2020.10.20
+17:24:18+07'00'
+Foxit PDF Reader
+Version: 2020.1.0
 
-Kính gửi: Ủy ban Chứng khoán Nhà Nước;
+CÔNG TY CP CHỨNG KHOÁN
+STANLEY BROTHERS
 
-Sở Giao dịch Chứng khoán Việt Nam;
+CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
+Độc lập - Tự do - Hạnh phúc
 
-Sở Giao dịch Chứng khoán Hà Nội;
+Số: 361/2026/CV-SBSI
 
-Sở Giao dịch Chứng khoán thành phố Hồ Chí Minh;
+Hà Nội, ngày 20 tháng 10 năm 2026
 
-- Tên tổ chức: Công ty Cổ phần Chứng khoán Stanley Brothers
-- Địa chỉ trụ sở chính: Tầng 9, tòa nhà ROX Tower, số 54A, Nguyễn Chí Thanh, phường Láng, thành phố Hà Nội
-- Điện thoại/Tel.: (+84) 24 3377 6699 - Fax: (+84) 24 3373 6699
-- Người thực hiện công bố thông tin: Nguyễn Tiến Dũng
-Chức vụ: Tổng giám đốc – Đại diện pháp luật
-- Loại thông tin công bố:
+# CÔNG BỐ THÔNG TIN ĐỊNH KỲ BÁO CÁO TÀI CHÍNH
+Kính gửi: Sở Giao dịch Chứng khoán Hà Nội
 
-☐ 24 giờ ☐ 72 giờ ☐ Bất thường ☐ Theo yêu cầu ☑ Định kỳ
+Thực hiện quy định tại khoản 3 Điều 14 Thông tư số 96/2020/TT-BTC ngày 16/11/2020
+của Bộ Tài chính hướng dẫn công bố thông tin trên thị trường chứng khoán, Công ty Cổ phần
+Chứng khoán Stanley Brothers thực hiện công bố thông tin báo cáo tài chính Quý III năm 2026
+với Sở Giao dịch Chứng khoán Hà Nội như sau
 
-Nội dung thông tin cần công bố/ Information content to be published:
+# 1. Tên tổ chức:
 
-Báo cáo tài chính Quý III năm 2026 và công văn giải trình
+- Ma chung khoan: VUA
+- Dja chi: Táng 9, tòa nhà ROX Tower, sô 54A, Nguyen Chi Thanh, phuong Láng, thanh pho Hà Nói
+- Diên thoai.: (+84) 24 3377 6699 Fax: (+84) 24 3373 6699
+- Email: info@sbsi.vn Website: sbsi.vn
 
-Thông tin này đã được công bố trên trang thông tin điện tử của Công ty vào ngày 20/10/2026 tại đường dẫn: https://sbsi.vn/vi-vn/ve-sbsi/bai-viet/quan-he-co-dong/bao-cao-tai-chinh/E23
+# 2. Nội dung thông tin công bố
 
-Chúng tôi xin cam kết các thông tin công bố trên đây là đúng sự thật và hoàn toàn chịu trách nhiệm trước pháp luật về nội dung các thông tin đã công bố.
+- Báo cáo tài chính Quý III năm 2026
 
-Tài liệu đính kèm/Attached documents:
+☑ Báo cáo tài chính riêng (Tổ chức niêm yết không có công ty con và đơn vị kế
+toán cấp trên có đơn vị trực thuộc);
 
-- Báo cáo tài chính Quý III năm 2026;
+Báo cáo tài chinh hop nhat (TCNY có cóng ty con);
+Báo cáo tài chinh tóng hop (TCNY có don vī ké toán truc thuoc to chuc bó may)
+ke toan rieng).
+
+- Cac truong hop thuoc dien phai giai trinh nguyen nhan
++ Lo i nhuan sau the thu nhap doanh nghiêp tai bao cao két qua kinh doanh cua ky bao cao thay doi tu 10% tro len so voi bao cao cung ky nam truc:
+
+☑ Có
+
+☐ Không
+
++ Văn bản giải trình trong trường hợp tích có:
+
+☑ Có
+
+☐ Không
+
++ Lợi nhuận sau thuế trong kỳ báo cáo bị lỗ, chuyển từ lỗ ở báo cáo cùng kỳ năm trước
+sang lỗ ở kỳ này hoặc ngược lại:
+
+☑ Có
+
+☐ Không
+
+Văn bản giải trình trong trường hợp tích có
+
+![img-0.jpeg](img-0.jpeg)
+
+☒ Có
+
+☐ Không
+
+Thông tin này đã được công bố trên trang thông tin điện tử của công ty vào ngày: 20/10/2026 tại đường dẫn: https://sbsi.vn/vi-vn/ve-sbsi/bai-viet/quan-he-co-dong/bao-cao-tai-chinh/E23
+
+Chúng tôi xin cam kết các thông tin công bố trên đây là đúng sự thật và hoàn toàn chịu trách nhiệm trước pháp luật về nội dung các thông tin công bố
+
+**Tài liệu đính kèm**
+
+- BCTC Quý III/2026;
 - Công văn giải trình.
 
-NGUYỄN CÔNG BỐ THÔNG TIN
+**Đại diện tổ chức**
+Người đại diện theo pháp luật
+
+**Tổng Giám đốc**
+Nguyễn Tiến Dũng
+
+![img-1.jpeg](img-1.jpeg)
 
 # **CÔNG TY CỔ PHẦN CHỨNG KHOÁN**
 **STANLEY BROTHERS**
@@ -178,7 +213,7 @@ BÁO CÁO TÌNH HÌNH BIẾN ĐỘNG VỐN CHỦ SỞ HỮU
 
 BÀN THUYẾT MINH BÁO CÁO TÀI CHÍNH
 
-![img-0.jpeg](img-0.jpeg)
+![img-2.jpeg](img-2.jpeg)
 
 CÔNG TY CỔ PHẦN CHỨNG KHOÁN STANLEY BROTHERS
 
@@ -525,54 +560,4 @@ Trương Thị Lan Anh
 
 Tổng Giám đốc
 
-Nguyễn Tiến Dũng
-
-CÔNG TY CỔ PHẦN CHỨNG KHOÁN STANLEY BROTHERS
-
-BÁO CÁO TÀI CHÍNH
-
-Tầng 9 tòa nhà ROX Tower, số 54A,
-dường Nguyễn Chí Thanh, phường Láng, Hà Nội
-
-Cho kỳ kế toán từ ngày 01/07/2026 đến ngày
-30/09/2026
-
-# PHẦN LƯU CHUYỂN TIỀN TỆ HOẠT ĐỘNG MÔI GIỚI, ỦY THÁC CỦA KHÁCH HÀNG
-
-|  Mã số | CHỈ TIÊU | Thuyết minh | Lũy kế từ đầu năm đến quý này (năm nay) VND | Lũy kế từ đầu năm đến quý này (năm trước) VND  |
-| --- | --- | --- | --- | --- |
-|   | **I. Lưu chuyển tiền hoạt động môi giới, ủy thác của khách hàng** |  |  |   |
-|  01 | 1. Tiền thu bán chứng khoán môi giới cho khách hàng |  | 31,486,663,801,989 | 747,061,770,136  |
-|  02 | 2. Tiền chi mua chứng khoán môi giới cho khách hàng |  | (30,110,744,585,261) | (940,660,949,098)  |
-|  07 | 3. Nhận tiền gửi để thanh toán giao dịch chứng khoán của khách hàng |  | 6,797,081,106,588 | 924,033,108,971  |
-|  08 | 4. Chi trả thanh toán giao dịch chứng khoán của khách hàng |  | (8,060,256,058,874) | (730,588,479,536)  |
-|  11 | 5. Chi trả phí lưu ký chứng khoán của khách hàng |  | (768,882,571) | (308,622,803)  |
-|  14 | 6. Tiền thu của Tổ chức phát hành chứng khoán |  | 20,610,270,113 | 3,025,731,096  |
-|  15 | 7. Tiền chi trả Tổ chức phát hành chứng khoán |  | (20,610,270,113) | (2,286,140,000)  |
-|  **20** | **Tăng/giảm tiền thuần trong kỳ** |  | **111,975,381,871** | **276,418,766**  |
-|  **30** | **II. Tiền và các khoản tương đương tiền đầu kỳ của khách hàng** |  | **21,565,152,112** | **45,059,858,808**  |
-|  31 | Tiền gửi ngân hàng đầu kỳ: |  | 21,565,152,112 | 45,059,858,808  |
-|  32 | - Tiền gửi của Nhà đầu tư về giao dịch chứng khoán theo phương thức công ty chứng khoán quản lý |  | 21,086,409,110 | 37,069,201,505  |
-|  34 | - Tiền gửi bù trừ và thanh toán giao dịch chứng khoán |  | 357,713,002 | 7,990,657,303  |
-|  35 | - Tiền gửi của Tổ chức phát hành |  | 121,030,000 | -  |
-|  **40** | **III. Tiền và các khoản tương đương tiền cuối kỳ của khách hàng** | **24** | **133,540,533,983** | **45,336,277,574**  |
-|  41 | Tiền gửi ngân hàng cuối kỳ: |  | 133,540,533,983 | 45,336,277,574  |
-|  42 | - Tiền gửi của Nhà đầu tư về giao dịch chứng khoán theo phương thức công ty chứng khoán quản lý |  | 120,864,258,383 | 45,182,095,897  |
-|  44 | - Tiền gửi bù trừ và thanh toán giao dịch chứng khoán |  | 12,676,275,600 | 140,851,677  |
-|  45 | - Tiền gửi của Tổ chức phát hành |  | - | 13,330,000  |
-
-Hà Nội, Ngày 16 tháng 10 năm 2026
-
-Người lập
-
-Lê Thị Lan Hương
-
-Kế toán trưởng
-
-Trương Thị Lan Anh
-
-Tổng Giám đốc  
-CÔNG TY  
-CỔ PHẦN CHỨNG KHOÁN  
-STANLEY BROTHERS  
 Nguyễn Tiến Dũng
