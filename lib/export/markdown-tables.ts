@@ -182,6 +182,43 @@ function looksLikePeriodSubHeaderRow(cells: string[]): boolean {
   );
 }
 
+// Tieu de bang BCDKT doi khi bi Mistral tach thanh 2 DONG markdown rieng, voi
+// dong THU HAI moi la tieu de THAT - da xac nhan qua DNC that (2026-10-22,
+// nguoi dung bao "DNC toan bo cac cot lien quan toi bang CDKT doc sai het"):
+//   |  Chi tieu |   | Thuyet minh | So du  |   |      <- dong 1 (o "So du" gop
+//   | --- | --- | --- | --- | --- |                      2 cot con)
+//   |  Noi dung | Ma so |   | Cuoi ky (30.9.2026) | Dau ky (01.01.2026)  |
+// Dong 1 KHONG he dat ten cot "Ma so" nen maSoIdx = -1, cot ma so bi tinh la
+// cot GIA TRI dau tien => "ky nay" cua MOI chi tieu BCDKT doc ra chinh la MA
+// SO (vd Tien = 230, Ton kho = 140), con cot "Cuoi ky" that bi hieu la "ky
+// truoc" - sai het ca bang, va validate con bao "tong cac muc TS dai han
+// (1680) khong khop" vi do la tong cac MA SO.
+//
+// looksLikePeriodSubHeaderRow (o tren) khong bat duoc truong hop nay vi no
+// duoc thiet ke rieng cho tieu de phu "Nam nay/Nam truoc" cua KQKD Quy. Dieu
+// kien o day chat de khong AN NHAM 1 dong du lieu that:
+//   1. Dong 1 CHUA TUNG dat ten cot ma so (neu da co thi header da du, khong
+//      can gop - tranh an mat 1 dong du lieu cua bang binh thuong).
+//   2. Dong ung vien KHONG co o nao la 1 CON SO thuan (SINGLE_NUMBER_PATTERN):
+//      moi dong du lieu BCDKT deu co it nhat o ma so hoac o gia tri la so.
+//   3. Dong ung vien phai co o ten DUNG BANG "Ma so"/"Ma chi tieu" VA it nhat
+//      1 o mang tu khoa ky ("Cuoi ky"/"Dau nam"/...) - 1 dong chi tieu that
+//      khong bao gio co dang nay.
+function looksLikeSplitHeaderRow(headerCells: string[], cells: string[]): boolean {
+  const headerHasMaSo = headerCells.some((c) => {
+    const normalized = normalizeLabelText(c);
+    return normalized.includes('MA SO') || normalized.includes('MA CHI TIEU');
+  });
+  if (headerHasMaSo) return false;
+  const nonEmpty = cells.map((c) => c.trim()).filter((c) => c !== '');
+  if (nonEmpty.length < 2) return false;
+  if (nonEmpty.some((c) => SINGLE_NUMBER_PATTERN.test(c))) return false;
+  const normalizedCells = nonEmpty.map((c) => normalizeLabelText(c));
+  const hasMaSo = normalizedCells.some((c) => c === 'MA SO' || c === 'MA CHI TIEU');
+  const hasPeriod = normalizedCells.some((c) => /CUOI KY|CUOI QUY|CUOI NAM|DAU KY|DAU NAM|DAU QUY/.test(c));
+  return hasMaSo && hasPeriod;
+}
+
 // KHONG cho phep khoang trang GIUA cac chu so nua (khac ban cu) - 1 con so
 // THAT SU khong bao gio co khoang trang o giua. Da gap that MBS Q2/2026
 // (2026-07-11): 1 vai o gia tri bi Mistral dinh 2 so lien tiep chi cach nhau
@@ -1572,6 +1609,16 @@ function parseAllTablesInRange(lines: string[]): ParsedTable[] {
         return lastGroupLabel;
       });
       effectiveHeaderCells = filledHeaderCells.map((c, idx) =>
+        [c, peekCells[idx] ?? ''].filter((s) => s.trim() !== '').join(' ').trim()
+      );
+      headerRowCount = 3;
+    } else if (!headerLooksLikeData && peekCells && looksLikeSplitHeaderRow(headerCells, peekCells)) {
+      // Gop y het nhanh tren nhung KHONG forward-fill dong 1: o day o trong
+      // cua dong 1 thuong nam NGAY TRUOC cot ma so (vd "Chi tieu | (trong) |
+      // Thuyet minh | So du | (trong)" cua DNC), forward-fill se dan ten
+      // "Chi tieu" vao dung cot ma so va lam findLabelColumnIndex chon nham
+      // cot ma so lam cot nhan.
+      effectiveHeaderCells = headerCells.map((c, idx) =>
         [c, peekCells[idx] ?? ''].filter((s) => s.trim() !== '').join(' ').trim()
       );
       headerRowCount = 3;

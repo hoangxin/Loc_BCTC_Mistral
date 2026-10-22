@@ -340,6 +340,48 @@ function looksLikeTextColumn(table: StatementTable, index: number): boolean {
   return textCount / sampleCount > 0.5;
 }
 
+// Cot MA SO KHONG DUOC DAT TEN trong header (ten cot rong, chi "Mã"/"MÃ"/"CT",
+// hoac ca dong header bi lech 1 o nen ten ngay thang roi vao dung cot ma so) -
+// isMetadataColumnName() (bam theo TEN) khong loai duoc, looksLikeTextColumn()
+// cung khong vi nguong "giong STT" cua no chi tinh so nguyen 1..30 con ma so
+// BCDKT la 100..999. Hau qua: cot ma so bi dung lam "cot gia tri ky nay", moi
+// chi tieu BCDKT doc ra CHINH LA MA SO (vd Tien = 230, Ton kho = 140) va
+// validate bao "tong cac muc khong khop" vi dang cong cac ma so - da xac nhan
+// qua DNC/SMC/BHA that (2026-10-22, nguoi dung bao "DNC toan bo cac cot lien
+// quan toi bang CDKT doc sai het"), quet corpus thay 17 bang bi loi nay.
+//
+// Tin hieu CAU TRUC (khong phai ten cot, cung khong phai "dung ma so de phan
+// loai DONG" - day la nhan dien 1 COT, giong y findMaSoColumnIndex nhung doc
+// noi dung thay vi ten): MOI o so cua cot do la so nguyen DUONG < 1000
+// (!looksLikeMoneyAmount - chinh nguong 1.000 ma file nay da chot: "STT/ma so/
+// so thuyet minh cua BCTC VN khong bao gio dat toi 4 chu so", dung cho ca bao
+// cao trinh bay theo trieu dong). Doi hoi 100% o so phai la ma so (1 o la so
+// tien that/so am/so le la du de GIU cot lai) + CHOT CHAN: chi loai khi CAC
+// COT CON LAI van con cot mang so tien that, nen khong bao gio xoa het cot gia
+// tri cua 1 bang trinh bay theo don vi nho.
+const MIN_CODE_CELLS_FOR_CODE_COLUMN = 8;
+
+function countMoneyCells(table: StatementTable, index: number): number {
+  let count = 0;
+  for (const row of table.rows) {
+    const cell = row[index];
+    if (typeof cell === 'number' && looksLikeMoneyAmount(cell)) count++;
+  }
+  return count;
+}
+
+function looksLikeCodeOnlyColumn(table: StatementTable, index: number): boolean {
+  let numericCount = 0;
+  let codeCount = 0;
+  for (const row of table.rows) {
+    const cell = row[index];
+    if (typeof cell !== 'number') continue;
+    numericCount++;
+    if (cell > 0 && !looksLikeMoneyAmount(cell)) codeCount++;
+  }
+  return numericCount >= MIN_CODE_CELLS_FOR_CODE_COLUMN && codeCount === numericCount;
+}
+
 export function valueColumnIndexes(table: StatementTable): number[] {
   const labelIndex = findLabelColumnIndex(table.columns, table.rows);
   const indexes: number[] = [];
@@ -349,7 +391,11 @@ export function valueColumnIndexes(table: StatementTable): number[] {
     if (looksLikeTextColumn(table, i)) continue;
     indexes.push(i);
   }
-  return indexes;
+  const codeColumns = indexes.filter((i) => looksLikeCodeOnlyColumn(table, i));
+  if (codeColumns.length === 0) return indexes;
+  const rest = indexes.filter((i) => !codeColumns.includes(i));
+  const restHasMoney = rest.some((i) => countMoneyCells(table, i) >= MIN_MONEY_CELLS_FOR_VALUE_COLUMN);
+  return restHasMoney ? rest : indexes;
 }
 
 // SUA 2026-07-23 (theo yeu cau nguoi dung, phong ngua truoc khi gap that): 2

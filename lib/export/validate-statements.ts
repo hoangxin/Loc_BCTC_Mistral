@@ -526,13 +526,41 @@ export function findRevenueRow(table: StatementTable): (string | number | null)[
   // KQKD song ngu TT99/2025 duoc OCR ra hoan toan tieng Anh - xem comment o
   // ANCHOR_MARKERS_BY_KEY.incomeStatement (lib/export/markdown-tables.ts) ve
   // cung 1 boi canh.
+  //
+  // SUA 2026-10-22 (xac nhan qua G36/WSB that):
+  //  - "NET REVENUE FROM SALES" noi long con "NET REVENUE": WSB ghi "Net
+  //    revenue (10 = 01 - 02)" (khong co chu "from sales"). Da soat lai toan
+  //    corpus: moi dong chua "NET REVENUE" deu dung la dong doanh thu thuan.
+  //  - Them bien the dau cham/viet tat kieu "D.thu thuan ..." (G36): sau
+  //    normalizeLabelText van con dau cham ("D.THU THUAN ...") nen khong khop
+  //    "DOANH THU THUAN" lan "DT THUAN"; bat qua cap tu "THU THUAN" + ("BAN
+  //    HANG" | "CUNG CAP DICH VU") de khong khop nham dong thu nhap khac.
   const byLabel = findRow(
     table,
-    (label) => label.includes('DOANH THU THUAN') || label.includes('DT THUAN') || label.includes('NET REVENUE FROM SALES')
+    (label) =>
+      label.includes('DOANH THU THUAN') ||
+      label.includes('DT THUAN') ||
+      label.includes('NET REVENUE') ||
+      (label.includes('THU THUAN') && (label.includes('BAN HANG') || label.includes('CUNG CAP DICH VU')))
   );
   if (byLabel) return byLabel;
   const maSoIndex = findMaSoColumnIndex(table);
-  return maSoIndex === null ? null : findRowByCode(table, maSoIndex, 10);
+  const byCode = maSoIndex === null ? null : findRowByCode(table, maSoIndex, 10);
+  if (byCode) return byCode;
+  // Mau KQKD Thong tu 99/2025 BO HAN 2 dong "Cac khoan giam tru doanh thu" va
+  // "Doanh thu thuan" (ma 02 va 10 cua Thong tu 200): bang nhay thang tu
+  // "Doanh thu ban hang va cung cap dich vu" (ma 01) sang "Gia von hang ban"
+  // roi "Loi nhuan gop (20 = 01 - 11)" - chinh dong ma 01 DA LA doanh thu
+  // thuan theo cong thuc in trong bao cao (xac nhan qua BSL/ALC/F88 that
+  // 2026-10-22, nguoi dung bao "BSL dang thieu doanh thu"). Chi dung lam
+  // PHUONG AN CUOI (sau khi da khong tim thay dong doanh thu thuan rieng) nen
+  // bao cao Thong tu 200 van uu tien dung ma 10 nhu truoc.
+  return findRow(
+    table,
+    (label) =>
+      (label.includes('DOANH THU BAN HANG') || label.includes('DOANH THU CUNG CAP DICH VU')) &&
+      !label.includes('GIAM TRU')
+  );
 }
 
 // Cong thuc co dinh theo VAS: Loi nhuan gop = Doanh thu thuan - Gia von hang ban.

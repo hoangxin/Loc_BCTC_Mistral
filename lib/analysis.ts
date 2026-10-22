@@ -165,7 +165,13 @@ function findSectionBoundaryIndex(table: StatementTable, marker: string, exclude
 // của khách hàng", "ngan han" nam GIUA "phai thu" va "cua khach hang" nen 1
 // cum lien tiep khong con la substring nua, lam ca 2 bao cao nay bi null oan,
 // mac du truoc do dang chay dung).
-function byLabelInRange(markers: string[], startIdx: number, endIdx: number): RowFinder {
+//
+// `exclude` (them 2026-10-22): loai dong KHONG duoc tinh du nam dung trong
+// doan - can cho cac chi tieu co dong "Du phong ..." mang CUNG cum tu voi
+// chinh chi tieu (vd "Du phong dau tu nam giu den ngay dao han dai han (*)"),
+// vi ham nay tra ve dong KHOP DAU TIEN nen khong co gi dam bao dong du phong
+// luon nam SAU dong goc trong moi bao cao.
+function byLabelInRange(markers: string[], startIdx: number, endIdx: number, exclude: string[] = []): RowFinder {
   return (table) => {
     if (startIdx === -1 || endIdx === -1 || endIdx <= startIdx) return null;
     const labelIndex = findLabelColumnIndex(table.columns, table.rows);
@@ -173,7 +179,7 @@ function byLabelInRange(markers: string[], startIdx: number, endIdx: number): Ro
       const label = table.rows[i][labelIndex];
       if (typeof label !== 'string') continue;
       const normalized = normalizeLabelText(label);
-      if (markers.every((m) => normalized.includes(m))) return table.rows[i];
+      if (markers.every((m) => normalized.includes(m)) && !exclude.some((m) => normalized.includes(m))) return table.rows[i];
     }
     return null;
   };
@@ -182,13 +188,15 @@ function byLabelInRange(markers: string[], startIdx: number, endIdx: number): Ro
 // Doan "Tai san ngan han"/"Tai san dai han" - khoanh vung boi 3 moc TEN (khong
 // "KHAC", tranh khop nham dong "Tai san ngan han khac"/"Tai san dai han khac"
 // lam moc): "Tài sản ngắn hạn" -> "Tài sản dài hạn" -> "Tổng cộng tài sản".
-function byLabelInAssetSection(markers: string[], section: 'short' | 'long'): RowFinder {
+function byLabelInAssetSection(markers: string[], section: 'short' | 'long', exclude: string[] = []): RowFinder {
   return (table) => {
     const shortStart = findSectionBoundaryIndex(table, 'TAI SAN NGAN HAN', ['KHAC']);
     const longStart = findSectionBoundaryIndex(table, 'TAI SAN DAI HAN', ['KHAC']);
     const totalIdx = findSectionBoundaryIndex(table, 'TONG CONG TAI SAN');
     const endIdx = totalIdx === -1 ? table.rows.length : totalIdx;
-    return section === 'short' ? byLabelInRange(markers, shortStart, longStart)(table) : byLabelInRange(markers, longStart, endIdx)(table);
+    return section === 'short'
+      ? byLabelInRange(markers, shortStart, longStart, exclude)(table)
+      : byLabelInRange(markers, longStart, endIdx, exclude)(table);
   };
 }
 
@@ -261,14 +269,30 @@ function findLnstCongTyMe(table: StatementTable): Row | null {
   const parentRow =
     findRowByLabel(table, (label) => label.includes('LOI NHUAN') && label.includes('PHAN BO') && label.includes('CHU SO HUU')) ??
     findRowByLabel(table, (label) => label.includes('LOI NHUAN SAU THUE') && label.includes('CO DONG') && label.includes('CONG TY ME'));
-  if (parentRow) return parentRow;
-  return findRowByLabel(
+  // SUA 2026-10-22 (xac nhan qua BXH that): bao cao RIENG LE/Chung van in DU
+  // 2 dong con "Loi nhuan sau thue cua co dong thieu so" (61) va "... co dong
+  // cong ty me" (62) theo mau, nhung DE TRONG ca 2 (khong co cong ty con nen
+  // khong tach) - dong 62 TON TAI nen uu tien NPATMI o tren bat dung no roi
+  // tra ve 1 dong RONG, lam LNST hien = 0 du bao cao co lai 297.708.208 o
+  // dong tong (60). Chi uu tien dong "cong ty me" khi no THUC SU co so lieu;
+  // dong rong thi di tiep xuong dong tong nhu bao cao Rieng le binh thuong.
+  // (KHAC voi lan thu 2026-10-20 da bo o tren: cho nay KHONG noi long dieu
+  // kien KHOP NHAN - chi them kiem tra dong tim duoc co gia tri hay khong.)
+  // Phai dung `typeof === 'number'`, KHONG dung numericValue(): theo quy uoc da
+  // chot cua project, numericValue(o trong/"-") = 0 (xem comment o do) nen moi
+  // dong - ke ca dong RONG TOAN BO - deu "co gia tri". O day can dung tin hieu
+  // "co o SO THAT hay khong" moi phan biet duoc dong 62 de trong voi dong 62
+  // thuc su bang 0.
+  const hasValue = (row: Row) => valueColumnIndexes(table).some((i) => typeof row[i] === 'number');
+  if (parentRow && hasValue(parentRow)) return parentRow;
+  const totalRow = findRowByLabel(
     table,
     (label) =>
       (label.includes('LOI NHUAN SAU THUE') || label.includes('LOI NHUAN THUAN SAU THUE') || label.includes('NET PROFIT AFTER TAX')) &&
       !label.includes('CO DONG') &&
       !label.includes('ATTRIBUTABLE')
   );
+  return totalRow ?? parentRow;
 }
 
 // 22 chi tieu tang truong nguoi dung yeu cau (2026-07-08, them "DT Chua Thuc
@@ -278,10 +302,29 @@ function findLnstCongTyMe(table: StatementTable): Row | null {
 // "Trả trước người bán" = NH + DH) - CA 2 finder phai tim thay thi moi cong,
 // thieu 1 ben la tra null (xem sumFindersAtColumn duoi).
 const OTHER_METRICS: MetricDef[] = [
+  // MO RONG 2026-10-22 (yeu cau nguoi dung): "Tien" = Tien va tuong duong tien
+  // + Dau tu tai chinh NGAN HAN + "Dau tu nam giu den ngay dao han" DAI HAN.
+  // Ly do: tien gui co ky han tren 12 thang ban chat van la tien gui, chi khac
+  // ky han - khong cong vao thi 1 cong ty chuyen tien gui tu <12 thang sang
+  // >12 thang se bi hien nhu "tien bay hoi" du khong he rut ra.
+  //
+  // Dung byLabelInAssetSection(...,'long') de khoanh dung doan "Tai san dai
+  // han" (dong ngan han CUNG TEN da nam trong "Dau tu tai chinh ngan han" o
+  // tren, cong lan nua la dem 2 lan), va loai dong "Du phong dau tu nam giu
+  // den ngay dao han" (dong contra, gia tri am).
+  //
+  // Marker ['DAU TU','DEN NGAY DAO HAN'] (khong doi hoi chu "NAM GIU") de bat
+  // ca 3 cach viet co that trong corpus: "Dau tu nam giu den ngay dao han dai
+  // han", "Cac khoan dau tu nam giu den ngay dao han", "Chung khoan dau tu giu
+  // den ngay dao han".
   {
     label: 'Tiền',
     statement: 'balanceSheet',
-    finders: [byLabel(['TIEN VA CAC KHOAN TUONG DUONG TIEN']), byLabel(['DAU TU TAI CHINH NGAN HAN'])],
+    finders: [
+      byLabel(['TIEN VA CAC KHOAN TUONG DUONG TIEN']),
+      byLabel(['DAU TU TAI CHINH NGAN HAN']),
+      byLabelInAssetSection(['DAU TU', 'DEN NGAY DAO HAN'], 'long', ['DU PHONG']),
+    ],
     thresholds: BCDKT_THRESHOLDS,
   },
   // SUA 2026-07-15 (theo yeu cau nguoi dung - dinh nghia truoc do "chi ngan
@@ -475,10 +518,20 @@ const INSURANCE_KQKD_THRESHOLDS_C: Thresholds = { level1: 40, level2: 50 };
 // byLabelLast() rieng cho 2 dong nay de chac chan lay dong Phan II (duong),
 // xem comment tai byLabelLast.
 const INSURANCE_METRICS: MetricDef[] = [
+  // Cong them "Dau tu nam giu den ngay dao han" DAI HAN giong nhom 'other'
+  // (2026-10-22, yeu cau nguoi dung) - dinh nghia "Tien" cua 2 nhom nay von
+  // giong het nhau (tien + dau tu TC ngan han) va BCDKT bao hiem cung co doan
+  // "Tai san dai han" voi dong nay; xem comment day du o OTHER_METRICS.
+  // KHONG ap dung cho SECURITIES_METRICS: o do HTM ngan+dai da la 1 chi tieu
+  // RIENG ("HTM"), cong vao "Tien" nua la dem 2 lan tren cung 1 bang.
   {
     label: 'Tiền',
     statement: 'balanceSheet',
-    finders: [byLabel(['TIEN VA CAC KHOAN TUONG DUONG TIEN']), byLabel(['DAU TU TAI CHINH NGAN HAN'])],
+    finders: [
+      byLabel(['TIEN VA CAC KHOAN TUONG DUONG TIEN']),
+      byLabel(['DAU TU TAI CHINH NGAN HAN']),
+      byLabelInAssetSection(['DAU TU', 'DEN NGAY DAO HAN'], 'long', ['DU PHONG']),
+    ],
     thresholds: INSURANCE_BCDKT_THRESHOLDS,
   },
   {
