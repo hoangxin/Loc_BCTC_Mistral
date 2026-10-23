@@ -2,7 +2,7 @@ import { createWriteStream } from 'fs';
 import { mkdir } from 'fs/promises';
 import { basename, extname, join } from 'path';
 import axios from 'axios';
-import { BROWSER_DOWNLOAD_HEADERS, BROWSER_USER_AGENT } from './http';
+import { BROWSER_DOWNLOAD_HEADERS, BROWSER_USER_AGENT, withTransientRetry } from './http';
 import { callMistralChat } from './ai/mistral-chat';
 import { resolveReportSourceFiles, cleanupDownloadedFile } from './report-source';
 import { extractReportContent } from './report-extract';
@@ -152,14 +152,36 @@ async function downloadFile(fileUrl: string, destDir: string): Promise<string> {
   // SUA 2026-10-20: dung CHUNG header trinh duyet voi lib/download.ts (xem
   // lib/http.ts) - truoc day file nay van gui UA ngan 'Mozilla/5.0', dung cai
   // da bi WAF/Cloudflare chan trong su co 404 Q3/2026.
-  const response = await axios.get(fileUrl, { responseType: 'stream', headers: BROWSER_DOWNLOAD_HEADERS, timeout: REQUEST_TIMEOUT_MS });
-  await new Promise<void>((resolve, reject) => {
-    const writer = createWriteStream(filePath);
-    response.data.pipe(writer);
-    writer.on('finish', () => resolve());
-    writer.on('error', reject);
-  });
-  return filePath;
+  //
+  // SUA 2026-10-23 (cung dot voi lib/download.ts, xem comment
+  // isTransientNetworkError trong lib/http.ts): (1) them retry loi tam thoi -
+  // truoc day 1 lan ket noi bi cat la mat han bao cao; (2) QUAN TRONG: them
+  // `response.data.on('error')` - thieu no thi khi stream nguon loi giua
+  // chung, writer khong bao gio phat 'finish' LAN 'error', Promise nay treo
+  // VINH VIEN (khong phai bao loi - la treo han ca worker).
+  return withTransientRetry(
+    async () => {
+      const response = await axios.get(fileUrl, {
+        responseType: 'stream',
+        headers: BROWSER_DOWNLOAD_HEADERS,
+        timeout: REQUEST_TIMEOUT_MS,
+      });
+      await new Promise<void>((resolve, reject) => {
+        const writer = createWriteStream(filePath);
+        const fail = (error: unknown) => {
+          response.data.destroy();
+          writer.destroy();
+          reject(error);
+        };
+        response.data.pipe(writer);
+        writer.on('finish', () => resolve());
+        writer.on('error', fail);
+        response.data.on('error', fail);
+      });
+      return filePath;
+    },
+    { retryNotFound: true }
+  );
 }
 
 // Tai + trich 3 bang 1 file BCTC tim duoc qua link nguon rieng - CHI trich 3

@@ -68,7 +68,11 @@ export async function downloadOne(report: ReportFile, destDir: string): Promise<
   return withTransientRetry(
     async () => {
       const controller = new AbortController();
-      const timer = setTimeout(() => controller.abort(), DOWNLOAD_TIMEOUT_MS);
+      let timedOut = false;
+      const timer = setTimeout(() => {
+        timedOut = true;
+        controller.abort();
+      }, DOWNLOAD_TIMEOUT_MS);
       try {
         const response = await axios.get(report.fileUrl, {
           responseType: 'stream',
@@ -78,13 +82,32 @@ export async function downloadOne(report: ReportFile, destDir: string): Promise<
 
         await new Promise<void>((resolve, reject) => {
           const writer = createWriteStream(filePath);
+          // Dong ca 2 dau khi 1 dau loi - truoc day stream nao con lai van mo
+          // (ro ri file handle + ket noi) moi lan retry.
+          const fail = (error: unknown) => {
+            response.data.destroy();
+            writer.destroy();
+            reject(error);
+          };
           response.data.pipe(writer);
           writer.on('finish', () => resolve());
-          writer.on('error', reject);
-          response.data.on('error', reject);
+          writer.on('error', fail);
+          response.data.on('error', fail);
         });
 
         return filePath;
+      } catch (error) {
+        // Qua han DOWNLOAD_TIMEOUT_MS thi loi nem ra cung mang hinh dang "loi
+        // mang tam thoi" (axios CanceledError, hoac `Error: aborted` tu stream
+        // khi controller.abort() cat giua chung) - neu de nguyen, isTransient*
+        // se cho retry 3 lan x 30 phut = 90 phut, vuot han timeout-minutes: 60
+        // cua GitHub Actions. Doi thanh loi RO RANG, KHONG retry.
+        if (timedOut) {
+          throw new Error(
+            `Tai file qua ${Math.round(DOWNLOAD_TIMEOUT_MS / 60000)} phut chua xong (${report.fileUrl}) - dung tai, khong thu lai.`
+          );
+        }
+        throw error;
       } finally {
         clearTimeout(timer);
       }

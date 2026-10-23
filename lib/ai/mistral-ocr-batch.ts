@@ -108,6 +108,20 @@ function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+// Giu lai MA TRANG THAI tren chinh doi tuong loi (2026-10-23) - truoc day chi
+// co chuoi message, ma khi body loi cua Mistral co san truong `message` thi
+// message do GHI DE phan "(status)" do minh tu ghep, lam MAT han ma trang
+// thai. Hau qua that: 2 bao cao Q2/2026 (AAT, DCS) that bai voi message tron
+// loc "An invalid response was received from the upstream server" - do la mo
+// ta chuan cua HTTP 502 (gateway cua Mistral), tuc la loi 5xx TAM THOI, nhung
+// TRANSIENT_ERROR_PATTERN do khop tren message nen khong nhan ra, khong retry.
+export class MistralApiError extends Error {
+  constructor(message: string, readonly status: number) {
+    super(message);
+    this.name = 'MistralApiError';
+  }
+}
+
 async function mistralRequest<T>(path: string, apiKey: string, init: RequestInit): Promise<T> {
   const response = await fetch(`https://api.mistral.ai${path}`, {
     ...init,
@@ -126,8 +140,11 @@ async function mistralRequest<T>(path: string, apiKey: string, init: RequestInit
     // tra ve body khong theo dung dinh dang {error:{message}} nhu ky vong, che
     // mat ly do that neu chi doc field do (xem debug 2026-07-12: 400 tai
     // /v1/batch/jobs khong ro nguyen nhan cho toi khi in rawText).
-    const message = data?.error?.message || data?.message || `Mistral API loi (${response.status}) tai ${path}: ${rawText.slice(0, 500)}`;
-    throw new Error(message);
+    // LUON giu tien to "(status) tai {path}" ke ca khi body co san `message`
+    // (truoc day body co `message` thi message do thay the ca cau, mat ma
+    // trang thai - xem MistralApiError o tren).
+    const detail = data?.error?.message || data?.message || rawText.slice(0, 500);
+    throw new MistralApiError(`Mistral API loi (${response.status}) tai ${path}: ${detail}`, response.status);
   }
   return data as T;
 }
@@ -186,21 +203,56 @@ async function downloadFileContent(fileId: string, apiKey: string): Promise<stri
 // KHONG retry loi khac (vd 400/401) vi do la loi that, retry vo ich.
 const POLL_TRANSIENT_RETRY_ATTEMPTS = 3;
 const POLL_TRANSIENT_RETRY_DELAY_MS = 5000;
-const TRANSIENT_ERROR_PATTERN = /Mistral API loi \(5\d\d\)|fetch failed|ECONNRESET|ETIMEDOUT|EAI_AGAIN/;
+const TRANSIENT_ERROR_PATTERN = /fetch failed|ECONNRESET|ETIMEDOUT|EAI_AGAIN|aborted|socket hang up|terminated/;
+
+// SUA 2026-10-23 (su co that: OGC Q2/2026 va UDJ/FGL Q3/2026 chet voi
+// `Mistral API loi (404) tai /v1/batch/jobs/<id>: {"detail": "Batch job not
+// found"}`): job NAY vua duoc chinh Mistral tao ra thanh cong vai giay truoc
+// (id lay tu response cua POST /v1/batch/jobs), nen 404 o day KHONG the la
+// "job khong ton tai" that - no la do tre dong bo giua cac he thong noi bo
+// cua Mistral, DUNG hien tuong da gap o buoc tai output_file (xem
+// downloadFileContent o tren). Truoc day 404 bi coi la loi vinh vien, nem ra
+// ngay: bao cao that bai HAN du job van dang OCR binh thuong - va vi job da
+// tao roi nen VAN BI TINH PHI, lan sau tai lai phai tra tien lan 2.
+//
+// Cho rieng 404 mot han muc thu lai DAI hon han loi 5xx (10 lan x 5 giay =
+// ~50 giay) vi do tre dong bo nay co the keo dai hon 1 nhip mang thoang qua;
+// het han muc do ma VAN 404 thi moi coi la loi that. Retry o day CHI lap lai
+// GET trang thai (khong tao job moi) nen KHONG ton them dong phi nao.
+const POLL_NOT_FOUND_RETRY_ATTEMPTS = 10;
+
+function isTransientPollError(error: unknown): boolean {
+  if (error instanceof MistralApiError) return error.status >= 500 && error.status < 600;
+  const message = error instanceof Error ? error.message : String(error);
+  return TRANSIENT_ERROR_PATTERN.test(message);
+}
+
+function isJobNotFoundError(error: unknown): boolean {
+  return error instanceof MistralApiError && error.status === 404;
+}
 
 async function pollJobStatus(jobId: string, apiKey: string): Promise<MistralBatchJob> {
-  let lastError: unknown;
-  for (let attempt = 0; attempt < POLL_TRANSIENT_RETRY_ATTEMPTS; attempt++) {
+  let transientAttempts = 0;
+  let notFoundAttempts = 0;
+  for (;;) {
     try {
       return await mistralRequest<MistralBatchJob>(`/v1/batch/jobs/${jobId}`, apiKey, { method: 'GET' });
     } catch (error) {
-      lastError = error;
-      const message = error instanceof Error ? error.message : String(error);
-      if (!TRANSIENT_ERROR_PATTERN.test(message)) throw error;
-      if (attempt < POLL_TRANSIENT_RETRY_ATTEMPTS - 1) await sleep(POLL_TRANSIENT_RETRY_DELAY_MS);
+      // 2 han muc RIENG, moi han muc deu CUNG (khong co duong nao lap vo han):
+      // het han muc nao thi nem loi do ra ngay.
+      if (isJobNotFoundError(error)) {
+        if (++notFoundAttempts >= POLL_NOT_FOUND_RETRY_ATTEMPTS) throw error;
+        console.warn(
+          `[mistral-batch] job ${jobId}: GET trang thai tra ve 404 (lan ${notFoundAttempts}/${POLL_NOT_FOUND_RETRY_ATTEMPTS}) - nhieu kha nang la tre dong bo, thu lai...`
+        );
+      } else if (isTransientPollError(error)) {
+        if (++transientAttempts >= POLL_TRANSIENT_RETRY_ATTEMPTS) throw error;
+      } else {
+        throw error;
+      }
+      await sleep(POLL_TRANSIENT_RETRY_DELAY_MS);
     }
   }
-  throw lastError;
 }
 
 // SUA 2026-07-20 (yeu cau nguoi dung, sau su co nghen hang doi keo dai ca

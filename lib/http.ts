@@ -50,8 +50,45 @@ export interface TransientRetryOptions {
 const DEFAULT_ATTEMPTS = 3;
 const DEFAULT_DELAYS_MS = [3000, 10000];
 
+// SUA 2026-10-23 (su co that: 9 bao cao Q3/2026 - VOS/HUG/THT/HVX/MCH/PAT/NBP
+// va truoc do OIL/SD2/TA9 Q2 - that bai voi loi tron loc "aborted", KHONG he
+// co dong log "that bai lan 1/3 - thu lai..." nao, tuc la retry CHUA TUNG
+// chay): khi tai file bang responseType 'stream', axios da resolve NGAY luc
+// nhan duoc header; moi su co SAU do (ket noi bi CDN cat giua chung) duoc Node
+// nem ra tu CHINH STREAM response duoi dang `Error: aborted` (code ECONNRESET)
+// - mot Error THUONG, KHONG phai AxiosError. Ham nay truoc day
+// `if (!axios.isAxiosError(error)) return false` nen coi day la loi vinh vien,
+// bo luon bao cao do du chi can thu lai la duoc.
+//
+// Nhan them cac loi MANG thuan tuy khong qua axios: nhan dien theo `code`
+// (ECONNRESET/ECONNABORTED/EPIPE/ETIMEDOUT/EAI_AGAIN/UND_ERR_*) hoac theo
+// message rat dac trung cua Node ('aborted', 'socket hang up', 'terminated',
+// 'fetch failed', 'Premature close'). KHONG bat tat ca Error (vd loi ghi dia,
+// loi logic) - nhung loi do thu lai cung vo ich.
+const TRANSIENT_NETWORK_CODES = new Set([
+  'ECONNRESET',
+  'ECONNABORTED',
+  'ECONNREFUSED',
+  'EPIPE',
+  'ETIMEDOUT',
+  'EAI_AGAIN',
+  'ERR_STREAM_PREMATURE_CLOSE',
+  'UND_ERR_SOCKET',
+  'UND_ERR_CONNECT_TIMEOUT',
+  'UND_ERR_HEADERS_TIMEOUT',
+  'UND_ERR_BODY_TIMEOUT',
+]);
+const TRANSIENT_NETWORK_MESSAGE = /^(aborted|socket hang up|terminated|fetch failed|Premature close)$/i;
+
+export function isTransientNetworkError(error: unknown): boolean {
+  if (!(error instanceof Error)) return false;
+  const code = (error as NodeJS.ErrnoException).code;
+  if (code && TRANSIENT_NETWORK_CODES.has(code)) return true;
+  return TRANSIENT_NETWORK_MESSAGE.test(error.message.trim());
+}
+
 export function isTransientAxiosError(error: unknown, retryNotFound = false): boolean {
-  if (!axios.isAxiosError(error)) return false;
+  if (!axios.isAxiosError(error)) return isTransientNetworkError(error);
   if (error.response) {
     const status = error.response.status;
     if (status >= 500 && status < 600) return true;

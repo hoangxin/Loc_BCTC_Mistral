@@ -730220,55 +730220,39 @@
       "title": "BCTC quý 2 năm 2026",
       "lastUpdate": "2026-07-24T08:36:16.613Z",
       "statementScope": "Chung",
-      "businessType": "bank",
+      "businessType": "other",
       "analysis": [
         {
-          "label": "Thu Nhập Lãi Thuần",
-          "percentChange": null,
-          "tier": null,
+          "label": "DT thuần",
+          "percentChange": 23.634315860513187,
+          "tier": "level1",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 676977488653,
+          "priorValue": 547564390955
         },
         {
-          "label": "Tổng TN Hoạt Động",
-          "percentChange": null,
+          "label": "Lãi gộp",
+          "percentChange": 29.143545464799132,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 100890318442,
+          "priorValue": 78122617804
         },
         {
-          "label": "CP Hoạt Động",
-          "percentChange": null,
+          "label": "CPBH",
+          "percentChange": 8.092434617928784,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 33961145159,
+          "priorValue": 31418614336
         },
         {
-          "label": "LN Thuần Trước Dự Phòng",
-          "percentChange": null,
+          "label": "CPQLDN",
+          "percentChange": -68.95566792485462,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
-        },
-        {
-          "label": "CP Dự Phòng",
-          "percentChange": null,
-          "tier": null,
-          "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
-        },
-        {
-          "label": "LNTT",
-          "percentChange": null,
-          "tier": null,
-          "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 4189474601,
+          "priorValue": 13495135250
         },
         {
           "label": "LNST",
@@ -730279,7 +730263,55 @@
           "priorValue": 22462608720
         },
         {
-          "label": "LNST Cty Mẹ",
+          "label": "Tiền",
+          "percentChange": -21.433866487839392,
+          "tier": null,
+          "unreliable": false,
+          "currentValue": 80687330987,
+          "priorValue": 102699887827
+        },
+        {
+          "label": "Phải thu khách hàng",
+          "percentChange": 11.987159291401147,
+          "tier": null,
+          "unreliable": false,
+          "currentValue": 660273802319,
+          "priorValue": 589597777546
+        },
+        {
+          "label": "Trả trước người bán",
+          "percentChange": -56.714774070058525,
+          "tier": null,
+          "unreliable": false,
+          "currentValue": 3693226760,
+          "priorValue": 8532303299
+        },
+        {
+          "label": "Phải thu khác",
+          "percentChange": 18.84811137421592,
+          "tier": null,
+          "unreliable": false,
+          "currentValue": 16810496157,
+          "priorValue": 14144521072
+        },
+        {
+          "label": "Tồn kho",
+          "percentChange": -14.065840610080881,
+          "tier": null,
+          "unreliable": false,
+          "currentValue": 868717355716,
+          "priorValue": 1010910401502
+        },
+        {
+          "label": "Nguyên giá tscđ hữu hình",
+          "percentChange": 1.0349496880240723,
+          "tier": null,
+          "unreliable": false,
+          "currentValue": 222632702537,
+          "priorValue": 220352168457
+        },
+        {
+          "label": "BĐS Đầu tư",
           "percentChange": null,
           "tier": null,
           "unreliable": false,
@@ -730287,7 +730319,63 @@
           "priorValue": 0
         },
         {
-          "label": "Tiền Gửi & Cho Vay TCTD Khác",
+          "label": "TS Dở dang",
+          "percentChange": -100,
+          "tier": null,
+          "unreliable": false,
+          "currentValue": 0,
+          "priorValue": 2539680000
+        },
+        {
+          "label": "TS Thuế TN Hoãn lại",
+          "percentChange": -59.581982013977594,
+          "tier": null,
+          "unreliable": false,
+          "currentValue": 1022060514,
+          "priorValue": 2528724972
+        },
+        {
+          "label": "Phải trả người bán",
+          "percentChange": 2.3827116635021293,
+          "tier": null,
+          "unreliable": false,
+          "currentValue": 650119576150,
+          "priorValue": 634989604775
+        },
+        {
+          "label": "Người mua trả trước",
+          "percentChange": 15.613040331299247,
+          "tier": null,
+          "unreliable": false,
+          "currentValue": 9091570812,
+          "priorValue": 7863793553
+        },
+        {
+          "label": "Chi phí phải trả",
+          "percentChange": -11.48180765718498,
+          "tier": null,
+          "unreliable": false,
+          "currentValue": 6089315014,
+          "priorValue": 6879167833
+        },
+        {
+          "label": "DT Chưa Thực Hiện",
+          "percentChange": 33.88625592417062,
+          "tier": "level2",
+          "unreliable": false,
+          "currentValue": 734500000,
+          "priorValue": 548600000
+        },
+        {
+          "label": "Phải trả khác",
+          "percentChange": 12.178273630345513,
+          "tier": null,
+          "unreliable": false,
+          "currentValue": 5762715818,
+          "priorValue": 5137105102
+        },
+        {
+          "label": "Dự phòng phải trả",
           "percentChange": null,
           "tier": null,
           "unreliable": false,
@@ -730295,60 +730383,12 @@
           "priorValue": 0
         },
         {
-          "label": "Cho Vay KH",
-          "percentChange": null,
+          "label": "Vay",
+          "percentChange": -31.51131099560745,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
-        },
-        {
-          "label": "CK Đầu Tư",
-          "percentChange": null,
-          "tier": null,
-          "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
-        },
-        {
-          "label": "Lãi, Phí Phải Thu",
-          "percentChange": null,
-          "tier": null,
-          "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
-        },
-        {
-          "label": "Tổng TS",
-          "percentChange": -5.71121379816671,
-          "tier": null,
-          "unreliable": false,
-          "currentValue": 1797334392076,
-          "priorValue": 1906201643352
-        },
-        {
-          "label": "Tiền & Vay TCTD Khác",
-          "percentChange": null,
-          "tier": null,
-          "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
-        },
-        {
-          "label": "Tiền Gửi Của KH",
-          "percentChange": null,
-          "tier": null,
-          "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
-        },
-        {
-          "label": "Giấy Tờ Có Giá",
-          "percentChange": null,
-          "tier": null,
-          "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 418380736221,
+          "priorValue": 610875667651
         },
         {
           "label": "Vốn CSH",
@@ -730357,14 +730397,6 @@
           "unreliable": false,
           "currentValue": 588479663103,
           "priorValue": 589671716642
-        },
-        {
-          "label": "Nợ Tiềm Ẩn Ngoại Bảng",
-          "percentChange": null,
-          "tier": null,
-          "unreliable": false,
-          "currentValue": null,
-          "priorValue": null
         }
       ],
       "statements": {
@@ -1920732,55 +1920764,39 @@
       "title": "BCTC quý 3 năm 2026",
       "lastUpdate": "2026-10-23T01:06:41.363Z",
       "statementScope": "Chung",
-      "businessType": "bank",
+      "businessType": "other",
       "analysis": [
         {
-          "label": "Thu Nhập Lãi Thuần",
-          "percentChange": null,
-          "tier": null,
+          "label": "DT thuần",
+          "percentChange": 32.40111792966501,
+          "tier": "level2",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 679513655467,
+          "priorValue": 513223503013
         },
         {
-          "label": "Tổng TN Hoạt Động",
-          "percentChange": null,
-          "tier": null,
+          "label": "Lãi gộp",
+          "percentChange": 45.17505034011992,
+          "tier": "level2",
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 91108115405,
+          "priorValue": 62757419537
         },
         {
-          "label": "CP Hoạt Động",
-          "percentChange": null,
+          "label": "CPBH",
+          "percentChange": 15.426725760479403,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 37194909754,
+          "priorValue": 32223828155
         },
         {
-          "label": "LN Thuần Trước Dự Phòng",
-          "percentChange": null,
+          "label": "CPQLDN",
+          "percentChange": -23.77251205667821,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
-        },
-        {
-          "label": "CP Dự Phòng",
-          "percentChange": null,
-          "tier": null,
-          "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
-        },
-        {
-          "label": "LNTT",
-          "percentChange": null,
-          "tier": null,
-          "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 5167482961,
+          "priorValue": 6779028275
         },
         {
           "label": "LNST",
@@ -1920791,7 +1920807,55 @@
           "priorValue": 45405254293
         },
         {
-          "label": "LNST Cty Mẹ",
+          "label": "Tiền",
+          "percentChange": 34.34153283697704,
+          "tier": "level1",
+          "unreliable": false,
+          "currentValue": 138415727115,
+          "priorValue": 103032713854
+        },
+        {
+          "label": "Phải thu khách hàng",
+          "percentChange": 18.52346648974253,
+          "tier": null,
+          "unreliable": false,
+          "currentValue": 698811724294,
+          "priorValue": 589597777546
+        },
+        {
+          "label": "Trả trước người bán",
+          "percentChange": 14.851017862298802,
+          "tier": null,
+          "unreliable": false,
+          "currentValue": 9799437186,
+          "priorValue": 8532303299
+        },
+        {
+          "label": "Phải thu khác",
+          "percentChange": 54.9119791907482,
+          "tier": "level2",
+          "unreliable": false,
+          "currentValue": 21395970154,
+          "priorValue": 13811695045
+        },
+        {
+          "label": "Tồn kho",
+          "percentChange": -23.740258448420843,
+          "tier": null,
+          "unreliable": false,
+          "currentValue": 787539653828,
+          "priorValue": 1032706953636
+        },
+        {
+          "label": "Nguyên giá tscđ hữu hình",
+          "percentChange": 2.6012394291996874,
+          "tier": null,
+          "unreliable": false,
+          "currentValue": 226084055946,
+          "priorValue": 220352168457
+        },
+        {
+          "label": "BĐS Đầu tư",
           "percentChange": null,
           "tier": null,
           "unreliable": false,
@@ -1920799,68 +1920863,76 @@
           "priorValue": 0
         },
         {
-          "label": "Tiền Gửi & Cho Vay TCTD Khác",
-          "percentChange": null,
+          "label": "TS Dở dang",
+          "percentChange": -100,
           "tier": null,
           "unreliable": false,
           "currentValue": 0,
-          "priorValue": 0
+          "priorValue": 2539680000
         },
         {
-          "label": "Cho Vay KH",
-          "percentChange": null,
+          "label": "TS Thuế TN Hoãn lại",
+          "percentChange": -95.9765113198716,
+          "tier": null,
+          "unreliable": false,
+          "currentValue": 101742963,
+          "priorValue": 2528724972
+        },
+        {
+          "label": "Phải trả người bán",
+          "percentChange": -1.0007066593686813,
+          "tier": null,
+          "unreliable": false,
+          "currentValue": 650213654099,
+          "priorValue": 656786156909
+        },
+        {
+          "label": "Người mua trả trước",
+          "percentChange": 134.00958827282176,
+          "tier": "level2",
+          "unreliable": false,
+          "currentValue": 18402030916,
+          "priorValue": 7863793553
+        },
+        {
+          "label": "Chi phí phải trả",
+          "percentChange": -69.96435726546657,
+          "tier": null,
+          "unreliable": false,
+          "currentValue": 1738048084,
+          "priorValue": 5786618583
+        },
+        {
+          "label": "DT Chưa Thực Hiện",
+          "percentChange": 35.073140721837404,
+          "tier": "level2",
+          "unreliable": false,
+          "currentValue": 741011250,
+          "priorValue": 548600000
+        },
+        {
+          "label": "Phải trả khác",
+          "percentChange": -7.210172648712142,
+          "tier": null,
+          "unreliable": false,
+          "currentValue": 4766710955,
+          "priorValue": 5137105102
+        },
+        {
+          "label": "Dự phòng phải trả",
+          "percentChange": -100,
           "tier": null,
           "unreliable": false,
           "currentValue": 0,
-          "priorValue": 0
+          "priorValue": 1092549250
         },
         {
-          "label": "CK Đầu Tư",
-          "percentChange": null,
+          "label": "Vay",
+          "percentChange": -34.85739321813229,
           "tier": null,
           "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
-        },
-        {
-          "label": "Lãi, Phí Phải Thu",
-          "percentChange": null,
-          "tier": null,
-          "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
-        },
-        {
-          "label": "Tổng TS",
-          "percentChange": -5.583873362257384,
-          "tier": null,
-          "unreliable": false,
-          "currentValue": 1811567388195,
-          "priorValue": 1918705471943
-        },
-        {
-          "label": "Tiền & Vay TCTD Khác",
-          "percentChange": null,
-          "tier": null,
-          "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
-        },
-        {
-          "label": "Tiền Gửi Của KH",
-          "percentChange": null,
-          "tier": null,
-          "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
-        },
-        {
-          "label": "Giấy Tờ Có Giá",
-          "percentChange": null,
-          "tier": null,
-          "unreliable": false,
-          "currentValue": 0,
-          "priorValue": 0
+          "currentValue": 397940334104,
+          "priorValue": 610875667651
         },
         {
           "label": "Vốn CSH",
@@ -1920869,14 +1920941,6 @@
           "unreliable": false,
           "currentValue": 0,
           "priorValue": 0
-        },
-        {
-          "label": "Nợ Tiềm Ẩn Ngoại Bảng",
-          "percentChange": null,
-          "tier": null,
-          "unreliable": false,
-          "currentValue": null,
-          "priorValue": null
         }
       ],
       "statements": {
@@ -1921832,7 +1921896,9 @@
       "entryName": "1_dp1_2026_10_22_799792f_vi_baocaotaichinh_q3_2026.pdf",
       "periodYear": 2026,
       "periodSlug": "Q3",
-      "warnings": []
+      "warnings": [
+        "KHONG DU TIN HIEU: khong kiem tra cheo sau duoc 4 muc trong BCDKT (thieu ten dong hoac cau truc bang khong ro rang) - khong phai loi, chi la khong du du lieu de xac minh."
+      ]
     },
     {
       "source": "vietstock",
