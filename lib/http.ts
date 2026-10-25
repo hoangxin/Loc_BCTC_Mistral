@@ -39,16 +39,24 @@ export interface TransientRetryOptions {
   // (502/503 thoang qua) vua cho duoc truong hop file vua len Vietstock chua
   // kip day ra het cac node CDN.
   delaysMs?: number[];
+  // Xe dich moi thoi gian cho +/- JITTER_RATIO mot cach ngau nhien. MAC DINH
+  // BAT (2026-10-25): pipeline chay PIPELINE_CONCURRENCY=5 worker song song
+  // vao CUNG 1 CDN; khi CDN nghen, ca 5 worker cung that bai gan nhu cung
+  // luc, roi cung ngu dung 3s/10s va cung dap lai 1 luot - tu minh tao ra
+  // dung kieu tai dong bo ma CDN dang khong chiu noi. Jitter pha vo dong bo
+  // do. Tat (false) chi khi can thoi gian cho tien doan duoc trong test.
+  jitter?: boolean;
   // Coi ca 404/403/429 la loi TAM THOI. CHI bat cho buoc TAI FILE tu CDN:
   // 1 file da duoc chinh API Vietstock liet ke ma tra 404 gan nhu luon la
   // chan/chua propagate, khong phai "khong ton tai that". KHONG bat cho cac
   // endpoint API (404 o do la loi that, retry chi ton thoi gian).
   retryNotFound?: boolean;
-  onRetry?: (error: unknown, attempt: number) => void;
+  onRetry?: (error: unknown, attempt: number, delayMs: number) => void;
 }
 
 const DEFAULT_ATTEMPTS = 3;
 const DEFAULT_DELAYS_MS = [3000, 10000];
+const JITTER_RATIO = 0.4; // thoi gian cho that = delay * (0.8 .. 1.2)
 
 // SUA 2026-10-23 (su co that: 9 bao cao Q3/2026 - VOS/HUG/THT/HVX/MCH/PAT/NBP
 // va truoc do OIL/SD2/TA9 Q2 - that bai voi loi tron loc "aborted", KHONG he
@@ -112,8 +120,11 @@ export async function withTransientRetry<T>(fn: () => Promise<T>, options: Trans
       lastError = error;
       if (!isTransientAxiosError(error, options.retryNotFound)) throw error;
       if (attempt >= attempts - 1) break;
-      options.onRetry?.(error, attempt + 1);
-      await sleep(delays[Math.min(attempt, delays.length - 1)]);
+      const baseDelay = delays[Math.min(attempt, delays.length - 1)];
+      const delayMs =
+        options.jitter === false ? baseDelay : Math.round(baseDelay * (1 - JITTER_RATIO / 2 + Math.random() * JITTER_RATIO));
+      options.onRetry?.(error, attempt + 1, delayMs);
+      await sleep(delayMs);
     }
   }
 

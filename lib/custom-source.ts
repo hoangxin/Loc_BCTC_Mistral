@@ -3,6 +3,7 @@ import { mkdir } from 'fs/promises';
 import { basename, extname, join } from 'path';
 import axios from 'axios';
 import { BROWSER_DOWNLOAD_HEADERS, BROWSER_USER_AGENT, withTransientRetry } from './http';
+import { DOWNLOAD_RETRY_ATTEMPTS, DOWNLOAD_RETRY_DELAYS_MS } from './download';
 import { callMistralChat } from './ai/mistral-chat';
 import { resolveReportSourceFiles, cleanupDownloadedFile } from './report-source';
 import { extractReportContent } from './report-extract';
@@ -180,7 +181,10 @@ async function downloadFile(fileUrl: string, destDir: string): Promise<string> {
       });
       return filePath;
     },
-    { retryNotFound: true }
+    // SUA 2026-10-25: dung CHUNG so lan thu + backoff voi lib/download.ts
+    // (truoc day lang le an theo mac dinh 3 lan x 3s/10s, qua ngan so voi dot
+    // nghen CDN keo dai hang chuc phut da lam mat 8 bao cao Q3/2026).
+    { attempts: DOWNLOAD_RETRY_ATTEMPTS, delaysMs: DOWNLOAD_RETRY_DELAYS_MS, retryNotFound: true }
   );
 }
 

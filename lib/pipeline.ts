@@ -4,7 +4,8 @@ import { getPreviousQuarter } from './quarter';
 import { resolveQuarterTerm, fetchReportFilesForTerm, type ReportTerm, type ReportFile } from './vietstock-reports';
 import { periodDisplayLabel, periodFolderSlug } from './period-label';
 import { filterReports, filterExclusionReason } from './filter';
-import { downloadOne } from './download';
+import { downloadOne, DownloadTimeoutError } from './download';
+import { sleep } from './http';
 import { resolveReportSourceFiles, cleanupDownloadedFile, type ResolvedReportFile } from './report-source';
 import { extractReportContent, type ReportContentResult } from './report-extract';
 import { isEmptyParse, shouldRetryIncompleteReport } from './export/financial-statements';
@@ -386,7 +387,17 @@ export async function runFetchPipeline(options: RunFetchPipelineOptions = {}): P
     // khong o dau ca trong FetchStatus.
     const excludedEntries: { idx: number; excluded: ExcludedReport }[] = [];
     let downloadedCount = 0;
-    let nextIndex = 0;
+    // Hang doi index trong `matched` ma cac worker rut dan. Tach ra thanh bien
+    // (thay vi dem thang tu 0 toi matched.length) de co the nap lai bang 1 tap
+    // index KHAC o VONG TAI BU cuoi lan chay - xem downloadFailedIndices duoi.
+    let queue: number[] = matched.map((_, idx) => idx);
+    let queuePos = 0;
+
+    // Cac index that bai RIENG o buoc TAI FILE (chua he OCR, nen chay lai
+    // KHONG ton them dong nao ngoai chi phi OCR dang le da phai tra o lan nay).
+    // Loi OCR/trich xuat KHONG duoc vao day - thu lai nhung loi do la tra tien
+    // OCR lan 2 cho cung 1 bao cao.
+    const downloadFailedIndices = new Set<number>();
 
     // Danh dau 1 index trong `matched` la DA XU LY XONG (du ket qua la them
     // vao reportEntries, failedEntries, hay bo qua co chu dich - vd file
@@ -479,8 +490,8 @@ export async function runFetchPipeline(options: RunFetchPipelineOptions = {}): P
 
     console.time('[perf] downloadResolveExtract');
     async function worker() {
-      while (nextIndex < matched.length) {
-        const index = nextIndex++;
+      while (queuePos < queue.length) {
+        const index = queue[queuePos++];
         const report: ReportFile = matched[index];
 
         let filePath: string;
@@ -493,6 +504,9 @@ export async function runFetchPipeline(options: RunFetchPipelineOptions = {}): P
             idx: index,
             failed: { stockCode: report.stockCode, title: report.title, error: error instanceof Error ? error.message : String(error) },
           });
+          // Qua han tai (30 phut cho 1 file) KHONG vao vong bu - xem
+          // DownloadTimeoutError.
+          if (!(error instanceof DownloadTimeoutError)) downloadFailedIndices.add(index);
           processedIndices.add(index);
           flushProgress();
           continue;
@@ -636,7 +650,56 @@ export async function runFetchPipeline(options: RunFetchPipelineOptions = {}): P
       }
     }
 
-    await Promise.all(Array.from({ length: Math.min(PIPELINE_CONCURRENCY, matched.length) }, worker));
+    const runWorkers = () => Promise.all(Array.from({ length: Math.min(PIPELINE_CONCURRENCY, queue.length) }, worker));
+
+    const pipelineStartedAt = Date.now();
+    await runWorkers();
+
+    // VONG TAI BU (2026-10-25, su co that: 8 bao cao Q3/2026 KKC/SPB/TOP/THS/
+    // PJC/HAH/PV2/SMT mat trong lan chay 24/10 vi static2.vietstock.vn nghen
+    // lien tuc ~25 phut, tra ve xen ke 520/522/525 va cat ket noi giua chung).
+    // Backoff dai hon trong lib/download.ts chiu duoc mot nhip nghen vai phut;
+    // vong nay la luoi do tiep cho nhip nghen DAI hon the. Chay lai TRON VEN
+    // (tai -> giai nen -> trich) dung cac bao cao that bai o buoc TAI, sau khi
+    // moi bao cao khac da xong - luc do thuong da cach cua so nghen hang chuc
+    // phut. CHI 1 vong, CHI cho loi tai file: bao cao that bai o buoc OCR
+    // KHONG vao day (thu lai se tra tien OCR lan 2 cho cung 1 bao cao).
+    const RETRY_ROUND_DELAY_MS = 3 * 60 * 1000;
+    // Tran thoi gian: bo qua vong bu neu lan chay da qua dai, de khong bi
+    // GitHub Actions giet o timeout-minutes: 120 ngay giua vong bu.
+    const RETRY_ROUND_MAX_ELAPSED_MS = 80 * 60 * 1000;
+    if (downloadFailedIndices.size > 0) {
+      const retryIndices = [...downloadFailedIndices].sort((a, b) => a - b);
+      downloadFailedIndices.clear();
+      const codes = retryIndices.map((idx) => matched[idx].stockCode).join(', ');
+      const elapsedMs = Date.now() - pipelineStartedAt;
+      if (elapsedMs > RETRY_ROUND_MAX_ELAPSED_MS) {
+        console.warn(
+          `[download] ${retryIndices.length} bao cao that bai o buoc tai file (${codes}) - BO QUA vong tai bu vi lan chay da keo dai ${Math.round(
+            elapsedMs / 60000
+          )} phut.`
+        );
+      } else {
+        console.warn(
+          `[download] ${retryIndices.length} bao cao that bai o buoc tai file (${codes}) - cho ${Math.round(
+            RETRY_ROUND_DELAY_MS / 60000
+          )} phut roi chay lai 1 vong bu.`
+        );
+        await sleep(RETRY_ROUND_DELAY_MS);
+        // Bo cac dong loi cu cua chinh cac index nay - neu vong bu that bai
+        // tiep, worker se ghi lai dong loi moi; neu thanh cong, khong con dong
+        // loi nao sot lai. (buildStatus cung tu loc failed trung voi bao cao da
+        // thanh cong, day chi la don cho sach ngay tu nguon.)
+        const retrySet = new Set(retryIndices);
+        for (let i = failedEntries.length - 1; i >= 0; i--) {
+          if (retrySet.has(failedEntries[i].idx)) failedEntries.splice(i, 1);
+        }
+        queue = retryIndices;
+        queuePos = 0;
+        await runWorkers();
+        console.warn(`[download] vong tai bu xong - con ${downloadFailedIndices.size}/${retryIndices.length} bao cao van that bai o buoc tai.`);
+      }
+    }
     console.timeEnd('[perf] downloadResolveExtract');
 
     // BO SUNG vao ket qua da co (khong tu xoa) - yeu cau user 2026-07-08: moi
