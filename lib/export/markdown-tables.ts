@@ -514,6 +514,123 @@ function realignRowByContent(
   return result;
 }
 
+// Cac dong MOC cua BCDKT: ten chi tieu -> ma so chuan. CHI dung de KIEM TRA
+// CHEO xem nhan va so lieu cua 1 bang co con khop nhau khong (xem
+// repairLabelValueRowShift ngay duoi) - KHONG dung de quyet dinh 1 dong LA gi.
+// Quy tac "khong phan loai dong theo so thu tu/ma so" (CLAUDE.md) cam viec
+// sau, khong cam viec truoc. Chi lay cac dong CAP TONG co ma so on dinh giua
+// cac mau/thong tu; ma so cac dong CHI TIET lech nhau tuy doanh nghiep (da
+// doi chieu that: VE3 ghi 320 cho "Phai tra ngan han khac" trong khi TPC ghi
+// 319 cho dung chi tieu do) nen KHONG duoc dung lam moc.
+const BALANCE_SHEET_CODE_ANCHORS: { test: RegExp; codes: number[] }[] = [
+  { test: /^[A-D]?\s*[-.]?\s*TAI SAN NGAN HAN/, codes: [100] },
+  { test: /^[A-D]?\s*[-.]?\s*TAI SAN DAI HAN/, codes: [200] },
+  { test: /TONG CONG TAI SAN/, codes: [270, 280] },
+  { test: /^[A-D]?\s*[-.]?\s*NO PHAI TRA/, codes: [300] },
+  { test: /^I\.?\s*NO NGAN HAN/, codes: [310] },
+  { test: /^II\.?\s*NO DAI HAN/, codes: [330] },
+  { test: /^[A-D]?\s*[-.]?\s*(NGUON )?VON CHU SO HUU/, codes: [400] },
+  { test: /TONG CONG NGUON VON/, codes: [430, 440] },
+];
+
+function maSoInteger(cell: string | null | undefined): number | null {
+  const s = String(cell ?? '').trim();
+  return /^\d{3}$/.test(s) ? Number(s) : null;
+}
+
+// Dem so dong MOC co ma so KHOP / LECH so voi ma chuan.
+function anchorAgreement(rows: string[][], labelIdx: number, maSoIdx: number): { match: number; mismatch: number } {
+  let match = 0;
+  let mismatch = 0;
+  for (const row of rows) {
+    const label = normalizeLabelText(row[labelIdx] ?? '');
+    if (!label) continue;
+    const anchor = BALANCE_SHEET_CODE_ANCHORS.find((a) => a.test.test(label));
+    if (!anchor) continue;
+    const code = maSoInteger(row[maSoIdx]);
+    if (code === null) continue;
+    if (anchor.codes.includes(code)) match++;
+    else mismatch++;
+  }
+  return { match, mismatch };
+}
+
+// SUA 2026-10-25 (TPC Q3/2026, nguoi dung bao "vay bi doc thanh du phong phai
+// tra"): Mistral OCR doi khi nhet dong DANH SO COT cua mau BCDKT (o chi co
+// "2") vao lam o dau tien cua dong du lieu dau bang, lam CA LUOI SO bi day
+// xuong 1 dong - tu do moi NHAN an so lieu cua dong NGAY DUOI no. Cu the o
+// TPC: "Phai tra nguoi ban ngan han" nhan 247,8 ty (thuc ra la TONG no ngan
+// han), "Vay no ngan han" nhan 2,67 ty (cua "Phai tra ngan han khac"), "Du
+// phong phai tra" nhan 217,7 ty (cua "Vay"). Dau vet de lai o CUOI bang:
+// dung 1 dong THUA chi co so, KHONG co nhan ("|  | 331 | - | - |").
+//
+// Re-OCR KHONG sua duoc (da thu that, run 40168668893: ket qua byte-identical
+// - OCR lap lai dung loi cu tren cung file PDF), nen phai sua o day.
+//
+// Phep sua: ghep nhan dong i voi so lieu dong i+1, bo dong thua cuoi bang.
+// CHI ap dung khi ca 3 dieu kien cung dung, de khong dong vao bang binh
+// thuong: (1) dong cuoi KHONG co nhan nhung CO so lieu, (2) moi dong deu du
+// so o nhu header (de khong giam chuc nang cua realignRowByContent - loi
+// LECH O TRONG 1 DONG la viec cua ham do), (3) sau khi ghep lai thi so dong
+// MOC khop ma chuan TANG it nhat 2 va KHONG phat sinh moc lech moi. Dieu
+// kien (3) la chot an toan that su: voi 1 bang von da dung, phep ghep nay se
+// pha vo su khop cua cac dong moc nen bi tu choi ngay.
+function repairLabelValueRowShift(rawRows: string[][], columnCount: number, labelIdx: number, maSoIdx: number): string[][] {
+  if (labelIdx === -1 || rawRows.length < 4) return rawRows;
+  // Khi OCR nuot luon dong header cua bang (da gap that o chinh TPC Q3: header
+  // "NGUON VON | MA SO | ..." bi doc thanh 1 DONG DU LIEU, nen bang khong con
+  // cot nao TEN la "Ma so" va ca khoi NGUON VON nam chung bang voi khoi TAI
+  // SAN), maSoIdx = -1. Dung VI TRI ngay sau nhan lam cot ma so - cung tin
+  // hieu ma realignRowByContent da dua vao, xem comment tai do.
+  const codeIdx = maSoIdx !== -1 ? maSoIdx : labelIdx + 1;
+  if (codeIdx >= columnCount || codeIdx + 1 >= columnCount) return rawRows;
+
+  const isShortLegendDigit = (cell: string | undefined) => /^\d{1,2}$/.test(String(cell ?? '').trim());
+
+  // Dong BAT DAU lech: co nhan that, nhung o ma so lai la 1 chu so ngan (so
+  // thu tu cot bi nhet vao) trong khi o KE TIEP moi dung dang ma so.
+  let start = -1;
+  for (let i = 0; i < rawRows.length - 1; i++) {
+    const row = rawRows[i];
+    if (row.length !== columnCount || !looksLikeLabel(row[labelIdx])) continue;
+    if (maSoInteger(row[codeIdx]) !== null) continue;
+    if (!isShortLegendDigit(row[codeIdx]) || maSoInteger(row[codeIdx + 1]) === null) continue;
+    start = i;
+    break;
+  }
+  if (start === -1) return rawRows;
+
+  // Dong KET THUC lech: dong THUA chi con so lieu, khong co nhan - day la cho
+  // luoi so "tra lai" dong cuoi cung cua khoi. Khong co no thi khong du bang
+  // chung la ca khoi bi truot, bo qua.
+  let end = -1;
+  for (let i = start + 1; i < rawRows.length; i++) {
+    const row = rawRows[i];
+    if (row.length !== columnCount) break;
+    if (looksLikeLabel(row[labelIdx])) continue;
+    if (row.some((cell, idx) => idx !== labelIdx && String(cell ?? '').trim() !== '')) {
+      end = i;
+      break;
+    }
+  }
+  if (end === -1 || end - start < 2) return rawRows;
+
+  // Ghep nhan dong i voi so lieu dong i+1 trong DUNG pham vi [start, end],
+  // giu nguyen moi dong ngoai pham vi (khoi TAI SAN phia tren va khoi VON CHU
+  // SO HUU phia duoi van dung, khong duoc dong vao).
+  const shifted = [
+    ...rawRows.slice(0, start),
+    ...rawRows.slice(start, end).map((row, k) => rawRows[start + k + 1].map((cell, col) => (col === labelIdx ? row[labelIdx] : cell))),
+    ...rawRows.slice(end + 1),
+  ];
+
+  const before = anchorAgreement(rawRows, labelIdx, codeIdx);
+  const after = anchorAgreement(shifted, labelIdx, codeIdx);
+  if (after.match - before.match < 2 || after.mismatch > before.mismatch) return rawRows;
+
+  return shifted;
+}
+
 // Ten chi tieu DAC TRUNG rieng cua tung bang (theo Thong tu 200/99, khong doi
 // du ten BANG co doi ten - xem comment o tren) - dung de nhan dien 1 bang
 // markdown DA PARSE thuoc bang nao qua NOI DUNG cac dong cua no thay vi tieu
@@ -1745,7 +1862,10 @@ function parseAllTablesInRange(lines: string[]): ParsedTable[] {
     // findUnreliableIncomeStatementCells (statement-shared.ts) phan biet dong
     // CHI TIET CAP 1 (can cong) voi muc con long ben trong 1 chi tieu khac
     // (khong duoc cong lai, tranh dem 2 lan).
-    const rows = rawRows.map((rowCells) => {
+    // Sua loi LECH NHAN/SO LIEU CA BANG truoc khi sua lech o trong tung dong
+    // - 2 loi khac han nhau, xem comment o repairLabelValueRowShift.
+    const repairedRows = repairLabelValueRowShift(rawRows, effectiveHeaderCells.length, labelIdx, maSoIdx);
+    const rows = repairedRows.map((rowCells) => {
       const realigned = realignRowByContent(rowCells, effectiveHeaderCells, labelIdx, maSoIdx);
       return realigned.map((cell, idx) => (idx === labelIdx || idx === maSoIdx || cell === null ? cell : parseNumericCell(cell)));
     });
