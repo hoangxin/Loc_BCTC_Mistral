@@ -8,9 +8,27 @@ import type { FinancialStatements, StatementTable } from '../lib/export/statemen
 
 const EMPTY: StatementTable = { columns: [], rows: [] };
 
+// Bang that luon 60-130 dong; findMaSoColumnByShape doi it nhat 10 o dang ma
+// so moi dam nhan 1 cot la cot ma so (xem MIN_CODE_CELLS). Them cac dong chi
+// tiet CO THAT cua BCDKT de bai thu phan anh dung dieu kien san xuat, thay vi
+// 1 bang 8 dong khong ton tai ngoai doi.
+const DONG_CHI_TIET: (string | number | null)[][] = [
+  ['1. Tiền', 111, 17562100094, 27676239963],
+  ['2. Các khoản tương đương tiền', 112, '-', '-'],
+  ['1. Phải thu ngắn hạn của khách hàng', 131, 90114237184, 81140230875],
+  ['2. Trả trước cho người bán ngắn hạn', 132, 1262884980, 2825700732],
+  ['6. Phải thu ngắn hạn khác', 136, 6691193917, 9825059177],
+  ['1. Hàng tồn kho', 141, 79382943208, 55823635225],
+  ['1. Chi phí trả trước ngắn hạn', 151, 3847097226, 5441027666],
+  ['1. Nguyên giá', 222, 157880381394, 196694000000],
+  ['2. Giá trị hao mòn lũy kế', 223, -164800000, -164800000],
+  ['1. Đầu tư vào công ty con', 261, '-', '-'],
+  ['3. Đầu tư góp vốn vào đơn vị khác', 263, 347397, 347397],
+];
+
 function bs(rows: (string | number | null)[][]): FinancialStatements {
   return {
-    balanceSheet: { columns: ['', '', '', ''], rows },
+    balanceSheet: { columns: ['', '', '', ''], rows: [...DONG_CHI_TIET, ...rows] },
     incomeStatement: EMPTY,
     cashFlow: EMPTY,
     offBalanceSheet: EMPTY,

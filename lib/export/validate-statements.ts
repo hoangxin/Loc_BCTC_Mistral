@@ -791,16 +791,40 @@ function validateIncomeStatementGroupSums(table: StatementTable, businessType: B
 // Chi lay dong CAP TONG: ma cua dong CHI TIET lech nhau tuy doanh nghiep (da
 // doi chieu that: VE3 ghi 320 cho "Phai tra ngan han khac" trong khi TPC ghi
 // 319 cho dung chi tieu do) nen khong dung lam moc duoc.
-const BALANCE_SHEET_CODE_ANCHORS: { test: RegExp; codes: number[]; name: string }[] = [
-  { test: /^[A-D]?\s*[-.]?\s*TAI SAN NGAN HAN/, codes: [100], name: 'Tai san ngan han' },
-  { test: /^[A-D]?\s*[-.]?\s*TAI SAN DAI HAN/, codes: [200], name: 'Tai san dai han' },
-  { test: /TONG CONG TAI SAN/, codes: [270, 280], name: 'Tong cong tai san' },
-  { test: /^[A-D]?\s*[-.]?\s*NO PHAI TRA/, codes: [300], name: 'No phai tra' },
-  { test: /^I\.?\s*NO NGAN HAN/, codes: [310], name: 'No ngan han' },
-  { test: /^II\.?\s*NO DAI HAN/, codes: [330], name: 'No dai han' },
-  { test: /^[A-D]?\s*[-.]?\s*(NGUON )?VON CHU SO HUU/, codes: [400], name: 'Von chu so huu' },
-  { test: /TONG CONG NGUON VON/, codes: [430, 440], name: 'Tong cong nguon von' },
+// So khop TRON VEN ten chi tieu, khong phai tien to.
+//
+// SUA 2026-10-25 (bat duoc khi mo phong tren 1.556 bao cao that TRUOC khi
+// commit): ban dau dung regex tien to -> 169 bao cao bao dong GIA, vi
+// "TAI SAN NGAN HAN KHAC" (ma 155/160/165) va "TAI SAN DAI HAN KHAC" (ma
+// 268/270) deu BAT DAU bang dung cum cua dong tong, nen bi cham diem nhu moc
+// - sinh ra canh bao vo nghia "Tai san ngan han mang ma 160".
+const BALANCE_SHEET_CODE_ANCHORS: { phrases: string[]; codes: number[]; name: string }[] = [
+  { phrases: ['TAI SAN NGAN HAN'], codes: [100], name: 'Tai san ngan han' },
+  { phrases: ['TAI SAN DAI HAN'], codes: [200], name: 'Tai san dai han' },
+  { phrases: ['TONG CONG TAI SAN'], codes: [270, 280], name: 'Tong cong tai san' },
+  { phrases: ['NO PHAI TRA'], codes: [300], name: 'No phai tra' },
+  { phrases: ['NO NGAN HAN'], codes: [310], name: 'No ngan han' },
+  { phrases: ['NO DAI HAN'], codes: [330], name: 'No dai han' },
+  // 410 la ma THAT cua dong "I. Von chu so huu" - cung ten chi tieu voi dong
+  // tong "D- VON CHU SO HUU" (400), chi khac so thu tu dau dong ma buoc lam
+  // sach da cat di. Chap nhan ca 2, neu khong SDN/PDC bi bao dong gia.
+  { phrases: ['VON CHU SO HUU', 'NGUON VON CHU SO HUU'], codes: [400, 410], name: 'Von chu so huu' },
+  { phrases: ['TONG CONG NGUON VON'], codes: [430, 440], name: 'Tong cong nguon von' },
 ];
+
+// Bo cong thuc trong ngoac ("(100=110+120+...)"), so thu tu dau dong ("A-",
+// "C .", "I.", "II.") va dau cau cuoi, de con lai DUNG ten chi tieu. So La Ma
+// bat buoc phai co dau phan cach ngay sau, neu khong "VON CHU SO HUU" se bi
+// cat mat chu "V" dau.
+function anchorPhrase(label: string): string {
+  return label
+    .replace(/\([^)]*\)/g, ' ')
+    .replace(/^[IVX]{1,4}([.\-):]|\s)\s*/, '')
+    .replace(/^[A-Z]\s*[-.):]+\s*/, '')
+    .replace(/[.,:;*\s]+$/, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
 
 // So moc lech TOI THIEU de bao dong. Nguong 2 KHONG phai chon bua: quet
 // 1.298 BCDKT that (2026-10-25) cho thay MOI ca lech dung 1 moc deu lanh
@@ -809,6 +833,41 @@ const BALANCE_SHEET_CODE_ANCHORS: { test: RegExp; codes: number[]; name: string 
 // hoac doc 280 thanh 275 o dung 1 o (VPH). Ca lech >= 2 moc chi co DUY NHAT
 // TPC Q3/2026, va do la loi that.
 const MIN_ANCHOR_MISMATCHES_TO_WARN = 2;
+
+// Khi khong doc duoc cot ma so theo TEN header, phai do theo HINH DANG cot
+// chu KHONG duoc lay bua "cot ngay sau nhan".
+//
+// SUA 2026-10-25 (bat duoc khi doi chieu cache sau reparse, TRUOC khi commit):
+// ban dau lay thang labelIdx+1 -> 176 bao cao bao dong GIA, vi cot do thuong
+// la cot THUYET MINH hoac cot GIA TRI, con parseCode() thi cat sach ky tu
+// khong phai so nen bat ky o nao cung thanh "ma so" (vd canh bao vo nghia
+// "Tai san ngan han mang ma 160" - 160 la gia tri, khong phai ma).
+//
+// O ma so la so 2-4 chu so (co the kem chu cai cuoi nhu "411a"); gia tri tien
+// VND luon lon hon nhieu. Doi cot phai co DU nhieu o dang ma va ap dao han
+// han cac o khac thi moi nhan - khong du tin hieu thi THA, khong kiem tra con
+// hon kiem tra sai.
+const MIN_CODE_CELLS = 10;
+const CODE_DOMINANCE = 5;
+
+function findMaSoColumnByShape(table: StatementTable, labelIdx: number): number | null {
+  let best: { index: number; codeLike: number } | null = null;
+  for (let i = labelIdx + 1; i < table.columns.length; i++) {
+    let codeLike = 0;
+    let other = 0;
+    for (const row of table.rows) {
+      const raw = row[i];
+      if (raw === null || raw === undefined) continue;
+      const s = String(raw).trim();
+      if (s === '' || s === '-') continue;
+      if (/^\d{2,4}[a-z]?$/i.test(s)) codeLike++;
+      else other++;
+    }
+    if (codeLike < MIN_CODE_CELLS || codeLike <= other * CODE_DOMINANCE) continue;
+    if (best === null || codeLike > best.codeLike) best = { index: i, codeLike };
+  }
+  return best?.index ?? null;
+}
 
 // Bat loi bang bi TRUOT DONG (nhan cua chi tieu nay di voi so lieu cua chi
 // tieu khac). repairLabelValueRowShift (markdown-tables.ts) da tu sua duoc
@@ -822,18 +881,24 @@ function validateMaSoAnchors(table: StatementTable): ValidationIssue[] {
   // dung ca TPC Q3 bi OCR nuot luon dong header nen bang KHONG con ten cot
   // nao. Lui ve vi tri ngay sau cot nhan, giong cach markdown-tables.ts lam.
   const named = findMaSoColumnIndex(table);
-  const codeIdx = named !== null && named > labelIdx ? named : labelIdx + 1;
-  if (codeIdx >= table.columns.length) return [];
+  const codeIdx = named !== null && named > labelIdx ? named : findMaSoColumnByShape(table, labelIdx);
+  if (codeIdx === null || codeIdx >= table.columns.length) return [];
 
   const mismatches: string[] = [];
   for (const row of table.rows) {
     const label = normalizeLabel(String(row[labelIdx] ?? ''));
     if (!label) continue;
-    const anchor = BALANCE_SHEET_CODE_ANCHORS.find((a) => a.test.test(label));
+    const phrase = anchorPhrase(label);
+    const anchor = BALANCE_SHEET_CODE_ANCHORS.find((a) => a.phrases.includes(phrase));
     if (!anchor) continue;
     const code = parseCode(row[codeIdx]);
     if (code === null) continue;
-    if (!anchor.codes.includes(code)) mismatches.push(`"${anchor.name}" mang ma ${code} (chuan ${anchor.codes.join('/')})`);
+    // Mot so doanh nghiep danh ma theo he NHAN 10 (PTC/CIG that: 1000 cho
+    // "Tai san ngan han", 2000 cho "Tai san dai han") - hop le, khong phai
+    // lech. Chap nhan ca ma chuan lan bien the x10.
+    if (!anchor.codes.some((c) => code === c || code === c * 10)) {
+      mismatches.push(`"${anchor.name}" mang ma ${code} (chuan ${anchor.codes.join('/')})`);
+    }
   }
   if (mismatches.length < MIN_ANCHOR_MISMATCHES_TO_WARN) return [];
 
