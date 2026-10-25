@@ -783,6 +783,68 @@ function validateIncomeStatementGroupSums(table: StatementTable, businessType: B
 // lai thanh 1 DONG DUY NHAT/bao cao (thay vi liet ke tung dong rac roi) VA
 // hien thi MO HON tren UI (xem "KHONG DU TIN HIEU:" prefix, doi chieu voi
 // app/ReportsSummaryTable.tsx doc prefix nay de chon mau nhat hon).
+// Cac dong MOC cua BCDKT: ten chi tieu -> ma so chuan. CHI dung KIEM TRA CHEO
+// xem nhan va so lieu con di cung nhau khong, KHONG dung de quyet dinh 1 dong
+// LA gi - quy tac "khong phan loai dong theo so thu tu/ma so" (CLAUDE.md) cam
+// viec sau, khong cam viec truoc.
+//
+// Chi lay dong CAP TONG: ma cua dong CHI TIET lech nhau tuy doanh nghiep (da
+// doi chieu that: VE3 ghi 320 cho "Phai tra ngan han khac" trong khi TPC ghi
+// 319 cho dung chi tieu do) nen khong dung lam moc duoc.
+const BALANCE_SHEET_CODE_ANCHORS: { test: RegExp; codes: number[]; name: string }[] = [
+  { test: /^[A-D]?\s*[-.]?\s*TAI SAN NGAN HAN/, codes: [100], name: 'Tai san ngan han' },
+  { test: /^[A-D]?\s*[-.]?\s*TAI SAN DAI HAN/, codes: [200], name: 'Tai san dai han' },
+  { test: /TONG CONG TAI SAN/, codes: [270, 280], name: 'Tong cong tai san' },
+  { test: /^[A-D]?\s*[-.]?\s*NO PHAI TRA/, codes: [300], name: 'No phai tra' },
+  { test: /^I\.?\s*NO NGAN HAN/, codes: [310], name: 'No ngan han' },
+  { test: /^II\.?\s*NO DAI HAN/, codes: [330], name: 'No dai han' },
+  { test: /^[A-D]?\s*[-.]?\s*(NGUON )?VON CHU SO HUU/, codes: [400], name: 'Von chu so huu' },
+  { test: /TONG CONG NGUON VON/, codes: [430, 440], name: 'Tong cong nguon von' },
+];
+
+// So moc lech TOI THIEU de bao dong. Nguong 2 KHONG phai chon bua: quet
+// 1.298 BCDKT that (2026-10-25) cho thay MOI ca lech dung 1 moc deu lanh
+// tinh - OCR gop dong "D- Von chu so huu" (400) voi "I. Von chu so huu" (410)
+// lam mot (CAG/DTC/LIC/NHT/PGD, 2 dong nay cung gia tri nen khong sai so),
+// hoac doc 280 thanh 275 o dung 1 o (VPH). Ca lech >= 2 moc chi co DUY NHAT
+// TPC Q3/2026, va do la loi that.
+const MIN_ANCHOR_MISMATCHES_TO_WARN = 2;
+
+// Bat loi bang bi TRUOT DONG (nhan cua chi tieu nay di voi so lieu cua chi
+// tieu khac). repairLabelValueRowShift (markdown-tables.ts) da tu sua duoc
+// dang co chu ky ro rang, nhung chi dang do; kiem tra nay la luoi an toan cho
+// moi dang con lai - thay vi am tham xuat so sai nhu TPC Q3/2026 da xay ra
+// (he thong khong he bao gi cho den khi nguoi dung tu soi ra).
+function validateMaSoAnchors(table: StatementTable): ValidationIssue[] {
+  const labelIdx = findLabelColumnIndex(table);
+  if (labelIdx === -1) return [];
+  // findMaSoColumnIndex tim theo TEN cot ("Ma so"/"Ma chi tieu") - khong du:
+  // dung ca TPC Q3 bi OCR nuot luon dong header nen bang KHONG con ten cot
+  // nao. Lui ve vi tri ngay sau cot nhan, giong cach markdown-tables.ts lam.
+  const named = findMaSoColumnIndex(table);
+  const codeIdx = named !== null && named > labelIdx ? named : labelIdx + 1;
+  if (codeIdx >= table.columns.length) return [];
+
+  const mismatches: string[] = [];
+  for (const row of table.rows) {
+    const label = normalizeLabel(String(row[labelIdx] ?? ''));
+    if (!label) continue;
+    const anchor = BALANCE_SHEET_CODE_ANCHORS.find((a) => a.test.test(label));
+    if (!anchor) continue;
+    const code = parseCode(row[codeIdx]);
+    if (code === null) continue;
+    if (!anchor.codes.includes(code)) mismatches.push(`"${anchor.name}" mang ma ${code} (chuan ${anchor.codes.join('/')})`);
+  }
+  if (mismatches.length < MIN_ANCHOR_MISMATCHES_TO_WARN) return [];
+
+  return [
+    {
+      table: 'balanceSheet',
+      message: `Nhan va ma so KHONG khop o ${mismatches.length} dong moc (${mismatches.join('; ')}) - bang nhieu kha nang bi truot dong, so lieu tung chi tieu CO THE dang gan nham nhan, can doi chieu ban goc.`,
+    },
+  ];
+}
+
 function isCannotVerifyMessage(message: string): boolean {
   return message.startsWith('Khong tim thay') || message.includes('khong phai dang so hop le');
 }
@@ -790,6 +852,7 @@ function isCannotVerifyMessage(message: string): boolean {
 export function validateFinancialStatements(statements: FinancialStatements, businessType: BusinessType): ValidationIssue[] {
   const rawIssues = [
     ...validateBalanceSheet(statements.balanceSheet),
+    ...validateMaSoAnchors(statements.balanceSheet),
     ...(businessType === 'bank' ? [] : validateBalanceSheetSubtotals(statements.balanceSheet)),
     ...(businessType === 'other' ? validateIncomeStatement(statements.incomeStatement) : []),
     ...validateIncomeStatementTax(statements.incomeStatement),
