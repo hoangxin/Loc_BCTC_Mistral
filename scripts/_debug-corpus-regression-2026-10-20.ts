@@ -5,7 +5,7 @@
 // Dung: npx tsx scripts/_debug-corpus-regression-2026-10-20.ts <thu-muc-repo-doi-chieu>
 // (thu muc do phai co data/ocr-markdown + data/latest-fetch.json cua ban dang
 // chay that tren production).
-import { readFileSync, readdirSync } from 'fs';
+import { existsSync, readFileSync, readdirSync } from 'fs';
 import { join } from 'path';
 import { buildResultFromMarkdown } from '../lib/export/financial-statements';
 import { parseStatementsFromMarkdown } from '../lib/export/markdown-tables';
@@ -14,10 +14,24 @@ import { computeAnalysisRows } from '../lib/analysis';
 
 const root = process.argv[2];
 const DIR = join(root, 'data', 'ocr-markdown');
-const STATUS_PATH = join(root, 'data', 'latest-fetch.json');
+// Trang thai tach thanh data/fetch-status/ (moi ky 1 file) tu 2026-10-25 -
+// xem lib/status-store.ts. Van doc duoc repo doi chieu CU (1 file
+// data/latest-fetch.json) vi script nay thuong chay tren 1 ban tai ve de lay
+// baseline, khong phai lúc nào cũng cùng phiên bản với code hiện tại.
+const STATUS_DIR = join(root, 'data', 'fetch-status');
+const LEGACY_STATUS_PATH = join(root, 'data', 'latest-fetch.json');
 const SCOPE_MAP: Record<string, string> = { Chung: 'Chung', Hopnhat: 'Hợp nhất', Riengle: 'Riêng lẻ' };
 
-const status = JSON.parse(readFileSync(STATUS_PATH, 'utf-8'));
+const status = (() => {
+  const indexPath = join(STATUS_DIR, 'index.json');
+  if (!existsSync(indexPath)) return JSON.parse(readFileSync(LEGACY_STATUS_PATH, 'utf-8'));
+  const index = JSON.parse(readFileSync(indexPath, 'utf-8'));
+  const reports = readdirSync(STATUS_DIR)
+    .filter((f) => f.endsWith('.json') && f !== 'index.json')
+    .sort()
+    .flatMap((f) => JSON.parse(readFileSync(join(STATUS_DIR, f), 'utf-8')));
+  return { ...index, reports };
+})();
 const files = readdirSync(DIR).filter((f) => f.endsWith('.md')).sort();
 
 interface Row {

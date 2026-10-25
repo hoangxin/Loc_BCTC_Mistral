@@ -173,7 +173,7 @@ jobs:
         with:
           name: fetch-result-backup-${{ github.run_id }}
           path: |
-            data/latest-fetch.json
+            data/fetch-status/**
             data/ocr-markdown/**
           retention-days: 7
           if-no-files-found: ignore
@@ -191,4 +191,4 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v7
         with:
           commit_message: 'chore: cap nhat ket qua BCTC'
-          file_pattern: data/latest-fetch.json data/ocr-markdown/**
+          file_pattern: data/fetch-status/** data/ocr-markdown/**

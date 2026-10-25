@@ -19,8 +19,8 @@ import { parseStatementsFromMarkdown } from './export/markdown-tables';
 import { findAllGroupSumMismatches } from './export/validate-statements';
 import { computeAnalysisRows } from './analysis';
 import { dedupeByIdentityKeepingLast } from './pipeline';
+import { readStatus, writeStatus } from './status-store';
 
-const STATUS_PATH = 'data/latest-fetch.json';
 const DIR = 'data/ocr-markdown';
 
 const SCOPE_MAP: Record<string, string> = { Chung: 'Chung', Hopnhat: 'Hợp nhất', Riengle: 'Riêng lẻ' };
@@ -53,7 +53,9 @@ export interface ReparseSummary {
 
 export function reparseAllSavedMarkdown(): ReparseSummary {
   const files = readdirSync(DIR).filter((f) => f.endsWith('.md'));
-  const status = JSON.parse(readFileSync(STATUS_PATH, 'utf-8'));
+  // Doc/ghi qua status-store: trang thai nam o data/fetch-status/ (moi ky 1
+  // file) tu 2026-10-25, xem lib/status-store.ts.
+  const status = readStatus();
 
   let updated = 0;
   let skipped = 0;
@@ -127,7 +129,7 @@ export function reparseAllSavedMarkdown(): ReparseSummary {
   // de biet "da xong"; khong doi thi UI tuong khong co gi thay doi.
   status.generatedAt = new Date().toISOString();
 
-  writeFileSync(STATUS_PATH, JSON.stringify(status, null, 2), 'utf-8');
+  writeStatus(status);
 
   return {
     updated,

@@ -1,0 +1,830 @@
+{
+  "running": false,
+  "generatedAt": "2026-10-25T08:56:40.451Z",
+  "periodLabel": "Quý 3/2026",
+  "year": 2026,
+  "totalFound": 690,
+  "totalMatched": 1,
+  "downloaded": 1,
+  "failed": [
+    {
+      "stockCode": "PSD",
+      "title": "BCTC quý 2 năm 2026",
+      "error": "Mistral batch job 72e08e13-e83e-4541-bb9e-02e7ef7ca6c6 qua 45 phut van con trang thai QUEUED - dung cho (co the do hang doi batch cua Mistral bi nghen tam thoi), da huy job de tranh bi tinh phi cho ket qua se khong lay ve, coi la loi tam thoi cho bao cao nay."
+    },
+    {
+      "stockCode": "OGC",
+      "title": "BCTC Hợp nhất quý 2 năm 2026",
+      "error": "Mistral API loi (404) tai /v1/batch/jobs/4a94a5c3-db1e-4a47-89c2-95d1269ac436: {\"detail\": \"Batch job not found\"}"
+    },
+    {
+      "stockCode": "OIL",
+      "title": "BCTC Hợp nhất quý 2 năm 2026",
+      "error": "aborted"
+    },
+    {
+      "stockCode": "SD2",
+      "title": "BCTC Hợp nhất quý 2 năm 2026",
+      "error": "aborted"
+    },
+    {
+      "stockCode": "TA9",
+      "title": "BCTC quý 2 năm 2026",
+      "error": "aborted"
+    },
+    {
+      "stockCode": "AAT",
+      "title": "BCTC Hợp nhất quý 2 năm 2026 (điều chỉnh)",
+      "error": "An invalid response was received from the upstream server"
+    },
+    {
+      "stockCode": "DCS",
+      "title": "BCTC quý 2 năm 2026",
+      "error": "An invalid response was received from the upstream server"
+    },
+    {
+      "stockCode": "KKC",
+      "title": "BCTC quý 3 năm 2026",
+      "error": "aborted"
+    },
+    {
+      "stockCode": "SPB",
+      "title": "BCTC quý 3 năm 2026",
+      "error": "aborted"
+    },
+    {
+      "stockCode": "HAH",
+      "title": "BCTC Hợp nhất quý 3 năm 2026",
+      "error": "Request failed with status code 525"
+    },
+    {
+      "stockCode": "TOP",
+      "title": "BCTC quý 3 năm 2026",
+      "error": "aborted"
+    },
+    {
+      "stockCode": "THS",
+      "title": "BCTC quý 3 năm 2026",
+      "error": "aborted"
+    },
+    {
+      "stockCode": "PJC",
+      "title": "BCTC quý 3 năm 2026",
+      "error": "aborted"
+    },
+    {
+      "stockCode": "PV2",
+      "title": "BCTC quý 3 năm 2026",
+      "error": "Request failed with status code 520"
+    },
+    {
+      "stockCode": "SMT",
+      "title": "BCTC quý 3 năm 2026",
+      "error": "Request failed with status code 522"
+    }
+  ],
+  "interruptedReports": [],
+  "excludedReports": [
+    {
+      "stockCode": "SD3",
+      "title": "BCTC Công ty mẹ quý 2 năm 2026",
+      "reason": "Báo cáo \"Riêng lẻ\" (công ty mẹ) - trùng lặp thông tin với báo cáo Hợp nhất cùng kỳ, đã có trong Hợp nhất"
+    },
+    {
+      "stockCode": "NVS",
+      "title": "BCTC quý 2 năm 2026",
+      "reason": "Sàn giao dịch \"OTC\" ngoài phạm vi phân tích (OTC/Khác)"
+    },
+    {
+      "stockCode": "PTV",
+      "title": "BCTC Công ty mẹ quý 2 năm 2026",
+      "reason": "Báo cáo \"Riêng lẻ\" (công ty mẹ) - trùng lặp thông tin với báo cáo Hợp nhất cùng kỳ, đã có trong Hợp nhất"
+    },
+    {
+      "stockCode": "TPC",
+      "title": "BCTC Công ty mẹ quý 2 năm 2026",
+      "reason": "Báo cáo \"Riêng lẻ\" (công ty mẹ) - trùng lặp thông tin với báo cáo Hợp nhất cùng kỳ, đã có trong Hợp nhất"
+    },
+    {
+      "stockCode": "TCR",
+      "title": "BCTC Công ty mẹ quý 2 năm 2026",
+      "reason": "Báo cáo \"Riêng lẻ\" (công ty mẹ) - trùng lặp thông tin với báo cáo Hợp nhất cùng kỳ, đã có trong Hợp nhất"
+    },
+    {
+      "stockCode": "IDP",
+      "title": "BCTC Công ty mẹ quý 2 năm 2026",
+      "reason": "Báo cáo \"Riêng lẻ\" (công ty mẹ) - trùng lặp thông tin với báo cáo Hợp nhất cùng kỳ, đã có trong Hợp nhất"
+    },
+    {
+      "stockCode": "SGR",
+      "title": "BCTC Công ty mẹ quý 2 năm 2026",
+      "reason": "Báo cáo \"Riêng lẻ\" (công ty mẹ) - trùng lặp thông tin với báo cáo Hợp nhất cùng kỳ, đã có trong Hợp nhất"
+    },
+    {
+      "stockCode": "LCM",
+      "title": "BCTC Công ty mẹ quý 2 năm 2026",
+      "reason": "Báo cáo \"Riêng lẻ\" (công ty mẹ) - trùng lặp thông tin với báo cáo Hợp nhất cùng kỳ, đã có trong Hợp nhất"
+    },
+    {
+      "stockCode": "DGC",
+      "title": "BCTC Công ty mẹ quý 2 năm 2026",
+      "reason": "Báo cáo \"Riêng lẻ\" (công ty mẹ) - trùng lặp thông tin với báo cáo Hợp nhất cùng kỳ, đã có trong Hợp nhất"
+    },
+    {
+      "stockCode": "HKB",
+      "title": "BCTC Công ty mẹ quý 2 năm 2026",
+      "reason": "Báo cáo \"Riêng lẻ\" (công ty mẹ) - trùng lặp thông tin với báo cáo Hợp nhất cùng kỳ, đã có trong Hợp nhất"
+    },
+    {
+      "stockCode": "TCB",
+      "title": "BCTC Công ty mẹ quý 2 năm 2026",
+      "reason": "Báo cáo \"Riêng lẻ\" (công ty mẹ) - trùng lặp thông tin với báo cáo Hợp nhất cùng kỳ, đã có trong Hợp nhất"
+    },
+    {
+      "stockCode": "ABB",
+      "title": "BCTC Công ty mẹ quý 2 năm 2026",
+      "reason": "Báo cáo \"Riêng lẻ\" (công ty mẹ) - trùng lặp thông tin với báo cáo Hợp nhất cùng kỳ, đã có trong Hợp nhất"
+    },
+    {
+      "stockCode": "ITS",
+      "title": "BCTC Công ty mẹ quý 2 năm 2026",
+      "reason": "Báo cáo \"Riêng lẻ\" (công ty mẹ) - trùng lặp thông tin với báo cáo Hợp nhất cùng kỳ, đã có trong Hợp nhất"
+    },
+    {
+      "stockCode": "HUB",
+      "title": "BCTC Công ty mẹ quý 2 năm 2026",
+      "reason": "Báo cáo \"Riêng lẻ\" (công ty mẹ) - trùng lặp thông tin với báo cáo Hợp nhất cùng kỳ, đã có trong Hợp nhất"
+    },
+    {
+      "stockCode": "PIT",
+      "title": "BCTC Công ty mẹ quý 2 năm 2026",
+      "reason": "Báo cáo \"Riêng lẻ\" (công ty mẹ) - trùng lặp thông tin với báo cáo Hợp nhất cùng kỳ, đã có trong Hợp nhất"
+    },
+    {
+      "stockCode": "HAX",
+      "title": "BCTC Công ty mẹ quý 2 năm 2026",
+      "reason": "Báo cáo \"Riêng lẻ\" (công ty mẹ) - trùng lặp thông tin với báo cáo Hợp nhất cùng kỳ, đã có trong Hợp nhất"
+    },
+    {
+      "stockCode": "VFG",
+      "title": "BCTC Công ty mẹ quý 2 năm 2026",
+      "reason": "Báo cáo \"Riêng lẻ\" (công ty mẹ) - trùng lặp thông tin với báo cáo Hợp nhất cùng kỳ, đã có trong Hợp nhất"
+    },
+    {
+      "stockCode": "NHSV",
+      "title": "BCTC quý 2 năm 2026",
+      "reason": "Sàn giao dịch \"Khac\" ngoài phạm vi phân tích (OTC/Khác)"
+    },
+    {
+      "stockCode": "FNS",
+      "title": "BCTC quý 2 năm 2026",
+      "reason": "Sàn giao dịch \"OTC\" ngoài phạm vi phân tích (OTC/Khác)"
+    },
+    {
+      "stockCode": "VTSC",
+      "title": "BCTC quý 2 năm 2026",
+      "reason": "Sàn giao dịch \"OTC\" ngoài phạm vi phân tích (OTC/Khác)"
+    },
+    {
+      "stockCode": "ANV",
+      "title": "BCTC Công ty mẹ quý 2 năm 2026",
+      "reason": "Báo cáo \"Riêng lẻ\" (công ty mẹ) - trùng lặp thông tin với báo cáo Hợp nhất cùng kỳ, đã có trong Hợp nhất"
+    },
+    {
+      "stockCode": "HT1",
+      "title": "BCTC Công ty mẹ quý 2 năm 2026",
+      "reason": "Báo cáo \"Riêng lẻ\" (công ty mẹ) - trùng lặp thông tin với báo cáo Hợp nhất cùng kỳ, đã có trong Hợp nhất"
+    },
+    {
+      "stockCode": "CII",
+      "title": "BCTC Công ty mẹ quý 2 năm 2026",
+      "reason": "Báo cáo \"Riêng lẻ\" (công ty mẹ) - trùng lặp thông tin với báo cáo Hợp nhất cùng kỳ, đã có trong Hợp nhất"
+    },
+    {
+      "stockCode": "SZC",
+      "title": "BCTC Công ty mẹ quý 2 năm 2026",
+      "reason": "Báo cáo \"Riêng lẻ\" (công ty mẹ) - trùng lặp thông tin với báo cáo Hợp nhất cùng kỳ, đã có trong Hợp nhất"
+    },
+    {
+      "stockCode": "FUEBFVND",
+      "title": "BCTC quý 2 năm 2026",
+      "reason": "Mã \"FUEBFVND\" dài hơn 3 ký tự - là chứng chỉ quỹ/ETF, ngoài phạm vi phân tích"
+    },
+    {
+      "stockCode": "FUEIP100",
+      "title": "BCTC quý 2 năm 2026",
+      "reason": "Mã \"FUEIP100\" dài hơn 3 ký tự - là chứng chỉ quỹ/ETF, ngoài phạm vi phân tích"
+    },
+    {
+      "stockCode": "TVS",
+      "title": "BCTC Công ty mẹ quý 2 năm 2026",
+      "reason": "Báo cáo \"Riêng lẻ\" (công ty mẹ) - trùng lặp thông tin với báo cáo Hợp nhất cùng kỳ, đã có trong Hợp nhất"
+    },
+    {
+      "stockCode": "CVS",
+      "title": "BCTC quý 2 năm 2026",
+      "reason": "Sàn giao dịch \"OTC\" ngoài phạm vi phân tích (OTC/Khác)"
+    },
+    {
+      "stockCode": "LPS",
+      "title": "BCTC quý 2 năm 2026",
+      "reason": "Sàn giao dịch \"OTC\" ngoài phạm vi phân tích (OTC/Khác)"
+    },
+    {
+      "stockCode": "GLS",
+      "title": "BCTC quý 2 năm 2026",
+      "reason": "Sàn giao dịch \"OTC\" ngoài phạm vi phân tích (OTC/Khác)"
+    },
+    {
+      "stockCode": "VikkiBankS",
+      "title": "BCTC quý 2 năm 2026",
+      "reason": "Sàn giao dịch \"Khac\" ngoài phạm vi phân tích (OTC/Khác)"
+    },
+    {
+      "stockCode": "SSI",
+      "title": "BCTC Công ty mẹ quý 2 năm 2026",
+      "reason": "Báo cáo \"Riêng lẻ\" (công ty mẹ) - trùng lặp thông tin với báo cáo Hợp nhất cùng kỳ, đã có trong Hợp nhất"
+    },
+    {
+      "stockCode": "FUETPVND",
+      "title": "BCTC quý 2 năm 2026",
+      "reason": "Mã \"FUETPVND\" dài hơn 3 ký tự - là chứng chỉ quỹ/ETF, ngoài phạm vi phân tích"
+    },
+    {
+      "stockCode": "KAFI",
+      "title": "BCTC quý 2 năm 2026",
+      "reason": "Sàn giao dịch \"OTC\" ngoài phạm vi phân tích (OTC/Khác)"
+    },
+    {
+      "stockCode": "AISEC",
+      "title": "BCTC quý 2 năm 2026",
+      "reason": "Sàn giao dịch \"OTC\" ngoài phạm vi phân tích (OTC/Khác)"
+    },
+    {
+      "stockCode": "FUEFCV50",
+      "title": "BCTC quý 2 năm 2026",
+      "reason": "Mã \"FUEFCV50\" dài hơn 3 ký tự - là chứng chỉ quỹ/ETF, ngoài phạm vi phân tích"
+    },
+    {
+      "stockCode": "FUEABVND",
+      "title": "BCTC quý 2 năm 2026",
+      "reason": "Mã \"FUEABVND\" dài hơn 3 ký tự - là chứng chỉ quỹ/ETF, ngoài phạm vi phân tích"
+    },
+    {
+      "stockCode": "VCBS",
+      "title": "BCTC quý 2 năm 2026",
+      "reason": "Sàn giao dịch \"Khac\" ngoài phạm vi phân tích (OTC/Khác)"
+    },
+    {
+      "stockCode": "MKV",
+      "title": "BCTC Công ty mẹ quý 2 năm 2026",
+      "reason": "Báo cáo \"Riêng lẻ\" (công ty mẹ) - trùng lặp thông tin với báo cáo Hợp nhất cùng kỳ, đã có trong Hợp nhất"
+    },
+    {
+      "stockCode": "PSD",
+      "title": "BCTC Công ty mẹ quý 2 năm 2026",
+      "reason": "Báo cáo \"Riêng lẻ\" (công ty mẹ) - trùng lặp thông tin với báo cáo Hợp nhất cùng kỳ, đã có trong Hợp nhất"
+    },
+    {
+      "stockCode": "FUETCC50",
+      "title": "BCTC quý 2 năm 2026",
+      "reason": "Mã \"FUETCC50\" dài hơn 3 ký tự - là chứng chỉ quỹ/ETF, ngoài phạm vi phân tích"
+    },
+    {
+      "stockCode": "FUEKIVND",
+      "title": "BCTC quý 2 năm 2026",
+      "reason": "Mã \"FUEKIVND\" dài hơn 3 ký tự - là chứng chỉ quỹ/ETF, ngoài phạm vi phân tích"
+    },
+    {
+      "stockCode": "FUEKIVFS",
+      "title": "BCTC quý 2 năm 2026",
+      "reason": "Mã \"FUEKIVFS\" dài hơn 3 ký tự - là chứng chỉ quỹ/ETF, ngoài phạm vi phân tích"
+    },
+    {
+      "stockCode": "FUEKIV30",
+      "title": "BCTC quý 2 năm 2026",
+      "reason": "Mã \"FUEKIV30\" dài hơn 3 ký tự - là chứng chỉ quỹ/ETF, ngoài phạm vi phân tích"
+    },
+    {
+      "stockCode": "FUEMAV30",
+      "title": "BCTC quý 2 năm 2026",
+      "reason": "Mã \"FUEMAV30\" dài hơn 3 ký tự - là chứng chỉ quỹ/ETF, ngoài phạm vi phân tích"
+    },
+    {
+      "stockCode": "FUEMAVND",
+      "title": "BCTC quý 2 năm 2026",
+      "reason": "Mã \"FUEMAVND\" dài hơn 3 ký tự - là chứng chỉ quỹ/ETF, ngoài phạm vi phân tích"
+    },
+    {
+      "stockCode": "FMC",
+      "title": "BCTC Công ty mẹ quý 2 năm 2026",
+      "reason": "Báo cáo \"Riêng lẻ\" (công ty mẹ) - trùng lặp thông tin với báo cáo Hợp nhất cùng kỳ, đã có trong Hợp nhất"
+    },
+    {
+      "stockCode": "VNSC",
+      "title": "BCTC quý 2 năm 2026",
+      "reason": "Sàn giao dịch \"OTC\" ngoài phạm vi phân tích (OTC/Khác)"
+    },
+    {
+      "stockCode": "YSVN",
+      "title": "BCTC quý 2 năm 2026",
+      "reason": "Sàn giao dịch \"Khac\" ngoài phạm vi phân tích (OTC/Khác)"
+    },
+    {
+      "stockCode": "MiraeAsset",
+      "title": "BCTC quý 2 năm 2026",
+      "reason": "Sàn giao dịch \"Khac\" ngoài phạm vi phân tích (OTC/Khác)"
+    },
+    {
+      "stockCode": "HRS",
+      "title": "BCTC quý 2 năm 2026",
+      "reason": "Sàn giao dịch \"OTC\" ngoài phạm vi phân tích (OTC/Khác)"
+    },
+    {
+      "stockCode": "FUESSV30",
+      "title": "BCTC quý 2 năm 2026",
+      "reason": "Mã \"FUESSV30\" dài hơn 3 ký tự - là chứng chỉ quỹ/ETF, ngoài phạm vi phân tích"
+    },
+    {
+      "stockCode": "FUESSV50",
+      "title": "BCTC quý 2 năm 2026",
+      "reason": "Mã \"FUESSV50\" dài hơn 3 ký tự - là chứng chỉ quỹ/ETF, ngoài phạm vi phân tích"
+    },
+    {
+      "stockCode": "E1VFVN30",
+      "title": "BCTC quý 2 năm 2026",
+      "reason": "Mã \"E1VFVN30\" dài hơn 3 ký tự - là chứng chỉ quỹ/ETF, ngoài phạm vi phân tích"
+    },
+    {
+      "stockCode": "FUESSVFL",
+      "title": "BCTC quý 2 năm 2026",
+      "reason": "Mã \"FUESSVFL\" dài hơn 3 ký tự - là chứng chỉ quỹ/ETF, ngoài phạm vi phân tích"
+    },
+    {
+      "stockCode": "SeASecurities",
+      "title": "BCTC quý 2 năm 2026",
+      "reason": "Sàn giao dịch \"OTC\" ngoài phạm vi phân tích (OTC/Khác)"
+    },
+    {
+      "stockCode": "TCL",
+      "title": "BCTC Công ty mẹ quý 2 năm 2026",
+      "reason": "Báo cáo \"Riêng lẻ\" (công ty mẹ) - trùng lặp thông tin với báo cáo Hợp nhất cùng kỳ, đã có trong Hợp nhất"
+    },
+    {
+      "stockCode": "TVSI",
+      "title": "BCTC quý 2 năm 2026",
+      "reason": "Sàn giao dịch \"OTC\" ngoài phạm vi phân tích (OTC/Khác)"
+    },
+    {
+      "stockCode": "KBSV",
+      "title": "BCTC quý 2 năm 2026",
+      "reason": "Sàn giao dịch \"OTC\" ngoài phạm vi phân tích (OTC/Khác)"
+    },
+    {
+      "stockCode": "VTSS",
+      "title": "BCTC quý 2 năm 2026",
+      "reason": "Sàn giao dịch \"OTC\" ngoài phạm vi phân tích (OTC/Khác)"
+    },
+    {
+      "stockCode": "VISECO",
+      "title": "BCTC quý 2 năm 2026",
+      "reason": "Sàn giao dịch \"OTC\" ngoài phạm vi phân tích (OTC/Khác)"
+    },
+    {
+      "stockCode": "SDC",
+      "title": "BCTC Công ty mẹ quý 2 năm 2026",
+      "reason": "Báo cáo \"Riêng lẻ\" (công ty mẹ) - trùng lặp thông tin với báo cáo Hợp nhất cùng kỳ, đã có trong Hợp nhất"
+    },
+    {
+      "stockCode": "HTV",
+      "title": "BCTC Công ty mẹ quý 2 năm 2026",
+      "reason": "Báo cáo \"Riêng lẻ\" (công ty mẹ) - trùng lặp thông tin với báo cáo Hợp nhất cùng kỳ, đã có trong Hợp nhất"
+    },
+    {
+      "stockCode": "NSI",
+      "title": "BCTC quý 2 năm 2026",
+      "reason": "Sàn giao dịch \"OTC\" ngoài phạm vi phân tích (OTC/Khác)"
+    },
+    {
+      "stockCode": "JSI",
+      "title": "BCTC quý 2 năm 2026",
+      "reason": "Sàn giao dịch \"OTC\" ngoài phạm vi phân tích (OTC/Khác)"
+    },
+    {
+      "stockCode": "OCBS",
+      "title": "BCTC quý 2 năm 2026",
+      "reason": "Sàn giao dịch \"OTC\" ngoài phạm vi phân tích (OTC/Khác)"
+    },
+    {
+      "stockCode": "ACBS",
+      "title": "BCTC Hợp nhất quý 2 năm 2026",
+      "reason": "Sàn giao dịch \"Khac\" ngoài phạm vi phân tích (OTC/Khác)"
+    },
+    {
+      "stockCode": "ECC",
+      "title": "BCTC quý 2 năm 2026",
+      "reason": "Sàn giao dịch \"OTC\" ngoài phạm vi phân tích (OTC/Khác)"
+    },
+    {
+      "stockCode": "CDN",
+      "title": "BCTC Công ty mẹ quý 2 năm 2026",
+      "reason": "Báo cáo \"Riêng lẻ\" (công ty mẹ) - trùng lặp thông tin với báo cáo Hợp nhất cùng kỳ, đã có trong Hợp nhất"
+    },
+    {
+      "stockCode": "HDBS",
+      "title": "BCTC quý 2 năm 2026",
+      "reason": "Sàn giao dịch \"OTC\" ngoài phạm vi phân tích (OTC/Khác)"
+    },
+    {
+      "stockCode": "Pinetree",
+      "title": "BCTC quý 2 năm 2026",
+      "reason": "Sàn giao dịch \"OTC\" ngoài phạm vi phân tích (OTC/Khác)"
+    },
+    {
+      "stockCode": "DVSC",
+      "title": "BCTC quý 2 năm 2026",
+      "reason": "Sàn giao dịch \"OTC\" ngoài phạm vi phân tích (OTC/Khác)"
+    },
+    {
+      "stockCode": "ACBS",
+      "title": "BCTC Công ty mẹ quý 2 năm 2026",
+      "reason": "Sàn giao dịch \"Khac\" ngoài phạm vi phân tích (OTC/Khác)"
+    },
+    {
+      "stockCode": "SSV",
+      "title": "BCTC quý 2 năm 2026",
+      "reason": "Sàn giao dịch \"Khac\" ngoài phạm vi phân tích (OTC/Khác)"
+    },
+    {
+      "stockCode": "VTB",
+      "title": "BCTC Công ty mẹ quý 2 năm 2026",
+      "reason": "Báo cáo \"Riêng lẻ\" (công ty mẹ) - trùng lặp thông tin với báo cáo Hợp nhất cùng kỳ, đã có trong Hợp nhất"
+    },
+    {
+      "stockCode": "KIS",
+      "title": "BCTC quý 2 năm 2026",
+      "reason": "Sàn giao dịch \"OTC\" ngoài phạm vi phân tích (OTC/Khác)"
+    },
+    {
+      "stockCode": "FUEDCMID",
+      "title": "BCTC quý 2 năm 2026",
+      "reason": "Mã \"FUEDCMID\" dài hơn 3 ký tự - là chứng chỉ quỹ/ETF, ngoài phạm vi phân tích"
+    },
+    {
+      "stockCode": "ABR",
+      "title": "BCTC Công ty mẹ quý 2 năm 2026",
+      "reason": "Báo cáo \"Riêng lẻ\" (công ty mẹ) - trùng lặp thông tin với báo cáo Hợp nhất cùng kỳ, đã có trong Hợp nhất"
+    },
+    {
+      "stockCode": "FUEVN100",
+      "title": "BCTC quý 2 năm 2026",
+      "reason": "Mã \"FUEVN100\" dài hơn 3 ký tự - là chứng chỉ quỹ/ETF, ngoài phạm vi phân tích"
+    },
+    {
+      "stockCode": "BMP",
+      "title": "BCTC Công ty mẹ quý 2 năm 2026",
+      "reason": "Báo cáo \"Riêng lẻ\" (công ty mẹ) - trùng lặp thông tin với báo cáo Hợp nhất cùng kỳ, đã có trong Hợp nhất"
+    },
+    {
+      "stockCode": "VNP",
+      "title": "BCTC Công ty mẹ quý 2 năm 2026",
+      "reason": "Báo cáo \"Riêng lẻ\" (công ty mẹ) - trùng lặp thông tin với báo cáo Hợp nhất cùng kỳ, đã có trong Hợp nhất"
+    },
+    {
+      "stockCode": "APSC",
+      "title": "BCTC quý 2 năm 2026",
+      "reason": "Sàn giao dịch \"OTC\" ngoài phạm vi phân tích (OTC/Khác)"
+    },
+    {
+      "stockCode": "VDS",
+      "title": "BCTC Công ty mẹ quý 2 năm 2026",
+      "reason": "Báo cáo \"Riêng lẻ\" (công ty mẹ) - trùng lặp thông tin với báo cáo Hợp nhất cùng kỳ, đã có trong Hợp nhất"
+    },
+    {
+      "stockCode": "Beta",
+      "title": "BCTC quý 2 năm 2026",
+      "reason": "Sàn giao dịch \"OTC\" ngoài phạm vi phân tích (OTC/Khác)"
+    },
+    {
+      "stockCode": "QNP",
+      "title": "BCTC Công ty mẹ quý 2 năm 2026",
+      "reason": "Báo cáo \"Riêng lẻ\" (công ty mẹ) - trùng lặp thông tin với báo cáo Hợp nhất cùng kỳ, đã có trong Hợp nhất"
+    },
+    {
+      "stockCode": "ASAM",
+      "title": "BCTC quý 2 năm 2026",
+      "reason": "Sàn giao dịch \"OTC\" ngoài phạm vi phân tích (OTC/Khác)"
+    },
+    {
+      "stockCode": "PBSV",
+      "title": "BCTC quý 2 năm 2026",
+      "reason": "Sàn giao dịch \"OTC\" ngoài phạm vi phân tích (OTC/Khác)"
+    },
+    {
+      "stockCode": "SBBS",
+      "title": "BCTC quý 2 năm 2026",
+      "reason": "Sàn giao dịch \"OTC\" ngoài phạm vi phân tích (OTC/Khác)"
+    },
+    {
+      "stockCode": "TRC",
+      "title": "BCTC Công ty mẹ quý 2 năm 2026",
+      "reason": "Báo cáo \"Riêng lẻ\" (công ty mẹ) - trùng lặp thông tin với báo cáo Hợp nhất cùng kỳ, đã có trong Hợp nhất"
+    },
+    {
+      "stockCode": "DLR",
+      "title": "BCTC Công ty mẹ quý 2 năm 2026",
+      "reason": "Báo cáo \"Riêng lẻ\" (công ty mẹ) - trùng lặp thông tin với báo cáo Hợp nhất cùng kỳ, đã có trong Hợp nhất"
+    },
+    {
+      "stockCode": "HVS",
+      "title": "BCTC quý 2 năm 2026",
+      "reason": "Sàn giao dịch \"OTC\" ngoài phạm vi phân tích (OTC/Khác)"
+    },
+    {
+      "stockCode": "MSVN",
+      "title": "BCTC quý 2 năm 2026",
+      "reason": "Sàn giao dịch \"Khac\" ngoài phạm vi phân tích (OTC/Khác)"
+    },
+    {
+      "stockCode": "TCVN",
+      "title": "BCTC quý 2 năm 2026",
+      "reason": "Sàn giao dịch \"Khac\" ngoài phạm vi phân tích (OTC/Khác)"
+    },
+    {
+      "stockCode": "FPC",
+      "title": "BCTC quý 2 năm 2026",
+      "reason": "Sàn giao dịch \"OTC\" ngoài phạm vi phân tích (OTC/Khác)"
+    },
+    {
+      "stockCode": "VHD",
+      "title": "BCTC Công ty mẹ quý 2 năm 2026",
+      "reason": "Báo cáo \"Riêng lẻ\" (công ty mẹ) - trùng lặp thông tin với báo cáo Hợp nhất cùng kỳ, đã có trong Hợp nhất"
+    },
+    {
+      "stockCode": "BISS",
+      "title": "BCTC quý 2 năm 2026",
+      "reason": "Sàn giao dịch \"OTC\" ngoài phạm vi phân tích (OTC/Khác)"
+    },
+    {
+      "stockCode": "CSCJ",
+      "title": "BCTC quý 2 năm 2026",
+      "reason": "Sàn giao dịch \"OTC\" ngoài phạm vi phân tích (OTC/Khác)"
+    },
+    {
+      "stockCode": "FUEVFVND",
+      "title": "BCTC quý 2 năm 2026",
+      "reason": "Mã \"FUEVFVND\" dài hơn 3 ký tự - là chứng chỉ quỹ/ETF, ngoài phạm vi phân tích"
+    },
+    {
+      "stockCode": "JBSV",
+      "title": "BCTC quý 2 năm 2026",
+      "reason": "Sàn giao dịch \"Khac\" ngoài phạm vi phân tích (OTC/Khác)"
+    },
+    {
+      "stockCode": "RTB",
+      "title": "BCTC Công ty mẹ quý 2 năm 2026",
+      "reason": "Báo cáo \"Riêng lẻ\" (công ty mẹ) - trùng lặp thông tin với báo cáo Hợp nhất cùng kỳ, đã có trong Hợp nhất"
+    },
+    {
+      "stockCode": "SJ1",
+      "title": "BCTC Công ty mẹ quý 2 năm 2026",
+      "reason": "Báo cáo \"Riêng lẻ\" (công ty mẹ) - trùng lặp thông tin với báo cáo Hợp nhất cùng kỳ, đã có trong Hợp nhất"
+    },
+    {
+      "stockCode": "DuongCanTho",
+      "title": "BCTC Công ty mẹ quý 2 năm 2026",
+      "reason": "Sàn giao dịch \"OTC\" ngoài phạm vi phân tích (OTC/Khác)"
+    },
+    {
+      "stockCode": "IDV",
+      "title": "BCTC Công ty mẹ quý 2 năm 2026",
+      "reason": "Báo cáo \"Riêng lẻ\" (công ty mẹ) - trùng lặp thông tin với báo cáo Hợp nhất cùng kỳ, đã có trong Hợp nhất"
+    },
+    {
+      "stockCode": "TCO",
+      "title": "BCTC Công ty mẹ quý 2 năm 2026",
+      "reason": "Báo cáo \"Riêng lẻ\" (công ty mẹ) - trùng lặp thông tin với báo cáo Hợp nhất cùng kỳ, đã có trong Hợp nhất"
+    },
+    {
+      "stockCode": "FIR",
+      "title": "BCTC Công ty mẹ quý 2 năm 2026",
+      "reason": "Báo cáo \"Riêng lẻ\" (công ty mẹ) - trùng lặp thông tin với báo cáo Hợp nhất cùng kỳ, đã có trong Hợp nhất"
+    },
+    {
+      "stockCode": "HSG",
+      "title": "BCTC Công ty mẹ quý 2 năm 2026",
+      "reason": "Báo cáo \"Riêng lẻ\" (công ty mẹ) - trùng lặp thông tin với báo cáo Hợp nhất cùng kỳ, đã có trong Hợp nhất"
+    },
+    {
+      "stockCode": "CTD",
+      "title": "BCTC Công ty mẹ quý 2 năm 2026",
+      "reason": "Báo cáo \"Riêng lẻ\" (công ty mẹ) - trùng lặp thông tin với báo cáo Hợp nhất cùng kỳ, đã có trong Hợp nhất"
+    },
+    {
+      "stockCode": "NDN",
+      "title": "BCTC Công ty mẹ quý 2 năm 2026",
+      "reason": "Báo cáo \"Riêng lẻ\" (công ty mẹ) - trùng lặp thông tin với báo cáo Hợp nhất cùng kỳ, đã có trong Hợp nhất"
+    },
+    {
+      "stockCode": "CMI",
+      "title": "BCTC Công ty mẹ quý 2 năm 2026",
+      "reason": "Báo cáo \"Riêng lẻ\" (công ty mẹ) - trùng lặp thông tin với báo cáo Hợp nhất cùng kỳ, đã có trong Hợp nhất"
+    },
+    {
+      "stockCode": "GMC",
+      "title": "BCTC Công ty mẹ quý 2 năm 2026",
+      "reason": "Báo cáo \"Riêng lẻ\" (công ty mẹ) - trùng lặp thông tin với báo cáo Hợp nhất cùng kỳ, đã có trong Hợp nhất"
+    },
+    {
+      "stockCode": "TNW",
+      "title": "BCTC Công ty mẹ quý 2 năm 2026",
+      "reason": "Báo cáo \"Riêng lẻ\" (công ty mẹ) - trùng lặp thông tin với báo cáo Hợp nhất cùng kỳ, đã có trong Hợp nhất"
+    },
+    {
+      "stockCode": "FID",
+      "title": "BCTC Công ty mẹ quý 2 năm 2026",
+      "reason": "Báo cáo \"Riêng lẻ\" (công ty mẹ) - trùng lặp thông tin với báo cáo Hợp nhất cùng kỳ, đã có trong Hợp nhất"
+    },
+    {
+      "stockCode": "KLB",
+      "title": "BCTC Công ty mẹ quý 2 năm 2026",
+      "reason": "Báo cáo \"Riêng lẻ\" (công ty mẹ) - trùng lặp thông tin với báo cáo Hợp nhất cùng kỳ, đã có trong Hợp nhất"
+    },
+    {
+      "stockCode": "BFC",
+      "title": "BCTC Công ty mẹ quý 2 năm 2026",
+      "reason": "Báo cáo \"Riêng lẻ\" (công ty mẹ) - trùng lặp thông tin với báo cáo Hợp nhất cùng kỳ, đã có trong Hợp nhất"
+    },
+    {
+      "stockCode": "SMB",
+      "title": "BCTC Công ty mẹ quý 2 năm 2026",
+      "reason": "Báo cáo \"Riêng lẻ\" (công ty mẹ) - trùng lặp thông tin với báo cáo Hợp nhất cùng kỳ, đã có trong Hợp nhất"
+    },
+    {
+      "stockCode": "TDP",
+      "title": "BCTC Công ty mẹ quý 2 năm 2026",
+      "reason": "Báo cáo \"Riêng lẻ\" (công ty mẹ) - trùng lặp thông tin với báo cáo Hợp nhất cùng kỳ, đã có trong Hợp nhất"
+    },
+    {
+      "stockCode": "ACB",
+      "title": "BCTC Công ty mẹ quý 2 năm 2026",
+      "reason": "Báo cáo \"Riêng lẻ\" (công ty mẹ) - trùng lặp thông tin với báo cáo Hợp nhất cùng kỳ, đã có trong Hợp nhất"
+    },
+    {
+      "stockCode": "NTP",
+      "title": "BCTC Công ty mẹ quý 2 năm 2026",
+      "reason": "Báo cáo \"Riêng lẻ\" (công ty mẹ) - trùng lặp thông tin với báo cáo Hợp nhất cùng kỳ, đã có trong Hợp nhất"
+    },
+    {
+      "stockCode": "F88",
+      "title": "BCTC Công ty mẹ quý 2 năm 2026",
+      "reason": "Báo cáo \"Riêng lẻ\" (công ty mẹ) - trùng lặp thông tin với báo cáo Hợp nhất cùng kỳ, đã có trong Hợp nhất"
+    },
+    {
+      "stockCode": "VVS",
+      "title": "BCTC Công ty mẹ quý 2 năm 2026",
+      "reason": "Báo cáo \"Riêng lẻ\" (công ty mẹ) - trùng lặp thông tin với báo cáo Hợp nhất cùng kỳ, đã có trong Hợp nhất"
+    },
+    {
+      "stockCode": "PVI",
+      "title": "BCTC Công ty mẹ quý 2 năm 2026",
+      "reason": "Báo cáo \"Riêng lẻ\" (công ty mẹ) - trùng lặp thông tin với báo cáo Hợp nhất cùng kỳ, đã có trong Hợp nhất"
+    },
+    {
+      "stockCode": "SAB",
+      "title": "BCTC Công ty mẹ quý 2 năm 2026",
+      "reason": "Báo cáo \"Riêng lẻ\" (công ty mẹ) - trùng lặp thông tin với báo cáo Hợp nhất cùng kỳ, đã có trong Hợp nhất"
+    },
+    {
+      "stockCode": "VTO",
+      "title": "BCTC Công ty mẹ quý 2 năm 2026",
+      "reason": "Báo cáo \"Riêng lẻ\" (công ty mẹ) - trùng lặp thông tin với báo cáo Hợp nhất cùng kỳ, đã có trong Hợp nhất"
+    },
+    {
+      "stockCode": "THG",
+      "title": "BCTC Công ty mẹ quý 2 năm 2026",
+      "reason": "Báo cáo \"Riêng lẻ\" (công ty mẹ) - trùng lặp thông tin với báo cáo Hợp nhất cùng kỳ, đã có trong Hợp nhất"
+    },
+    {
+      "stockCode": "MIE",
+      "title": "BCTC Công ty mẹ quý 2 năm 2026",
+      "reason": "Báo cáo \"Riêng lẻ\" (công ty mẹ) - trùng lặp thông tin với báo cáo Hợp nhất cùng kỳ, đã có trong Hợp nhất"
+    },
+    {
+      "stockCode": "MIG",
+      "title": "Thuyết minh BCTC quý 2 năm 2026 (điều chỉnh)",
+      "reason": "Bản \"Thuyết minh BCTC\" nộp riêng (không phải BCTC đầy đủ) - đã có báo cáo BCTC chính cùng kỳ"
+    },
+    {
+      "stockCode": "ART",
+      "title": "Thuyết minh BCTC quý 2 năm 2026",
+      "reason": "Bản \"Thuyết minh BCTC\" nộp riêng (không phải BCTC đầy đủ) - đã có báo cáo BCTC chính cùng kỳ"
+    },
+    {
+      "stockCode": "BCF",
+      "title": "BCTC Công ty mẹ quý 2 năm 2026",
+      "reason": "Báo cáo \"Riêng lẻ\" (công ty mẹ) - trùng lặp thông tin với báo cáo Hợp nhất cùng kỳ, đã có trong Hợp nhất"
+    },
+    {
+      "stockCode": "CTW",
+      "title": "BCTC Công ty mẹ quý 2 năm 2026",
+      "reason": "Báo cáo \"Riêng lẻ\" (công ty mẹ) - trùng lặp thông tin với báo cáo Hợp nhất cùng kỳ, đã có trong Hợp nhất"
+    },
+    {
+      "stockCode": "OGC",
+      "title": "BCTC Hợp nhất quý 2 năm 2026",
+      "reason": "Toàn bộ file trong nhóm bị coi là không phải tiếng Việt (kiểm tra text layer trước OCR hoặc nội dung sau OCR) - cần xem tay trên PDF gốc nếu nghi ngờ sai"
+    },
+    {
+      "stockCode": "PCB",
+      "title": "BCTC Hợp nhất quý 2 năm 2026",
+      "reason": "Sàn giao dịch \"OTC\" ngoài phạm vi phân tích (OTC/Khác)"
+    },
+    {
+      "stockCode": "SMVC",
+      "title": "BCTC Hợp nhất quý 2 năm 2026",
+      "reason": "Sàn giao dịch \"OTC\" ngoài phạm vi phân tích (OTC/Khác)"
+    },
+    {
+      "stockCode": "VUG",
+      "title": "BCTC Hợp nhất quý 2 năm 2026",
+      "reason": "Sàn giao dịch \"OTC\" ngoài phạm vi phân tích (OTC/Khác)"
+    },
+    {
+      "stockCode": "GTX",
+      "title": "BCTC quý 2 năm 2026",
+      "reason": "Sàn giao dịch \"OTC\" ngoài phạm vi phân tích (OTC/Khác)"
+    },
+    {
+      "stockCode": "AAT",
+      "title": "BCTC Hợp nhất quý 2 năm 2026 (điều chỉnh)",
+      "reason": "Toàn bộ file trong nhóm bị coi là không phải tiếng Việt (kiểm tra text layer trước OCR hoặc nội dung sau OCR) - cần xem tay trên PDF gốc nếu nghi ngờ sai"
+    },
+    {
+      "stockCode": "DCS",
+      "title": "BCTC quý 2 năm 2026",
+      "reason": "Toàn bộ file trong nhóm bị coi là không phải tiếng Việt (kiểm tra text layer trước OCR hoặc nội dung sau OCR) - cần xem tay trên PDF gốc nếu nghi ngờ sai"
+    },
+    {
+      "stockCode": "HVS",
+      "title": "BCTC quý 3 năm 2026",
+      "reason": "Sàn giao dịch \"OTC\" ngoài phạm vi phân tích (OTC/Khác)"
+    },
+    {
+      "stockCode": "ECC",
+      "title": "BCTC quý 3 năm 2026",
+      "reason": "Sàn giao dịch \"OTC\" ngoài phạm vi phân tích (OTC/Khác)"
+    },
+    {
+      "stockCode": "DSC",
+      "title": "BCTC quý 3 năm 2026",
+      "reason": "Toàn bộ file trong nhóm bị coi là không phải tiếng Việt (kiểm tra text layer trước OCR hoặc nội dung sau OCR) - cần xem tay trên PDF gốc nếu nghi ngờ sai"
+    },
+    {
+      "stockCode": "SSV",
+      "title": "BCTC quý 3 năm 2026",
+      "reason": "Sàn giao dịch \"Khac\" ngoài phạm vi phân tích (OTC/Khác)"
+    },
+    {
+      "stockCode": "KIS",
+      "title": "BCTC quý 3 năm 2026",
+      "reason": "Sàn giao dịch \"OTC\" ngoài phạm vi phân tích (OTC/Khác)"
+    },
+    {
+      "stockCode": "GLS",
+      "title": "BCTC quý 3 năm 2026",
+      "reason": "Sàn giao dịch \"OTC\" ngoài phạm vi phân tích (OTC/Khác)"
+    },
+    {
+      "stockCode": "VSA",
+      "title": "BCTC Công ty mẹ quý 3 năm 2026",
+      "reason": "Báo cáo \"Riêng lẻ\" (công ty mẹ) - trùng lặp thông tin với báo cáo Hợp nhất cùng kỳ, đã có trong Hợp nhất"
+    },
+    {
+      "stockCode": "QTP",
+      "title": "BCTC quý 3 năm 2026",
+      "reason": "Toàn bộ file trong nhóm bị coi là không phải tiếng Việt (kiểm tra text layer trước OCR hoặc nội dung sau OCR) - cần xem tay trên PDF gốc nếu nghi ngờ sai"
+    },
+    {
+      "stockCode": "MVC",
+      "title": "BCTC Công ty mẹ quý 3 năm 2026",
+      "reason": "Báo cáo \"Riêng lẻ\" (công ty mẹ) - trùng lặp thông tin với báo cáo Hợp nhất cùng kỳ, đã có trong Hợp nhất"
+    },
+    {
+      "stockCode": "PVH",
+      "title": "BCTC quý 3 năm 2026",
+      "reason": "Toàn bộ file trong nhóm bị coi là không phải tiếng Việt (kiểm tra text layer trước OCR hoặc nội dung sau OCR) - cần xem tay trên PDF gốc nếu nghi ngờ sai"
+    },
+    {
+      "stockCode": "PSE",
+      "title": "BCTC quý 3 năm 2026",
+      "reason": "Toàn bộ file trong nhóm bị coi là không phải tiếng Việt (kiểm tra text layer trước OCR hoặc nội dung sau OCR) - cần xem tay trên PDF gốc nếu nghi ngờ sai"
+    }
+  ],
+  "lastCustomSourceCheck": {
+    "requestId": "54e19ffb-1396-4cd5-9dcd-dc77e700381f",
+    "url": "https://sagiang.com.vn/wp-content/uploads/2026/07/VI_BCTC_Quy2_2026_Hop-nhat.pdf",
+    "found": true,
+    "message": ""
+  }
+}

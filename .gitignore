@@ -11,3 +11,8 @@ data/reports
 data/exports
 *.traineddata
 .claude/settings.local.json
+
+# Cache cu 1 file - da tach thanh data/fetch-status/ (2026-10-25, xem
+# lib/status-store.ts). Giu lai tren dia lam ban du phong cuc bo nhung KHONG
+# track nua, de khong ai lo `git add -A` dua lai 52MB vao repo.
+data/latest-fetch.json

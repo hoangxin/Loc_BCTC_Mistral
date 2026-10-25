@@ -20,9 +20,11 @@ import { readFileSync, writeFileSync } from 'fs';
 import { validateFinancialStatements, findAllGroupSumMismatches } from '../lib/export/validate-statements';
 import { unreliableCellKeysFromMismatches } from '../lib/export/statement-shared';
 import { computeAnalysisRows } from '../lib/analysis';
+import { readStatus, writeStatus } from '../lib/status-store';
 
-const STATUS_PATH = 'data/latest-fetch.json';
-const status = JSON.parse(readFileSync(STATUS_PATH, 'utf-8'));
+// Trang thai nam o data/fetch-status/ (moi ky 1 file) tu 2026-10-25 - doc/ghi
+// qua status-store, xem lib/status-store.ts.
+const status = readStatus();
 
 for (const r of status.reports) {
   const oldCanhBao = r.warnings.filter((w: string) => w.startsWith('CANH BAO:'));
@@ -37,5 +39,5 @@ for (const r of status.reports) {
   r.analysis = computeAnalysisRows(r.statements, r.businessType, unreliableCells);
 }
 
-writeFileSync(STATUS_PATH, JSON.stringify(status, null, 2), 'utf-8');
+writeStatus(status);
 console.log(`Da dong bo lai warnings/analysis cho ${status.reports.length} bao cao.`);

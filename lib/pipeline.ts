@@ -17,46 +17,18 @@ import { reportIdentityKey } from './report-identity';
 import { DEFAULT_OCR_MODE, type OcrMode } from './ocr-mode';
 
 const DATA_DIR = join(process.cwd(), 'data');
-const STATUS_PATH = join(DATA_DIR, 'latest-fetch.json');
 
-export function readStatus(): FetchStatus {
-  if (!existsSync(STATUS_PATH)) {
-    return {
-      running: false,
-      generatedAt: '',
-      periodLabel: null,
-      year: null,
-      totalFound: 0,
-      totalMatched: 0,
-      downloaded: 0,
-      failed: [],
-      interruptedReports: [],
-      excludedReports: [],
-      reports: [],
-      lastCustomSourceCheck: null,
-    };
-  }
-  const parsed = JSON.parse(readFileSync(STATUS_PATH, 'utf-8')) as Partial<FetchStatus>;
-  // SUA 2026-07-20/2026-07-21: backfill field them SAU nay (interruptedReports,
-  // excludedReports) khi doc 1 file data/latest-fetch.json cu da ghi TRUOC khi
-  // field nay ton tai - tranh phai sua tay file data (rui ro xung dot rebase
-  // voi 1 job dang chay dong thoi tren GitHub Actions, xem lib/status.ts
-  // InterruptedReport/ExcludedReport).
-  return { interruptedReports: [], excludedReports: [], ...parsed } as FetchStatus;
-}
-
-// SUA 2026-07-20 (yeu cau nguoi dung, sau su co Mistral nghen hang doi lam
-// batch chay ~30 phut nhung ket qua CHI ghi 1 LAN DUY NHAT o cuoi
-// runFetchPipeline): ghi qua file tam roi rename - rename cung thu muc la
-// atomic (POSIX lan NTFS), tranh JSON bi ghi do neu process bi kill dung luc
-// dang writeFileSync (vd GitHub Actions huy job giua chung khi cham
-// timeout-minutes).
-function writeStatus(status: FetchStatus) {
-  mkdirSync(DATA_DIR, { recursive: true });
-  const tmpPath = `${STATUS_PATH}.tmp`;
-  writeFileSync(tmpPath, JSON.stringify(status, null, 2), 'utf-8');
-  renameSync(tmpPath, STATUS_PATH);
-}
+// SUA 2026-10-25: trang thai khong con nam o 1 file data/latest-fetch.json ma
+// tach thanh data/fetch-status/{index,<ky>}.json - xem lib/status-store.ts ve
+// ly do (file don da 52MB, va moi lan chay commit lai toan bo). Re-export o
+// day de MOI noi dang goi readStatus tu '@/lib/pipeline' khong phai sua gi.
+//
+// Cac chot cu van giu nguyen trong status-store: backfill interruptedReports/
+// excludedReports khi doc du lieu ghi boi ban cu (SUA 2026-07-20/07-21), va
+// ghi qua file tam roi rename cho atomic (SUA 2026-07-20, sau su co Mistral
+// nghen hang doi lam batch chay ~30 phut ma ket qua chi ghi 1 lan o cuoi).
+export { readStatus } from './status-store';
+import { readStatus, writeStatus } from './status-store';
 
 // Dung cho lib/custom-source.ts - them 1 bao cao tim duoc qua "nguon rieng"
 // vao CUNG danh sach voi bao cao Vietstock, khong tao trang thai rieng (giu 1

@@ -31,9 +31,16 @@ lấy được dữ liệu dùng được. Để không lặp lại:
    với những gì mình vừa gọi): dừng lại hỏi người dùng ngay, không tiếp tục
    suy đoán/thử thêm lệnh gọi API thật để tự kiểm chứng giả thuyết.
 
-## Cache kết quả (data/latest-fetch.json)
+## Cache kết quả (data/fetch-status/)
 
-`data/latest-fetch.json` là dữ liệu đã tính sẵn 1 lần, KHÔNG tự cập nhật khi
+Từ 2026-10-25 cache KHÔNG còn là 1 file `data/latest-fetch.json` mà tách thành
+`data/fetch-status/index.json` (phần dùng chung) + mỗi kỳ 1 file
+`data/fetch-status/<năm>-<kỳ>.json` — xem `lib/status-store.ts`. Lý do: file đơn
+đã 52MB, vượt mức GitHub khuyến nghị, và mỗi lần chạy fetch commit lại TOÀN BỘ
+file nên repo phình hàng chục MB mỗi lần. Luôn đọc/ghi qua `readStatus()` /
+`writeStatus()`, đừng mở thẳng file.
+
+Cache là dữ liệu đã tính sẵn 1 lần, KHÔNG tự cập nhật khi
 code đổi. Sau khi sửa code ở tầng validate/analysis (không đụng tới cách đọc
 markdown), chạy `scripts/resync-cache.ts` để đồng bộ `warnings`/`analysis`
 mà không cần OCR lại - xem comment đầu file đó. Nếu sửa ở tầng PARSER (cách
@@ -46,7 +53,7 @@ Mọi thay đổi trong `lib/export/markdown-tables.ts`, `lib/export/statement-s
 `lib/export/validate-statements.ts` hay `lib/analysis.ts` đều có thể làm sai
 hàng trăm báo cáo khác mà không ai thấy. Trước khi push:
 
-1. Lấy bản `data/ocr-markdown` + `data/latest-fetch.json` đang chạy thật
+1. Lấy bản `data/ocr-markdown` + `data/fetch-status/` đang chạy thật
    (tarball repo trên GitHub là đủ, không cần OCR lại).
 2. Chạy `scripts/_debug-corpus-regression-2026-10-20.ts <thư-mục-đó>` - script
    parse lại toàn bộ ~1.200 markdown bằng parser hiện tại rồi so với cache.
