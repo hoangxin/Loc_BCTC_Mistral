@@ -455,14 +455,24 @@ export async function extractFinancialStatementsWithOcrProbe(
     // lai dung thu tu trang. CHI chay cho bao cao von da hong hoan toan -
     // bao cao binh thuong khong ton them 1 trang nao. Chi phi toi da tang
     // them: TAIL_PROBE_PAGES trang/bao cao hong (xem hang so duoi).
-    if (collectedByPage.size < totalPages && isEmptyParse(parseStatementsFromMarkdown(markdownOfCollected()))) {
+    //
+    // NOI LONG DIEU KIEN 2026-10-26 (PXM/SD6 Q3/2026 that): doi hoi CA 3 BANG
+    // rong la qua chat. Tai lieu xep bang chinh o cuoi van thuong xuyen de lot
+    // vao pham vi 10-20 trang dau 1 bang don le (LCTT, hoac 1 bang thuyet minh
+    // bi phan loai nham) - khi do isEmptyParse=false va buoc do phan duoi
+    // KHONG BAO GIO chay, bao cao ra thieu han BCDKT hoac KQKD ma khong co
+    // cach nao tu phuc hoi. Doi sang: thieu 1 trong 2 bang BAT BUOC (BCDKT/
+    // KQKD) la du de do phan duoi. Quet cache: 23/1566 bao cao roi vao dien
+    // nay, tuc chi phi them toi da ~TAIL_PROBE_PAGES trang cho 1,5% bao cao -
+    // va dung la nhung bao cao dang hong.
+    if (collectedByPage.size < totalPages && !hasBothPrimaryStatements(parseStatementsFromMarkdown(markdownOfCollected()))) {
       const tailStart = Math.max(0, totalPages - TAIL_PROBE_PAGES);
       const tailPages = Array.from({ length: totalPages - tailStart }, (_, i) => tailStart + i).filter(
         (page) => !collectedByPage.has(page)
       );
       if (tailPages.length > 0) {
         console.log(
-          `[mistral-ocr] ${filePath}: 3 bang chinh van rong sau ${collectedByPage.size} trang dau - OCR them ${tailPages.length} trang cuoi (${tailStart + 1}-${totalPages})`
+          `[mistral-ocr] ${filePath}: thieu BCDKT hoac KQKD sau ${collectedByPage.size} trang dau - OCR them ${tailPages.length} trang cuoi (${tailStart + 1}-${totalPages})`
         );
         await ocrPages(tailPages);
       }

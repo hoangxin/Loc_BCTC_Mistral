@@ -2304,6 +2304,29 @@ export function detectCashFlowBeforeOtherStatementsOrderViolation(markdown: stri
   return cashFlowFirst < incomeStatementFirst;
 }
 
+// Vi pham thu tu KIEU KHAC, phat hien RIENG (2026-10-26, bug that SBM
+// Q3/2026): BCDKT nam SAU LCTT. Comment o ham tren khang dinh "BCDKT LUON nam
+// TRUOC LCTT trong ca 2 thu tu" - SBM chung minh dieu do KHONG dung: ho so
+// SBM xep KQKD -> LCTT -> BCDKT ("Bao cao tinh hinh tai chinh" o CUOI, truoc
+// Thuyet minh). Diem cat "het LCTT" vi the cat mat NGUYEN bang BCDKT: parse
+// rieng doan do ra 133 dong, con parse ca tai lieu ra 0 dong.
+//
+// Van la 2 phep kiem RIENG BIET (khong gop lam mot): gop BCDKT vao ham tren
+// se che mat vi pham cua WSS (xem comment tai do), con ham nay chi tra true
+// khi TIM THAY CA 2 neo va neo BCDKT nam SAU - tai lieu binh thuong (BCDKT
+// truoc LCTT) va tai lieu KHONG CO neo BCDKT (OCR hong, khong biet no o dau)
+// deu khong kich hoat, nen khong mo rong pham vi parse 1 cach mu quang.
+export function detectBalanceSheetAfterCashFlowOrderViolation(markdown: string): boolean {
+  const lines = convertJsonCaptionTablesToMarkdown(markdown).split(/\r?\n/);
+  const normalizedLines = lines.map((l) => normalizeLabelText(l));
+  const tables = parseAllTablesInRange(lines);
+  const cashFlowFirst = findFirstAnchorTableLineIndex(lines, normalizedLines, tables, ['cashFlow']);
+  if (cashFlowFirst === -1) return false;
+  const balanceSheetFirst = findFirstAnchorTableLineIndex(lines, normalizedLines, tables, ['balanceSheet']);
+  if (balanceSheetFirst === -1) return false;
+  return cashFlowFirst < balanceSheetFirst;
+}
+
 export function parseStatementsFromMarkdown(rawMarkdown: string): FinancialStatements {
   const markdown = convertJsonCaptionTablesToMarkdown(rawMarkdown);
   const lines = markdown.split(/\r?\n/);
@@ -2376,7 +2399,9 @@ export function parseStatementsFromMarkdown(rawMarkdown: string): FinancialState
   // nguoc thu tu van nam TRONG pham vi duoc parse). Khong doi hanh vi cho
   // 99% tai lieu THUONG (khong vi pham thu tu) - chi mo rong o dung 1 nhanh
   // hep, da duoc xac nhan RIENG BIET truoc do.
-  if (detectCashFlowBeforeOtherStatementsOrderViolation(rawMarkdown)) {
+  // SBM Q3/2026 (2026-10-26) kich hoat CUNG chien luoc mo rong nay qua phep
+  // kiem thu 2 - xem detectBalanceSheetAfterCashFlowOrderViolation.
+  if (detectCashFlowBeforeOtherStatementsOrderViolation(rawMarkdown) || detectBalanceSheetAfterCashFlowOrderViolation(rawMarkdown)) {
     const searchFrom = notesLine !== -1 ? notesLine : firstContentLine === -1 ? 0 : firstContentLine;
     const extendedNotesStart = findNotesSectionStartIndex(lines, searchFrom);
     if (extendedNotesStart !== -1 && (notesLine === -1 || extendedNotesStart > notesLine)) {
