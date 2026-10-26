@@ -268,6 +268,28 @@ function detectSplitFilingDropWarnings(dropped: ResolvedReportFile[]): string[] 
 // nhom) de file nghi la BCTC that luon duoc thu TRUOC.
 const STANDALONE_NOTES_FILENAME_MARKER = /thuyet[_-]?minh/i;
 
+// Thu tu file dua cho buoc OCR: file "chinh" truoc, file ngan (van ban phu
+// theo dropShortAncillaryPdfs) SAU CUNG - khong con bi VUT HAN.
+//
+// SUA 2026-10-26 (INC Q3/2026 that, nguoi dung bao "INC dang trong hoan
+// toan"): INC nop BCTC tach lam 2 phan - "..._p1.pdf" 10 trang chua DU 3 bang
+// chinh, "..._p2.pdf" 19 trang chua thuyet minh. Nguong "van ban ngan" la 10
+// trang, va p1 dung 10 trang nen bi LOAI HAN; chi con p2 di vao OCR, bao cao
+// ra rong ma khong co loi nao. Canh bao detectSplitFilingDropWarnings cung
+// khong bat duoc vi no doi ten file khop >=2 LOAI BANG khac nhau ("p1"/"p2"
+// khong noi gi ve loai bang).
+//
+// Cho file ngan xuong CUOI thay vi vut di: bao cao binh thuong (file chinh
+// cho du BCDKT+KQKD) dung lai ngay o file dau, KHONG ton them 1 trang OCR
+// nao - dung hanh vi cu; chi bao cao von se ra rong moi di tiep xuong cac
+// file ngan. Dieu kien dung vong lap da duoc siet lai o lib/pipeline.ts
+// (hasBothPrimaryStatements) - thieu no thi 1 file thuyet minh co bang phu
+// van lam dung som nhu truoc.
+function orderResolvedForOcr(kept: ResolvedReportFile[], dropped: ResolvedReportFile[]): ResolvedReportFile[] {
+  const getName = (r: ResolvedReportFile) => r.entryName ?? r.filePath;
+  return [...deprioritizeStandaloneNotesFiles(kept, getName), ...deprioritizeStandaloneNotesFiles(dropped, getName)];
+}
+
 function deprioritizeStandaloneNotesFiles<T>(resolved: T[], getName: (entry: T) => string): T[] {
   if (resolved.length <= 1) return resolved;
   const primary = resolved.filter((r) => !STANDALONE_NOTES_FILENAME_MARKER.test(getName(r)));
@@ -402,7 +424,7 @@ export async function resolveReportSourceFiles(result: DownloadResult): Promise<
     const zipResult = extractZip(filePath, result.report);
     const { kept, dropped } = await dropShortAncillaryPdfs(zipResult.resolved);
     return {
-      resolved: deprioritizeStandaloneNotesFiles(kept, (r) => r.entryName ?? r.filePath),
+      resolved: orderResolvedForOcr(kept, dropped),
       errors: zipResult.errors,
       filingStructureWarnings: detectSplitFilingDropWarnings(dropped),
     };
@@ -411,7 +433,7 @@ export async function resolveReportSourceFiles(result: DownloadResult): Promise<
     const rarResult = await extractRar(filePath, result.report);
     const { kept, dropped } = await dropShortAncillaryPdfs(rarResult.resolved);
     return {
-      resolved: deprioritizeStandaloneNotesFiles(kept, (r) => r.entryName ?? r.filePath),
+      resolved: orderResolvedForOcr(kept, dropped),
       errors: rarResult.errors,
       filingStructureWarnings: detectSplitFilingDropWarnings(dropped),
     };

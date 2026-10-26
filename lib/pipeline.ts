@@ -8,7 +8,7 @@ import { downloadOne, DownloadTimeoutError } from './download';
 import { sleep } from './http';
 import { resolveReportSourceFiles, cleanupDownloadedFile, type ResolvedReportFile } from './report-source';
 import { extractReportContent, type ReportContentResult } from './report-extract';
-import { isEmptyParse, shouldRetryIncompleteReport } from './export/financial-statements';
+import { hasBothPrimaryStatements, shouldRetryIncompleteReport } from './export/financial-statements';
 import { computeAnalysisRows } from './analysis';
 import { classifyStatementScope } from './statement-scope';
 import { saveProductionOcrMarkdown } from './ocr-markdown-store';
@@ -527,7 +527,13 @@ export async function runFetchPipeline(options: RunFetchPipelineOptions = {}): P
               continue;
             }
             extracted.push({ resolvedFile, content });
-            if (!isEmptyParse(content.statements)) foundUsable = true;
+            // SUA 2026-10-26 (INC Q3/2026 that): dieu kien cu la "KHONG rong
+            // hoan toan" (isEmptyParse) - chi can 1 bang BAT KY co dong la
+            // dung thu cac file con lai. Qua long: 1 bang THUYET MINH chi tiet
+            // bi phan loai nham thanh LCTT cung du lam dung som, bo lai chinh
+            // file chua 3 bang. Doi hoi 2 bang BAT BUOC (BCDKT + KQKD) - xem
+            // hasBothPrimaryStatements.
+            if (hasBothPrimaryStatements(content.statements)) foundUsable = true;
           } catch (error) {
             console.error('extract report content error', resolvedFile.filePath, error);
             failedEntries.push({
@@ -566,10 +572,15 @@ export async function runFetchPipeline(options: RunFetchPipelineOptions = {}): P
         // co, de canh bao "CANH BAO: ca 3 bang...rong" (financial-statements.ts)
         // tu nhien noi len, vi day co the la loi OCR/scan that tren chinh
         // BCTC, khong phai van ban phu - khong the tu dong ket luan an toan.
-        const usable = foundUsable ? extracted.filter(({ content }) => !isEmptyParse(content.statements)) : extracted;
+        // Loc theo CUNG tieu chuan da dung de dung vong lap (2 bang bat buoc)
+        // - truoc day loc bang isEmptyParse nen 1 file thuyet minh "co vai
+        // dong bang phu" van duoc giu lam 1 ket qua RIENG ben canh file BCTC
+        // that, tao 2 dong cho cung 1 bao cao.
+        const usable = foundUsable ? extracted.filter(({ content }) => hasBothPrimaryStatements(content.statements)) : extracted;
         if (foundUsable) {
           for (const { resolvedFile, content } of extracted) {
-            if (isEmptyParse(content.statements)) console.log('bo qua file rong (van ban phu, da co nguon khac cho du lieu that)', resolvedFile.filePath);
+            if (!hasBothPrimaryStatements(content.statements))
+              console.log('bo qua file khong co du BCDKT+KQKD (van ban phu/thuyet minh, da co nguon khac cho du lieu that)', resolvedFile.filePath);
           }
         }
 

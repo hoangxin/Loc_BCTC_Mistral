@@ -144,6 +144,21 @@ export function isKnownPermanentlyIncompleteWarning(warnings: string[]): boolean
   });
 }
 
+// 2 bang BAT BUOC co trong MOI BCTC (ke ca ngan hang/CTCK/bao hiem - khac
+// LCTT, ma 1 so mau ngan hang khong trinh bay). Dung lam dieu kien "file nay
+// DA cho du lieu that, khong can thu file khac trong cung nhom" o lib/
+// pipeline.ts - chat hon isEmptyParse (chi can 1 bang BAT KY co dong).
+//
+// SUA 2026-10-26 (INC Q3/2026 that, nguoi dung bao "INC dang trong hoan
+// toan"): ho so INC nop TACH 2 phan - p1 (10 trang) chua 3 bang chinh, p2 (19
+// trang) chua thuyet minh. Vong lap chon file dung LAI o p2 vi 1 bang thuyet
+// minh chi tiet (phai thu khach hang) bi phan loai nham thanh LCTT: 28 "dong
+// LCTT" -> isEmptyParse=false -> coi nhu da co du lieu that -> KHONG BAO GIO
+// thu p1, bao cao ra rong hoan toan ma khong loi gi.
+export function hasBothPrimaryStatements(statements: FinancialStatements): boolean {
+  return statements.balanceSheet.rows.length > 0 && statements.incomeStatement.rows.length > 0;
+}
+
 export function hasIncompleteCoreStatements(statements: FinancialStatements): boolean {
   return (
     statements.balanceSheet.rows.length === 0 ||
