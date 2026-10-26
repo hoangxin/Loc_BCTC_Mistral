@@ -152,6 +152,11 @@ const METADATA_COLUMN_MARKERS = [
   'NOTE',
 ];
 
+// Cac marker gom NHIEU TU - chi rieng nhom nay duoc doi chieu them 1 lan voi
+// ten cot da xoa het khoang trang, de chiu duoc viec OCR tach/ghep tu ("Thu
+// yết minh", "Mãsố"). Xem isMetadataColumnName.
+const MULTI_WORD_METADATA_MARKERS = METADATA_COLUMN_MARKERS.filter((m) => m.includes(' ')).map((m) => m.replace(/\s+/g, ''));
+
 // Cot GIA TRI (ngay ky) THAT SU vo tinh chua 1 marker metadata trong CHINH
 // no - xac nhan qua HNR that (2026-07-22): cot "01/01/2026 (Trình bày lại –
 // Thuyết minh VIII)" (so dau nam, kem chu thich "so lieu da trinh bay lai,
@@ -197,7 +202,21 @@ export function isMetadataColumnName(columnName: string | undefined): boolean {
   // su, khong ngoac don), khong phai 1 chu thich phu chen giua ten cot khac.
   const withoutParenthetical = normalized.replace(/\([^)]*\)/g, '').trim();
   const textToCheck = withoutParenthetical || normalized;
-  return METADATA_COLUMN_MARKERS.some((marker) => textToCheck.includes(marker));
+  if (METADATA_COLUMN_MARKERS.some((marker) => textToCheck.includes(marker))) return true;
+  // SUA 2026-10-26 (LSG Q3/2026 that, nguoi dung bao "cac cot lien quan KQKD
+  // bi loi"): Mistral OCR chen 1 khoang trang vao GIUA 1 tu - cot "Thuyết
+  // minh" ra thanh "Thu yết minh". Khong marker nao khop (ca "THUYET" cung
+  // khong, vi chuoi that la "THU YET"), nen cot Thuyet minh bi tinh la cot
+  // GIA TRI: incomeStatementPeriodColumns chon no lam "ky hien tai" va moi chi
+  // tieu KQKD cua LSG doc ra 0 (o thuyet minh rong), LNST sai hoan toan.
+  //
+  // Thay vi them "THU YET MINH" vao danh sach (lan sau se la "Thuyet mi nh"),
+  // doi chieu them 1 lan nua voi CA 2 ben DA XOA HET khoang trang - bao trum
+  // moi kieu tach/ghep tu cua OCR. CHI lam vay voi cac marker NHIEU TU: marker
+  // ngan 2 ky tu ("TM", "MT") sau khi xoa khoang trang se khop nham vao giua
+  // nhung ten cot dai hon (vd "CHI TIET MUC" -> "CHITIETMUC" chua "TM").
+  const textNoSpace = textToCheck.replace(/\s+/g, '');
+  return MULTI_WORD_METADATA_MARKERS.some((marker) => textNoSpace.includes(marker));
 }
 
 // "Chi tieu" la TEN CUA CHINH cot nhan (khong phai 1 dong du lieu that) - co
@@ -254,6 +273,16 @@ function isTableHeaderEchoLabel(label: string): boolean {
 // phai cot gia tri" giong cum chu.
 const ORDINAL_MARKER_PATTERN = /^[IVXLCDM]{1,4}\s*[-.)]?$|^[A-Za-z]\s*[-.)]?$|^\d{1,2}\s*[-.)]?$/;
 
+// Tham chieu THUYET MINH ("V.01", "VI.1", "V.12", "IX.2.1") - so La Ma + so.
+// Cot chua nhung o nay la cot Thuyet minh, khong bao gio la cot gia tri.
+// Can rieng pattern nay (2026-10-26, POS Q3/2026): khi header KHONG dat ten
+// cot ("" thay vi "Thuyet minh") thi isMetadataColumnName khong loai duoc, con
+// looksLikeTextColumn thi truot ca 2 nhanh - "VI.1" khong du 3 chu cai lien
+// tiep de la "cum chu", cung khong phai so La Ma THUAN (co ".1" o cuoi) de
+// khop ORDINAL_MARKER_PATTERN. Cot Thuyet minh cua POS vi the lot vao danh
+// sach cot gia tri va duoc chon lam "ky hien tai": moi chi tieu KQKD doc ra 0.
+const NOTE_REFERENCE_PATTERN = /^[IVXLCDM]{1,4}\s*[.-]\s*\d{1,2}(\s*[.-]\s*\d{1,2})*$/;
+
 // "So tien that": khong con la 1 so thu tu/ma so/tham chieu thuyet minh duoc
 // nua. Nguong 1.000 an toan cho CA don vi VND day du LAN cac bao cao trinh
 // bay theo trieu dong (ngan hang/CTCK) - STT/ma so/so thuyet minh cua BCTC
@@ -278,7 +307,8 @@ function looksLikeTextColumn(table: StatementTable, index: number): boolean {
       const trimmed = cell.trim();
       if (trimmed === '' || trimmed === '-') continue; // rong/dau "-": khong phai tin hieu, bo qua
       sampleCount++;
-      if (LOOKS_LIKE_LABEL_PATTERN.test(trimmed) || ORDINAL_MARKER_PATTERN.test(trimmed)) textCount++;
+      if (LOOKS_LIKE_LABEL_PATTERN.test(trimmed) || ORDINAL_MARKER_PATTERN.test(trimmed) || NOTE_REFERENCE_PATTERN.test(trimmed))
+        textCount++;
     } else {
       // parseNumericCell da tra ve KIEU number (khong con la string) cho da
       // so o gia tri hop le - PHAI tinh cac o nay vao mau (khong phai chi
@@ -370,11 +400,23 @@ function countMoneyCells(table: StatementTable, index: number): number {
   return count;
 }
 
+// Ma so duoc GIU NGUYEN DANG CHUOI tu luc parse (khong parseNumericCell, de
+// khong mat dau cham cua muc con "311.1") - nen 1 cot ma so da duoc nhan dien
+// se khong con o kieu number nao de dem. Them nhanh chuoi (2026-10-26, POS
+// Q3/2026): cung nguong "<1000, so nguyen" nhu looksLikeMoneyAmount dung cho
+// so, co the kem 1 chu cai ("411a") hoac 1 muc con ("311.1").
+const CODE_LIKE_STRING_CELL = /^\d{1,3}([.,]\d{1,2})?\s*[a-zA-Z]?$/;
+
 function looksLikeCodeOnlyColumn(table: StatementTable, index: number): boolean {
   let numericCount = 0;
   let codeCount = 0;
   for (const row of table.rows) {
     const cell = row[index];
+    if (typeof cell === 'string' && CODE_LIKE_STRING_CELL.test(cell.trim())) {
+      numericCount++;
+      codeCount++;
+      continue;
+    }
     if (typeof cell !== 'number') continue;
     numericCount++;
     if (cell > 0 && !looksLikeMoneyAmount(cell)) codeCount++;

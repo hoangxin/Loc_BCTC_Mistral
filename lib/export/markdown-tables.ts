@@ -182,6 +182,62 @@ function looksLikePeriodSubHeaderRow(cells: string[]): boolean {
   );
 }
 
+// 1 o header MO TA MOT KY bao cao bang chinh thoi gian cua ky do: "Nam 2026",
+// "Quy III/2026", "Tu 01/07/2026 den 30/09/2026", "30/09/2026"... Dau hieu CAU
+// TRUC (khong phai danh sach tu ngu): o co chua 1 nam 4 chu so. Dung de nhan
+// dien DONG tieu de phu cua KQKD khi no KHONG ghi "Nam nay/Nam truoc" - xem
+// looksLikePeriodDescriptionRow.
+const PERIOD_YEAR_IN_CELL = /(^|\D)(19|20)\d{2}(\D|$)/;
+
+// O nay co tu neu DU pham vi 1 ky khong ("Tu 01/07/2026 den 30/09/2026" = 2
+// moc ngay) hay chi noi mo ho 1 nam ("Nam 2026") - quyet dinh co can muon them
+// nhan nhom ("Quy III"/"Luy ke...") o dong header phia tren hay khong.
+function cellHasFullDateRange(cell: string): boolean {
+  return (cell.match(/\d{1,2}\/\d{1,2}\/\d{4}/g) ?? []).length >= 2;
+}
+
+// O phu duoc phep xuat hien chen giua cac o mo ta ky trong CUNG dong tieu de
+// phu: don vi tien te, va 2 nhan cua bao cao co dieu chinh (xem
+// looksLikePeriodSubHeaderRow). Khong nhan them loai o nao khac - moi o con
+// lai phai la mo ta ky that.
+function isAuxiliaryPeriodHeaderCell(normalized: string): boolean {
+  return (
+    normalized === 'VND' ||
+    normalized === 'DONG' ||
+    normalized.includes('DON VI TINH') ||
+    normalized.includes('SO DON VI') ||
+    normalized.includes('DIEU CHINH')
+  );
+}
+
+// SUA 2026-10-26 (POS + LSG Q3/2026 that, nguoi dung bao "loi cac cot lien
+// quan bao cao KQHDKD"): header KQKD cung bi Mistral tach lam 2 dong markdown
+// y nhu truong hop "Nam nay/Nam truoc" o looksLikePeriodSubHeaderRow, nhung
+// dong 2 ghi THANG TEN KY thay vi chu "nay/truoc":
+//   LSG: |  CHI TIEU | Ma so | Thuyet minh | Quy III |   | Luy ke... |   |
+//        |   |   |   |  Nam 2026 | Nam 2025 | Nam 2026 | Nam 2025  |
+//   POS: |  CHI TIEU |  |  | Quy III |   |   | Don vi tinh: VND  |
+//        |   |   |  | Tu 01/07/2026 den 30/09/2026 | Tu 01/07/2025 den ... |
+// looksLikePeriodSubHeaderRow doi MOI o phai chua "NAM NAY"/"NAM TRUOC" nen
+// truot ca 2 - dong tieu de phu bi coi la DONG DU LIEU DAU TIEN, roi
+// realignRowByContent thay o "Tu 01/07/2026 den 30/09/2026" trong nhu 1 nhan
+// (co chu) nen day no vao CHINH cot nhan, de lai 1 dong rac giua bang; con
+// ten cac cot gia tri thi mat han (chi con "Quy III"/rong/"Don vi tinh: VND").
+//
+// Nhan dien theo CAU TRUC, khong theo tu ngu: moi o khong rong deu la mo ta 1
+// KY (co nam 4 chu so) hoac 1 o phu duoc phep, va KHONG o nao la so thuan -
+// moi dong du lieu that cua 3 bang deu co it nhat 1 o so (ma so hoac gia tri).
+function looksLikePeriodDescriptionRow(cells: string[]): boolean {
+  const nonEmpty = cells.map((c) => c.trim()).filter((c) => c !== '');
+  if (nonEmpty.length < 2) return false;
+  if (nonEmpty.some((c) => SINGLE_NUMBER_PATTERN.test(c))) return false;
+  const normalizedCells = nonEmpty.map((c) => normalizeLabelText(c));
+  return (
+    normalizedCells.every((c, idx) => PERIOD_YEAR_IN_CELL.test(nonEmpty[idx]) || isAuxiliaryPeriodHeaderCell(c)) &&
+    normalizedCells.some((_, idx) => PERIOD_YEAR_IN_CELL.test(nonEmpty[idx]))
+  );
+}
+
 // Tieu de bang BCDKT doi khi bi Mistral tach thanh 2 DONG markdown rieng, voi
 // dong THU HAI moi la tieu de THAT - da xac nhan qua DNC that (2026-10-22,
 // nguoi dung bao "DNC toan bo cac cot lien quan toi bang CDKT doc sai het"):
@@ -437,6 +493,32 @@ function looksLikeLabel(cell: string | null): boolean {
 function looksLikeValidMaSoCell(cell: string | null): boolean {
   if (cell === null) return true;
   return !looksLikeLabel(cell);
+}
+
+// Ma so trong 1 o DUNG NGHIA: 1-4 chu so, co the kem 1 chu cai hoac 1 muc con
+// sau dau cham ("01", "311.1", "411a"). Rong hon MA_SO_PATTERN (2-4 chu so) vi
+// KQKD danh so tu "1" (POS: 1, 2, 10, 11, 20...) - va o day viec nhan nham 1 o
+// khong lam hong gi ngay, chi gop vao mot phep dem ty le.
+const MA_SO_LIKE_CELL = /^\d{1,4}([.,]\d{1,2})?[a-zA-Z]?$/;
+
+// Suy ra cot "Ma so" khi header KHONG dat ten cot nao nhu vay. CHI dua vao cac
+// dong DU so o (dong thieu o chua duoc canh lai nen vi tri chua dang tin), va
+// doi DA SO ap dao (>=80%) cac o khong rong o cot ung vien la ma so - cot gia
+// tri tien te khong bao gio dat nguong nay. Tra ve -1 khi khong du chac, de
+// nguyen hanh vi cu.
+function inferMaSoColumnIndex(rawRows: string[][], columnCount: number, labelIdx: number): number {
+  const candidate = labelIdx + 1;
+  if (labelIdx === -1 || candidate >= columnCount) return -1;
+  const fullRows = rawRows.filter((row) => row.length === columnCount);
+  let nonEmpty = 0;
+  let maSoLike = 0;
+  for (const row of fullRows) {
+    const cell = (row[candidate] ?? '').trim();
+    if (cell === '') continue;
+    nonEmpty++;
+    if (MA_SO_LIKE_CELL.test(cell)) maSoLike++;
+  }
+  return nonEmpty >= 5 && maSoLike >= nonEmpty * 0.8 ? candidate : -1;
 }
 
 function realignRowByContent(
@@ -1710,23 +1792,56 @@ function parseAllTablesInRange(lines: string[]): ParsedTable[] {
     let effectiveHeaderCells = headerLooksLikeData ? headerCells.map(() => '') : headerCells;
     const peekCells = i + 2 < lines.length ? splitMarkdownRow(lines[i + 2]) : null;
     let headerRowCount = 2;
-    if (!headerLooksLikeData && peekCells && looksLikePeriodSubHeaderRow(peekCells)) {
+    if (!headerLooksLikeData && peekCells && (looksLikePeriodSubHeaderRow(peekCells) || looksLikePeriodDescriptionRow(peekCells))) {
       // "Quy nay"/"Luy ke..." o dong 1 THUONG chi ghi 1 lan o O DAU TIEN cua
       // nhom (o thu 2 tro di cua CUNG nhom de trong - markdown the hien 1 o
       // gop truc quan bang nhieu o rong lien tiep) - dien tiep (forward-fill)
       // TU o co chu GAN NHAT sang cac o trong ngay sau, CHI trong pham vi
       // dong nay (truoc khi gop voi dong 2), de "Quy nay"/"Luy ke..." lan
       // toi CA 2 cot con (Nam nay/Nam truoc) cua nhom do thay vi chi 1 cot.
+      //
+      // SUA 2026-10-26 (POS that): CHI dien vao o trong NAO co o cung cot o
+      // dong 2 KHONG rong - tuc chi cac cot THAT SU thuoc 1 nhom ky. Truoc day
+      // dien vo dieu kien: voi header "CHI TIEU | (trong) | (trong) | Quy III
+      // | ..." cua POS, "CHI TIEU" bi dan sang DUNG 2 cot ma so/thuyet minh,
+      // bien chung thanh cot co ten -> het bi coi la cot metadata va duoc tinh
+      // nham vao valueColumnIndexes (cong ca ma so vao cac phep kiem tra tong).
+      // Cung quy tac ma nhanh looksLikeSplitHeaderRow duoi day da phai tranh.
+      // 2 dong header KHONG phai luc nao cung cung so o: POS Q2/2026 co dong 1
+      // dai 5 o ("CHI TIEU |  |  | Quy II | Don vi tinh: VND") con dong 2 chi 4
+      // o - Mistral bo han cac o trong dan dau thay vi giu cho. Gop theo chi so
+      // tho se dich CA 4 ten ky sang trai 1 cot, gan ten ky NAM TRUOC cho dung
+      // cot so lieu nam NAY (dao nguoc hien tai/ky truoc o
+      // incomeStatementPeriodColumns). Canh PHAI dong ngan hon - cac cot gia
+      // tri luon nam cuoi bang, dung quy uoc trailing-align da dung o
+      // realignRowByContent/alignRowToColumns.
+      const headerWidth = Math.max(headerCells.length, peekCells.length);
+      const padLeading = (cells: string[]) => [...new Array(headerWidth - cells.length).fill(''), ...cells];
+      const paddedHeaderCells = padLeading(headerCells);
+      const paddedPeekCells = padLeading(peekCells);
       let lastGroupLabel = '';
-      const filledHeaderCells = headerCells.map((c) => {
+      const filledHeaderCells = paddedHeaderCells.map((c, idx) => {
         if (c.trim() !== '') {
           lastGroupLabel = c;
           return c;
         }
-        return lastGroupLabel;
+        // O dong 2 da TU neu tron ven pham vi ky ("Tu 01/07/2026 den
+        // 30/09/2026") thi nhan nhom o dong 1 khong them thong tin gi, con dan
+        // sang thi dan SAI: nhom "Quy III" cua POS chi phu 2 cot dau, nhung o
+        // trong keo dai het ca 2 cot luy ke, forward-fill se gan "Quy III" cho
+        // CA cot luy ke. Chi dien khi dong 2 ghi ky chua tron (vd "Nam 2026"
+        // cua LSG - can "Quy III"/"Luy ke..." moi biet la quy hay luy ke).
+        if (cellHasFullDateRange(paddedPeekCells[idx] ?? '')) return '';
+        return (paddedPeekCells[idx] ?? '').trim() !== '' ? lastGroupLabel : '';
       });
       effectiveHeaderCells = filledHeaderCells.map((c, idx) =>
-        [c, peekCells[idx] ?? ''].filter((s) => s.trim() !== '').join(' ').trim()
+        // "Don vi tinh: VND" la chu thich cua CA bang, khong phai ten cot - no
+        // hay dung o o cuoi cung cua dong 1 va se dinh vao ten cot gia tri
+        // cuoi neu gop nguyen (POS that).
+        [normalizeLabelText(c).includes('DON VI TINH') ? '' : c, paddedPeekCells[idx] ?? '']
+          .filter((s) => s.trim() !== '')
+          .join(' ')
+          .trim()
       );
       headerRowCount = 3;
     } else if (!headerLooksLikeData && peekCells && looksLikeSplitHeaderRow(headerCells, peekCells)) {
@@ -1806,6 +1921,16 @@ function parseAllTablesInRange(lines: string[]): ParsedTable[] {
         j++; // dong danh so cot "(1) (2) (3)..." - xem isColumnNumberLegendRow
         continue;
       }
+      // Header LAP LAI o dau trang moi: khi bang keo dai qua nhieu trang,
+      // dong tieu de phu ("Tu 01/07/2026 den 30/09/2026 | ...") duoc in lai o
+      // moi trang va bi Mistral giu nguyen giua long bang. Day KHONG phai du
+      // lieu (xem looksLikePeriodDescriptionRow: khong o nao la so) - truoc
+      // day no chui vao rawRows roi bi realignRowByContent doi thanh 1 dong co
+      // "nhan" la chuoi ngay thang, nam chen giua cac chi tieu that (POS Q3).
+      if (looksLikePeriodDescriptionRow(rowCells)) {
+        j++;
+        continue;
+      }
       rawRows.push(rowCells);
       j++;
     }
@@ -1853,7 +1978,20 @@ function parseAllTablesInRange(lines: string[]): ParsedTable[] {
     // da xac nhan qua debug that). Suy ra vi tri "Ma so" THAT SU = ngay SAU
     // nhan (quy uoc quan sat duoc o MOI bang da doi chieu: ma so luon nam sat
     // canh nhan, khong bao gio cach xa).
-    const maSoIdx = namedMaSoIdx === labelIdx ? labelIdx + 1 : namedMaSoIdx;
+    // SUA 2026-10-26 (POS Q3/2026 that): header KQKD cua POS KHONG dat ten
+    // cot nao la "Ma so" (OCR tra ve 2 o rong giua "CHI TIEU" va cac cot gia
+    // tri), nen namedMaSoIdx = -1 va realignRowByContent khong biet cot nao la
+    // ma so. Khi trang 2 cua bang (thieu han cot Thuyet minh, 6 o thay vi 7)
+    // duoc canh lai, ma so bi don vao cot THUYET MINH, con cot Ma so bo trong
+    // - trong cung 1 bang, ma so nam o 2 cot khac nhau tuy dong.
+    // Suy ra theo NOI DUNG (khong phai theo vi tri suong): cot ngay sau nhan,
+    // va chi khi DA SO cac dong day du o deu ghi o do 1 ma so ngan.
+    const maSoIdx =
+      namedMaSoIdx === labelIdx
+        ? labelIdx + 1
+        : namedMaSoIdx === -1
+          ? inferMaSoColumnIndex(rawRows, effectiveHeaderCells.length, labelIdx)
+          : namedMaSoIdx;
     // Cot "Ma so" cung KHONG duoc parseNumericCell (giu nguyen la chuoi, giong
     // cot nhan) - da gap that (2026-07-11): ma so con (vd "212.1"/"01.1", co
     // dau cham) bi parseNumericCell noi lien thanh 1 SO SAI (vd "2121"/"11" -
