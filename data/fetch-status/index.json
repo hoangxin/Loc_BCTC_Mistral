@@ -1,11 +1,11 @@
 {
   "running": false,
-  "generatedAt": "2026-10-26T05:45:40.469Z",
+  "generatedAt": "2026-10-26T06:00:28.572Z",
   "periodLabel": "Quý 3/2026",
   "year": 2026,
-  "totalFound": 695,
-  "totalMatched": 2,
-  "downloaded": 2,
+  "totalFound": 709,
+  "totalMatched": 8,
+  "downloaded": 8,
   "failed": [
     {
       "stockCode": "PSD",
@@ -41,46 +41,6 @@
       "stockCode": "DCS",
       "title": "BCTC quý 2 năm 2026",
       "error": "An invalid response was received from the upstream server"
-    },
-    {
-      "stockCode": "KKC",
-      "title": "BCTC quý 3 năm 2026",
-      "error": "aborted"
-    },
-    {
-      "stockCode": "SPB",
-      "title": "BCTC quý 3 năm 2026",
-      "error": "aborted"
-    },
-    {
-      "stockCode": "HAH",
-      "title": "BCTC Hợp nhất quý 3 năm 2026",
-      "error": "Request failed with status code 525"
-    },
-    {
-      "stockCode": "TOP",
-      "title": "BCTC quý 3 năm 2026",
-      "error": "aborted"
-    },
-    {
-      "stockCode": "THS",
-      "title": "BCTC quý 3 năm 2026",
-      "error": "aborted"
-    },
-    {
-      "stockCode": "PJC",
-      "title": "BCTC quý 3 năm 2026",
-      "error": "aborted"
-    },
-    {
-      "stockCode": "PV2",
-      "title": "BCTC quý 3 năm 2026",
-      "error": "Request failed with status code 520"
-    },
-    {
-      "stockCode": "SMT",
-      "title": "BCTC quý 3 năm 2026",
-      "error": "Request failed with status code 522"
     }
   ],
   "interruptedReports": [],
