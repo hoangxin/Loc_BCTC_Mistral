@@ -86,17 +86,19 @@ NGƯỜI LẬP
 
 (Ký, họ tên)
 
-Nguyễn Thị Nhung
-
 KẾ TOÁN TRƯỞNG
 
 (Ký, họ tên)
 
-Bùi Tuyết Vân
-
 NGƯỜI ĐẠI DIỆN THEO PHÁP LUẬT
 
 (Ký, họ tên, đóng dấu)
+
+Nguyễn Thị Nhung
+
+Bùi Tuyết Vân
+
+![img-2.jpeg](img-2.jpeg)
 
 Lê Đức Dần
 
@@ -184,7 +186,7 @@ Phê duyệt, Ngày 12 tháng 10 năm 2026
 
 Người đại diện theo pháp luật
 
-![img-2.jpeg](img-2.jpeg)
+![img-3.jpeg](img-3.jpeg)
 
 Lê Đức Dần
 
@@ -382,8 +384,6 @@ Bùi Tuyết Vân
 NGƯỜI ĐẠI DIỆN THEO PHÁP LUẬT
 
 (Ký, họ tên, đóng dấu)
-
-Lê Đức Dân
 
 - Số chứng chỉ hành nghề:
 - Đơn vị cung cấp dịch vụ kế toán:

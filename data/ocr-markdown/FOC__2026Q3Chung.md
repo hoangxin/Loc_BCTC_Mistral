@@ -1,572 +1,304 @@
 CÔNG TY CỔ PHẦN DỊCH VỤ TRỰC TUYẾN FPT
 
-Lô L 29B-31B-33B, Đường Tân Thuận
+Lô L 29B-31B,33B Đường Tân Thuận,P.Tân Thuận, HCM
 
-Phường Tân Thuận
+Tại ngày 30 tháng 09 năm 20226
 
-Thành phố Hồ Chí Minh, Việt Nam
+Mẫu số B 01a - DN
 
-THUYẾT MINH BÁO CÁO TÀI CHÍNH
+(Kèm theo Thông tư số 99/2025/TT-BTC ngày 27
 
-MẪU SỐ B 09A-DN
+tháng 10 năm 2025 của Bộ trưởng Bộ Tài chính)
 
-(Kèm theo Thông tư số 99/2025/TT-BTC ngày 27 tháng
+# BÁO CÁO TÌNH HÌNH TÀI CHÍNH
 
-10 năm 2025 của Bộ trưởng Bộ Tài chính)
+Đơn vị: VNĐ
 
-# 1. THÔNG TIN KHÁI QUÁT
-
-# Hình thức sở hữu vốn
-
-Công ty Cổ phần Dịch vụ Trực tuyến FPT (gọi tắt là "Công ty") được thành lập tại Việt Nam theo Giấy Chứng nhận Đăng ký Kinh doanh do Sở Kế hoạch và Đầu tư Thành phố Hồ Chí Minh cấp lần đầu ngày 21 tháng 6 năm 2007 và giấy phép điều chỉnh lần 16 của Giấy Chứng nhận Đăng ký Kinh doanh số 0305045911 ngày 06 tháng 11 năm 2023.
-
-Công ty mẹ của Công ty là Công ty Cổ phần Viễn Thông FPT.
-
-# Ngành nghề kinh doanh và hoạt động chính
-
-Ngành nghề kinh doanh của Công ty là hoạt động viễn thông có dây; xử lý dữ liệu; cho thuê và các hoạt động liên quan, sản xuất sản phẩm điện tử dân dụng, hoạt động dịch vụ công nghệ thông tin và dịch vụ khác liên quan tới máy tính; xuất bán phần mềm; giáo dục khác; lập trình máy vi tính; cổng thông tin; hoạt động chuyên môn, khoa học và công nghệ khác; hoạt động viễn thông khác, kinh doanh bất động sản, quyền sử dụng đất thuộc chủ sở hữu, chủ sử dụng hoặc đi thuê; tư vấn máy vi tính và quản trị hệ thống máy vi tính; bán buôn máy móc thiết bị và phụ tùng máy khác; bán buôn ô tô và xe có động cơ khác; hoạt động của các Trung tâm, đại lý tư vấn, giới thiệu và môi giới lao động, việc làm; bán buôn máy vi tính, thiết bị ngoại vi và phần mềm; bán buôn thiết bị và linh kiện điện tử, viễn thông; đại lý ô tô và xe có động cơ khác; vận tải hành khách đường bộ khác; vận tải hàng hóa bằng đường bộ; sản xuất thực phẩm; bán buôn thực phẩm; bán lẻ ô tô con; bán lẻ thực phẩm trong các cửa hàng chuyên doanh; sản xuất mô tơ, máy phát, biến thể điện; thiết bị phân phối và điều khiển điện; dịch vụ hỗ trợ liên quan đến quảng bá và tổ chức tour du lịch; hoạt động dịch vụ hỗ trợ khác liên quan đến vận tải; đại lý môi giới, đấu giá; sản xuất thiết bị truyền thông; sản xuất máy vi tính và thiết bị ngoại vi của máy vi tính; tổ chức giới thiệu và xúc tiến thương mại; quảng cáo; xây dựng công trình kỹ thuật dân dụng khác; xây dựng công trình đường sắt và đường bộ; lắp đặt máy móc và thiết bị công nghiệp; lắp đặt hệ thống cấp, thoát nước, lò sưởi và điều hòa không khí; lắp đặt hệ thống xây dựng khác; hoàn thiện công trình xây dựng; hoạt động kiến trúc và tư vấn kỹ thuật có liên quan; phá dỡ; chuẩn bị mặt bằng; hoạt động xây dựng chuyên dụng khác; hoạt động thiết kế chuyên dụng; lắp đặt hệ thống điện; xây dựng nhà các loại.
-
-Hoạt động chính của Công ty là cung cấp các dịch vụ viễn thông, dịch vụ quảng cáo trực tuyến, dịch vụ truy cập internet, dịch vụ truy cập dữ liệu, dịch vụ xử lý số liệu và thông tin trên mạng internet, dịch vụ trao đổi dữ liệu điện tử; và các dịch vụ trực tuyến khác.
-
-# Chu kỳ hoạt động, kinh doanh thông thường
-
-Chu kỳ hoạt động, kinh doanh thông thường của Công ty được thực hiện trong thời gian 12 tháng.
-
-# Cấu trúc doanh nghiệp
-
-Công ty có trụ sở chính ở Thành phố Hồ Chí Minh và một chi nhánh ở Hà Nội.
-
-# Thuyết minh về khả năng so sánh thông tin trên báo cáo tài chính.
-
-Số liệu so sánh là số liệu của báo cáo tài chính tại ngày 30 tháng 09 năm 2025.
-
-# 2. CƠ SỞ LẬP BÁO CÁO TÀI CHÍNH VÀ NĂM TÀI CHÍNH
-
-# Cơ sở lập Báo cáo tài chính
-
-Báo cáo tài chính kèm theo được trình bày bằng đồng Việt Nam (VND), theo nguyên tắc giá gốc và phù hợp với chuẩn mực kế toán, chế độ kế toán doanh nghiệp Việt Nam và các quy định pháp lý có liên quan đến việc lập và trình bày báo cáo tài chính.
-
-# Năm tài chính
-
-Năm tài chính của Công ty bắt đầu từ ngày 01 tháng 01 và kết thúc vào ngày 31 tháng 12.
-
-# 3. TÓM TẮT CÁC CHÍNH SÁCH KẾ TOÁN CHỦ YẾU
-
-Sau đây là các chính sách kế toán chủ yếu được Công ty áp dụng trong việc lập báo cáo tài chính riêng:
-
-# Ước tính kế toán
-
-1
-
-CÔNG TY CỔ PHẦN DỊCH VỤ
-
-TRỰC TUYẾN FPT
-
-CÔNG TY CỔ PHẦN DỊCH VỤ TRỰC TUYẾN FPT
-THUYẾT MINH BÁO CÁO TÀI CHÍNH RIÊNG (Tiếp theo)
-
-MẪU SỐ B 09A-DN
-
-Việc lập báo cáo tài chính giữa niên độ tuân thủ theo các Chuẩn mực Kế toán Việt Nam, Chế độ Kế toán Doanh nghiệp Việt Nam và các quy định pháp lý có liên quan đến việc lập và trình bày báo cáo tài chính yêu cầu Người đại diện theo pháp luật phải có những ước tính và giả định ảnh hưởng đến số liệu về tài sản, nợ phải trả và việc trình bày các khoản nợ và tài sản tiềm tàng tại ngày kết thúc kỳ kế toán cũng như các số liệu về doanh thu và chi phí trong suốt kỳ kế toán.
-
-Các ước tính và giả định thường xuyên được đánh giá dựa trên kinh nghiệm trong quá khứ và các yếu tố khác, bao gồm các giả định trong tương lai có ảnh hưởng trọng yếu tới báo cáo tài chính giữa niên độ của Công ty và được Người đại diện theo pháp luật đánh giá là hợp lý.
-
-# **Tiền và các khoản tương đương tiền**
-
-Tiền và các khoản tương đương tiền bao gồm tiền mặt tại quỹ, tiền gửi ngân hàng không kỳ hạn và các khoản đầu tư ngắn hạn khác có thời hạn đáo hạn ban đầu không quá ba tháng.
-
-# **Các khoản đầu tư tài chính**
-
-# *Các khoản đầu tư nắm giữ đến ngày đáo hạn*
-
-Các khoản đầu tư nắm giữ đến ngày đáo hạn là các khoản đầu tư mà Công ty có ý định và có khả năng giữ đến ngày đáo hạn.
-
-Các khoản đầu tư nắm giữ đến ngày đáo hạn bao gồm các khoản tiền gửi ngân hàng có kỳ hạn và các khoản đầu tư nắm giữ đến ngày đáo hạn khác.
-
-Các khoản đầu tư này ban đầu được ghi nhận theo giá gốc là giá phí mua của khoản đầu tư và các chi phí mua liên quan trực tiếp khác (nếu có). Sau đó, doanh thu hoạt động tài chính phát sinh từ các khoản đầu tư như lãi tiền gửi có kỳ hạn, lãi cho vay, lãi trái phiếu,... được ghi tăng giá ghi sổ của khoản đầu tư liên quan. Đồng thời, Người đại diện theo pháp luật thực hiện việc rà soát đối với tất cả các khoản đầu tư để ghi nhận dự phòng vào cuối kỳ kế toán.
-
-Dự phòng giảm giá đầu tư nắm giữ đến ngày đáo hạn được lập trên cơ sở có bằng chứng chắc chắn cho thấy một phần hoặc toàn bộ khoản đầu tư có thể không thu hồi được. Chênh lệch giữa khoản dự phòng lập ở cuối kỳ kế toán này và khoản dự phòng đã lập ở cuối kỳ kế toán trước được ghi nhận tăng hoặc giảm chi phí tài chính trong kỳ kế toán. Khoản dự phòng được hoàn nhập không vượt quá giá trị ghi sổ ban đầu.
-
-Các khoản đầu tư nắm giữ đến ngày đáo hạn được phân loại ngắn hạn và dài hạn trên báo cáo tình hình tài chính giữa niên độ căn cứ theo kỳ hạn còn lại của các khoản đầu tư nắm giữ đến ngày đáo hạn tại ngày của báo cáo tình hình tài chính giữa niên độ đến ngày đáo hạn.
-
-# *Các khoản đầu tư góp vốn vào đơn vị khác*
-
-# *Đầu tư vào công cụ vốn của đơn vị khác*
-
-Đầu tư góp vốn vào đơn vị khác là các khoản đầu tư vào công cụ vốn của đơn vị khác nhưng Công ty không có quyền kiểm soát hoặc đồng kiểm soát, không có ảnh hưởng đáng kể đối với bên được đầu tư. Các khoản đầu tư này được ghi nhận ban đầu theo giá gốc. Sau đó, Người đại diện theo pháp luật thực hiện việc rà soát đối với tất cả các khoản đầu tư để ghi nhận dự phòng vào cuối kỳ kế toán.
-
-Dự phòng giảm giá đầu tư góp vốn vào đơn vị khác được tính dựa trên giá trị thị trường nếu giá trị thị trường được xác định một cách tin cậy. Nếu giá trị thị trường không thể được xác định một cách tin cậy, dự phòng giảm giá đầu tư góp vốn vào đơn vị khác được trích dự theo số lỗ của đơn vị được đầu tư.
-
-Chênh lệch giữa khoản dự phòng lập ở cuối kỳ kế toán này và khoản dự phòng đã lập ở cuối kỳ kế toán trước được ghi nhận tăng hoặc giảm chi phí tài chính trong kỳ kế toán. Khoản dự phòng được hoàn nhập không vượt quá giá trị ghi sổ ban đầu.
-
-# **Các khoản phải thu**
-
-Các khoản phải thu được ghi nhận ban đầu theo giá gốc. Các khoản phải thu bao gồm phải thu mang tính chất thương mại phát sinh từ giao dịch cung cấp dịch vụ; và các khoản phải thu khác không có tính thương mại, không liên quan đến giao dịch cung cấp dịch vụ. Dự phòng các khoản phải thu khó đòi được lập khi có khoản nợ phải thu đã quá hạn thanh toán hoặc chưa đến hạn thanh toán nhưng có bằng chứng cho thấy một phần hoặc toàn bộ khoản nợ phải thu đó đối tượng nợ khó có khả năng hoặc không có khả năng thanh toán khoản nợ.
-
-2
-
-CÔNG TY CỔ PHẦN DỊCH VỤ TRỰC TUYẾN FPT
-THUYẾT MINH BÁO CÁO TÀI CHÍNH RIÊNG (Tiếp theo)
-
-MẪU SỐ B 09A-DN
-
-Đối với các khoản nợ phải thu đã quá hạn thanh toán, việc xác định thời gian quá hạn được căn cứ vào thời gian trả nợ gốc theo hợp đồng ban đầu, không tính đến việc gia hạn nợ giữa các bên. Mức trích lập dự phòng các khoản nợ phải thu khó đòi như sau:
-
-- 30% giá tri doi voi khoan no phai thu qua han tu 6 thang den duoi 1 nam.
-- 50% giá tri doi voi khoan no phai thu qua han tu 1 nam den duoi 2 nam.
-- 70% giá tri doi voi khoan no phai thu qua han tu 2 nam den duoi 3 nam.
-100% giá tri doi voi khoan no phai thu tu 3 nam tro len.
-
-Đối với các khoản nợ phải thu chưa đến hạn thanh toán nhưng có bằng chứng cho thấy không có khả năng thu hồi một phần hoặc toàn bộ khoản nợ phải thu do khách nợ đã lâm vào tình trạng phá sản hoặc đang làm thủ tục giải thể, mất tích, bỏ trốn thì Công ty ước tính mức tổn thất không thu hồi được để trích lập dự phòng nợ phải thu khó đòi.
-
-Chênh lệch giữa khoản dự phòng phải lập ở cuối kỳ kế toán này và khoản dự phòng đã lập ở cuối kỳ kế toán trước được ghi nhận tăng hoặc giảm chi phí quản lý doanh nghiệp trong kỳ kế toán. Các khoản phải thu được xác định là không thể thu hồi sẽ được xóa sổ.
-
-Các khoản phải thu được phân loại ngắn hạn và dài hạn trên báo cáo tình hình tài chính giữa niên độ căn cứ theo kỳ hạn còn lại của các khoản phải thu tại ngày kết thúc kỳ kế toán.
-
-# Hàng tồn kho
-
-Hàng tồn kho được thể hiện theo giá thấp hơn giữa giá gốc và giá trị thuần có thể thực hiện được. Giá gốc được xác định trên cơ sở nhập trước xuất trước và bao gồm tất cả các chi phí mua và các chi phí liên quan trực tiếp khác phát sinh để có được hàng tồn kho ở địa điểm và trạng thái hiện tại. Giá trị thuần có thể thực hiện được là giá bán ước tính của hàng tồn kho trong kỳ kế toán kinh doanh bình thường trừ chi phí ước tính để hoàn thành sản phẩm và chi phí ước tính cần thiết cho việc tiêu thụ.
-
-Công ty áp dụng phương pháp kê khai thường xuyên để hạch toán hàng tồn kho.
-
-Phần thấp hơn của giá trị thuần có thể thực hiện được so với giá gốc được ghi nhận là khoản dự phòng giảm giá hàng tồn kho. Chênh lệch giữa khoản dự phòng phải lập ở cuối kỳ kế toán này và khoản dự phòng đã lập ở cuối kỳ kế toán trước được ghi nhận tăng hoặc giảm giá vốn hàng bán trong kỳ kế toán.
-
-# Tài sản cố định và khấu hao
-
-TSCĐ là những tài sản do doanh nghiệp nắm giữ để sử dụng cho hoạt động kinh doanh của Công ty phù hợp với tiêu chuẩn ghi nhận TSCĐ, được phản ánh theo nguyên giá trừ khấu hao lũy kế. Nguyên giá bao gồm các chi phí liên quan trực tiếp đến việc có được TSCĐ ở trạng thái sẵn sàng sử dụng.
-
-Các chi phí phát sinh sau ghi nhận ban đầu chỉ được ghi tăng nguyên giá TSCĐ nếu các chi phí này chắc chắn làm tăng lợi ích kinh tế trong tương lai do sử dụng tài sản đó. Các chi phí phát sinh không thỏa mãn điều kiện trên được ghi nhận là chi phí kinh doanh trong kỳ kế toán.
-
-Tài sản cố định được khấu hao theo phương pháp đường thẳng dựa trên thời gian hữu dụng ước tính, cụ thể như sau:
-
-Máy móc và thiết bị
-
-Thiết bị quản lý
-
-Bản quyền, bằng sáng chế
-
-Phần mềm máy tính
-
-Số năm
-
-3 - 5
-
-2 - 5
-
-3
-
-3
-
-Các khoản lãi, lỗ phát sinh khi thanh lý, bán tài sản là chênh lệch giữa thu nhập từ thanh lý và giá trị còn lại của tài sản và được ghi nhận vào báo cáo kết quả hoạt động kinh doanh.
-
-# Thuê hoạt động
-
-Thuê hoạt động là loại hình thuê TSCĐ mà phần lớn rủi ro và lợi ích gắn liền với quyền sở hữu của tài sản thuộc về bên cho thuê. Khoản thanh toán dưới hình thức thuê hoạt động được hạch toán vào báo cáo kết quả hoạt động kinh doanh giữa niên độ theo phương pháp đường thẳng dựa trên thời hạn thuê hoạt động giữa niên độ.
-
-# Chi phí chờ phân bổ
-
-Chi phí chờ phân bổ là chi phí thực tế đã phát sinh nhưng có liên quan đến kết quả hoạt động kinh doanh của nhiều kỳ kế toán, bao gồm các chi phí chờ phân bổ ngắn hạn và chi phí chờ phân bổ dài hạn trên báo cáo tình hình tài chính giữa niên độ. Chi phí chờ phân bổ ngắn hạn phản ánh giá trị
-
-3
-
-CÔNG TY CỔ PHẦN DỊCH VỤ TRỰC TUYẾN FPT
-THUYẾT MINH BÁO CÁO TÀI CHÍNH RIÊNG (Tiếp theo)
-
-MẪU SỐ B 09A-DN
-
-khoản chi phí chờ phân bổ có thời gian phân bổ từ 12 tháng trở xuống hoặc trong một chu kỳ kinh doanh thông thường kể từ thời điểm phát sinh chi phí chờ phân bổ. Chi phí chờ phân bổ dài hạn phản ánh. giá trị khoản chi phí đã phát sinh có thời gian dự kiến phân bổ trên 12 tháng hoặc hơn một chu kỳ kinh doanh thông thường kể từ thời điểm phát sinh chi phí chờ phân bổ. Các khoản chi phí chờ phân bổ này được ghi nhận theo giá gốc và được phân bổ theo phương pháp đường thẳng dựa trên thời gian sử dụng hữu ích ước tính.
-
-# Các khoản dự phòng
-
-Các khoản dự phòng được ghi nhận khi Công ty có nghĩa vụ nợ hiện tại, pháp lý hoặc liên đới, phát sinh từ các sự kiện đã xảy ra; việc thanh toán nghĩa vụ nợ có thể sẽ dẫn đến sự giảm sút về những lợi ích kinh tế và giá trị của nghĩa vụ nợ đó được ước tính một cách đáng tin cậy. Dự phòng không được ghi nhận cho các khoản lỗ hoạt động trong tương lai.
-
-Dự phòng được tính trên cơ sở các khoản chi phí dự tính phải thanh toán nghĩa vụ nợ. Nếu ảnh hưởng về giá trị thời gian của tiền là trọng yếu thì dự phòng được tính trên cơ sở giá trị hiện tại với tỷ lệ chiết khấu trước thuế và phản ánh những đánh giá trên thị trường hiện tại về giá trị thời gian của tiền và rủi ro cụ thể của khoản nợ đó. Giá trị tăng lên do ảnh hưởng của yếu tố thời gian được ghi nhận là chi phí tài chính. Chênh lệch giữa khoản dự phòng lập ở cuối kỳ kế toán này và khoản dự phòng đã lập chưa sử dụng ở cuối kỳ kế toán trước được ghi nhận tăng hoặc giảm chi phí sản xuất, kinh doanh trong kỳ kế toán.
-
-# Ghi nhận doanh thu
-
-Doanh thu của giao dịch về cung cấp dịch vụ được ghi nhận khi kết quả của giao dịch đó được xác định một cách đáng tin cậy. Trường hợp giao dịch về cung cấp dịch vụ liên quan đến nhiều kỳ thì doanh thu được ghi nhận trong kỳ theo kết quả phần công việc đã hoàn thành tại ngày của bảng cân đối kế toán của kỳ đó. Kết quả của giao dịch cung cấp dịch vụ được xác định khi thỏa mãn tất cả bốn (4) điều kiện sau:
-
-(a) Doanh thu duoc xác dinh tuong doi chac chan;
-(b) Có kha nang thu duoc lói ich kinh té tu giao dich cung cap dich vu do;
-(c) Xac dinh duoc phan cong viec da hoan thanh tai ngay cua bang can doi ke toan; va
-(d) Xac dinh duoc chi phi phat sinh cho giao dich va chi phi de hoan thanh giao dich cung cap dich vu do.
-
-Tiền lãi được ghi nhận trong báo cáo kết quả hoạt động kinh doanh giữa niên độ trên cơ sở thời gian và lãi suất thực tế từng kỳ khi thỏa mãn đồng thời hai (2) điều kiện sau:
-
-Có kha nang thu duoc lói ich kinh té tu giao dich do; va
-Gia tri duoc xac dinh tuong doi chac chan.
-
-# Các loại tỷ giá hối đoái áp dụng trong kế toán
-
-Các nghiệp vụ phát sinh bằng ngoại tệ được quy đổi theo tỷ giá giao dịch thực tế là tỷ giá xấp xỉ với tỷ giá mua bán chuyển khoản trung bình của ngân hàng thương mại nơi Công ty thường xuyên có giao dịch. Công ty đảm bảo tỷ giá xấp xỉ có chênh lệch không vượt quá +/-1% so với tỷ giá mua bán chuyển khoản trung bình tại ngày giao dịch, và không làm ảnh hưởng trọng yếu đến tình hình tài chính và kết quả hoạt động kinh doanh của kỳ kế toán. Tỷ giá mua bán chuyển khoản trung bình được xác định hàng ngày trên cơ sở trung bình cộng giữa tỷ giá mua chuyển khoản và tỷ giá bán chuyển khoản hàng ngày của ngân hàng thương mại. Chênh lệch tỷ giá phát sinh từ việc quy đổi này được ghi nhận là thu nhập hoặc chi phí trong báo cáo kết quả hoạt động kinh doanh giữa niên độ.
-
-Tài sản và nợ phải trả bằng tiền tệ có gốc ngoại tệ tại ngày của báo cáo tình hình tài chính giữa niên độ được quy đổi theo tỷ giá mua bán chuyển khoản trung bình của ngân hàng thương mại nơi Công ty thường xuyên có giao dịch áp dụng tại ngày kết thúc kỳ kế toán giữa niên độ. Riêng các khoản ngoại tệ gửi ngân hàng được quy đổi theo tỷ giá mua bán chuyển khoản trung bình của ngân hàng nơi Công ty mở tài khoản ngoại tệ. Chênh lệch tỷ giá phát sinh từ việc quy đổi này được ghi nhận là thu nhập hoặc chi phí trong báo cáo kết quả hoạt động kinh doanh giữa niên độ.
-
-# Quỹ khen thưởng và phúc lợi
-
-Quỹ khen thưởng, phúc lợi được trích lập từ LNST TNDN của Công ty và được các cổ đông phê duyệt tại Đại hội đồng Cổ đông. Quỹ được trình bày là một khoản phải trả trên báo cáo tình hình tài chính giữa niên độ. Quỹ được sử dụng cho công tác khen thưởng, cải thiện và nâng cao đời sống vật chất, tinh thần của người lao động.
-
-# Thuế TNDN hiện hành và thuế TNDN hoãn lại
-
-4
-
-CÔNG TY CỔ PHẦN DỊCH VỤ TRỰC TUYẾN FPT
-THUYẾT MINH BÁO CÁO TÀI CHÍNH RIÊNG (Tiếp theo)
-
-MẪU SỐ B 09A-DN
-
-Thuế TNDN bao gồm toàn bộ số thuế TNDN tính trên thu nhập chịu thuế TNDN. Chi phí thuế TNDN bao gồm chi phí thuế TNDN hiện hành và chi phí thuế TNDN hoãn lại.
-
-Thuế TNDN hiện hành là số thuế TNDN phải nộp hoặc thu hồi được tính trên thu nhập chịu thuế và thuế suất thuế TNDN của kỳ kế toán hiện hành. Thuế TNDN hiện hành và thuế TNDN hoãn lại được ghi nhận là thu nhập hay chi phí khi xác định lợi nhuận hoặc lỗ của kỳ kế toán phát sinh, ngoại trừ trường hợp thuế TNDN phát sinh từ một giao dịch hoặc sự kiện được ghi nhận trực tiếp vào vốn chủ sở hữu trong cùng kỳ kế toán hay một kỳ kế toán khác.
-
-Thuế TNDN hoãn lại, sử dụng phương pháp công nợ, được tính đầy đủ dựa trên các khoản chênh lệch tạm thời giữa giá trị ghi sổ của các khoản mục tài sản và nợ phải trả trên báo cáo tài chính giữa niên độ và cơ sở tính thuế TNDN của các khoản mục này. Thuế TNDN hoãn lại không được ghi nhận khi nợ thuế TNDN hoãn lại phải trả phát sinh từ ghi nhận ban đầu của một tài sản hay nợ phải trả của một giao dịch mà giao dịch này không phải là giao dịch sáp nhập doanh nghiệp, không có ảnh hưởng đến lợi nhuận kế toán hoặc lợi nhuận/lỗ tính thuế TNDN tại thời điểm phát sinh giao dịch. Thuế TNDN hoãn lại được tính theo thuế suất dự tính được áp dụng trong niên độ mà tài sản được thu hồi hoặc khoản nợ phải trả được thanh toán dựa trên thuế suất đã ban hành hoặc xem như có hiệu lực tại ngày của báo cáo tình hình tài chính giữa niên độ.
-
-Tài sản thuế TNDN hoãn lại được ghi nhận khi có khả năng sẽ có lợi nhuận tính thuế TNDN trong tương lai để sử dụng những chênh lệch tạm thời được khấu trừ.
-
-# 4. TIỀN VÀ CÁC KHOẢN TƯƠNG ĐƯƠNG TIỀN
-
-|   | Số cuối quý | Số đầu năm  |
-| --- | --- | --- |
-|  Tiền mặt | 103,771,097 | 58,174,022  |
-|  Tiền gửi ngân hàng không kỳ hạn | 72,598,876,757 | 43,122,710,392  |
-|  Các khoản tương đương tiền |  | 24,600,000,000  |
-|  Tổng cộng | 72,702,647,854 | 67,780,884,414  |
-
-# 5. CÁC KHOẢN ĐẦU TƯ TÀI CHÍNH
-
-|   | Số cuối quý | Số đầu năm  |
-| --- | --- | --- |
-|  Tiền gửi có kỳ hạn | 593,193,736,100 | 710,196,553,650  |
-|  Dự thu lãi tiền gửi | 11,100,000,000 | 9,300,000,000  |
-|  Tổng cộng | 604,293,736,100 | 719,496,553,650  |
-
-# 6. PHÁI THU NGẮN HẠN CỦA KHÁCH HÀNG
-
-|  Phải thu của khách hàng ngắn hạn | Số cuối quý | Số đầu năm  |
-| --- | --- | --- |
-|  Các khoản phải thu khách hàng khác | 101,464,180,619 | 147,504,506,019  |
-|  Tổng cộng | 101,464,180,619 | 147,504,506,019  |
-
-# 7. CÁC KHOẢN PHÁI THU KHÁC
-
-|  Ngắn hạn | Số cuối quý | Số đầu năm  |
-| --- | --- | --- |
-|  Phải thu người lao động | 7,239,049,423 | 2,664,565,000  |
-|  Ký quỹ, ký cược | 167,195,700 | 108,595,700  |
-|  Tổng cộng | 7,406,245,123 | 2,773,160,700  |
-|  Dài hạn | Số cuối quý | Số cuối quý  |
-|  Ký quỹ, ký cược | 5,374,231,920 | 3,846,782,520  |
-|  Tổng cộng | 5,374,231,920 | 3,846,782,520  |
-
-# 8. DỰ PHÒNG PHÁI THU NGẮN HẠN KHÓ ĐỔI
-
-5
-
-CÔNG TY CỔ PHẦN DỊCH VỤ TRỰC TUYẾN FPT
-THUYẾT MINH BÁO CÁO TÀI CHÍNH RIÊNG (Tiếp theo)
-
-MẪU SỐ B 09A-DN
-
-|  Giá gốc | Giá trị có thể thu hồi | Dự phòng | Giá gốc | Giá trị có thể thu hồi | Dự phòng  |
+|  STT | TÀI SẢN | Mã số | Thuyết minh | Số cuối quý | Số đầu năm  |
 | --- | --- | --- | --- | --- | --- |
-|  VND | VND | VND | VND | VND | VND  |
-|  18,548,361,946 | 740,960,000 | 17,807,401,946 | 16,826,660,269 | 222,009,280 | 16,604,650,989  |
-|  18,548,361,946 | 740,960,000 | 17,807,401,946 | 16,828,880,096 | 222,009,280 | 16,604,650,989  |
+|  A - | TÀI SẢN NGẮN HẠN | 100 |  | 774,535,956,233 | 924,591,168,384  |
+|  I. | Tiền và các khoản tương đương tiền | 110 | 5 | 72,702,647,854 | 67,780,884,414  |
+|  1 | Tiền | 111 |  | 72,702,647,854 | 43,180,884,414  |
+|  2 | Các khoản tương đương tiền | 112 |  | - | 24,600,000,000  |
+|  II. | Các khoản đầu tư tài chính ngắn hạn | 120 | 6 | 604,293,736,100 | 719,496,553,650  |
+|  1 | Chứng khoán kinh doanh | 121 |  | - | -  |
+|  2 | Dự phòng giảm giá chứng khoán kinh doanh | 122 |  | - | -  |
+|  3 | Đầu tư nắm giữ đến ngày đáo hạn ngắn hạn | 123 |  | 604,293,736,100 | 719,496,553,650  |
+|  4 | Dự phòng đầu tư nắm giữ đến ngày đáo hạn ngắn hạn | 124 |  | - | -  |
+|  5 | Đầu tư ngắn hạn khác | 125 |  | - | -  |
+|  6 | Dự phòng tổn thất các khoản đầu tư ngắn hạn khác | 126 |  | - | -  |
+|  III. | Các khoản phải thu ngắn hạn | 130 |  | 92,775,395,163 | 134,207,014,477  |
+|  1 | Phải thu ngắn hạn của khách hàng | 131 |  | 101,102,835,860 | 147,504,506,019  |
+|  2 | Trả trước cho người bán ngắn hạn | 132 |  | 2,073,716,126 | 533,998,747  |
+|  3 | Phải thu nội bộ ngắn hạn | 133 |  | - | -  |
+|  4 | Phải thu theo tiến độ hợp đồng xây dựng | 134 |  | - | -  |
+|  5 | Phải thu ngắn hạn khác | 135 |  | 7,406,245,123 | 2,773,160,700  |
+|  6 | Dự phòng phải thu ngắn hạn khó đòi | 136 |  | (17,807,401,946) | (16,604,650,989)  |
+|  7 | Tài sản thiếu chờ xử lý | 137 |  | - | -  |
+|  IV. | Hàng tồn kho | 140 |  | 950,773,401 | 663,248,342  |
+|  1 | Hàng tồn kho | 141 |  | 950,773,401 | 663,248,342  |
+|  2 | Dự phòng giảm giá hàng tồn kho | 142 |  | - | -  |
+|  V. | Tài sản sinh học ngắn hạn | 150 |  | - | -  |
+|  1 | Súc vật nuôi lấy sản phẩm một lần ngắn hạn | 151 |  | - | -  |
+|  2 | Cây trồng theo mùa vụ hoặc lấy sản phẩm một lần ngắn | 152 |  | - | -  |
+|  3 | Dự phòng tổn thất tài sản sinh học ngắn hạn | 153 |  | - | -  |
+|  VI. | Tài sản ngắn hạn khác | 160 |  | 3,813,403,715 | 2,443,467,501  |
+|  1 | Chi phí chờ phân bổ ngắn hạn | 161 |  | 3,813,403,715 | 2,443,467,501  |
+|  2 | Thuế giá trị gia tăng được khấu trừ | 162 |  | - | -  |
+|  3 | Thuế và các khoản khác phải thu Nhà nước | 163 |  | - | -  |
+|  4 | Giao dịch mua bán lại trái phiếu Chính phủ | 164 |  | - | -  |
+|  5 | Tài sản ngắn hạn khác | 165 |  | - | -  |
+|  B - | TÀI SẢN DÀI HẠN | 200 |  | 47,677,748,528 | 45,474,454,895  |
+|  I. | Các khoản phải thu dài hạn | 210 |  | 5,374,231,920 | 3,846,782,520  |
+|  1 | Phải thu dài hạn của khách hàng | 211 |  | - | -  |
+|  2 | Trả trước cho người bán dài hạn | 212 |  | - | -  |
+|  3 | Vốn kinh doanh ở đơn vị trực thuộc | 213 |  | - | -  |
+|  4 | Phải thu nội bộ dài hạn | 214 |  | - | -  |
+|  5 | Phải thu dài hạn khác | 215 |  | 5,374,231,920 | 3,846,782,520  |
+|  6 | Dự phòng phải thu dài hạn khó đòi | 216 |  | - | -  |
+|  II. | Tài sản cố định | 220 |  | 1,892,873,380 | 3,037,577,670  |
+|  1 | Tài sản cố định hữu hình | 221 |  | 1,852,151,426 | 2,972,422,842  |
+|   | Nguyên giá | 222 |  | 95,502,768,161 | 94,351,527,520  |
+|   | Giá trị hao mòn lũy kế | 223 |  | (93,650,616,735) | (91,379,104,678)  |
+|  2 | Tài sản cố định thuê tài chính | 224 |  | - | -  |
+|   | Nguyên giá | 225 |  | - | -  |
+|   | Giá trị hao mòn lũy kế | 226 |  | - | -  |
+|  3 | Tài sản cố định vô hình | 227 |  | 40,721,954 | 65,154,828  |
+|   | Nguyên giá | 228 |  | 98,000,000 | 98,000,000  |
+|   | Giá trị hao mòn lũy kế | 229 |  | (57,278,046) | (32,845,172)  |
+|  III. | Tài sản sinh học dài hạn | 230 |  | - | -  |
+|  1 | Súc vật nuôi cho sản phẩm định kỳ dài hạn | 231 |  | - | -  |
+|  2 | Súc vật nuôi cho sản phẩm định kỳ chưa đến giai đoạn t | 232 |  | - | -  |
 
-# 9. CHI PHÍ CHỜ PHÂN BỐ
+CÔNG TY CỔ PHẦN
 
-|   | Số cuối quý | Số đầu năm  |
-| --- | --- | --- |
-|  Ngắn hạn | 3,813,403,715 | 2,443,467,501  |
-|  Tổng cộng | 3,813,403,715 | 2,443,467,501  |
-|   | Số cuối quý | Số cuối quý  |
-|  Dài hạn | 40,410,643,228 | 38,590,094,705  |
-|  Tổng cộng | 40,410,643,228 | 38,590,094,705  |
+DỊCH VỤ TRỰC TUYẾN
 
-# 10. TÀI SẢN CỐ ĐỊNH HỮU HÌNH
+FPT
 
-|   | Máy móc thiết bị | Thiết bị văn phòng | Tổng cộng  |
-| --- | --- | --- | --- |
-|  NGUYÊN GIÁ |  |  |   |
-|  Số đầu năm | 143,429,743 | 94,208,097,777 | 94,351,527,520  |
-|  Tăng trong năm |  | 1,151,240,641 | 1,151,240,641  |
-|  Giảm khác/Thanh lý |  |  |   |
-|  Số cuối quý | 143,429,743 | 95,359,338,418 | 95,502,768,161  |
-|  Số đầu năm | 143,429,743 | 91,235,674,935 | 91,379,104,678  |
-|  Khấu hao trong năm |  | 2,271,512,057 | 2,271,512,057  |
-|  Giảm khác/Thanh lý |  |  |   |
-|  Số cuối quý | 143,429,743 | 93,507,186,992 | 93,650,616,735  |
-|  GIÁ TRỊ CÒN LẠI |  |  |   |
-|  Số cuối quý | 0 | 1,852,151,426 | 1,852,151,426  |
-|  Số đầu năm | 0 | 2,972,422,842 | 2,972,422,842  |
+Dự án: 1.NHQ HỌC VÀ CÔNG TY CỔ PHẦN DỊCH VỤ TRỰC TUYẾN FPT
 
-# 11. TÀI SẢN CỐ ĐỊNH VÔ HÌNH
+Bộ Phòng: 1.1.2.3.4.5.6.7.8.9.10.11.12.13.14.15.16.17.18.19.20.21.22.23.24.25.26.27.28.29.30.31.32.33.34.35.36.37.38.39.40.41.42.43.44.45.46.47.48.49.50.51.52.53.54.55.56.57.58.59.60.61.62.63.64.65.66.67.68.69.70.71.72.73.74.75.76.77.78.79.80.81.82.83.84.85.86.87.88.89.90.91.92.93.94.95.96.97.98.99.100
 
-|   | Bản quyền, bằng sáng chế | Phần mềm máy tính | Tổng cộng  |
-| --- | --- | --- | --- |
-|  NGUYÊN GIÁ |  |  |   |
-|  Số đầu năm | 98,000,000 |  | 98,000,000  |
-|  Tăng trong năm |  |  |   |
-|  Phân loại lại | -98,000,000 | 98,000,000 | 0  |
-|  Giảm khác/Thanh lý |  |  |   |
-|  Số cuối quý | 0 | 98,000,000 | 98,000,000  |
-|  GIÁ TRỊ HAO MÒN LŨY KẾ |  |  |   |
-|  Số đầu năm | 32,845,172 |  | 32,845,172  |
-|  Khấu hao trong năm | 10,739,725 | 13,693,149 | 24,432,874  |
-|  Phân loại lại | -43,584,897 | -43,584,897 | 0  |
-|  Giảm khác/Thanh lý |  |  |   |
-|  Số cuối quý | 0 | 57,278,046 | 57,278,046  |
-|  GIÁ TRỊ CÒN LẠI |  |  |   |
-|  Số cuối quý | 0 | 40,721,954 | 40,721,954  |
-|  Số đầu năm | 65,154,828 | 0 | 65,154,828  |
+Bộ Phòng: 1.1.2.3.4.5.6.7.8.9.10.11.12.13.14.15.16.17.18.19.20.21.22.23.24.25.26.27.28.29.30.31.32.33.34.35.36.37.38.39.40.41.42.43.44.45.46.47.48.49.50.51.52.53.54.55.56.57.58.59.60.61.62.63.64.65.66.67.68.69.70.71.72.73.74.75.76.77.78.79.80.81.82.83.84.85.86.87.88.89.90.91.92.93.94.95.96.97.98.99.100
 
-6
+Bộ Phòng: 1.1.2.3.4.5.6.7.8.9.10.11.12.13.14.15.16.17.18.19.20.21.22.23.24.25.26.27.28.29.30.31.32.33.34.35.36.37.38.39.40.41.42.43.44.45.46.47.48.49.50.51.52.53.54.55.56.57.58.59.60.61.62.63.64.65.66.67.68.69.70.71.72.73.74.75.76.77.78.79.80.81.82.83.84.85.86.87.88.89.90.91.92.93.94.95.96.97.98.99.100
 
-CÔNG TY CỔ PHẦN DỊCH VỤ TRỰC TUYẾN FPT
-THUYẾT MINH BÁO CÁO TÀI CHÍNH RIÊNG (Tiếp theo)
+Bộ Phòng: 1.1.2.3.4.5.6.7.8.9.10.11.12.13.14.15.16.17.18.19.20.21.22.23.24.25.26.27.28.29.30.31.32.33.34.35.36.37.38.39.40.41.42.43.44.45.46.47.48.49.50.51.52.53.54.55.56.57.58.59.60.61.62.63.64.65.66.67.68.69.70.71.72.73.74.75.76.77.78.79.80.81.82.83.84.85.86.87.88.89.90.91.92.93.94.95.96.97.98.99.100
 
-MẪU SỐ B 09A-DN
+Bộ Phòng: 1.1.2.3.4.5.6.7.8.9.10.11.12.13.14.15.16.17.18.19.20.21.22.23.24.25.26.27.28.29.30.31.32.33.34.35.36.37.38.39.40.41.42.43.44.45.46.47.48.49.50.51.52.53.54.55.56.57.58.59.60.61.62.63.64.65.66.67.68.69.70.71.72.73.74.75.76.77.78.79.80.81.82.83.84.85.86.87.88.89.90.91.92.93.94.95.96.97.98.99.100
 
-# 12. TÀI SẢN THUẾ THU NHẬP HOÃN LẠI
+![img-0.jpeg](img-0.jpeg)
 
-Dưới đây là tài sản thuế thu nhập hoãn lại do Công ty ghi nhận và sự thay đổi của các khoản mục này trong năm và năm trước:
-
-|  Số dư đầu năm trước | 0  |
-| --- | --- |
-|  Chuyển vào báo cáo kết quả hoạt động kinh doanh |   |
-|  **Số dư đầu năm nay** | **0**  |
-|  Chuyển vào báo cáo kết quả hoạt động kinh doanh | 0  |
-|  TS thuế TNDN hoãn lại liên quan đến khoản chênh lệch tạm thời |   |
-|  **Số dư cuối năm nay** | **0**  |
-
-# 13. PHẢI TRẢ NGƯỜI BÁN NGẮN HẠN
-
-|   | **Số cuối quý** | **Số đầu năm**  |
-| --- | --- | --- |
-|  Các khoản phải trả người bán ngắn hạn | 15,951,678,623 | 25,868,597,942  |
-|  **Tổng cộng** | **15,951,678,623** | **25,868,597,942**  |
-
-# 14. NGƯỜI MUA TRẢ TIỀN TRƯỚC NGẮN HẠN
-
-Người mua trả tiền trước ngắn hạn bao gồm các khoản người mua trả tiền trước khi Công ty cung cấp dịch vụ quảng cáo theo quy định của hợp đồng cung cấp dịch vụ giữa Công ty và khách hàng.
-
-# 15. THUẾ VÀ CÁC KHOẢN PHẢI NỘP NHÀ NƯỚC
-
-|   | **Số đầu năm** | **Số phải nộp trong năm** | **Số đã thực nộp trong năm** | **Số cuối quý**  |
-| --- | --- | --- | --- | --- |
-|  Thuế giá trị gia tăng | 5,903,580,320 | 16,888,617,200 | 27,069,274,074 | 3,536,653,289  |
-|  Thuế thu nhập doanh nghiệp | 23,366,822,999 | 29,069,152,328 | 42,885,136,387 | 9,550,838,940  |
-|  Thuế thu nhập cá nhân | 818,762,352 | 14,536,056,953 | 11,695,816,369 | 3,659,002,936  |
-|  Các loại thuế khác | 6,764,885 | 200,106,930 | 205,992,257 | 879,558  |
-|  **Tổng cộng** | **30,095,930,556** | **87,763,207,485** | **74,042,489,244** | **16,747,374,723**  |
-
-# 16. CHI PHÍ PHẢI TRẢ NGẮN HẠN
-
-Chi phí khác
-
-|   | **Số cuối quý** | **Số đầu năm**  |
-| --- | --- | --- |
-|   | 8,200,000,000 | 9,508,000,000  |
-|   | **8,200,000,000** | **9,508,000,000**  |
-
-# 17. VỐN CHỦ SỞ HỮU
-
-Vốn góp cổ phần nhận được từ các cổ đông của Công ty được ghi nhận theo số thực góp, không ghi nhận theo số cam kết sẽ góp của các chủ sở hữu. Trường hợp nhận vốn góp bằng tài sản phi tiền tệ thì Công ty ghi nhận theo giá trị hợp lý của tài sản phi tiền tệ tại ngày góp vốn.
-
-Vốn góp của chủ sở hữu phản ánh tổng mệnh giá của cổ phiếu bao gồm cổ phiếu phổ thông và cổ phiếu ưu đãi được phân loại là vốn chủ sở hữu và được cấp Giấy chứng nhận đăng ký doanh nghiệp.
-
-Thặng dư vốn là phản ánh khoản chênh lệch giữa mệnh giá và giá phát hành cổ phiếu (kể cả các trường hợp tái phát hành cổ phiếu mua lại của chính mình) và có thể là thặng dư dương (nếu giá phát hành cao hơn mệnh giá) hoặc thặng dư âm (nếu giá phát hành thấp hơn mệnh giá). Cổ phiếu mua lại của chính mình
-
-Cổ phiếu mua lại của chính mình trước ngày hiệu lực của Luật Chứng khoán (ngày 1 tháng 1 năm 2021) là cổ phiếu do Công ty phát hành và được mua lại bởi chính Công ty, nhưng chưa bị huỷ bỏ và sẽ được tái phát hành trở lại trong khoảng thời gian theo quy định của pháp luật về chứng khoán.
-
-7
-
-CÔNG TY CỔ PHẦN DỊCH VỤ TRỰC TUYẾN FPT
-THUYẾT MINH BÁO CÁO TÀI CHÍNH RIÊNG (Tiếp theo)
-
-MẪU SỐ B 09A-DN
-
-LNST chưa phân phối phản ánh kết quả kinh doanh sau thuế TNDN của Công ty tại thời điểm báo cáo.
-
-Cổ tức của Công ty được ghi nhận là một khoản phải trả trong báo cáo tài chính của kỳ kế toán mà việc chia cổ tức đã được phê duyệt và Công ty không có quyền từ chối nghĩa vụ chi trả cổ tức cho các cổ đông của Công ty.
-
-Quỹ khen thưởng, phúc lợi được trích lập từ LNST TNDN của Công ty và được các cổ đông phê duyệt tại Đại hội đồng Cổ đông. Quỹ được trình bày là một khoản phải trả trên báo cáo tình hình tài chính giữa niên độ. Quỹ được sử dụng cho công tác khen thưởng, cải thiện và nâng cao đời sống vật chất, tinh thần của người lao động.
-
-# (a) Số lượng cổ phiếu
-
-|   | Số cuối quý | Số đầu năm  |
-| --- | --- | --- |
-|  Số lượng cổ phiếu đăng ký phát hành | 18,471,275 | 18,471,275  |
-|  Số lượng cổ phiếu đã phát hành | 18,471,275 | 18,471,275  |
-|  Số lượng cổ phiếu đã mua lại | (51,391) | (51,391)  |
-|  Số lượng cổ phiếu đang lưu hành | 18,419,884 | 18,419,884  |
-
-# (b) Chi tiết vốn góp của chủ sở hữu
-
-|   | Cuối kỳ |   | Đầu kỳ  |   |
-| --- | --- | --- | --- | --- |
-|   |  Cổ phiếu phổ thông | % | Cổ phiếu phổ thông | %  |
-|  Công ty Cổ phần Viễn thông FPT | 10,409,697 | 56,51 | 10,409,697 | 56,51  |
-|  Công ty Cổ phần FPT | 4,394,690 | 23,86 | 4,394,690 | 23,86  |
-|  Các cổ đông khác | 3,615,497 | 19,63 | 3,615,497 | 19,63  |
-|  Số lượng cổ phiếu đang lưu hành | 18,419,884 | 100,00 | 18,419,884 | 100,00  |
-
-8
-
-# **CÔNG TY CỔ PHẦN DỊCH VỤ TRỰC TUYẾN FPT  
-THUYẾT MINH BÁO CÁO TÀI CHÍNH RIÊNG (Tiếp theo)**
-
-**MẪU SỐ B 09-DN**
-
-# **(c) Tình hình biến động vốn chủ sở hữu trong năm như sau:**
-
-|   | **Vốn góp của chủ sở hữu** | **Thặng dư vốn cổ phần** | **Cổ phiếu quỹ** | **Lợi nhuận sau thuế chưa phân phối** | **Tổng cộng**  |
+|  STT | TÀI SẢN | Mã số | Thuyết minh | Số cuối quý | Số đầu năm  |
 | --- | --- | --- | --- | --- | --- |
-|   | 184,712,750,000 | 36,208,703,645 | (721,035,000) | 593,453,351,517 | 813,653,770,162  |
-|  Số dư đầu năm trước |  |  |  |  |   |
-|  Vốn góp |  |  |  |  |   |
-|  Biến động thuần về cổ phiếu ngân quỹ |  |  |  |  |   |
-|  Lợi nhuận trong năm |  |  |  | 156,847,631,791 | 156,847,631,791  |
-|  Tạm trích Quỹ khen thưởng, phúc lợi (**) |  |  |  | (15,684,763,179) | (15,684,763,179)  |
-|  Chia cổ tức (***) |  |  |  | (184,198,840,000) | (184,198,840,000)  |
-|  Các biến động khác |  |  |  |  |   |
-|  **Số dư đầu năm nay** | **184,712,750,000** | **36,208,703,645** | **(721,035,000)** | **550,417,380,129** | **770,617,798,774**  |
-|  Biến động thuần về cổ phiếu ngân quỹ |  |  |  |  |   |
-|  Lợi nhuận trong năm |  |  |  | 115,297,457,999 | 115,297,457,999  |
-|  Tạm trích Quỹ khen thưởng, phúc lợi (**) |  |  |  |  |   |
-|  Chia cổ tức (***) |  |  |  | (184,198,840,000) | (184,198,840,000)  |
-|  Các biến động khác |  |  |  |  |   |
-|  **Số dư cuối năm nay** | **184,712,750,000** | **36,208,703,645** | **(721,035,000)** | **481,515,998,128** | **701,716,416,773**  |
+|  3 | Súc vật nuôi cho sản phẩm định kỳ đạt đến giai đoạn tru | 233 |  | - | -  |
+|   | Nguyên giá | 234 |  | - | -  |
+|   | Giá trị khấu hao lũy kế | 235 |  | - | -  |
+|  4 | Súc vật nuôi lấy sản phẩm một lần dài hạn | 236 |  | - | -  |
+|  5 | Cây trồng theo mùa vụ hoặc lấy sản phẩm một lần dài h | 237 |  | - | -  |
+|  6 | Dự phòng tổn thất tài sản sinh học dài hạn | 238 |  | - | -  |
+|  IV. | Bất động sản đầu tư | 240 |  | - | -  |
+|  1 | Nguyên giá | 241 |  | - | -  |
+|  2 | Giá trị hao mòn lũy kế | 242 |  | - | -  |
+|  IV. | Tài sản dở dang dài hạn | 250 |  | - | -  |
+|  1 | Chi phí sản xuất, kinh doanh dở dang dài hạn | 251 |  | - | -  |
+|  2 | Chi phí xây dựng cơ bản dở dang | 252 |  | - | -  |
+|  V. | Các khoản đầu tư tài chính dài hạn | 260 |  | - | -  |
+|  1 | Đầu tư vào công ty con | 261 |  | - | -  |
+|  2 | Đầu tư vào công ty liên kết, liên doanh | 262 |  | - | -  |
+|  3 | Đầu tư góp vốn vào đơn vị khác | 263 |  | 3,684,980,000 | 3,684,980,000  |
+|  4 | Dự phòng tổn thất vào đơn vị khác dài hạn | 264 |  | (3,684,980,000) | (3,684,980,000)  |
+|  5 | Đầu tư nắm giữ đến ngày đáo hạn dài hạn | 265 |  | - | -  |
+|  6 | Dự phòng đầu tư nắm giữ đến ngày đáo hạn dài hạn | 266 |  | - | -  |
+|  VI. | Tài sản dài hạn khác | 270 |  | 40,410,643,228 | 38,590,094,705  |
+|  1 | Chi phí chờ phân bổ dài hạn | 271 |  | 40,410,643,228 | 38,590,094,705  |
+|  2 | Tài sản thuế thu nhập hoãn lại | 272 |  | - | -  |
+|  3 | Thiết bị, vật tư, phụ tùng thay thế dài hạn | 273 |  | - | -  |
+|  4 | Tài sản dài hạn khác | 274 |  | - | -  |
+|  5 | Lợi thế thương mại | 279 |  | - | -  |
+|   | TỔNG CỘNG TÀI SẢN | 280 |  | 822,213,704,761 | 970,065,623,279  |
+|  A - | NỢ PHẢI TRẢ | 300 |  | 120,497,287,988 | 199,447,824,505  |
+|  I. | Nợ ngắn hạn | 310 |  | 119,467,676,745 | 198,182,818,509  |
+|  1 | Phải trả người bán ngắn hạn | 311 |  | 15,951,678,623 | 25,868,597,942  |
+|  2 | Người mua trả tiền trước ngắn hạn | 312 |  | 30,488,610,845 | 26,111,884,125  |
+|  3 | Phải trả cổ tức, lợi nhuận | 313 |  | 8,483,500 | 7,315,000  |
+|  4 | Thuế và các khoản phải nộp cho Nhà nước ngắn hạn | 314 |  | 16,747,374,723 | 30,095,930,556  |
+|  5 | Phải trả người lao động | 315 |  | 44,890,842,000 | 87,438,948,000  |
+|  6 | Chi phí phải trả ngắn hạn | 316 |  | 8,200,000,000 | 9,508,000,000  |
+|  7 | Phải trả nội bộ ngắn hạn | 317 |  | - | -  |
+|  8 | Phải trả theo tiến độ kế hoạch hợp đồng xây dựng | 318 |  | - | -  |
+|  9 | Doanh thu chờ phân bổ ngắn hạn | 319 |  | - | -  |
+|  10 | Phải trả ngắn hạn khác | 320 |  | 2,722,663,256 | 2,605,419,088  |
+|  11 | Vay và nợ thuê tài chính ngắn hạn | 321 |  | - | -  |
+|  12 | Dự phòng phải trả ngắn hạn | 322 |  | - | -  |
+|  13 | Quỹ khen thưởng, phúc lợi | 323 |  | 458,023,798 | 16,546,723,798  |
+|  14 | Quỹ bình ổn giá | 324 |  | - | -  |
+|  15 | Giao dịch mua bán lại trái phiếu Chính phủ | 325 |  | - | -  |
+|  II. | Nợ dài hạn | 330 |  | 1,029,611,243 | 1,265,005,996  |
+|  1 | Phải trả người bán dài hạn | 331 |  | - | -  |
+|  2 | Người mua trả tiền trước dài hạn | 332 |  | - | -  |
+|  3 | Thuế và các khoản phải nộp cho Nhà nước dài hạn | 333 |  | - | -  |
+|  4 | Chi phí phải trả dài hạn | 334 |  | - | -  |
+|  5 | Phải trả nội bộ về vốn kinh doanh | 335 |  | - | -  |
+|  6 | Phải trả nội bộ dài hạn | 336 |  | - | -  |
+|  7 | Doanh thu chờ phân bổ dài hạn | 337 |  | - | -  |
+|  8 | Phải trả dài hạn khác | 338 |  | - | -  |
+|  9 | Vay và nợ thuê tài chính dài hạn | 339 |  | - | -  |
+|  10 | Trái phiếu chuyển đổi | 340 |  | - | -  |
+|  11 | Cổ phiếu ưu đãi | 341 |  | - | -  |
+|  12 | Thuế thu nhập hoãn lại phải trả | 342 |  | 1,029,611,243 | 1,265,005,996  |
+|  13 | Dự phòng phải trả dài hạn | 343 |  | - | -  |
+|  14 | Quỹ phát triển khoa học và công nghệ | 344 |  | - | -  |
 
-9
+|  STT | TÀI SẢN | Mã số | Thuyết minh | Số cuối quý | Số đầu năm  |
+| --- | --- | --- | --- | --- | --- |
+|  **B -** | **VỐN CHỦ SỞ HỮU** | **400** |  | **701,716,416,773** | **770,617,798,774**  |
+|  1 | Vốn góp của chủ sở hữu | 411 |  | 184,712,750,000 | 184,712,750,000  |
+|   | *Cổ phiếu phổ thông có quyền biểu quyết* | 411a - |  | *184,712,750,000* | *184,712,750,000*  |
+|   | *Cổ phiếu ưu đãi* | 411b - |  | - | -  |
+|  2 | Thặng dư vốn | 412 |  | 36,208,703,645 | 36,208,703,645  |
+|  3 | Quyền chọn chuyển đổi trái phiếu | 413 |  | - | -  |
+|  4 | Vốn khác của chủ sở hữu | 414 |  | - | -  |
+|  5 | Cổ phiếu mua lại của chính mình | 415 |  | (721,035,000) | (721,035,000)  |
+|  6 | Chênh lệch đánh giá lại tài sản | 416 |  | - | -  |
+|  7 | Chênh lệch tỷ giá hối đoái | 417 |  | - | -  |
+|  8 | Quỹ đầu tư phát triển | 418 |  | - | -  |
+|  9 | Quỹ khác thuộc vốn chủ sở hữu | 419 |  | - | -  |
+|  10 | Lợi nhuận sau thuế chưa phân phối | 420 |  | 481,515,998,128 | 550,417,380,129  |
+|   | LNST chưa phân phối lũy kế đến cuối kỳ trước | 420a - |  | 366,218,540,129 | 409,254,511,517  |
+|   | LNST chưa phân phối kỳ này | 420b - |  | 115,297,457,999 | 141,162,868,612  |
+|  11 | Lợi ích của cổ đông không kiểm soát | 429 |  | - | -  |
+|   | **TỔNG CỘNG NGUỒN VỐN** | **440** |  | **822,213,704,761** | **970,065,623,279**  |
+
+Người lập
+
+Nguyễn Ngọc Duy Sinh
+
+Kế toán trưởng
+
+Lã Thị Thanh Hằng
+
+Ban giám đốc
+
+Trần Hải Linh
 
 CÔNG TY CỔ PHẦN DỊCH VỤ TRỰC TUYẾN FPT
-THUYẾT MINH BÁO CÁO TÀI CHÍNH RIÊNG (Tiếp theo)
+Lô L 29B-31B,33B Đường Tân Thuận,P.Tân Thuận, HCM
+Tại ngày 30 tháng 09 năm 20226
 
-MẪU SỐ B 09A-DN
+Mẫu số B 02a - DN
+(Kèm theo Thông tư số 99/2025/TT-BTC ngày 27
+tháng 10 năm 2025 của Bộ trưởng Bộ Tài chính)
 
-# 18. LÃI TRÊN CỔ PHIẾU
+# BÁO CÁO KẾT QUẢ HOẠT ĐỘNG KINH DOANH
 
-Lãi cơ bản trên cổ phiếu được tính bằng hiệu của số lợi nhuận thuần phân bổ cho các cổ đông và số trích quỹ khen thưởng, phúc lợi và cổ tức của cổ phiếu ưu đãi, chia cho số lượng bình quân gia quyền của số cổ phiếu phổ thông đang lưu hành trong kỳ kế toán, điều chỉnh cho cổ phiếu thưởng phát hành trong kỳ kế toán trừ đi cổ phiếu mua lại của chính mình. Chi tiết như sau:
+Kỳ kế toán từ ngày 01/01/2026 đến ngày 30/09/2026
 
-|   | Số đến 30.09.2026 | Số đến 30.09.2025  |
-| --- | --- | --- |
-|  Lãi cơ bản trên mỗi cổ phiếu (VND) | 6,259 | 5,940  |
-|   | 6,259 | 5,940  |
+Đơn vị: VND
 
-Công ty không có cổ phiếu phổ thông tiềm năng có tác động suy giảm trong kỳ kế toán và đến ngày lập báo cáo tài chính giữa niên độ này. Do đó, lãi suy giảm trên cổ phiếu bằng với lãi cơ bản trên cổ phiếu.
+|  STT | CHỈ TIÊU | Mã số | Thuyết minh | QUÝ III.2026 |   | Lũy kế từ đầu năm đến cuối quý này  |   |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+|   |   |   |   |  Năm nay | Năm trước | Năm nay | Năm trước  |
+|  1. | Doanh thu bán hàng và cung cấp dịch vụ | 01 |  | 201,537,212,503 | 223,906,435,217 | 551,197,512,110 | 552,313,553,647  |
+|  2. | Các khoản giảm trừ | 02 |  | 2,938,757,118 | 2,458,455,086 | 6,754,287,197 | 3,570,689,341  |
+|  3. | Doanh thu thuần về bán hàng và cung cấp dịch vụ | 10 |  | 198,598,455,385 | 221,447,980,131 | 544,443,224,913 | 548,742,864,306  |
+|  4. | Giá vốn hàng bán | 11 |  | 122,203,484,614 | 111,163,361,151 | 289,468,865,487 | 289,543,177,316  |
+|  5. | Lợi nhuận gộp về bán hàng và cung cấp dịch vụ | 20 |  | 76,394,970,771 | 110,284,618,980 | 254,974,359,426 | 259,199,686,990  |
+|  6. | Lãi/Lỗ của hoạt động bán, thanh lý bất động sản đầu tư | 21 |  | - | - | - | -  |
+|  7. | Doanh thu hoạt động tài chính | 22 |  | 15,684,453,776 | 9,227,061,471 | 40,717,347,402 | 31,228,405,547  |
+|  8. | Chi phí tài chính | 23 |  | 1,048,780,613 | 32,285,356 | 1,269,430,075 | 156,542,839  |
+|  - | Trong đó: chi phí lãi vay | 24 |  | - | - | - | -  |
+|  9. | Lợi nhuận từ công ty liên doanh liên kết | 2x |  | - | - | - | -  |
+|  10. | Chi phí bán hàng | 25 |  | 23,059,972,582 | 32,535,600,999 | 76,336,152,322 | 73,436,036,134  |
+|  11. | Chi phí quản lý doanh nghiệp | 26 |  | 22,254,657,281 | 29,417,276,373 | 73,919,806,733 | 80,095,707,599  |
+|  12. | Lợi nhuận thuần từ hoạt động kinh doanh | 30 |  | 45,716,014,071 | 57,526,517,723 | 144,166,317,698 | 136,739,805,965  |
+|  13. | Thu nhập khác | 31 |  | 33,880,678 | 4,912,722 | 35,159,742 | 37,902,130  |
+|  14. | Chi phí khác | 32 |  | 59,224,797 | 158,217 | 70,261,866 | 16,680,905  |
+|  15. | Lợi nhuận khác | 40 |  | (25,344,119) | 4,754,505 | (35,102,124) | 21,221,225  |
+|  16. | Tổng lợi nhuận kế toán trước thuế | 50 |  | 45,690,669,952 | 57,531,272,228 | 144,131,215,574 | 136,761,027,190  |
+|  17. | Chi phí thuế TNDN hiện hành | 51 |  | 9,421,658,386 | 11,023,788,187 | 29,069,152,328 | 26,170,742,911  |
+|  18. | Chi phí thuế TNDN hoãn lại | 52 |  | (276,084,990) | 482,497,788 | (235,394,753) | 1,183,471,594  |
+|  19. | Lợi nhuận sau thuế thu nhập doanh nghiệp | 60 |  | 36,545,096,556 | 46,024,986,253 | 115,297,457,999 | 109,406,812,685  |
+|  19.1. | - Lợi nhuận sau thuế của cổ đông của Công ty mẹ | 61 |  | 36,545,096,556 | 46,024,986,253 | 115,297,457,999 | 109,406,812,685  |
+|  19.2. | - Lợi ích của cổ đông không kiểm soát | 62 |  | - | - | - | -  |
+|  20. | Lãi cơ bản trên cổ phiếu (*) | 70 |  | 1,984 | 2,499 | 6,259 | 5,940  |
+|  21. | Lãi suy giảm trên cổ phiếu (*) | 71 |  | 1,984 | 2,499 | 6,259 | 5,940  |
 
-# 19. CÁC KHOẢN MỤC NGOÀI BẢNG CÂN ĐỐI KẾ TOÁN
+Người lập
 
-|   | Số cuối quý | Số đầu năm  |
-| --- | --- | --- |
-|  Ngoại tệ các loại |  |   |
-|  - Đô la Mỹ (USD) | 1,373,417 | 689,988  |
-|   | 1,373,417 | 689,988  |
+Nguyễn Ngọc Duy Sinh
 
-# 20. DOANH THU THUẦN VỀ BÁN HÀNG VÀ CUNG CẤP DỊCH VỤ
+Kế toán trưởng
 
-|   | Số đến 30.09.2026 | Số đến 30.09.2025  |
-| --- | --- | --- |
-|  Doanh thu | 551,197,512,110 | 552,313,553,647  |
-|  Các khoản giảm trừ | -6,754,287,197 | -3,570,689,341  |
-|   | 345,844,769,528 | 548,742,864,306  |
+Lã Thị Thanh Hằng
 
-# 21. GIÁ VỐN HÀNG BÁN VÀ DỊCH VỤ CUNG CẤP
+Ban giám đốc
 
-|   | Số đến 30.09.2026 | Số đến 30.09.2025  |
-| --- | --- | --- |
-|  Giá vốn | 289,468,865,487 | 289,543,177,316  |
-|   | 289,468,865,487 | 289,543,177,316  |
-
-# 22. CHI PHÍ KINH DOANH THEO YẾU TỐ
-
-|   | Số đến 30.09.2026 | Số đến 30.09.2025  |
-| --- | --- | --- |
-|  Chi phí nguyên liệu, vật liệu | 2,078,562,233 | 2,217,679,780  |
-|  Chi phí nhân công | 108,008,711,589 | 114,237,218,974  |
-|  Chi phí khấu hao tài sản cố định | 2,295,944,931 | 2,314,566,007  |
-|  Chi phí dịch vụ mua ngoài | 305,178,047,524 | 308,413,404,326  |
-|  Chi phí khác bằng tiền | 22,163,558,265 | 15,892,051,962  |
-|   | 439,724,824,542 | 443,074,921,049  |
-
-10
+Trần Hải Linh
 
 CÔNG TY CỔ PHẦN DỊCH VỤ TRỰC TUYẾN FPT
-THUYẾT MINH BÁO CÁO TÀI CHÍNH RIÊNG (Tiếp theo)
+Lồ L 29B-31B,33B Đường Tản Thuận,P.Tản Thuận, HCM
+Tại ngày 30 tháng 09 năm 20226
 
-MẪU SỐ B 09A-DN
+Mẫu số B 03a - DN
+(Kèm theo Thông tư số 99/2025/TT-BTC ngày 27
+tháng 10 năm 2025 của Bộ trưởng Bộ Tài chính)
 
-# 23. DOANH THU HOẠT ĐỘNG TÀI CHÍNH
+# BÁO CÁO LƯU CHUYỂN TIỀN TỆ
 
-|   | Số đến 30.09.2026 | Số đến 30.09.2025  |
-| --- | --- | --- |
-|  Doanh thu tiền lãi | 40,717,333,106 | 28,356,330,310  |
-|  Lãi chênh lệch tỷ giá | 14,296 | 2,872,075,237  |
-|   | 40,717,347,402 | 31,228,405,547  |
+Đơn vị: VND
 
-# 24. CHI PHÍ HOẠT ĐỘNG TÀI CHÍNH
+|  STT | CHỈ TIÊU | Mã số | Thuyết minh | Lũy kế từ đầu năm đến cuối quý  |   |
+| --- | --- | --- | --- | --- | --- |
+|   |   |   |   |  Năm nay | Năm trước  |
+|  1 | Lợi nhuận trước thuế | 01 |  | 144,131,215,574 | 136,761,027,190  |
+|   | Điều chỉnh cho các khoản: |  |  |  |   |
+|  - | Khấu hao tài sản cố định | 02 |  | 2,295,944,931 | 2,314,566,007  |
+|  - | Các khoản dự phòng | 03 |  | 1,202,750,957 | (483,461,168)  |
+|  - | (Lãi)/Lỗ chênh lệch tỷ giá hối đoái do đánh giá lại các khoản mục tiền tệ có gốc ngoại tệ | 04 |  | 1,035,934,144 | (2,843,042,554)  |
+|  - | (Lãi)/Lỗ từ hoạt động đầu tư/tài chính | 05 |  | (40,717,333,106) | (28,356,330,310)  |
+|  - | Chi phí đi vay | 06 |  | - | -  |
+|  - | Các khoản điều chỉnh khác | 07 |  | - | -  |
+|  2 | Lợi nhuận từ hoạt động kinh doanh trước thay đổi vốn lưu động | 08 |  | 107,948,512,500 | 107,392,759,165  |
+|  9 | (Tăng)/Giảm các khoản phải thu | 9 |  | 38,729,626,881 | (11,828,852,688)  |
+|  10 | (Tăng)/Giảm hàng tồn kho | 10 |  | (287,525,059) | 252,955,350  |
+|  11 | Tăng/(Giảm) các khoản phải trả (ko kê lãi vay phải trả, thuế thu nhập phải nộp) | 11 |  | (48,839,834,129) | 9,774,185,976  |
+|  12 | Tăng/(Giảm) chi phí chờ phân bổ | 12 |  | (3,190,484,737) | 7,155,305,196  |
+|  13 | (Tăng)/Giảm chứng khoán kinh doanh | 13 |  | - | -  |
+|  14 | Chi phí đi vay đã trả | 14 |  | - | -  |
+|  15 | Thuế thu nhập doanh nghiệp đã nộp | 15 |  | (42,885,136,387) | (22,594,914,564)  |
+|  16 | Tiền thu khác từ hoạt động kinh doanh | 16 |  | - | -  |
+|  17 | Tiền chi khác từ hoạt động kinh doanh | 17 |  | (16,088,700,000) | (38,251,590,000)  |
+|   | **Lưu chuyển tiền thuần từ hoạt động kinh doanh** | 20 |  | 35,386,459,069 | 51,899,848,435  |
+|  21 | Tiền chi để mua sắm, xây dựng TSCĐ và các tài sản dài hạn khác | 21 |  | (1,151,240,641) | (504,781,818)  |
+|  22 | Tiền thu từ thanh lý, nhượng bán TSCĐ và các TS dài hạn khác | 22 |  | - | -  |
+|  23 | Tiền chi cho vay, mua các công cụ nợ của đơn vị khác | 23 |  | (1,002,179,014,188) | (1,021,527,288,776)  |
+|  24 | Tiền thu hồi cho vay, bán lại các công cụ nợ của đơn vị khác | 24 |  | 1,119,181,831,738 | 1,101,982,838,659  |
+|  25 | Tiền chi đầu tư, góp vốn vào đơn vị khác | 25 |  | - | -  |
+|  26 | Tiền thu hồi đầu tư, góp vốn vào đơn vị khác | 26 |  | - | -  |
+|  27 | Tiền thu lãi cho vay, cổ tức và lợi nhuận được chia | 27 |  | 38,917,333,106 | 30,013,330,314  |
+|  30 | **Lưu chuyển tiền từ hoạt động đầu tư** | 30 |  | 154,768,910,015 | 109,964,098,375  |
+|  31 | Tiền thu từ phát hành cổ phiếu, nhận góp vốn của chủ sở hữu | 31 |  | - | -  |
+|  32 | Tiền chi trả góp vốn cho các chủ sở hữu, mua lại cổ phiếu của doanh nghiệp đã phát hành | 32 |  | - | -  |
+|  33 | Tiền thu từ đi vay | 33 |  | - | -  |
+|  34 | Tiền trả nợ gốc vay | 34 |  | - | -  |
+|  35 | Tiền trả nợ gốc thuê tài chính | 35 |  | - | -  |
+|  36 | Cổ tức, lợi nhuận đã trả cho chủ sở hữu | 36 |  | (184,197,671,500) | (184,197,671,500)  |
+|  40 | **Lưu chuyển tiền thuần từ hoạt động tài chính** | 40 |  | (184,197,671,500) | (184,197,671,500)  |
+|  50 | **Lưu chuyển tiền thuần trong năm/kỳ** | 50 |  | 5,957,697,584 | (22,333,724,690)  |
+|  60 | **Tiền và tương đương tiền đầu năm/kỳ** | 60 |  | 67,780,884,414 | 53,250,437,627  |
+|  61 | Ảnh hưởng của thay đổi tỷ giá hối đoái quy đổi ngoại tệ | 61 |  | (1,035,934,144) | 2,843,042,554  |
+|  70 | **Tiền và tương đương tiền cuối năm/kỳ** | 70 |  | 72,702,647,854 | 33,759,755,491  |
 
-|   | Số đến 30.09.2026 | Số đến 30.09.2025  |
-| --- | --- | --- |
-|  Khoản lỗ về chênh lệch tỷ giá | 1,269,430,075 | 156,542,839  |
-|  Chi phí tài chính khác | 1,269,430,075 | 156,542,839  |
+Người lập
 
-# 25. THUẾ THU NHẬP DOANH NGHIỆP HIỆN HÀNH
+Nguyễn Ngọc Duy Sinh
 
-Số thuế TNDN trên lợi nhuận kế toán trước thuế của Công ty khác với số thuế khi được tính theo thuế suất phổ thông áp dụng 20% như sau:
+Kế toán trưởng
 
-|   | Số đến 30.09.2026 | Số đến 30.09.2025  |
-| --- | --- | --- |
-|  Lợi nhuận trước thuế | 144,131,215,574 | 136,761,027,190  |
-|  Điều chỉnh thu nhập chịu thuế | 1,214,546,066 | (5,907,312,634)  |
-|  Tổng thu nhập chịu thuế | 145,345,761,640 | 130,853,714,556  |
-|  Thuế suất thuế TNDN (%) | 20% | 20%  |
-|  Tổng thuế TNDN | 29,069,152,328 | 26,170,742,911  |
-|  Thuế TNDN hiện hành phải nộp | 29,069,152,328 | 26,170,742,911  |
+Lê Thị Thanh Hằng
 
-# 26. SỐ LIỆU SO SÁNH
+Ban giám đốc
 
-Do việc áp dụng lần đầu Chế độ kế toán mới, Người đại diện theo pháp luật đã trình bày lại số liệu so sánh để phù hợp với cách trình bày của năm nay.
-
-Lai du thu cua cac khoan muc dau tu nam giu den ngay dao han duoc trinh bay tai so du cua khoan muc "Dau tu nam giu den ngay dao han", thay vi trinh bay tai khoan muc "Phai thu khac" nhu truc day;
-Cac khoan thai tra co tuc duoc trinh bay tai so du cua khoan muc "Phai tra co tuc, loi nhuan", thay vi trinh bay tai khoan muc "Phai tra ngan han khac" nhu truc day.
-
-Báo cáo tình hình tài chính (trích lược)
-
-|  Mã số | TÀI SẢN | Tại ngày 31 tháng 12 năm 2025  |   |   |
-| --- | --- | --- | --- | --- |
-|   |   |  Số liệu theo báo cáo trước đây VND | Phân loại lại VND | Số liệu trình bày lại VND  |
-|  100 | TÀI SẢN NGẮN HẠN | 924,591,168,384 | - | 924,591,168,384  |
-|  123 | Đầu tư nắm giữ đến ngày đáo hạn | 710,196,553,650 | 9,300,000,000 | 719,496,553,650  |
-|  135 | Phải thu ngắn hạn khác | 12,073,160,700 | (9,300,000,000) | 2,773,160,700  |
-|  280 | TỔNG TÀI SẢN | 970,065,623,279 | - | 970,065,623,279  |
-
-11
-
-# **CÔNG TY CỔ PHẦN DỊCH VỤ TRỰC TUYẾN FPT**
-**THUYẾT MINH BÁO CÁO TÀI CHÍNH RIÊNG (Tiếp theo)**
-
-**MẪU SỐ B 09A-DN**
-
-|  Mã số | NGUỒN VỐN | Tại ngày 31 tháng 12 năm 2025  |   |   |
-| --- | --- | --- | --- | --- |
-|   |   |  Số liệu theo báo cáo trước đây VND | Phân loại lại VND | Số liệu trình bày lại VND  |
-|  **300** | **NỢ PHẢI TRẢ** | **199,447,824,505** | **-** | **199,447,824,505**  |
-|  313 | Phải trả cổ tức, lợi nhuận | - | 7,315,000 | 7,315,000  |
-|  320 | Phải trả ngắn hạn khác | 2,612,734,088 | (7,315,000) | 2,605,419,088  |
-|  **440** | **TỔNG NGUỒN VỐN** | **970,065,623,279** | **-** | **970,065,623,279**  |
-
-Báo cáo tài chính đã được Tổng Giám đốc theo ủy quyền của Người đại diện theo pháp luật của Công ty phê duyệt
-
-**Nguyễn Ngọc Duy Sinh**
-**Người lập biểu**
-
-**Lã Thị Thanh Hằng**
-**Kế toán trưởng**
-
-**Trần Hải Linh**
-**Tổng Giám đốc**
-**Ngày 16 tháng 10 năm 2026**
-
-12
+Trần Hải Linh
