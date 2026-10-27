@@ -2,6 +2,7 @@
 
 import { useState, type ReactNode } from 'react';
 import { WatchlistProvider } from './WatchlistContext';
+import MarksSyncBar from './MarksSyncBar';
 
 // 2 tab tach rieng "Tai bao cao" (chon ky + xem truoc danh muc that + Tai
 // BCTC/Them nguon rieng) voi "Ket qua" (bang tong hop %/xuat Excel-PDF) - yeu
@@ -61,6 +62,9 @@ export default function Tabs({
           </button>
           {statsBar && <div className="tabs-stats">{statsBar}</div>}
         </div>
+
+        {/* Trang thai dong bo danh dau + Xuat/Nhap sao luu - xem MarksSyncBar. */}
+        <MarksSyncBar />
 
         {/* flex-col-fill CA 2 ben (yeu cau nguoi dung 2026-07-18 - truoc day
         fetchTab chi la div block thuong, khong chiem het chieu cao con lai

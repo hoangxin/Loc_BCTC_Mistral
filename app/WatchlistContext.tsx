@@ -1,21 +1,37 @@
 'use client';
 
-import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import {
+  emptyMarksDoc,
+  fromLegacyState,
+  isMarksDoc,
+  mergeMarksDocs,
+  toLegacyState,
+  type MarksDoc,
+  type HighlightState as SharedHighlightState,
+  type ReportMarkState as SharedReportMarkState,
+} from '@/lib/report-marks';
 
 const STORAGE_KEY = 'bctc-watchlist-v1';
+// Ban DOC day du (kem dau thoi gian tung muc) dung de dong bo len server -
+// giu RIENG khoi STORAGE_KEY de ban cu van doc duoc neu phai lui code.
+const DOC_STORAGE_KEY = 'bctc-watchlist-doc-v1';
+// Cho lang 1 nhip roi moi day len server: nguoi dung thuong tick lien tay
+// nhieu o, khong can moi tick 1 lan ghi repo.
+const SYNC_DEBOUNCE_MS = 4000;
 
 // 3 trang thai 1 o chi tieu dang highlight co the dung (yeu cau nguoi dung
 // 2026-07-18): 'blink' = vang dam + nhap nhay (tier level2 tu nhien), 'light'
 // = vang nhat khong nhap nhay (tier level1 tu nhien), 'off' = tat han, tro ve
 // giao dien binh thuong khong mau. Nguoi dung co the chuyen QUA LAI ca 3 trang
 // thai nay bat ke tier goc la gi (vd 1 o level1 van bam len duoc 'blink').
-export type HighlightState = 'blink' | 'light' | 'off';
+export type HighlightState = SharedHighlightState;
 
 // Danh dau THU CONG o o Ma CK (yeu cau nguoi dung 2026-07-25) - truoc day chi
 // co 1 trang thai boolean "da doc" (bôi xam). Nay them "Luu y" (bôi vang) ben
 // canh "Da xong" (bôi xam nhu cu), chon 1 trong 2 qua popup xac nhan giong
 // pattern MuteableHighlightCell. undefined = chua danh dau gi.
-export type ReportMarkState = 'note' | 'done';
+export type ReportMarkState = SharedReportMarkState;
 
 interface StoredState {
   codes: string[];
@@ -88,24 +104,31 @@ function loadStored(): StoredState {
 //
 // Doc - sua - ghi khien thay doi cua 2 tab cong don len nhau, va viec XOA
 // (bo tick) van hoat dong vi no la 1 thay doi co chu dich tren dung khoa do.
-// Them/sua 1 cap [khoa, gia tri] trong danh sach da luu, giu nguyen thu tu cu.
-function upsertEntry<T>(entries: [string, T][], key: string, value: T): [string, T][] {
-  const idx = entries.findIndex(([k]) => k === key);
-  if (idx === -1) return [...entries, [key, value]];
-  const next = entries.slice();
-  next[idx] = [key, value];
-  return next;
+// Ban DOC (kem dau thoi gian) nam song song voi ban cu: ban cu de giao dien
+// doc nhanh, ban doc de GOP voi server/may khac ma khong mat du lieu.
+function loadDoc(): MarksDoc {
+  if (typeof window === 'undefined') return emptyMarksDoc();
+  try {
+    const raw = window.localStorage.getItem(DOC_STORAGE_KEY);
+    if (raw) {
+      const parsed: unknown = JSON.parse(raw);
+      if (isMarksDoc(parsed)) return parsed;
+    }
+  } catch {
+    // doc hong thi dung ban cu dung lai o duoi
+  }
+  // Chua co ban doc (lan dau sau khi nang cap): dung lai ban cu, dau thoi gian
+  // 0 de bat ky thay doi moi nao cung thang khi gop.
+  return fromLegacyState(loadStored(), 0);
 }
 
-function mutateStored(apply: (prev: StoredState) => StoredState): StoredState {
-  const latest = loadStored();
-  const next = apply(latest);
+function saveDoc(doc: MarksDoc) {
   try {
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+    window.localStorage.setItem(DOC_STORAGE_KEY, JSON.stringify(doc));
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(toLegacyState(doc)));
   } catch (error) {
     console.error('Khong luu duoc danh dau vao localStorage', error);
   }
-  return next;
 }
 
 interface WatchlistContextValue {
@@ -127,7 +150,20 @@ interface WatchlistContextValue {
   // reportNotes o StoredState tren cho ly do tach rieng khoi reportMarks.
   getReportNote: (filePath: string) => string | undefined;
   setReportNote: (filePath: string, note: string) => void;
+  // Dong bo len repo + xuat/nhap file sao luu (them 2026-10-27, xem
+  // lib/report-marks.ts). syncState de giao dien noi ro dang o trang thai nao -
+  // nguoi dung PHAI thay duoc danh dau da len server hay chua.
+  syncState: SyncState;
+  syncNow: () => Promise<void>;
+  exportToFile: () => void;
+  importFromFile: (file: File) => Promise<{ ok: boolean; message: string }>;
 }
+
+export type SyncState =
+  | { kind: 'idle' }
+  | { kind: 'syncing' }
+  | { kind: 'saved'; at: number }
+  | { kind: 'error'; message: string };
 
 const WatchlistContext = createContext<WatchlistContextValue | null>(null);
 
@@ -144,9 +180,9 @@ export function WatchlistProvider({ children }: { children: ReactNode }) {
   const [reportNotes, setReportNotes] = useState<Map<string, string>>(() => new Map());
   // Khong con co "hydrated" nua: truoc day no la chot chan duy nhat ngan buoc
   // ghi-de-toan-bo ghi state RONG len du lieu that. Nay moi thay doi deu di qua
-  // applyChange (doc - sua - ghi), khong con buoc ghi de nao de ma chan.
+  // applyDocChange (doc - sua - ghi), khong con buoc ghi de nao de ma chan.
   useEffect(() => {
-    const stored = loadStored();
+    const stored = toLegacyState(loadDoc());
     setCodes(new Set(stored.codes));
     setOverrides(new Map(stored.highlightOverrides));
     setReportMarks(new Map(stored.reportMarks));
@@ -158,8 +194,8 @@ export function WatchlistProvider({ children }: { children: ReactNode }) {
   // ban o CAC TAB KHAC (khong ban o chinh tab vua ghi) - dung nhu can.
   useEffect(() => {
     const onStorage = (event: StorageEvent) => {
-      if (event.key !== null && event.key !== STORAGE_KEY) return;
-      const stored = loadStored();
+      if (event.key !== null && event.key !== STORAGE_KEY && event.key !== DOC_STORAGE_KEY) return;
+      const stored = toLegacyState(loadDoc());
       setCodes(new Set(stored.codes));
       setOverrides(new Map(stored.highlightOverrides));
       setReportMarks(new Map(stored.reportMarks));
@@ -176,54 +212,150 @@ export function WatchlistProvider({ children }: { children: ReactNode }) {
     void navigator.storage?.persist?.().catch(() => undefined);
   }, []);
 
-  // Ap thay doi THANG len ban dang nam trong localStorage roi dong bo lai RAM -
-  // xem mutateStored ve ly do khong con ghi de bang toan bo state cua tab nay.
-  const applyChange = useCallback((apply: (prev: StoredState) => StoredState) => {
-    const next = mutateStored(apply);
-    setCodes(new Set(next.codes));
-    setOverrides(new Map(next.highlightOverrides));
-    setReportMarks(new Map(next.reportMarks));
-    setReportNotes(new Map(next.reportNotes));
+  const [syncState, setSyncState] = useState<SyncState>({ kind: 'idle' });
+  const syncTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const applyDoc = useCallback((doc: MarksDoc) => {
+    saveDoc(doc);
+    const legacy = toLegacyState(doc);
+    setCodes(new Set(legacy.codes));
+    setOverrides(new Map(legacy.highlightOverrides));
+    setReportMarks(new Map(legacy.reportMarks));
+    setReportNotes(new Map(legacy.reportNotes));
   }, []);
 
+  // Day ban doc hien tai len server roi GOP ban server tra ve - 2 chieu trong
+  // 1 lan goi, nen may khac danh dau gi cung ve day du.
+  const syncNow = useCallback(async () => {
+    setSyncState({ kind: 'syncing' });
+    try {
+      const response = await fetch('/api/report-marks', {
+        method: 'PUT',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify(loadDoc()),
+      });
+      const data = (await response.json()) as { ok?: boolean; doc?: unknown; error?: string };
+      if (!response.ok || !data.ok || !isMarksDoc(data.doc)) {
+        setSyncState({ kind: 'error', message: data.error ?? `Lỗi ${response.status}` });
+        return;
+      }
+      applyDoc(mergeMarksDocs(loadDoc(), data.doc));
+      setSyncState({ kind: 'saved', at: Date.now() });
+    } catch (error) {
+      setSyncState({ kind: 'error', message: error instanceof Error ? error.message : String(error) });
+    }
+  }, [applyDoc]);
+
+  const scheduleSync = useCallback(() => {
+    if (syncTimer.current) clearTimeout(syncTimer.current);
+    syncTimer.current = setTimeout(() => void syncNow(), SYNC_DEBOUNCE_MS);
+  }, [syncNow]);
+
+  // Luc mo app: keo ban tren server ve va GOP (khong de len) - mo o may khac
+  // hoac sau khi trinh duyet bi don du lieu thi danh dau van tro lai day du.
+  useEffect(() => {
+    let huy = false;
+    (async () => {
+      try {
+        const response = await fetch('/api/report-marks', { cache: 'no-store' });
+        const data = (await response.json()) as { ok?: boolean; doc?: unknown };
+        if (huy || !response.ok || !data.ok || !isMarksDoc(data.doc)) return;
+        const merged = mergeMarksDocs(loadDoc(), data.doc);
+        applyDoc(merged);
+        // Ban dia phuong co the dang co muc ma server chua biet (vd danh dau
+        // luc mat mang) - day nguoc len luon cho khoi lech.
+        scheduleSync();
+      } catch {
+        // khong co mang/server chua cau hinh token: van chay binh thuong voi
+        // ban trong trinh duyet, chi la chua co ban du phong tren repo
+      }
+    })();
+    return () => {
+      huy = true;
+    };
+  }, [applyDoc, scheduleSync]);
+
+  // Ghi 1 thay doi vao ban doc (kem dau thoi gian) + hen dong bo len server.
+  const applyDocChange = useCallback(
+    (apply: (doc: MarksDoc) => MarksDoc) => {
+      applyDoc(apply(loadDoc()));
+      scheduleSync();
+    },
+    [applyDoc, scheduleSync]
+  );
+
+  const exportToFile = useCallback(() => {
+    const blob = new Blob([JSON.stringify(loadDoc(), null, 2)], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `bctc-danh-dau-${new Date().toISOString().slice(0, 10)}.json`;
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }, []);
+
+  const importFromFile = useCallback(
+    async (file: File): Promise<{ ok: boolean; message: string }> => {
+      try {
+        const text = await file.text();
+        const parsed: unknown = JSON.parse(text);
+        // Nhan CA ban xuat moi (co dau thoi gian) LAN ban sao luu thu cong cua
+        // localStorage kieu cu - ban cu vao voi dau thoi gian 0 nen khong de
+        // mat nhung gi dang co.
+        const incoming = isMarksDoc(parsed)
+          ? parsed
+          : fromLegacyState(parsed as StoredState, 0);
+        const merged = mergeMarksDocs(loadDoc(), incoming);
+        applyDoc(merged);
+        scheduleSync();
+        const legacy = toLegacyState(merged);
+        return {
+          ok: true,
+          message: `Đã nhập: ${legacy.reportMarks.length} đánh dấu, ${legacy.reportNotes.length} ghi chú, ${legacy.highlightOverrides.length} ô tô màu, ${legacy.codes.length} mã theo dõi.`,
+        };
+      } catch (error) {
+        return { ok: false, message: `Không đọc được file: ${error instanceof Error ? error.message : String(error)}` };
+      }
+    },
+    [applyDoc, scheduleSync]
+  );
+
+  // Moi thay doi deu ghi kem DAU THOI GIAN (xem MarkEntry) - do la thu cho
+  // phep gop 2 ban tu 2 tab/2 may ma khong ben nao de mat ben nao.
   const addToWatchlist = useCallback(
     (code: string) => {
       const normalized = code.trim().toUpperCase();
       if (!normalized) return;
-      applyChange((prev) => ({ ...prev, codes: prev.codes.includes(normalized) ? prev.codes : [...prev.codes, normalized] }));
+      applyDocChange((doc) => ({ ...doc, codes: { ...doc.codes, [normalized]: { value: true, at: Date.now() } } }));
     },
-    [applyChange]
+    [applyDocChange]
   );
 
   const removeFromWatchlist = useCallback(
     (code: string) => {
-      applyChange((prev) => ({ ...prev, codes: prev.codes.filter((c) => c !== code) }));
+      applyDocChange((doc) => ({ ...doc, codes: { ...doc.codes, [code]: { value: null, at: Date.now() } } }));
     },
-    [applyChange]
+    [applyDocChange]
   );
 
   const setHighlightOverride = useCallback(
     (key: string, state: HighlightState) => {
-      applyChange((prev) => ({ ...prev, highlightOverrides: upsertEntry(prev.highlightOverrides, key, state) }));
+      applyDocChange((doc) => ({ ...doc, highlights: { ...doc.highlights, [key]: { value: state, at: Date.now() } } }));
     },
-    [applyChange]
+    [applyDocChange]
   );
 
   const setReportMark = useCallback(
     (filePath: string, state: ReportMarkState | null) => {
-      applyChange((prev) => ({
-        ...prev,
-        reportMarks: state === null ? prev.reportMarks.filter(([k]) => k !== filePath) : upsertEntry(prev.reportMarks, filePath, state),
-      }));
+      applyDocChange((doc) => ({ ...doc, marks: { ...doc.marks, [filePath]: { value: state, at: Date.now() } } }));
     },
-    [applyChange]
+    [applyDocChange]
   );
 
   const setReportNote = useCallback(
     (filePath: string, note: string) => {
-      applyChange((prev) => ({ ...prev, reportNotes: upsertEntry(prev.reportNotes, filePath, note) }));
+      applyDocChange((doc) => ({ ...doc, notes: { ...doc.notes, [filePath]: { value: note, at: Date.now() } } }));
     },
-    [applyChange]
+    [applyDocChange]
   );
 
   const value = useMemo<WatchlistContextValue>(
@@ -238,8 +370,26 @@ export function WatchlistProvider({ children }: { children: ReactNode }) {
       getReportNote: (filePath: string) => reportNotes.get(filePath),
       setReportNote,
       setReportMark,
+      syncState,
+      syncNow,
+      exportToFile,
+      importFromFile,
     }),
-    [codes, overrides, reportMarks, reportNotes, addToWatchlist, removeFromWatchlist, setHighlightOverride, setReportMark, setReportNote],
+    [
+      codes,
+      overrides,
+      reportMarks,
+      reportNotes,
+      addToWatchlist,
+      removeFromWatchlist,
+      setHighlightOverride,
+      setReportMark,
+      setReportNote,
+      syncState,
+      syncNow,
+      exportToFile,
+      importFromFile,
+    ],
   );
 
   return <WatchlistContext.Provider value={value}>{children}</WatchlistContext.Provider>;
