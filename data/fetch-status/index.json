@@ -1,11 +1,11 @@
 {
   "running": false,
-  "generatedAt": "2026-10-26T08:54:54.392Z",
+  "generatedAt": "2026-10-27T05:11:42.723Z",
   "periodLabel": "Quý 3/2026",
   "year": 2026,
-  "totalFound": 723,
-  "totalMatched": 14,
-  "downloaded": 14,
+  "totalFound": 766,
+  "totalMatched": 22,
+  "downloaded": 22,
   "failed": [
     {
       "stockCode": "PSD",
@@ -41,6 +41,16 @@
       "stockCode": "DCS",
       "title": "BCTC quý 2 năm 2026",
       "error": "An invalid response was received from the upstream server"
+    },
+    {
+      "stockCode": "SMB",
+      "title": "BCTC Hợp nhất quý 3 năm 2026",
+      "error": "Mistral API loi (404) tai /v1/batch/jobs/0305fedf-846b-4a04-9cd7-d6bc13f127d1: {\"detail\": \"Batch job not found\"}"
+    },
+    {
+      "stockCode": "L35",
+      "title": "BCTC quý 3 năm 2026",
+      "error": "Mistral API loi (404) tai /v1/batch/jobs/e65e9414-d5c0-4f9b-bb73-239ac8bc2726: {\"detail\": \"Batch job not found\"}"
     }
   ],
   "interruptedReports": [],
@@ -777,6 +787,21 @@
     },
     {
       "stockCode": "PSE",
+      "title": "BCTC quý 3 năm 2026",
+      "reason": "Toàn bộ file trong nhóm bị coi là không phải tiếng Việt (kiểm tra text layer trước OCR hoặc nội dung sau OCR) - cần xem tay trên PDF gốc nếu nghi ngờ sai"
+    },
+    {
+      "stockCode": "TNW",
+      "title": "BCTC Công ty mẹ quý 3 năm 2026",
+      "reason": "Báo cáo \"Riêng lẻ\" (công ty mẹ) - trùng lặp thông tin với báo cáo Hợp nhất cùng kỳ, đã có trong Hợp nhất"
+    },
+    {
+      "stockCode": "SMB",
+      "title": "BCTC Hợp nhất quý 3 năm 2026",
+      "reason": "Toàn bộ file trong nhóm bị coi là không phải tiếng Việt (kiểm tra text layer trước OCR hoặc nội dung sau OCR) - cần xem tay trên PDF gốc nếu nghi ngờ sai"
+    },
+    {
+      "stockCode": "L35",
       "title": "BCTC quý 3 năm 2026",
       "reason": "Toàn bộ file trong nhóm bị coi là không phải tiếng Việt (kiểm tra text layer trước OCR hoặc nội dung sau OCR) - cần xem tay trên PDF gốc nếu nghi ngờ sai"
     }
