@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-28T06:33:57.457Z",
+  "updatedAt": "2026-10-28T06:35:59.904Z",
   "codes": {
     "HPI": {
       "value": true,
@@ -982,7 +982,7 @@
     },
     "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/PVB_Baocaotaichinh_Q3_2026.zip__extracted/4_pvb_2026_10_21_f62303d_vi_baocaotaichinh_q3_2026.pdf": {
       "value": "note",
-      "at": 1793169230507
+      "at": 1793169352833
     }
   },
   "notes": {
@@ -1035,8 +1035,8 @@
       "at": 1793160860896
     },
     "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/PVB_Baocaotaichinh_Q3_2026.zip__extracted/4_pvb_2026_10_21_f62303d_vi_baocaotaichinh_q3_2026.pdf": {
-      "value": "Dt tăng hơn gấp rưỡi nhưng lãi gộp chỉ tăng chưa tới 40% và lãi ròng giảm hơn 30%",
-      "at": 1793169230485
+      "value": "Dt tăng hơn gấp rưỡi nhưng lãi gộp chỉ tăng chưa tới 40% và lãi ròng giảm hơn 30%. Tồn kho tăng gần 40% lên 400 tỷ (trong khi giá vốn lũy kế 4 quý gần nhất ), cp phải trả gần gấp 3 lên 13 tỷ, dự phòng phải trả hơn gấp đôi lên gần 68 tỷ.",
+      "at": 1793169352817
     }
   },
   "highlights": {
