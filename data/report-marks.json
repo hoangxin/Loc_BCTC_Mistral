@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-28T04:21:15.246Z",
+  "updatedAt": "2026-10-28T04:21:35.343Z",
   "codes": {
     "HPI": {
       "value": true,
@@ -651,6 +651,34 @@
     "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/PQN_Baocaotaichinh_Q3_2026.zip__extracted/3_pqn_2026_10_22_58d0852_vi_baocaotaichinh_q3_2026.pdf": {
       "value": "done",
       "at": 1793161268762
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/PCT_Baocaotaichinh_Q3_2026.zip__extracted/3_pct_2026_10_22_688b30a_vi_baocaotaichinh_q3_2026.pdf": {
+      "value": "done",
+      "at": 1793161274343
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/ADC_Baocaotaichinh_Q3_2026.zip__extracted/4_adc_2026_10_22_9cf2466_vi_baocaotaichinh_q3_2026.pdf": {
+      "value": "done",
+      "at": 1793161278132
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/NSH_Baocaotaichinh_Q3_2026.zip__extracted/4_nsh_2026_10_22_f272ffb_vi_bao_cao_tai_chinh_quy_3_nam_2026_dk.pdf": {
+      "value": "done",
+      "at": 1793161281350
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/HMR_Baocaotaichinh_Q3_2026.zip__extracted/2_hmr_2026_10_22_d8119ed_vn_bao_cao_tai_chinh_quy_3_nam_2026.pdf": {
+      "value": "done",
+      "at": 1793161282807
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/ONE_Baocaotaichinh_Q3_2026.zip__extracted/3_one_2026_10_22_d4bd1c7_vi_baocaotaichinh_q3_2026.pdf": {
+      "value": "done",
+      "at": 1793161285522
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/VTV_Baocaotaichinh_Q3_2026.zip__extracted/4_vtv_2026_10_22_d8c24dd_vi_baocaotaichinh_q3_2026.pdf": {
+      "value": "done",
+      "at": 1793161286954
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/NBP_Baocaotaichinh_Q3_2026.zip__extracted/1_nbp_2026_10_22_1fce038_vi_bao_cao_tai_chinh_q3__2026.pdf": {
+      "value": "done",
+      "at": 1793161289080
     }
   },
   "notes": {
