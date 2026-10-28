@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-28T04:12:09.403Z",
+  "updatedAt": "2026-10-28T04:12:44.698Z",
   "codes": {
     "HPI": {
       "value": true,
@@ -189,8 +189,8 @@
       "at": 0
     },
     "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/BNW_Baocaotaichinh_Q3_2026.zip__extracted/4_bnw_2026_10_23_dd752f7_vi_baocaotaichinh_q3_2026.pdf": {
-      "value": "done",
-      "at": 0
+      "value": "note",
+      "at": 1793160758526
     },
     "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/PBP_Baocaotaichinh_Q3_2026.zip__extracted/1_pbp_2026_10_23_299ef33_vi_baocaotaichinh_q3_2026.pdf": {
       "value": "done",
@@ -381,6 +381,10 @@
     "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/BSL_Baocaotaichinh_Q3_2026.zip__extracted/1_bsl_2026_10_20_5b26e66_vi_baocaotaichinh_q3_2026.pdf": {
       "value": "Dt tăng nhẹ, lãi gộp tăng 155%, lãi ròng tăng 180%. P/e khoảng 5.5, p/b 1.1. Năm ngoái q4 kết quả cao nhất.",
       "at": 1793160700232
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/BNW_Baocaotaichinh_Q3_2026.zip__extracted/4_bnw_2026_10_23_dd752f7_vi_baocaotaichinh_q3_2026.pdf": {
+      "value": "Lãi gộp hơn gấp đôi, lãi ròng hơn gấp 3. Lũy kế 2 quý gần nhất lãi ròng gần 45 tỷ, vốn hóa đang 660 tỷ (ở giá 17.6) và p/b 1.6.",
+      "at": 1793160758524
     }
   },
   "highlights": {
