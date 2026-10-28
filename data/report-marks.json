@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-28T04:11:25.326Z",
+  "updatedAt": "2026-10-28T04:11:46.187Z",
   "codes": {
     "HPI": {
       "value": true,
@@ -343,6 +343,10 @@
     "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/HNR_Baocaotaichinh_Q3_2026.zip__extracted/4_hnr_2026_10_19_fe31b8c_vi_baocaotaichinh_q3_2026.pdf": {
       "value": "note",
       "at": 1793160662134
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/BSL_Baocaotaichinh_Q3_2026.zip__extracted/1_bsl_2026_10_20_5b26e66_vi_baocaotaichinh_q3_2026.pdf": {
+      "value": "note",
+      "at": 1793160700236
     }
   },
   "notes": {
@@ -373,6 +377,10 @@
     "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/HNR_Baocaotaichinh_Q3_2026.zip__extracted/4_hnr_2026_10_19_fe31b8c_vi_baocaotaichinh_q3_2026.pdf": {
       "value": "Dt tăng khá, lãi gộp và lãi ròng đều tăng mạnh, lãi ròng lên 5.5 tỷ trong khi vốn hóa vẫn đang 240 tỷ. Cp phải trả hơn 3 tỷ, nhưng chắc ko phải toàn bộ có thể đc hoàn nhập thành lãi kỳ sau (vd chi phí bảo dưỡng cơ sở hạ tầng chắc ko hoàn, chỉ có chiết khấu thương mại 1 tỷ có khả năng).",
       "at": 1793160662131
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/BSL_Baocaotaichinh_Q3_2026.zip__extracted/1_bsl_2026_10_20_5b26e66_vi_baocaotaichinh_q3_2026.pdf": {
+      "value": "Dt tăng nhẹ, lãi gộp tăng 155%, lãi ròng tăng 180%. P/e khoảng 5.5, p/b 1.1. Năm ngoái q4 kết quả cao nhất.",
+      "at": 1793160700232
     }
   },
   "highlights": {
