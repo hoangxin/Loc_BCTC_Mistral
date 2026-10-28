@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-28T04:03:06.192Z",
+  "updatedAt": "2026-10-28T04:07:36.858Z",
   "codes": {
     "HPI": {
       "value": true,
@@ -331,6 +331,10 @@
     "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/TKU_Baocaotaichinh_Q3_2026.zip__extracted/5_tku_2026_10_23_e95ec52_vi_baocaotaichinh_q3_2026.pdf": {
       "value": "done",
       "at": 1793118521811
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/KTL_Baocaotaichinh_Q3_2026.zip__extracted/1_ktl_2026_10_21_5601001_1_1_bctc_quy_32026dk.pdf": {
+      "value": "note",
+      "at": 1793160450421
     }
   },
   "notes": {
@@ -349,6 +353,10 @@
     "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/PSB_Baocaotaichinh_Q3_2026.zip__extracted/1_psb_2026_10_26_0b6ca58_vi_baocaotaichinh_q3_2026.pdf": {
       "value": "Nguyên giá tscđ hữu hình tăng gần 150 tỷ (toàn bộ là nhà cửa kiến trúc) lên 340 tỷ. Dở dang tăng hơn 160 lên 214 tỷ (hầu hết phần tăng là dự án xây dựng khu dịch vụ dầu khí 35ha). Cp phải trả tăng 12 lên 22 tỷ. Dt xây lắp & cơ khí tăng rất mạnh, dù biên lãi mỏng.",
       "at": 0
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/KTL_Baocaotaichinh_Q3_2026.zip__extracted/1_ktl_2026_10_21_5601001_1_1_bctc_quy_32026dk.pdf": {
+      "value": "Ts dở dang tăng lên 144 tỷ không có thuyết minh, nhưng theo bc bán niên thì nhiều khả năng là dự án Đầu tư Nhà máy sản xuất hàng cơ kim khí tại KCN Minh Quang - Hưng Yên, tmđt 350 tỷ, dự kiến hoàn thành 6/10/2026.",
+      "at": 1793160450417
     }
   },
   "highlights": {
