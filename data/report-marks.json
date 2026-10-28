@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-28T08:04:07.432Z",
+  "updatedAt": "2026-10-28T08:04:35.479Z",
   "codes": {
     "HPI": {
       "value": true,
@@ -1577,8 +1577,8 @@
       "at": 1793173942189
     },
     "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/PGD_Baocaotaichinh_Q3_2026.pdf": {
-      "value": "done",
-      "at": 1793174640673
+      "value": "note",
+      "at": 1793174668565
     }
   },
   "notes": {
@@ -1637,6 +1637,10 @@
     "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/VCA_Baocaotaichinh_Q3_2026.pdf": {
       "value": "Lnst tăng mạnh từ âm lên 23 tỷ nhờ có thu nhập khác từ thanh lý ts (lũy kế cả năm tới 52 tỷ), trong khi lãi gộp chỉ có hơn 1 tỷ. Vốn hóa đang 105 tỷ, tiền và đầu tư tài chính ngắn hạn tới 202 tỷ trong khi nợ vay = 0 và tổng nợ chỉ 14 tỷ.",
       "at": 1793170347437
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/PGD_Baocaotaichinh_Q3_2026.pdf": {
+      "value": "Dt tăng chưa tới 7% nhưng lãi gộp tăng hơn 90%, lãi ròng",
+      "at": 1793174668546
     }
   },
   "highlights": {
