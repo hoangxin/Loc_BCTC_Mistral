@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-28T08:40:31.699Z",
+  "updatedAt": "2026-10-28T08:43:16.434Z",
   "codes": {
     "HPI": {
       "value": true,
@@ -1623,6 +1623,10 @@
     "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/LBM_Baocaotaichinh_Q3_2026_Hopnhat.pdf": {
       "value": "done",
       "at": 1793176562741
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/MAC_Baocaotaichinh_Q3_2026_Hopnhat.zip__extracted/1_mac_2026_10_27_2df689a_bctc_hop_nhat_quy_3__viet.pdf": {
+      "value": "note",
+      "at": 1793176988324
     }
   },
   "notes": {
@@ -1685,6 +1689,10 @@
     "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/PGD_Baocaotaichinh_Q3_2026.pdf": {
       "value": "Dt tăng chưa tới 7% nhưng lãi gộp tăng hơn 90%, lãi ròng gấp 3.5 lần lên 265 tỷ. Có khoản trích trước cp mua khí hơn 1k tỷ trong cp phải trả (tăng 200 tỷ từ hơn 800 tỷ). Vốn hóa đang hơn 2.2k tỷ, p/b 1.4.",
       "at": 1793174771282
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/MAC_Baocaotaichinh_Q3_2026_Hopnhat.zip__extracted/1_mac_2026_10_27_2df689a_bctc_hop_nhat_quy_3__viet.pdf": {
+      "value": "Trong trả trước ng bán có 64 tỷ để đóng tàu (và theo lộ trình sẽ đóng thêm 9 tàu), trong khi nguyên giá tscđ đang 187 tỷ. Dt tăng hơn 75%, lãi gộp gấp 5 lần, nhưng lãi ròng giảm chỉ còn 17 tỷ vì cùng kỳ có dt tài chính 45 tỷ. Vốn hóa đang 540 tỷ, p/b 1.",
+      "at": 1793176988306
     }
   },
   "highlights": {
