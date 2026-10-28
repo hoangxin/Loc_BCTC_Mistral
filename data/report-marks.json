@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-28T04:19:46.951Z",
+  "updatedAt": "2026-10-28T04:20:08.123Z",
   "codes": {
     "HPI": {
       "value": true,
@@ -539,6 +539,34 @@
     "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/NTF_Baocaotaichinh_Q3_2026.zip__extracted/4_ntf_2026_10_22_b5c26fd_bctc_1_1_202630_9_2026__tv_da_ky.pdf": {
       "value": "done",
       "at": 1793161180987
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/MPT_Baocaotaichinh_Q3_2026.zip__extracted/1_mpt_2026_10_22_6c1bbd2_vi_bao_cao_tai_chinh_q3_2026.pdf": {
+      "value": "done",
+      "at": 1793161186745
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/DHB_Baocaotaichinh_Q3_2026.zip__extracted/4_dhb_2026_10_22_d834c84_vi_baocaotaichinh_q3_2026.pdf": {
+      "value": "done",
+      "at": 1793161188787
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/CMP_Baocaotaichinh_Q3_2026.zip__extracted/4_cmp_2026_10_22_9938cdd_vi_baocaotaichinh_q3_2026.pdf": {
+      "value": "done",
+      "at": 1793161192387
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/HNM_Baocaotaichinh_Q3_2026.zip__extracted/4_hnm_2026_10_22_a9c0dd5_vi_baocaotaichinh_q3_2026.pdf": {
+      "value": "done",
+      "at": 1793161195069
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/CMI_Baocaotaichinh_Q3_2026.zip__extracted/3_cmi_2026_10_22_a71a6cb_vi_baocaotaichinh_q3_2026.pdf": {
+      "value": "done",
+      "at": 1793161196427
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/PBT_Baocaotaichinh_Q3_2026.zip__extracted/2_pbt_2026_10_22_51d33ac_vi_baocaotaichinh_q32026.pdf": {
+      "value": "done",
+      "at": 1793161199838
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/CJC_Baocaotaichinh_Q3_2026.zip__extracted/1_cjc_2026_10_22_7254c8c_vi_baocaotaichinh_q3_2026.pdf": {
+      "value": "done",
+      "at": 1793161201890
     }
   },
   "notes": {
