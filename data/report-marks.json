@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-28T04:20:08.123Z",
+  "updatedAt": "2026-10-28T04:20:20.841Z",
   "codes": {
     "HPI": {
       "value": true,
@@ -567,6 +567,22 @@
     "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/CJC_Baocaotaichinh_Q3_2026.zip__extracted/1_cjc_2026_10_22_7254c8c_vi_baocaotaichinh_q3_2026.pdf": {
       "value": "done",
       "at": 1793161201890
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/CDN_Baocaotaichinh_Q3_2026.zip__extracted/3_cdn_2026_10_22_e88ccd9_dnp__fs_q3_2026__vie__signed.pdf": {
+      "value": "done",
+      "at": 1793161207389
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/PEN_Baocaotaichinh_Q3_2026.zip__extracted/3_pen_2026_10_22_678c577_vi_baocaotaichinh_q3_2026signed.pdf": {
+      "value": "done",
+      "at": 1793161210403
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/VLS_Baocaotaichinh_Q3_2026.zip__extracted/2_vls_2026_10_22_701814e_vi_baocaotaichinh_q3_2026.pdf": {
+      "value": "done",
+      "at": 1793161211987
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/MAS_Baocaotaichinh_Q3_2026.zip__extracted/1_mas_2026_10_22_2fcfb80_bctc_quy_3_26.pdf": {
+      "value": "done",
+      "at": 1793161213558
     }
   },
   "notes": {
