@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-28T08:46:04.157Z",
+  "updatedAt": "2026-10-28T08:46:09.884Z",
   "codes": {
     "HPI": {
       "value": true,
@@ -9555,6 +9555,10 @@
     "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/VNY_Baocaotaichinh_Q3_2026_Hopnhat.zip__extracted/2_vny_2026_10_27_4037324_1__bao_cao_tai_chinh_hop_nhat_quy_32026.pdf::Phải thu khách hàng": {
       "value": "off",
       "at": 1793177156803
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/VNY_Baocaotaichinh_Q3_2026_Hopnhat.zip__extracted/2_vny_2026_10_27_4037324_1__bao_cao_tai_chinh_hop_nhat_quy_32026.pdf::TS Dở dang": {
+      "value": "off",
+      "at": 1793177162856
     }
   }
 }
