@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-28T06:08:37.578Z",
+  "updatedAt": "2026-10-28T06:08:49.601Z",
   "codes": {
     "HPI": {
       "value": true,
@@ -931,6 +931,10 @@
     "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/TXM_Baocaotaichinh_Q3_2026.zip__extracted/4_txm_2026_10_21_b2d3e3c_bao_cao_tai_chinh_giua_nien_do_01_01_202630_09_2026__2026_tieng_viet.pdf": {
       "value": "done",
       "at": 1793167632246
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/NQB_Baocaotaichinh_Q3_2026.zip__extracted/1_nqb_2026_10_21_8817fbc_vi_baocaotaichinh_q3_2026.pdf": {
+      "value": "done",
+      "at": 1793167723084
     }
   },
   "notes": {
@@ -5483,6 +5487,14 @@
     "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/NQB_Baocaotaichinh_Q3_2026.zip__extracted/1_nqb_2026_10_21_8817fbc_vi_baocaotaichinh_q3_2026.pdf::Phải trả người bán": {
       "value": "off",
       "at": 1793167711007
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/NQB_Baocaotaichinh_Q3_2026.zip__extracted/1_nqb_2026_10_21_8817fbc_vi_baocaotaichinh_q3_2026.pdf::Người mua trả trước": {
+      "value": "off",
+      "at": 1793167715786
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/NQB_Baocaotaichinh_Q3_2026.zip__extracted/1_nqb_2026_10_21_8817fbc_vi_baocaotaichinh_q3_2026.pdf::Phải trả khác": {
+      "value": "off",
+      "at": 1793167719575
     }
   }
 }
