@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-28T06:33:12.832Z",
+  "updatedAt": "2026-10-28T06:33:57.457Z",
   "codes": {
     "HPI": {
       "value": true,
@@ -979,6 +979,10 @@
     "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/DBC_Baocaotaichinh_Q3_2026_Hopnhat.pdf": {
       "value": "done",
       "at": 1793169051612
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/PVB_Baocaotaichinh_Q3_2026.zip__extracted/4_pvb_2026_10_21_f62303d_vi_baocaotaichinh_q3_2026.pdf": {
+      "value": "note",
+      "at": 1793169230507
     }
   },
   "notes": {
@@ -1029,6 +1033,10 @@
     "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/PSN_Baocaotaichinh_Q3_2026.zip__extracted/4_psn_2026_10_21_cc0dd82_vi_baocaotaichinh_q3_2026.pdf": {
       "value": "Cp phải trả tăng 80% lên 700 tỷ, trong đó phần lớn là Chi phí trích trước dự án cơ khí gói thầu tuabin hơi STG3 (trong báo cáo bán niên khoản này là 587 tỷ).",
       "at": 1793160860896
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/PVB_Baocaotaichinh_Q3_2026.zip__extracted/4_pvb_2026_10_21_f62303d_vi_baocaotaichinh_q3_2026.pdf": {
+      "value": "Dt tăng hơn gấp rưỡi nhưng lãi gộp chỉ tăng chưa tới 40% và lãi ròng giảm hơn 30%",
+      "at": 1793169230485
     }
   },
   "highlights": {
