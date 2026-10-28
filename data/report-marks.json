@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-28T07:31:32.214Z",
+  "updatedAt": "2026-10-28T07:31:36.696Z",
   "codes": {
     "HPI": {
       "value": true,
@@ -1107,6 +1107,10 @@
     "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/D2D_Baocaotaichinh_Q3_2026.pdf": {
       "value": "done",
       "at": 1793172685431
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/COM_Baocaotaichinh_Q3_2026.pdf": {
+      "value": "done",
+      "at": 1793172689904
     }
   },
   "notes": {
