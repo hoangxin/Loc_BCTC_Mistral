@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-28T04:13:52.982Z",
+  "updatedAt": "2026-10-28T04:14:27.088Z",
   "codes": {
     "HPI": {
       "value": true,
@@ -355,6 +355,10 @@
     "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/CTB_Baocaotaichinh_Q3_2026.zip__extracted/2_ctb_2026_10_22_4b988d4_tviet_bctc_qiii_2026_signed.pdf": {
       "value": "note",
       "at": 1793160817972
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/PSN_Baocaotaichinh_Q3_2026.zip__extracted/4_psn_2026_10_21_cc0dd82_vi_baocaotaichinh_q3_2026.pdf": {
+      "value": "note",
+      "at": 1793160860901
     }
   },
   "notes": {
@@ -401,6 +405,10 @@
     "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/CTB_Baocaotaichinh_Q3_2026.zip__extracted/2_ctb_2026_10_22_4b988d4_tviet_bctc_qiii_2026_signed.pdf": {
       "value": "Dt và ln giảm rất mạnh, nhưng tồn kho và ng mua trả trước tăng hơn gấp đôi và hơn gấp 3 lên cao kỷ lục lịch sử.",
       "at": 1793160817968
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/PSN_Baocaotaichinh_Q3_2026.zip__extracted/4_psn_2026_10_21_cc0dd82_vi_baocaotaichinh_q3_2026.pdf": {
+      "value": "Cp phải trả tăng 80% lên 700 tỷ, trong đó phần lớn là Chi phí trích trước dự án cơ khí gói thầu tuabin hơi STG3 (trong báo cáo bán niên khoản này là 587 tỷ).",
+      "at": 1793160860896
     }
   },
   "highlights": {
