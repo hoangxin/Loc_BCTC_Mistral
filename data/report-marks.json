@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-28T08:19:48.911Z",
+  "updatedAt": "2026-10-28T08:20:03.201Z",
   "codes": {
     "HPI": {
       "value": true,
@@ -9415,6 +9415,10 @@
     "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/GEX_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Chi phí phải trả": {
       "value": "off",
       "at": 1793175581974
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/GEX_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Phải trả khác": {
+      "value": "off",
+      "at": 1793175595322
     }
   }
 }
