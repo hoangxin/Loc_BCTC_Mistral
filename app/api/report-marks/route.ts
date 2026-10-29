@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { emptyMarksDoc, isMarksDoc, mergeMarksDocs, type MarksDoc } from '@/lib/report-marks';
+import { emptyMarksDoc, isMarksDoc, mergeMarksDocs, sameMarksContent, type MarksDoc } from '@/lib/report-marks';
 
 export const dynamic = 'force-dynamic';
 
@@ -7,9 +7,18 @@ export const dynamic = 'force-dynamic';
 // khong con phu thuoc localStorage cua 1 trinh duyet (xem lib/report-marks.ts
 // ve su co mat du lieu 2026-10-27).
 //
-// Ghi vao 1 NHANH RIENG chu khong phai `main`: moi commit vao main deu kich
-// hoat 1 lan deploy Vercel, ma danh dau thi duoc ghi lien tuc trong luc doc
-// bao cao - de o main se vua lam ban lich su main vua deploy lai ca ngay.
+// Ghi vao 1 NHANH RIENG chu khong phai `main` de khong lam ban lich su main.
+//
+// CANH BAO - dung tin la nhanh rieng thi khong ton deployment (gia dinh sai
+// trong comment cu o day, su co 2026-10-29): Vercel mac dinh build MOI nhanh
+// thanh 1 ban Preview, nen commit vao user-marks ton deployment y nhu commit
+// vao main. Nhanh nay duoc chan rieng bang `git.deploymentEnabled` trong
+// vercel.json (co MOT BAN tren CA main lan user-marks - Vercel doc vercel.json
+// cua commit duoc push, nen thieu ban nao la nhanh do lai deploy tiep).
+//
+// Vi the moi lan ghi vao day deu phai dang gia: xem sameMarksContent ben duoi
+// (khong commit khi khong co gi doi) va AUTO_SYNC_MIN_INTERVAL_MS trong
+// app/WatchlistContext.tsx (tu dong toi da 1 lan/ngay).
 const OWNER = 'hoangxin';
 const REPO = 'Loc_BCTC_Mistral';
 const BRANCH = 'user-marks';
@@ -93,7 +102,17 @@ export async function PUT(request: Request) {
     // GOP voi ban dang nam tren server thay vi ghi de - 2 may/2 tab dong bo
     // lech nhau van cong don dung (xem mergeMarksDocs).
     const { doc: remote, sha } = await readRemote(token);
-    const merged = mergeMarksDocs(remote, { ...incoming, updatedAt: new Date().toISOString() });
+    const merged = mergeMarksDocs(remote, incoming);
+    // KHONG commit khi gop lai ra dung ban dang nam tren repo (xem
+    // sameMarksContent trong lib/report-marks.ts ve su co 2026-10-29). Truoc
+    // day buoc nay luon ghi lai updatedAt = bay gio truoc khi gop, nen moi lan
+    // mo trang cung sinh 1 commit rong + 2 lan build Vercel.
+    if (sha && sameMarksContent(merged, remote)) {
+      return NextResponse.json({ ok: true, doc: remote, unchanged: true });
+    }
+    // Chi den day moi dong dau thoi gian moi vao - de updatedAt phan anh lan
+    // GHI THAT cuoi cung chu khong phai lan gui len cuoi cung.
+    merged.updatedAt = new Date().toISOString();
     const body = {
       message: `chore: cap nhat danh dau nguoi dung (${Object.keys(merged.marks).length} muc)`,
       content: Buffer.from(JSON.stringify(merged, null, 2), 'utf-8').toString('base64'),

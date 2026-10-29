@@ -19,6 +19,38 @@ const DOC_STORAGE_KEY = 'bctc-watchlist-doc-v1';
 // Cho lang 1 nhip roi moi day len server: nguoi dung thuong tick lien tay
 // nhieu o, khong can moi tick 1 lan ghi repo.
 const SYNC_DEBOUNCE_MS = 4000;
+// Tran cho lan dong bo TU DONG: toi da 1 lan/ngay (yeu cau nguoi dung
+// 2026-10-29). Bam "Lưu ngay" thi luon di ngay, khong qua tran nay.
+//
+// VI SAO (su co that 2026-10-29): moi commit len nhanh user-marks deu khien
+// Vercel build 1 lan - gia dinh "de o nhanh rieng thi khong deploy" trong
+// app/api/report-marks/route.ts la SAI, Vercel mac dinh build MOI nhanh thanh
+// ban Preview. Voi debounce 4 giay + 1 lan day len moi khi mo trang, ngay
+// 2026-10-28 sinh 428 commit, nhan doi vi repo dang noi voi 2 project Vercel.
+// Han muc deployment het, nen khi GitHub Actions push 43 bao cao Q3/2026 that
+// thi Vercel tu choi build ("Deployment rate limited - retry in 24 hours") va
+// web tiep tuc tra so lieu cua ngay hom truoc.
+const AUTO_SYNC_MIN_INTERVAL_MS = 24 * 60 * 60 * 1000;
+// Luu o localStorage chu khong phai trong RAM: F5 lai khong duoc coi la "chua
+// dong bo bao gio", neu khong thi chi can tai lai trang la lai them 1 commit.
+const LAST_SYNC_STORAGE_KEY = 'bctc-watchlist-last-sync-v1';
+
+function readLastSyncAt(): number {
+  try {
+    return Number(window.localStorage.getItem(LAST_SYNC_STORAGE_KEY)) || 0;
+  } catch {
+    return 0;
+  }
+}
+
+function writeLastSyncAt(at: number) {
+  try {
+    window.localStorage.setItem(LAST_SYNC_STORAGE_KEY, String(at));
+  } catch {
+    // localStorage bi chan/day: coi nhu chua tung dong bo. Chi lam lan dong bo
+    // tu dong ke tiep den som hon, khong lam mat du lieu gi.
+  }
+}
 
 // 3 trang thai 1 o chi tieu dang highlight co the dung (yeu cau nguoi dung
 // 2026-07-18): 'blink' = vang dam + nhap nhay (tier level2 tu nhien), 'light'
@@ -141,8 +173,9 @@ interface WatchlistContextValue {
   setHighlightOverride: (key: string, state: HighlightState) => void;
   // Danh dau THU CONG theo filePath (yeu cau nguoi dung 2026-07-22, mo rong
   // 2026-07-25 tu boolean sang 2 trang thai) - CHI luu tick THU CONG cua nguoi
-  // dung, khong lien quan gi den warnings/du lieu OCR - hoan toan client-local
-  // (localStorage), khong dong bo len server. undefined = chua danh dau gi.
+  // dung, khong lien quan gi den warnings/du lieu OCR. undefined = chua danh
+  // dau gi. (Tu 2026-10-27 KHONG con chi nam trong localStorage nua: co dong
+  // bo len repo, xem syncState/syncNow ben duoi.)
   getReportMark: (filePath: string) => ReportMarkState | undefined;
   // state = null xoa danh dau (ve trang thai chua danh dau).
   setReportMark: (filePath: string, state: ReportMarkState | null) => void;
@@ -153,6 +186,9 @@ interface WatchlistContextValue {
   // Dong bo len repo + xuat/nhap file sao luu (them 2026-10-27, xem
   // lib/report-marks.ts). syncState de giao dien noi ro dang o trang thai nao -
   // nguoi dung PHAI thay duoc danh dau da len server hay chua.
+  //
+  // Tu 2026-10-29: tu dong toi da 1 lan/ngay (AUTO_SYNC_MIN_INTERVAL_MS),
+  // ngoai ra chi dong bo khi nguoi dung bam "Lưu ngay" (syncNow).
   syncState: SyncState;
   syncNow: () => Promise<void>;
   exportToFile: () => void;
@@ -163,6 +199,10 @@ export type SyncState =
   | { kind: 'idle' }
   | { kind: 'syncing' }
   | { kind: 'saved'; at: number }
+  // Co thay doi nhung lan dong bo tu dong gan nhat chua du 1 ngay - PHAI noi ro
+  // ra, vi day la trang thai "danh dau chi con trong trinh duyet", dung thu da
+  // gay mat du lieu ngay 2026-10-27.
+  | { kind: 'pending'; lastSyncAt: number }
   | { kind: 'error'; message: string };
 
 const WatchlistContext = createContext<WatchlistContextValue | null>(null);
@@ -226,7 +266,7 @@ export function WatchlistProvider({ children }: { children: ReactNode }) {
 
   // Day ban doc hien tai len server roi GOP ban server tra ve - 2 chieu trong
   // 1 lan goi, nen may khac danh dau gi cung ve day du.
-  const syncNow = useCallback(async () => {
+  const runSync = useCallback(async () => {
     setSyncState({ kind: 'syncing' });
     try {
       const response = await fetch('/api/report-marks', {
@@ -240,16 +280,41 @@ export function WatchlistProvider({ children }: { children: ReactNode }) {
         return;
       }
       applyDoc(mergeMarksDocs(loadDoc(), data.doc));
-      setSyncState({ kind: 'saved', at: Date.now() });
+      // Tinh moc cho tran 1 lan/ngay ke ca khi server tra ve "khong co gi doi"
+      // (unchanged): da hoi server 1 lan roi, khong can hoi lai trong ngay.
+      const at = Date.now();
+      writeLastSyncAt(at);
+      setSyncState({ kind: 'saved', at });
     } catch (error) {
       setSyncState({ kind: 'error', message: error instanceof Error ? error.message : String(error) });
     }
   }, [applyDoc]);
 
+  // Nut "Lưu ngay": luon di ngay, bo qua tran 1 lan/ngay va huy luon lan tu
+  // dong dang hen (neu co) de khong ghi 2 lan lien tiep.
+  const syncNow = useCallback(async () => {
+    if (syncTimer.current) {
+      clearTimeout(syncTimer.current);
+      syncTimer.current = null;
+    }
+    await runSync();
+  }, [runSync]);
+
+  // Dong bo TU DONG: chi thuc su di neu lan truoc da qua 1 ngay. Chua du thi
+  // dung o trang thai 'pending' cho nguoi dung bam "Lưu ngay" - khong am tham
+  // bo qua, vi nguoi dung phai biet danh dau dang chi nam trong trinh duyet.
   const scheduleSync = useCallback(() => {
     if (syncTimer.current) clearTimeout(syncTimer.current);
-    syncTimer.current = setTimeout(() => void syncNow(), SYNC_DEBOUNCE_MS);
-  }, [syncNow]);
+    syncTimer.current = setTimeout(() => {
+      syncTimer.current = null;
+      const lastSyncAt = readLastSyncAt();
+      if (Date.now() - lastSyncAt < AUTO_SYNC_MIN_INTERVAL_MS) {
+        setSyncState({ kind: 'pending', lastSyncAt });
+        return;
+      }
+      void runSync();
+    }, SYNC_DEBOUNCE_MS);
+  }, [runSync]);
 
   // Luc mo app: keo ban tren server ve va GOP (khong de len) - mo o may khac
   // hoac sau khi trinh duyet bi don du lieu thi danh dau van tro lai day du.

@@ -65,6 +65,31 @@ export function mergeMarksDocs(a: MarksDoc, b: MarksDoc): MarksDoc {
   };
 }
 
+// So sanh NOI DUNG 2 ban, BO QUA `updatedAt`.
+//
+// VI SAO CAN (su co that 2026-10-29): phia server truoc day luon ghi lai
+// updatedAt = thoi diem hien tai truoc khi gop, nen file JSON LUON khac ban
+// tren repo du nguoi dung khong doi danh dau nao - GitHub tao commit moi moi
+// lan, va moi commit do lai keo theo 1 lan build Vercel. 428 commit trong
+// ngay 2026-10-28, gan het chi doi dung 1 dong updatedAt, da dot het han muc
+// deployment cua Vercel; den luc GitHub Actions push ket qua BCTC that thi
+// Vercel tu choi build ("Deployment rate limited - retry in 24 hours") nen
+// web dung so lieu cu. Dung ham nay de khong commit khi khong co gi doi.
+export function sameMarksContent(a: MarksDoc, b: MarksDoc): boolean {
+  return canonicalContent(a) === canonicalContent(b);
+}
+
+function canonicalContent(doc: MarksDoc): string {
+  // Sap xep khoa truoc khi so: thu tu khoa trong JSON phu thuoc thu tu ghi,
+  // khong phai noi dung - 2 ban cung du lieu van ra 2 chuoi khac nhau neu so
+  // tho. Giu ca `at` vi do la thu quyet dinh ben nao thang khi gop.
+  const section = <T>(record: Record<string, MarkEntry<T>>): unknown[] =>
+    Object.keys(record)
+      .sort()
+      .map((key) => [key, record[key].value, record[key].at]);
+  return JSON.stringify([section(doc.codes), section(doc.marks), section(doc.notes), section(doc.highlights)]);
+}
+
 // Dang cu trong localStorage (khong co dau thoi gian) - quy doi voi at = 0 de
 // ban nao CO dau thoi gian cung thang, nhung van khong mat du lieu cu.
 export interface LegacyStoredState {

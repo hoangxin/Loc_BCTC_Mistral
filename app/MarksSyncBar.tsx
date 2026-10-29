@@ -22,7 +22,12 @@ export default function MarksSyncBar() {
         ? `Đã lưu lên repo lúc ${new Date(syncState.at).toLocaleTimeString('vi-VN')}`
         : syncState.kind === 'error'
           ? `Chưa lưu được: ${syncState.message}`
-          : 'Đánh dấu lưu trong trình duyệt';
+          : // Tu 2026-10-29 tu dong chi chay 1 lan/ngay (xem
+            // AUTO_SYNC_MIN_INTERVAL_MS) - trong ngay thi phai bam "Lưu ngay",
+            // nen trang thai nay can noi ro la CHUA len repo.
+            syncState.kind === 'pending'
+            ? `Có đánh dấu mới chưa lưu lên repo (lần lưu gần nhất ${new Date(syncState.lastSyncAt).toLocaleString('vi-VN')}) — bấm "Lưu ngay"`
+            : 'Đánh dấu lưu trong trình duyệt';
 
   return (
     <div className="marks-sync-bar">

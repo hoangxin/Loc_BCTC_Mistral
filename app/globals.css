@@ -1145,6 +1145,11 @@ tab "Ket qua") - nho hon tab chinh de phan biet cap do. */
   color: #047857;
 }
 
+.marks-sync-status.pending {
+  color: #b45309;
+  font-weight: 600;
+}
+
 .marks-sync-status.error {
   color: #b91c1c;
   font-weight: 600;
