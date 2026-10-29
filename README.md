@@ -209,7 +209,8 @@ cùng tác giả (`loc_tin`, `Loc_Tin_Mistral`, `loc_tin_qwen`) đã dùng thậ
 
 1. **"Tải BCTC" / "Thêm nguồn riêng"** (nặng, hàng chục báo cáo/lần) - web (Vercel) chỉ dispatch
    `.github/workflows/fetch-bctc.yml`, pipeline thật chạy trên GitHub Actions runner (tối đa 60 phút,
-   không giới hạn vài giây như serverless), rồi commit `data/latest-fetch.json` lại `main` - cú push đó
+   không giới hạn vài giây như serverless), rồi commit `data/fetch-status/` lại `main` (từ 2026-10-25
+   không còn là 1 file `data/latest-fetch.json` nữa, xem `lib/status-store.ts`) - cú push đó
    tự khiến Vercel deploy lại. Web polling `generatedAt`/`lastCustomSourceCheck` rồi reload. **KHÔNG cần
    Vercel Blob/S3** - chỉ 1 file JSON nhẹ được commit, không phải file PDF/Excel. Cùng lúc, mỗi báo cáo
    OCR thành công cũng ghi kèm markdown thô vào `data/ocr-markdown/<MÃ>__<kỳ>.md` (`lib/ocr-markdown-store.ts`,
@@ -227,6 +228,42 @@ Việc cần làm 1 lần (không tự động hoá được, cần đăng nhậ
   workflow cần để OCR 3 bảng), `MISTRAL_OCR_MODEL`/`MISTRAL_CHAT_MODEL` (tuỳ chọn).
 - `MISTRAL_API_KEY` set trên **Vercel** (mục biến môi trường ở trên) vẫn cần riêng - dùng cho
   `app/api/report-file` (OCR toàn văn lúc xuất, chạy trên Vercel) - 2 nơi set KHÁC NHAU, cùng 1 giá trị.
+
+### Hạn mức deployment - lý do web có thể KHÔNG cập nhật dù Actions báo thành công
+
+Sự cố 2026-10-29: GitHub Actions chạy xong, 43 báo cáo Q3/2026 đã nằm trong repo (commit `72a3033`),
+nhưng web vẫn hiện số liệu hôm trước. Nguyên nhân: **Vercel từ chối build**, trạng thái trên chính commit
+đó ghi `failure - "Deployment rate limited — retry in 24 hours"`. Vì dữ liệu được đọc từ đĩa trong bản
+build đã deploy (`readStatus()`, route `force-dynamic`), không deploy lại thì web đứng nguyên số cũ.
+
+Ba ràng buộc cần nhớ:
+
+- **Mọi nhánh đều tốn deployment, không riêng `main`.** Vercel mặc định build MỌI nhánh thành bản
+  Preview. Nhánh `user-marks` (nơi `app/api/report-marks` lưu đánh dấu) bị chặn riêng bằng
+  `git.deploymentEnabled` trong `vercel.json`, và file này phải có mặt trên **CẢ** `main` lẫn
+  `user-marks` vì Vercel đọc `vercel.json` của chính commit được push.
+- **Repo đang nối với 2 project Vercel** (`loc-bctc-mistral` và `loc_bctc_mistral`, tạo ngày 7/7/2026
+  cách nhau 30 phút), nên mỗi commit tốn 2 deployment. Xoá bớt 1 project thì giảm nửa.
+- **Hạn mức là cửa sổ trượt 24 giờ, không phải mốc reset.** Suất nhả dần khi deployment cũ hết hạn, và
+  suất vừa nhả bị cú push kế tiếp ăn ngay - nên khi đang chạm trần, một đợt commit dày đặc sẽ liên tục
+  cướp chỗ của lần deploy thật.
+
+Chẩn đoán khi web không cập nhật (không cần token Vercel):
+
+```bash
+# Vercel nói gì về commit đó? Bị hạn mức từ chối thì CÓ status failure.
+gh api repos/hoangxin/Loc_BCTC_Mistral/commits/<sha>/statuses \
+  --jq '.[] | "\(.context) | \(.state) | \(.description)"'
+
+# Deployment thật sự được tạo, kèm tên project và Production/Preview.
+gh api "repos/hoangxin/Loc_BCTC_Mistral/deployments?per_page=20" \
+  --jq '.[] | "\(.created_at) \(.sha[0:7]) \(.environment)"'
+```
+
+Phân biệt 2 trường hợp dễ nhầm: commit bị **hạn mức** từ chối vẫn CÓ status `failure`; commit bị
+`vercel.json` chặn thì **không có status nào** vì Vercel không xét tới. Nút "Redeploy" trên dashboard
+dựng lại ĐÚNG commit của bản deployment đó, không phải HEAD mới nhất - muốn đưa commit mới lên phải
+push mới hoặc gọi Deploy Hook của nhánh.
 
 `lib/report-source.ts` giải nén RAR qua `node-unrar-js` (WASM) bằng đường dẫn `process.cwd()` tới
 `node_modules` (tránh webpack/`@vercel/nft` cố bundle file `.wasm`) - chạy trên GitHub Actions runner
