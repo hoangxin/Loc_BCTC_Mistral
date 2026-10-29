@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-29T05:11:45.453Z",
+  "updatedAt": "2026-10-29T05:17:44.165Z",
   "codes": {
     "HPI": {
       "value": true,
@@ -1742,7 +1742,7 @@
     },
     "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/CX8_Baocaotaichinh_Q3_2026.zip__extracted/3_cx8_2026_10_19_8e61472_bao_cao_tai_chinh_quy_3_nam_2026.pdf": {
       "value": "note",
-      "at": 1793250685064
+      "at": 1793251054905
     }
   },
   "notes": {
@@ -1811,8 +1811,8 @@
       "at": 1793176988306
     },
     "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/CX8_Baocaotaichinh_Q3_2026.zip__extracted/3_cx8_2026_10_19_8e61472_bao_cao_tai_chinh_quy_3_nam_2026.pdf": {
-      "value": "Phải thu khác hơn gấp đôi lên gần 84 tỷ, Ng mua trả trước đột biến lên 49 tỷ, cp phải trả đột biến lên 16 tỷ, tất cả đều ko có thuyết minh. Vốn hóa chỉ đang 25 tỷ.",
-      "at": 1793250685021
+      "value": "Phải thu khác hơn gấp đôi lên gần 84 tỷ, Ng mua trả trước đột biến lên 49 tỷ, cp phải trả đột biến lên 16 tỷ, tất cả đều ko có thuyết minh. Vốn hóa chỉ đang 25 tỷ. Nhưng vđl đang nhỏ hơn 30 tỷ ko đáp ứng đk cty đại chúng, theo biên bản đhcđ thì đang open cả 2 phương án.",
+      "at": 1793251054863
     }
   },
   "highlights": {
