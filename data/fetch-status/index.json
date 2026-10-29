@@ -1,11 +1,11 @@
 {
   "running": false,
-  "generatedAt": "2026-10-28T04:20:31.968Z",
+  "generatedAt": "2026-10-29T03:59:20.971Z",
   "periodLabel": "Quý 3/2026",
   "year": 2026,
-  "totalFound": 839,
-  "totalMatched": 31,
-  "downloaded": 31,
+  "totalFound": 935,
+  "totalMatched": 43,
+  "downloaded": 43,
   "failed": [
     {
       "stockCode": "PSD",
@@ -794,6 +794,11 @@
       "stockCode": "L35",
       "title": "BCTC quý 3 năm 2026",
       "reason": "Toàn bộ file trong nhóm bị coi là không phải tiếng Việt (kiểm tra text layer trước OCR hoặc nội dung sau OCR) - cần xem tay trên PDF gốc nếu nghi ngờ sai"
+    },
+    {
+      "stockCode": "GDA",
+      "title": "BCTC Hợp nhất quý 3 năm 2026",
+      "reason": "Sàn giao dịch \"OTC\" ngoài phạm vi phân tích (OTC/Khác)"
     }
   ],
   "lastCustomSourceCheck": {
