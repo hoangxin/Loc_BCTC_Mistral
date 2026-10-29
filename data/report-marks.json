@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-29T05:08:49.242Z",
+  "updatedAt": "2026-10-29T05:10:44.474Z",
   "codes": {
     "HPI": {
       "value": true,
@@ -1739,6 +1739,10 @@
     "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/CAG_Baocaotaichinh_Q3_2026.zip__extracted/3_cag_2026_10_19_50fce15_vi_baocaotaichinhquy3nam2026.pdf": {
       "value": "done",
       "at": 1793249024823
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/CX8_Baocaotaichinh_Q3_2026.zip__extracted/3_cx8_2026_10_19_8e61472_bao_cao_tai_chinh_quy_3_nam_2026.pdf": {
+      "value": "note",
+      "at": 1793250635184
     }
   },
   "notes": {
@@ -1805,6 +1809,10 @@
     "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/MAC_Baocaotaichinh_Q3_2026_Hopnhat.zip__extracted/1_mac_2026_10_27_2df689a_bctc_hop_nhat_quy_3__viet.pdf": {
       "value": "Trong trả trước ng bán có 64 tỷ để đóng tàu (và theo lộ trình sẽ đóng thêm 9 tàu), trong khi nguyên giá tscđ đang 187 tỷ. Dt tăng hơn 75%, lãi gộp gấp 5 lần, nhưng lãi ròng giảm chỉ còn 17 tỷ vì cùng kỳ có dt tài chính 45 tỷ. Vốn hóa đang 540 tỷ, p/b 1.",
       "at": 1793176988306
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/CX8_Baocaotaichinh_Q3_2026.zip__extracted/3_cx8_2026_10_19_8e61472_bao_cao_tai_chinh_quy_3_nam_2026.pdf": {
+      "value": "Phải thu khác hơn gấp đôi lên gần 84 tỷ, Ng mua trả trước đột biến lên 49 tỷ, cp phải trả",
+      "at": 1793250635143
     }
   },
   "highlights": {
