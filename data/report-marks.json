@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-29T03:51:12.950Z",
+  "updatedAt": "2026-10-29T03:51:19.331Z",
   "codes": {
     "HPI": {
       "value": true,
@@ -9747,6 +9747,10 @@
     "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/LCM_Baocaotaichinh_Q3_2026_Hopnhat.zip__extracted/2_lcm_2026_10_27_8051d11_vi__baocaotaichinhhn_q3_2026.pdf::Lãi gộp": {
       "value": "off",
       "at": 1793245862799
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/LCM_Baocaotaichinh_Q3_2026_Hopnhat.zip__extracted/2_lcm_2026_10_27_8051d11_vi__baocaotaichinhhn_q3_2026.pdf::Tiền": {
+      "value": "off",
+      "at": 1793245867829
     }
   }
 }
