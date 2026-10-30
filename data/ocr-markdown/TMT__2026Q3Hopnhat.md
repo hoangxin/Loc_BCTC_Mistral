@@ -540,6 +540,124 @@ Các Thuyết minh đính kèm là bộ phận hợp thành của Báo cáo tài
 
 6
 
+CÔNG TY CỔ PHẦN Ô TÔ TMT
+Tầng 9+10 tòa nhà Coninco, số 4 Tôn Thất Tùng, phường
+Kim Liên, thành phố Hà Nội
+
+BÁO CÁO TÀI CHÍNH HỢP NHẤT
+Cho kỳ kế toán kết thúc ngày 30/09/2026
+
+THUYẾT MINH BÁO CÁO TÀI CHÍNH HỢP NHẤT (TIẾP)
+
+# BÁO CÁO KẾT QUẢ HOẠT ĐỘNG KINH DOANH
+
+Từ ngày 01 tháng 01 năm 2026 đến 30 tháng 09 năm 2026
+
+Đơn vị tính: VND
+
+|  CHỈ TIÊU | Mã số | Thuyết minh | Năm nay | Năm trước  |
+| --- | --- | --- | --- | --- |
+|  1. Doanh thu bán hàng và cung cấp dịch vụ | 01 | 25 | 1.579.136.092.619 | 1.623.150.877.987  |
+|  2. Các khoản giảm trừ doanh thu | 02 | 26 | 2.922.527.333 | 3.172.390.371  |
+|  3. Doanh thu thuần về bán hàng và cung cấp dịch vụ | 10 |  | 1.576.213.565.286 | 1.619.978.487.616  |
+|  4. Giá vốn hàng bán | 11 | 27 | 1.352.440.756.530 | 1.440.713.957.965  |
+|  5. Lợi nhuận gộp về bán hàng và cung cấp dịch vụ | 20 |  | 223.772.808.756 | 179.264.529.651  |
+|  6. Lãi/lỗ của hoạt động bán, thanh lý bất động sản đầu tư | 21 |  | - | -  |
+|  7. Doanh thu hoạt động tài chính | 22 | 28 | 8.177.513.904 | 6.812.315.117  |
+|  8. Chi phí tài chính | 23 | 29 | 53.923.911.459 | 37.946.730.351  |
+|  - Trong đó: Chi phí lãi vay | 24 |  | 51.324.262.347 | 22.800.671.035  |
+|  9. Chi phí bán hàng | 25 | 30 | 74.111.534.781 | 47.039.385.427  |
+|  10. Chi phí quản lý doanh nghiệp | 26 | 30 | 34.482.225.780 | 40.464.616.167  |
+|  11. Lợi nhuận thuần từ hoạt động kinh doanh | 30 |  | 69.432.650.640 | 60.626.112.823  |
+|  12. Thu nhập khác | 31 | 31 | 5.177.902.146 | 1.652.153.083  |
+|  13. Chi phí khác | 32 | 32 | 5.060.237.534 | 5.156.564.857  |
+|  14. Lợi nhuận khác | 40 |  | 117.664.612 | (3.504.411.774)  |
+|  15. Tổng lợi nhuận kế toán trước thuế | 50 |  | 69.550.315.252 | 57.121.701.049  |
+|  16. Chi phí thuế TNDN hiện hành | 51 | 33 | - | -  |
+|  17. Chi phí thuế TNDN hoãn lại | 52 | 34 | 1.457.131.266 | 309.898.423  |
+|  18. Lợi nhuận sau thuế TNDN | 60 |  | 68.093.183.986 | 56.811.802.626  |
+|  19. Lợi nhuận sau thuế của Công ty mẹ | 61 |  | 68.239.531.965 | 56.831.714.959  |
+|  20. Lợi nhuận sau thuế của cổ đông không kiểm soát | 62 |  | (146.347.979) | (19.912.333)  |
+|  21. Lãi cơ bản trên cổ phiếu (*) | 70 | 35 | 1.846 | 1.541  |
+
+Hà Nội, ngày 29 tháng 10 năm 2026
+
+Người lập biểu
+
+Kế toán trưởng
+
+TT. Hội đồng quản trị
+
+Chủ tịch HĐQT
+
+Phùng Thùy Linh
+
+Nguyễn Nghĩa Trung
+
+Bùi Văn Hữu
+
+Các Thuyết minh đính kèm là bộ phận hợp thành của Báo cáo tài chính hợp nhất
+
+7
+
+CÔNG TY CỔ PHẦN Ô TÔ TMT
+
+Tầng 9+10 tòa nhà Coninco, số 4 Tôn Thất Tùng, phường
+Kim Liên, thành phố Hà Nội
+
+BÁO CÁO TÀI CHÍNH HỢP NHẤT
+
+Cho kỳ kế toán kết thúc ngày 30/06/2026
+
+BÁO CÁO KẾT QUẢ HOẠT ĐỘNG KINH DOANH
+
+Quý III năm 2026
+
+|  STT | CHỈ TIÊU | Mã số | Quý III |   | Lũy kế  |   |
+| --- | --- | --- | --- | --- | --- | --- |
+|   |   |   |  Năm 2026 | Năm 2025 | Năm 2026 | Năm 2025  |
+|  1 | Doanh thu bán hàng và cung cấp dịch vụ | 01 | 476.478.165.155 | 387.763.495.061 | 1.579.136.092.619 | 1.623.150.877.987  |
+|  2 | Các khoản giảm trừ doanh thu | 02 | 968.118.213 | 1.087.097.630 | 2.922.527.333 | 3.172.390.371  |
+|  3 | Doanh thu thuần về bán hàng và cung cấp dịch vụ | 10 | 475.510.046.943 | 386.676.397.431 | 1.576.213.565.286 | 1.619.978.487.616  |
+|  4 | Giá vốn hàng bán | 11 | 411.594.950.503 | 340.621.442.025 | 1.352.440.756.530 | 1.440.713.957.965  |
+|  5 | Lợi nhuận gộp về bán hàng và cung cấp dịch vụ | 20 | 63.915.096.439 | 46.054.955.406 | 223.772.808.756 | 179.264.529.651  |
+|  6 | Doanh thu hoạt động tài chính | 22 | 3.221.585.009 | 3.747.589.603 | 8.177.513.904 | 6.812.315.117  |
+|  7 | Chi phí tài chính | 23 | 21.582.374.977 | 14.926.330.925 | 53.923.911.459 | 37.946.730.351  |
+|  8 | - Trong đó: Chi phí lãi vay | 24 | 21.406.669.739 | 9.772.502.765 | 51.324.262.347 | 22.800.671.035  |
+|  9 | Chi phí bán hàng | 25 | 27.526.328.594 | 19.297.916.861 | 74.111.534.781 | 47.039.385.427  |
+|  10 | Chi phí quản lý doanh nghiệp | 26 | 11.683.844.686 | 13.482.117.113 | 34.482.225.780 | 40.464.616.167  |
+|  11 | Lợi nhuận thuần từ hoạt động kinh doanh | 30 | 6.344.133.191 | 2.096.180.110 | 69.432.650.640 | 60.626.112.823  |
+|  12 | Thu nhập khác | 31 | 549.187.711 | 504.779.713 | 5.177.902.146 | 1.652.153.083  |
+|  13 | Chi phí khác | 32 | (1.029.973.849) | - | 4.164.443.312 | 4.520.400.919  |
+|  14 | Lợi nhuận khác | 40 | 1.579.161.560 | 504.779.713 | 1.013.458.834 | (2.868.247.836)  |
+|  15 | Tổng lợi nhuận kế toán trước thuế | 50 | 7.923.294.751 | 2.600.959.823 | 70.446.109.474 | 57.757.864.987  |
+|  16 | Chi phí thuế TNDN hiện hành | 51 | - | - | - | -  |
+|  17 | Chi phí thuế TNDN hoãn lại | 52 | 904.432.505 | 85.380.336 | 1.457.131.266 | 309.898.423  |
+|  18 | Lợi nhuận sau thuế TNDN | 60 | 7.018.862.246 | 2.515.579.487 | 68.988.978.208 | 57.447.966.564  |
+|  19 | Lợi nhuận sau thuế của Công ty mẹ | 61 | 6.214.497.938 | 1.885.765.024 | 68.239.531.965 | 56.831.714.959  |
+|  20 | Lợi nhuận sau thuế của cổ đông không kiểm soát | 62 | (91.429.914) | (6.349.475) | (146.347.979) | (19.912.333)  |
+|  21 | Lãi cơ bản trên cổ phiếu (*) | 70 | 184 | 51 | 1.846 | 1.541  |
+
+Người lập biểu
+
+Phùng Thùy Linh
+
+Kế toán trưởng
+
+Nguyễn Nghĩa Trung
+
+ĐKý 14, năm 29 tháng 10 năm 2026
+
+TTL Hội đồng quản trị
+
+Chủ tịch HĐQT
+
+Bùi Văn Hữu
+
+Các Thuyết minh đính kèm là bộ phận hợp thành của Báo cáo tài chính hợp nhất
+
+8
+
 # **CÔNG TY CỔ PHẦN Ô TÔ TMT**
 
 Tầng 9+10 tòa nhà Coninco, số 4 Tôn Thất Tùng,

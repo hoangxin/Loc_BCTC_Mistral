@@ -99,18 +99,42 @@ General Director
 TP. Hồ Chí Minh, ngày 30 tháng 09 năm 2026
 Ho Chi Minh City, 30th Sep 2026
 
+# **STATEMENT of FINANCIAL POSITION**
+
+As at 30/09/2026
+
+|  1. 2026 | 400 | 13 | 273,248,460,849 | 275,729,415,336  |
+| --- | --- | --- | --- | --- |
+|  2. 2026 | 411 |  | 198,868,710,000 | 198,868,710,000  |
+|  3. 2026 | 411a |  | 198,868,710,000 | 198,868,710,000  |
+|  4. 2026 | 412 |  | 508,431,449 | 508,431,449  |
+|  5. 2026 | 415 |  | (317,124,000) | (317,124,000)  |
+|  6. 2026 | 418 |  | 67,542,959,507 | 67,080,335,727  |
+|  7. 2026 | 420 |  | 6,645,483,893 | 9,589,062,160  |
+|  8. 2026 | 420a |  | 8,663,814,600 | 336,586,552  |
+|  9. 2026 | 420b |  | -2,018,330,707 | 9,252,475,608  |
+|  TOTAL CAPITAL | 440 |  | 319,757,908,428 | 325,307,873,175  |
+
 Phạm Thị Thu Trang
 
 Phụ trách kế toán
 The person incharge of accounting
 
-**Công Ty Cổ Phần In Và Bao Bì Mỹ Châu**
+**Công Ty Cổ
+Phần In Và
+Bao Bì Mỹ
+Châu**
 
-Digitally signed by Công Ty Cổ Phần In Và Bao Bì Mỹ Châu
+Digitally signed by Công Ty Cổ
+Phần In Và Bao Bì Mỹ Châu
 DN:
 OID.0.9.2342.19200300.100.1.
-1=MST:0301671386, CN=Công Ty Cổ Phần In Và Bao Bì Mỹ Châu, S=THÁNH PHỐ HỒ CHÍ MINH, C=VN
-Reason: I am the author of this document
+1=MST:0301671386, CN=Công
+Ty Cổ Phần In Và Bao Bì Mỹ
+Châu, S=THÀNH PHỐ HỒ CHÍ
+MINH, C=VN
+Reason: I am the author of this
+document
 Date: 20/10/2026 5:26 CH
 PDFgear Version: 2.1.20
 
@@ -134,7 +158,7 @@ Cho kỳ kế toán Quý III/2026 kết thúc ngày 30/09/2026
 
 # **2. Điều chỉnh cho các khoản:**
 
-Khấu hao TSCĐ và BĐSDT
+Khấu hao TSCĐ và BĐSĐT
 
 Các khoản dự phòng
 
@@ -166,19 +190,13 @@ Lưu chuyển tiền thuần từ hoạt động kinh doanh
 
 # **II. LƯU CHUYỂN TIỀN TỪ HOẠT ĐỘNG ĐẦU TƯ**
 
-Tiền chi để mua sắm, xây dựng TSCĐ và
+Tiền chi để mua sắm, xây dựng TSCĐ và các tài sản dài hạn khác
 
-các tài sản dài hạn khác
-
-Tiền thu từ thanh lý, nhượng bán TSCĐ và
-
-các tài sản dài hạn khác
+Tiền thu từ thanh lý, nhượng bán TSCĐ và các tài sản dài hạn khác
 
 Tiền chi cho vay, mua các công cụ nợ của đơn vị khác
 
-Tiền thu hồi cho vay, bán lại các công cụ nợ
-
-của đơn vị khác
+Tiền thu hồi cho vay, bán lại các công cụ nợ của đơn vị khác
 
 Tiền chi đầu tư góp vốn vào đơn vị khác
 
@@ -251,6 +269,8 @@ Increase/decrease in prepaid expenses
 Interest paid
 
 Corporate income tax paid
+
+16
 
 Other payments on operating activities
 
@@ -375,9 +395,7 @@ Cho kỳ kế toán Quý III/2026 kết thúc ngày 30/09/2026
 
 CÓ PHẦN THỊ  
 CÔNG TY CỔ PHẦN IN VÀ BAO BÍ MỸ CHÂU  
-T. CHÁU  
-Lã Hoài Nam  
-Tổng Giám đốc  
+Tân Phú  
 General Director
 
 Phạm Thị Thu Trang  
@@ -715,7 +733,7 @@ BALANCE SHEET**
 # 5. Tăng, giảm tài sản cố định hữu hình
 Increase and decrease of assets
 
-|   | Nhà cửa, vật kiến trúc Building, stucture | Máy móc, thiết bị Machinery and equipment | Phương tiện vận tải, truyền dẫn Vihickes,Transport and equipment | Thiết bị, dụng cụ quản lý Management equipment | Tài sản cố định khác Other Fixed Assets | Cộng Total  |
+|   | Nhà cửa, vật kiến trúc Building, stucture | Máy móc, thiết bị Machinery and equipment | Phương tiện vận tải, truyền dẫn Vihickes, Transport and equipment | Thiết bị, dụng cụ quản lý Management equipment | Tài sản cố định khác Other Fixed Assets | Cộng Total  |
 | --- | --- | --- | --- | --- | --- | --- |
 |  Nguyên giá Cost | VND | VND | VND | VND | VND | VND  |
 |  Số dư ngày 01/01/2026 As at 01 Jan 2026 | 10,667,980,186 | 343,495,742,078 | 7,435,141,700 | 975,794,863 | 647,431,743 | 363,222,090,570  |
