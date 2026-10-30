@@ -1171,13 +1171,16 @@ function isNotesSectionTitleHeadingLine(normalizedLine: string): boolean {
 // Dau hieu CAU TRUC de loai tieu de sai (khong bam theo tu ngu): bang DAU
 // TIEN ngay sau tieu de co cot "Mã số" DI KEM cot "TÀI SẢN"/"NGUỒN VỐN"/"CHỈ
 // TIÊU" - dac trung cua 3 bang chinh, Thuyet minh that khong in cot Ma so.
+// Giua marker va bang dau tien luon co vai dong van ban (ten cong ty, dia
+// chi, ky bao cao, tieu de that cua bang, "Don vi tinh: VND") - quet qua
+// chung, nhung CO GIOI HAN de khong di lan sang 1 muc hoan toan khac.
+const MAX_LINES_TO_FIRST_TABLE = 40;
+
 function firstTableHeaderAfter(lines: string[], fromIndex: number): string[] | null {
-  for (let i = fromIndex; i < lines.length; i++) {
+  const until = Math.min(lines.length, fromIndex + MAX_LINES_TO_FIRST_TABLE);
+  for (let i = fromIndex; i < until; i++) {
     const cells = splitMarkdownRow(lines[i]);
-    if (cells) return isSeparatorRow(cells) ? null : cells;
-    // Van ban xuoi giua tieu de va bang (ten cong ty, dia chi, don vi tinh)
-    // la binh thuong - chi dung khi gap 1 tieu de khac.
-    if (looksLikeHeadingLine(lines[i]) && lines[i].trim().startsWith('#')) return null;
+    if (cells && !isSeparatorRow(cells)) return cells;
   }
   return null;
 }
