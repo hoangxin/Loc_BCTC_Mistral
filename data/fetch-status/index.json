@@ -1,11 +1,11 @@
 {
   "running": false,
-  "generatedAt": "2026-10-30T04:45:31.212Z",
+  "generatedAt": "2026-10-30T05:14:36.397Z",
   "periodLabel": "Quý 3/2026",
   "year": 2026,
-  "totalFound": 1096,
-  "totalMatched": 72,
-  "downloaded": 72,
+  "totalFound": 1111,
+  "totalMatched": 8,
+  "downloaded": 8,
   "failed": [
     {
       "stockCode": "PSD",
