@@ -1158,10 +1158,48 @@ function isNotesSectionTitleHeadingLine(normalizedLine: string): boolean {
   return NOTES_SECTION_TITLE_MARKERS.some((tokens) => tokens.every((t) => normalizedLine.includes(t)));
 }
 
+// MOI 2026-10-30 (TMT Q3/2026 that - nguoi dung bao "doc thieu hau het so
+// lieu"): Mistral OCR GAN SAI tieu de "# THUYẾT MINH BÁO CÁO TÀI CHÍNH HỢP
+// NHẤT (TIẾP)" cho cac TRANG TIEP cua BCDKT - ngay duoi tieu de do la bang
+// "| TÀI SẢN | Mã số | Thuyết minh | Số cuối năm | Số đầu năm |", tuc van la
+// BCDKT chu khong phai Thuyet minh. BCDKT cua TMT nam tren 3 trang va bi 2
+// tieu de sai nay cat thanh 3 bang; findCashFlowEndingIndex (khong tim duoc
+// chu ky ket thuc LCTT vi LCTT chua tung duoc OCR) roi xuong lop fallback nay
+// va cat PHAM VI QUET ngay tai tieu de sai dau tien - mat 2/3 BCDKT (32 dong
+// thay vi 128).
+//
+// Dau hieu CAU TRUC de loai tieu de sai (khong bam theo tu ngu): bang DAU
+// TIEN ngay sau tieu de co cot "Mã số" DI KEM cot "TÀI SẢN"/"NGUỒN VỐN"/"CHỈ
+// TIÊU" - dac trung cua 3 bang chinh, Thuyet minh that khong in cot Ma so.
+function firstTableHeaderAfter(lines: string[], fromIndex: number): string[] | null {
+  for (let i = fromIndex; i < lines.length; i++) {
+    const cells = splitMarkdownRow(lines[i]);
+    if (cells) return isSeparatorRow(cells) ? null : cells;
+    // Van ban xuoi giua tieu de va bang (ten cong ty, dia chi, don vi tinh)
+    // la binh thuong - chi dung khi gap 1 tieu de khac.
+    if (looksLikeHeadingLine(lines[i]) && lines[i].trim().startsWith('#')) return null;
+  }
+  return null;
+}
+
+function headerLooksLikeMainStatement(headerCells: string[]): boolean {
+  const normalized = headerCells.map((c) => normalizeLabelText(c));
+  const coMaSo = normalized.some((c) => c.includes('MA SO'));
+  const coNhanBangChinh = normalized.some(
+    (c) => c.includes('TAI SAN') || c.includes('NGUON VON') || c.includes('CHI TIEU')
+  );
+  return coMaSo && coNhanBangChinh;
+}
+
 function findNotesSectionStartIndex(lines: string[], searchFromIndex: number): number {
   for (let i = searchFromIndex; i < lines.length; i++) {
     if (!looksLikeHeadingLine(lines[i])) continue;
-    if (isNotesSectionTitleHeadingLine(normalizeLabelText(lines[i]))) return i;
+    if (!isNotesSectionTitleHeadingLine(normalizeLabelText(lines[i]))) continue;
+    // Tieu de "Thuyet minh" ma ngay sau la 1 bang CHINH thi la tieu de bi OCR
+    // gan sai cho trang tiep cua bang do - bo qua, tim tieu de that o sau.
+    const header = firstTableHeaderAfter(lines, i + 1);
+    if (header && headerLooksLikeMainStatement(header)) continue;
+    return i;
   }
   return -1;
 }
