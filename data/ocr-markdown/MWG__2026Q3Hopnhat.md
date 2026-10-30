@@ -1,13 +1,106 @@
+CÔNG TY CỔ PHẦN ĐẦU TƯ
+THẾ GIỚI DI ĐỘNG
+MOBILE WORLD
+INVESTMENT CORPORATION
+
+CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
+Độc lập - Tự do - Hạnh phúc
+THE SOCIALIST REPUBLIC OF VIETNAM
+Independence - Freedom - Happiness
+
+Số/No.: 70/2026/MWG
+
+TP. Hồ Chí Minh, ngày 29 tháng 10 năm 2026
+
+HCMC, October 29, 2026
+
+# CÔNG BỐ THÔNG TIN BẤT THƯỜNG
+EXTRAORDINARY INFORMATION DISCLOSURE
+
+Kính gửi: - Ủy ban Chứng khoán Nhà nước;
+
+- So Giao dich Chung khoan thanh pho Ho Chi Minh;
+- So Giao dích Chung khoan Viet Nam;
+
+To: - State Securities Commission of Vietnam;
+
+- Hochiminh Stock Exchange;
+Vietnam Stock Exchange;
+
+1. Tên tổ chức/Name of organization: Công ty Cổ phần Đầu tư Thế Giới Di Động ("Công ty")/ Mobile World Investment Corporation ("Company")
+
+- Ma chung khoan/Stock code: MWG
+- Dja chi/ Address: So 222 Yersin, Phuong Thu Dau Mot, Thanh pho Ho Chi Minh, Viet Nam/ No. 222 Yersin Street, Thu Dau Mot Ward, Ho Chi Minh City, Vietnam
+- Diên thoai lien hé/ Telephone: (028) 38 125 960
+
+2. Nội dung thông tin công bố/ Contents of disclosure:
+
+Công ty Cổ phần Đầu tư Thế Giới Di Động đính chính nội dung Thuế thu nhập hoãn lại chưa được ghi nhận, chi tiết phần lỗ thuế của Công ty Cổ phần Dược phẩm An Khang Pharma ("An Khang Pharma") tại Thuyết minh số 30.4 (trang 43) - Báo cáo tài chính hợp nhất quý 3 năm 2026 cho kỳ kế toán chín tháng kết thúc ngày 30/9/2026 công bố ngày 28/10/2026 như sau:
+
+Mobile World Investment Corporation hereby corrects Tax loss carried forward, specifically the tax loss amount of An Khang Pharma Pharmacy Joint Stock Company ("An Khang Pharma") in Note 30.4 (page 43) of the interim consolidated financial statements for the nine-month period ended September 30, 2026, released on October 28, 2026, as follows:
+
+|  Chỉ tiêu (VND) | Đã công bố | Đính chính  |
+| --- | --- | --- |
+|  An Khang Pharma – lỗ phát sinh năm 2026, chuyển lỗ đến 2031 | 3.977.440.650 | Không trình bày  |
+|  An Khang Pharma – tổng lỗ thuế | 1.112.535.273.982 | 1.108.557.833.332  |
+|  An Khang Pharma – chưa chuyển lỗ tại 30/9/2026 | 1.110.246.178.481 | 1.106.268.737.831  |
+|  Tổng cộng – lỗ thuế | 6.085.431.186.792 | 6.081.453.746.142  |
+|  TỔNG CỘNG – chưa chuyển lỗ tại 30/9/2026 | 4.614.218.373.242 | 4.610.240.932.592  |
+
+Signature Not Verified
+
+Ký bởi: CÔNG TY CỔ PHẦN ĐẦU TƯ THẾ GIỚI DI ĐỘNG
+Ký ngày: 29/10/2026 11:38:59
+
+|  Item (VND) | Published | Correction  |
+| --- | --- | --- |
+|  *An Khang Pharma – tax loss amount 2026, carried forward to 2031* | 3,977,440,650 | Do not present  |
+|  *An Khang Pharma – total tax loss amount* | 1,112,535,273,982 | 1,108,557,833,332  |
+|  *An Khang Pharma – unutilised as at 30 September 2026* | 1,110,246,178,481 | 1,106,268,737,831  |
+|  *Total – tax loss amount* | 6,085,431,186,792 | 6,081,453,746,142  |
+|  *TOTAL – unutilised as at 30 September 2026* | 4,614,218,373,242 | 4,610,240,932,592  |
+
+Các chỉ tiêu khác trong Thuyết minh 30.4 không thay đổi.
+
+*The other items in Note 30.4 remain unchanged.*
+
+**Lý do đính chính:** lỗi khi cập nhật số liệu trong quá trình in ấn. Trong kỳ kế toán chín tháng năm 2026, Công ty Cổ phần Dược phẩm An Khang Pharma phát sinh lợi nhuận tính thuế, do đó không có khoản lỗ tính thuế phát sinh năm 2026.
+
+*Reason for correction: an error occurred during the data update process before printing. For the nine-month accounting period of 2026, An Khang Pharma Joint Stock Company generated taxable profit; therefore, no tax loss was incurred in 2026.*
+
+Khoản mục trên chỉ được trình bày trong phần thuyết minh. Việc đính chính không làm thay đổi bất kỳ chỉ tiêu nào trên Bảng cân đối kế toán hợp nhất, Báo cáo kết quả hoạt động kinh doanh hợp nhất và Báo cáo lưu chuyển tiền tệ hợp nhất giữa niên độ.
+
+*This item is presented solely in the notes to the financial statements. The correction does not alter any line items in the interim consolidated balance sheet, the interim consolidated statement of profit or loss, or the interim consolidated statement of cash flows.*
+
+**Tài liệu đính kèm:** Báo cáo tài chính hợp nhất quý 3 năm 2026 cho kỳ kế toán chín tháng kết thúc ngày 30/9/2026, bản đã được đính chính và đăng tải tại website của Công ty tại đường dẫn https://mwg.vn/.
+
+**Attached document:** *The interim consolidated financial statements for the nine months ended September 30, 2026, the corrected version is available on the Company’s website at the following link: https://mwg.vn/.*
+
+3. Thông tin này đã được công bố trên trang thông tin điện tử của công ty vào ngày 29/10/2026 tại đường dẫn https://mwg.vn/.
+
+*This information was disclosed on the company’s website on October 29, 2026 via: https://mwg.vn/en/.*
+
+Chúng tôi xin cam kết các thông tin công bố trên đây là đúng sự thật và hoàn toàn chịu trách nhiệm trước pháp luật về nội dung các thông tin đã công bố.
+
+We hereby certify that the information provided is true and correct and take responsibility before the law for the disclosed information.
+
+CÔNG TY CỔ PHẦN ĐẦU TƯ THẾ GIỚI DI ĐỘNG
+
+Mobile World Investment Corporation
+
+Tổng Giám đốc kiêm Người đại diện pháp luật
+
+General Director and Legal Representative
+
+VŨ ĐĂNG LINH
+
 # Công ty Cổ phần Đầu tư Thế Giới Di Động
 
 Báo cáo tài chính hợp nhất giữa niên độ
 
 Cho kỳ kế toán chín tháng kết thúc ngày 30 tháng 9 năm 2026
 
-Signature Not Verified
-
-Ký bởi: CÔNG TY CỔ PHẦN ĐẦU TƯ THẾ GIỚI DI ĐỘNG  
-Ký ngày: 28/10/2026 11:59:24
+![img-0.jpeg](img-0.jpeg)
 
 # Công ty Cổ phần Đầu tư Thế Giới Di Động
 
@@ -422,27 +515,3 @@ NGƯỜI ĐẠI DIỆN THEO PHÁP LUẬT
 Vũ Đăng Linh
 
 9
-
-Công ty Cổ phần Đầu tư Thế Giới Di Động
-
-B09a – DN/HN
-
-# **BẢN THUYẾT MINH BÁO CÁO TÀI CHÍNH HỢP NHẤT GIỮA NIÊN ĐỘ**
-
-Tại ngày 30 tháng 9 năm 2026 và cho kỳ kế toán chín tháng kết thúc cùng ngày
-
-# **1. ĐẶC ĐIỂM HOẠT ĐỘNG CỦA DOANH NGHIỆP**
-
-Công ty Cổ phần Đầu tư Thế Giới Di Động (“Công ty”) là một công ty cổ phần được thành lập theo Luật Doanh nghiệp của Việt Nam theo Giấy Chứng nhận Đăng ký Doanh nghiệp (“GCNĐKDN”) số 0306731335 do Sở Kế hoạch và Đầu tư (“Sở KH & ĐT”) Tỉnh Bình Dương (nay là Sở Tài chính Thành phố Hồ Chí Minh) cấp ngày 16 tháng 1 năm 2009, và theo GCNĐKDN điều chỉnh gần nhất lần thứ 37 ngày 17 tháng 7 năm 2026.
-
-Cổ phiếu của Công ty được niêm yết tại Sở Giao dịch Chứng khoán Thành phố Hồ Chí Minh (“SGDCKHCM”) với mã chứng khoán “MWG” theo Quyết định niêm yết số 253/QĐ-SGDHCM do SGDCKHCM cấp ngày 7 tháng 7 năm 2014.
-
-Hoạt động chủ yếu trong năm hiện tại của Công ty và các công ty con (“Nhóm Công ty”) là mua bán, bảo hành, sửa chữa thiết bị tin học, điện thoại, linh kiện và phụ kiện điện thoại với thương hiệu Thế Giới Di Động, các mặt hàng điện máy với thương hiệu Điện Máy Xanh và các mặt hàng lương thực, thực phẩm, đồ uống và các hàng hóa khác với thương hiệu Bách Hóa Xanh.
-
-Chu kỳ kinh doanh thông thường của Công ty là 12 tháng.
-
-Công ty có trụ sở chính tại Số 222 Đường Yersin, Phường Thủ Dầu Một, Thành phố Hồ Chí Minh, Việt Nam và văn phòng hoạt động tại Tòa nhà MWG, Lô T2-1.2, Đường D1, Khu Công nghệ cao, Phường Tăng Nhơn Phú, Thành phố Hồ Chí Minh, Việt Nam.
-
-Số lượng nhân viên của Nhóm Công ty tại ngày 30 tháng 9 năm 2026 là 76.940 (ngày 31 tháng 12 năm 2025 là 64.727).
-
-10
