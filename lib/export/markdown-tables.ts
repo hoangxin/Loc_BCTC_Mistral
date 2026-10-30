@@ -238,6 +238,74 @@ function looksLikePeriodDescriptionRow(cells: string[]): boolean {
   );
 }
 
+// 1 o header dong 1 la NHAN NHOM KY ("Kỳ 3 tháng kết thúc ngày", "Quý III",
+// "Lũy kế từ đầu năm") - trong PDF goc no la 1 o GOP phu NHIEU cot con, moi
+// cot con duoc dat ten o dong 2 bang chinh ngay ket thuc ky.
+const PERIOD_GROUP_LABEL_PATTERN = /^(KY\s+\d+\s+THANG|QUY|LUY KE|TU DAU NAM)/;
+
+// O header chi ten cot METADATA (khong phai cot gia tri) - dung de chac chan
+// phan dau dong 1 khong chua nhan nhom ky nao bi bo sot.
+const HEADER_METADATA_CELL_PATTERN = /(MA SO|THUYET MINH|CHI TIEU|STT|NOI DUNG|DIEN GIAI|TAI SAN|NGUON VON)/;
+
+// MOI 2026-10-30 (ACG Q3/2026 that - nguoi dung bao "doc sai so lieu cung ky
+// nam truoc"): header KQKD co 2 NHOM ky, moi nhom phu 2 cot con:
+//   | Mã số | Thuyết minh | Kỳ 3 tháng kết thúc ngày | Kỳ 9 tháng kết thúc ngày |
+//   | 30.9.2026 VND | 30.9.2025 VND (...) | 30.9.2026 VND | 30.9.2025 VND (...) |
+//   | 01 | Doanh thu bán hàng... | 1.209.751.595.413 | 1.184.774.240.300 | 3.576.634.668.219 | 2.960.366.093.667 |
+// Dong 1 (4 o) va dong 2 (4 o) KHONG cung he cot: dong 1 dung 1 o cho CA nhom
+// 2 cot, dong 2 moi la 4 cot gia tri that. Gop theo chi so (hanh vi cu) gan
+// "Mã số" + "Thuyết minh" cho dung 2 cot gia tri dau, roi day ten "Kỳ 3
+// tháng" sang cot LUY KE 9 THANG - app lay 3.576 ty (9 thang) lam so quy va
+// 2.960 ty (9 thang nam truoc) lam cung ky, thay vi 1.201/1.175 ty cua rieng
+// quy 3. Phan bo lai: moi nhan nhom phu deu so cot con cua no.
+//
+// Dieu kien HEP co chu dich (phai co >= 2 nhan nhom LIEN TIEP O CUOI dong 1,
+// phan dau chi gom o metadata/rong, va so cot con chia het cho so nhom) - de
+// khong dung toi cac bien the 2-dong-header da sua rieng truoc day: POS
+// (2026-10-26, o cuoi dong 1 la "Đơn vị tính: VND" nen khong co nhan nhom nao
+// o cuoi), DNC (2026-10-22), LSG.
+function expandPeriodGroupHeader(headerCells: string[], peekCells: string[]): string[] | null {
+  const groups: string[] = [];
+  let idx = headerCells.length - 1;
+  while (idx >= 0 && PERIOD_GROUP_LABEL_PATTERN.test(normalizeLabelText(headerCells[idx]))) {
+    groups.unshift(headerCells[idx]);
+    idx -= 1;
+  }
+  if (groups.length < 2) return null;
+  const leadingCells = headerCells.slice(0, idx + 1);
+  if (
+    !leadingCells.every((c) => c.trim() === '' || HEADER_METADATA_CELL_PATTERN.test(normalizeLabelText(c)))
+  ) {
+    return null;
+  }
+  const periodCells = peekCells.map((c) => c.trim()).filter((c) => c !== '');
+  if (periodCells.length <= groups.length || periodCells.length % groups.length !== 0) return null;
+  const columnsPerGroup = periodCells.length / groups.length;
+  const valueColumns = periodCells.map((period, i) => `${groups[Math.floor(i / columnsPerGroup)]} ${period}`.trim());
+  return [...leadingCells, ...valueColumns];
+}
+
+// 1 dong GIUA bang thuc ra la HEADER duoc in lai o trang sau: moi o khong
+// rong deu la TEN COT (metadata, nhan nhom ky, hoac mot moc thoi gian) va
+// khong o nao la so lieu. Khac looksLikePeriodDescriptionRow (chi nhan dong
+// phu CHI ghi moc thoi gian) - day la dong header DAY DU ("Mã số | | Thuyết
+// minh | Kỳ 3 tháng kết thúc ngày | ..." cua ACG trang 6).
+function looksLikeRepeatedHeaderRow(cells: string[]): boolean {
+  const nonEmpty = cells.map((c) => c.trim()).filter((c) => c !== '');
+  if (nonEmpty.length < 2) return false;
+  // parseNumericCell tra ve CHINH CHUOI khi o khong phai so (chi tra null khi
+  // o rong) - phai xet typeof, khong phai !== null.
+  if (nonEmpty.some((c) => typeof parseNumericCell(c) === 'number')) return false;
+  return nonEmpty.every((c) => {
+    const norm = normalizeLabelText(c);
+    return (
+      HEADER_METADATA_CELL_PATTERN.test(norm) ||
+      PERIOD_GROUP_LABEL_PATTERN.test(norm) ||
+      PERIOD_YEAR_IN_CELL.test(c)
+    );
+  });
+}
+
 // Tieu de bang BCDKT doi khi bi Mistral tach thanh 2 DONG markdown rieng, voi
 // dong THU HAI moi la tieu de THAT - da xac nhan qua DNC that (2026-10-22,
 // nguoi dung bao "DNC toan bo cac cot lien quan toi bang CDKT doc sai het"):
@@ -1815,6 +1883,9 @@ function parseAllTablesInRange(lines: string[]): ParsedTable[] {
       // incomeStatementPeriodColumns). Canh PHAI dong ngan hon - cac cot gia
       // tri luon nam cuoi bang, dung quy uoc trailing-align da dung o
       // realignRowByContent/alignRowToColumns.
+      // Nhom ky phu NHIEU cot con (ACG that) - xu ly rieng truoc, vi o day 2
+      // dong header khong cung he cot nen gop theo chi so la sai han.
+      const spannedHeaderCells = expandPeriodGroupHeader(headerCells, peekCells);
       const headerWidth = Math.max(headerCells.length, peekCells.length);
       const padLeading = (cells: string[]) => [...new Array(headerWidth - cells.length).fill(''), ...cells];
       const paddedHeaderCells = padLeading(headerCells);
@@ -1834,15 +1905,17 @@ function parseAllTablesInRange(lines: string[]): ParsedTable[] {
         if (cellHasFullDateRange(paddedPeekCells[idx] ?? '')) return '';
         return (paddedPeekCells[idx] ?? '').trim() !== '' ? lastGroupLabel : '';
       });
-      effectiveHeaderCells = filledHeaderCells.map((c, idx) =>
-        // "Don vi tinh: VND" la chu thich cua CA bang, khong phai ten cot - no
-        // hay dung o o cuoi cung cua dong 1 va se dinh vao ten cot gia tri
-        // cuoi neu gop nguyen (POS that).
-        [normalizeLabelText(c).includes('DON VI TINH') ? '' : c, paddedPeekCells[idx] ?? '']
-          .filter((s) => s.trim() !== '')
-          .join(' ')
-          .trim()
-      );
+      effectiveHeaderCells =
+        spannedHeaderCells ??
+        filledHeaderCells.map((c, idx) =>
+          // "Don vi tinh: VND" la chu thich cua CA bang, khong phai ten cot - no
+          // hay dung o o cuoi cung cua dong 1 va se dinh vao ten cot gia tri
+          // cuoi neu gop nguyen (POS that).
+          [normalizeLabelText(c).includes('DON VI TINH') ? '' : c, paddedPeekCells[idx] ?? '']
+            .filter((s) => s.trim() !== '')
+            .join(' ')
+            .trim()
+        );
       headerRowCount = 3;
     } else if (!headerLooksLikeData && peekCells && looksLikeSplitHeaderRow(headerCells, peekCells)) {
       // Gop y het nhanh tren nhung KHONG forward-fill dong 1: o day o trong
@@ -1931,6 +2004,27 @@ function parseAllTablesInRange(lines: string[]): ParsedTable[] {
         j++;
         continue;
       }
+      // MOI 2026-10-30 (ACG Q3/2026 that): phan TIEP cua bang o trang sau co
+      // the co SO COT KHAC phan dau - KQKD cua ACG in cot "Thuyết minh" o
+      // trang 6 (dong du lieu 7 o) nhung bo trong han cot do o trang 5 (6 o),
+      // va Mistral luoc cot trong di. Truoc day ca phan 2 bi nuot vao bang cua
+      // phan 1 roi canh theo he cot 6 cot: ma so bi day vao dung cot gia tri
+      // dau ("ky nay" cua LNST doc ra 60 - chinh la MA SO), cot 9 thang nam
+      // truoc roi han ra ngoai. Cat bang tai dong header lap lai de phan 2
+      // thanh 1 bang RIENG voi he cot cua no, roi 2 bang duoc gop lai dung o
+      // buoc sau (mostCommonColumns + alignRowToColumns theo labelIndex/
+      // maSoIndex rieng cua tung bang).
+      //
+      // CHI cat khi header lap lai RONG HON bang dang doc (ACG: 7 o so voi 6)
+      // - dau hieu trang sau co THEM cot ma trang truoc bo trong. Header lap
+      // lai CUNG so cot (pho bien, da xu ly o looksLikePeriodDescriptionRow
+      // tren) hoac HEP HON (header ngat trang chi lap lai phan cot gia tri -
+      // da co co che bu cot rong o DAU, xem VCB Q1/2026 ben duoi) giu nguyen
+      // hanh vi cu, khong tach bang: tach ra la 1 bang moi vai dong, co the
+      // khong con du dac trung de classifyTableByContent nhan dung bang nao,
+      // roi mat han (da thay that voi SHS Q3/2026 khi dieu kien con la "khac
+      // so o": KQKD tu 72 dong con 54).
+      if (rowCells.length > effectiveHeaderCells.length && looksLikeRepeatedHeaderRow(rowCells)) break;
       rawRows.push(rowCells);
       j++;
     }
