@@ -1,11 +1,11 @@
 {
   "running": false,
-  "generatedAt": "2026-11-02T04:16:39.230Z",
+  "generatedAt": "2026-11-03T05:01:40.768Z",
   "periodLabel": "Quý 3/2026",
   "year": 2026,
-  "totalFound": 1373,
-  "totalMatched": 19,
-  "downloaded": 19,
+  "totalFound": 1684,
+  "totalMatched": 114,
+  "downloaded": 114,
   "failed": [
     {
       "stockCode": "PSD",
@@ -799,6 +799,11 @@
       "stockCode": "GDA",
       "title": "BCTC Hợp nhất quý 3 năm 2026",
       "reason": "Sàn giao dịch \"OTC\" ngoài phạm vi phân tích (OTC/Khác)"
+    },
+    {
+      "stockCode": "RAL",
+      "title": "BCTC Công ty mẹ quý 3 năm 2026",
+      "reason": "Báo cáo \"Riêng lẻ\" (công ty mẹ) - trùng lặp thông tin với báo cáo Hợp nhất cùng kỳ, đã có trong Hợp nhất"
     }
   ],
   "lastCustomSourceCheck": {
