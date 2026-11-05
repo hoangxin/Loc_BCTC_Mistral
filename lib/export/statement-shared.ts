@@ -1316,12 +1316,22 @@ export function findArithmeticTotalRow(
 // thay the co dinh" da mo ta o tren, khong noi rong sang loai ngoac khac.
 const PARENTHETICAL_LOSS_ALTERNATIVE_MARKER = /\s*\/?\s*\(\s*(LO|LAI)\s*\)/g;
 
+// SUA 2026-11-05 (bug that KSV Q3/2026): them "CTY" = "CONG TY". KSV in dong
+// NPATMI la "LNST của cổ đông Cty mẹ" - sau khi mo rong LNST van ra "LOI NHUAN
+// SAU THUE CUA CO DONG CTY ME", thieu dung cum "CONG TY ME" ma finder
+// findLnstCongTyMe doi hoi, nen dong 61 bi bo sot va LNST roi ve dong TONG (60):
+// hien 1.036.423.171.299 thay vi 995.776.139.391. Day la mo rong VIET TAT thuan
+// (dung co che co san, giu nguyen CA 3 dieu kien khop nhan "LOI NHUAN SAU
+// THUE" + "CO DONG" + "CONG TY ME"), KHAC han lan thu 2026-10-20 da bo o
+// findLnstCongTyMe - lan do NOI LONG dieu kien (bo "CO DONG") nen lam doi LNST
+// cua 298 bao cao.
 function expandLabelFinderAbbreviations(normalized: string): string {
   const withoutLossAlternative = normalized.replace(PARENTHETICAL_LOSS_ALTERNATIVE_MARKER, ' ').replace(/\s+/g, ' ').trim();
   return withoutLossAlternative
     .replace(/\bLNST\b/g, 'LOI NHUAN SAU THUE')
     .replace(/\bLN\b/g, 'LOI NHUAN')
-    .replace(/\bDT\b/g, 'DOANH THU');
+    .replace(/\bDT\b/g, 'DOANH THU')
+    .replace(/\bCTY\b/g, 'CONG TY');
 }
 
 export function findRowByLabel(
