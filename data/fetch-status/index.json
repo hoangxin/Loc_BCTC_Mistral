@@ -1,11 +1,11 @@
 {
   "running": false,
-  "generatedAt": "2026-11-05T04:54:31.655Z",
+  "generatedAt": "2026-11-06T04:13:28.752Z",
   "periodLabel": "Quý 3/2026",
   "year": 2026,
-  "totalFound": 1781,
-  "totalMatched": 7,
-  "downloaded": 7,
+  "totalFound": 1791,
+  "totalMatched": 5,
+  "downloaded": 5,
   "failed": [
     {
       "stockCode": "PSD",
@@ -802,6 +802,11 @@
     },
     {
       "stockCode": "RAL",
+      "title": "BCTC Công ty mẹ quý 3 năm 2026",
+      "reason": "Báo cáo \"Riêng lẻ\" (công ty mẹ) - trùng lặp thông tin với báo cáo Hợp nhất cùng kỳ, đã có trong Hợp nhất"
+    },
+    {
+      "stockCode": "BKC",
       "title": "BCTC Công ty mẹ quý 3 năm 2026",
       "reason": "Báo cáo \"Riêng lẻ\" (công ty mẹ) - trùng lặp thông tin với báo cáo Hợp nhất cùng kỳ, đã có trong Hợp nhất"
     }
