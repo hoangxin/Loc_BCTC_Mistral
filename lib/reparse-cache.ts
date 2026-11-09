@@ -59,14 +59,34 @@ export interface ReparseOptions {
   // kiem chung tung cai theo CLAUDE.md truoc khi day di - khong gop chung
   // vao 1 ban sua khong lien quan). Khong truyen = toan bo nhu truoc.
   onlyStockCodes?: string[];
+  // Gioi han o 1 vai KY, dang "<nam><ky>" nhu trong ten file markdown (vd
+  // ['2026Q3'], dau '-' bi bo qua nen '2026-Q3' cung duoc). Ket hop VOI
+  // onlyStockCodes theo kieu VA: ['TMT','ACG'] + ['2026Q3'] = dung 2 bao cao
+  // Q3 cua 2 ma do, KHONG dung toi ban Q2 cua chinh 2 ma do (them
+  // 2026-11-09 theo yeu cau nguoi dung: chi muon sua cac bao cao Q3, de
+  // nguyen Q2 - loc theo ma khong du vi 1 ma co nhieu ky trong cung thu muc).
+  onlyPeriods?: string[];
 }
 
 export function reparseAllSavedMarkdown(options: ReparseOptions = {}): ReparseSummary {
   const onlyStockCodes = options.onlyStockCodes?.map((code) => code.toUpperCase());
+  const onlyPeriods = options.onlyPeriods?.map((period) => period.replace(/-/g, '').toUpperCase());
+  // Ten file: {MA}__{NAM}{KY}{PhamVi}.md - xem lib/ocr-markdown-store.ts.
+  const periodOfFile = (f: string) => f.replace(/\.md$/i, '').split('__')[1]?.replace(/(Chung|Hopnhat|Riengle)$/i, '') ?? '';
   const files = readdirSync(DIR).filter(
-    (f) => f.endsWith('.md') && (!onlyStockCodes || onlyStockCodes.includes(f.split('__')[0].toUpperCase()))
+    (f) =>
+      f.endsWith('.md') &&
+      (!onlyStockCodes || onlyStockCodes.includes(f.split('__')[0].toUpperCase())) &&
+      (!onlyPeriods || onlyPeriods.includes(periodOfFile(f).toUpperCase()))
   );
-  if (onlyStockCodes) console.log(`Chi parse lai ${files.length} file cua: ${onlyStockCodes.join(', ')}`);
+  if (onlyStockCodes || onlyPeriods) {
+    console.log(
+      `Chi parse lai ${files.length} file` +
+        (onlyStockCodes ? ` cua: ${onlyStockCodes.join(', ')}` : '') +
+        (onlyPeriods ? ` - ky: ${onlyPeriods.join(', ')}` : '') +
+        (files.length > 0 ? ` (${files.join(', ')})` : '')
+    );
+  }
   // Doc/ghi qua status-store: trang thai nam o data/fetch-status/ (moi ky 1
   // file) tu 2026-10-25, xem lib/status-store.ts.
   const status = readStatus();
