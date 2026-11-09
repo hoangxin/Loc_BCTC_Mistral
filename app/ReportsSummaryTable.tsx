@@ -4,6 +4,15 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode }
 import { createPortal } from 'react-dom';
 import type { DownloadedReport } from '@/lib/status';
 import { buildOriginalFileUrl } from '@/lib/original-file-url';
+import {
+  comparePercentSortValues,
+  formatCompactSignedAmount,
+  formatPercentCell,
+  percentCellKind,
+  percentCellTooltip,
+  percentSortValue,
+  NEW_FROM_ZERO_LABEL,
+} from '@/lib/percent-cell';
 import WarningBadge from './WarningBadge';
 import ExportSummaryButton from './ExportSummaryButton';
 import ClearResultsButton from './ClearResultsButton';
@@ -31,21 +40,12 @@ function collectLabels(reports: DownloadedReport[]): string[] {
   return labels;
 }
 
-function formatPercent(value: number | null | undefined): string {
-  if (value == null) return '—';
-  const sign = value > 0 ? '+' : '';
-  return `${sign}${value.toFixed(1)}%`;
-}
-
-// Tooltip hover cho o highlight vang (yeu cau nguoi dung 2026-07-21) - hien
-// so goc dang "kỳ này/kỳ trước" (vd doanh thu thuan tang 30% -> hover thay
-// "150.000.000.000 / 115.000.000.000") thay vi chi thay % ma khong ro so
-// tuyet doi. Dinh dang so kieu Viet (dau . ngan cach hang nghin, dung
-// 'vi-VN' - khong lam tron, cac chi tieu nay luon la so nguyen VND tu OCR).
-function formatCompareTooltip(current: number | null | undefined, prior: number | null | undefined): string | undefined {
-  if (current == null || prior == null) return undefined;
-  return `${current.toLocaleString('vi-VN')} / ${prior.toLocaleString('vi-VN')}`;
-}
+// Chu hien trong o % va tooltip hover (so goc dang "kỳ này/kỳ trước", yeu cau
+// nguoi dung 2026-07-21) da chuyen het sang lib/percent-cell.ts (2026-11-09)
+// de dung CHUNG voi Excel/PDF tong hop - truoc day moi dau ra tu viet 1 ban
+// rieng nen o "tang tu 0" hien "—" giong het o thieu du lieu (xem ly do day
+// du trong file do). Dung formatPercentCell/percentCellTooltip thay cho 2 ham
+// formatPercent/formatCompareTooltip cu o day.
 
 function excelFileHref(filePath: string): string {
   return `/api/report-file?filePath=${encodeURIComponent(filePath)}&kind=excel`;
@@ -64,7 +64,9 @@ type SortState = { label: string; direction: 'desc' | 'asc' } | null;
 
 function getPercentValue(report: DownloadedReport, label: string): number | null {
   const item = (report.analysis ?? []).find((i) => i.label === label);
-  return item?.unreliable ? null : (item?.percentChange ?? null);
+  // percentSortValue: o "Mới" (ky truoc = 0) duoc coi la +/-vo cuc thay vi
+  // "khong co gia tri" - xem lib/percent-cell.ts.
+  return percentSortValue(item);
 }
 
 function sortReports(reports: DownloadedReport[], sortState: SortState): DownloadedReport[] {
@@ -80,7 +82,9 @@ function sortReports(reports: DownloadedReport[], sortState: SortState): Downloa
     if (av == null && bv == null) return 0;
     if (av == null) return 1;
     if (bv == null) return -1;
-    return direction === 'desc' ? bv - av : av - bv;
+    // comparePercentSortValues (khong phai phep tru) - gia tri co the la
+    // +/-Infinity cho o "Mới", Infinity - Infinity = NaN se pha comparator.
+    return direction === 'desc' ? comparePercentSortValues(bv, av) : comparePercentSortValues(av, bv);
   });
 }
 
@@ -776,8 +780,23 @@ export default function ReportsSummaryTable({
                   // nen tierClass tu nhien khong con ap dung (an toan).
                   if (item?.unreliable) {
                     return (
-                      <td key={label} className="pct-col pct-unreliable" title="OCR có thể đã gộp/bịa dòng dữ liệu, đã thử đọc lại nhưng vẫn sai - cần xem tay trên PDF gốc">
+                      <td key={label} className="pct-col pct-unreliable" title={percentCellTooltip(item)}>
                         ⚠ Cần xem tay
+                      </td>
+                    );
+                  }
+                  // O "tang tu 0" (ky truoc = 0, ky nay co so) - KHONG con
+                  // hien "—" giong o thieu du lieu nua (phan hoi nguoi dung
+                  // 2026-11-09, xac nhan qua FCN Q3/2026 "BDS Dau tu" 0 ->
+                  // 864,4 ty: nguoi doc hieu nham thanh chi tieu bang 0 va bo
+                  // sot han 1 bien dong lon). Hien nhan "Mới" + gia tri tuyet
+                  // doi dang gon tren 2 dong, nen rieng (.pct-new) - xem ly do
+                  // va quy uoc day du o lib/percent-cell.ts.
+                  if (percentCellKind(item) === 'newFromZero') {
+                    return (
+                      <td key={label} className="pct-col pct-new" title={percentCellTooltip(item)}>
+                        <span className="pct-new-tag">{NEW_FROM_ZERO_LABEL}</span>
+                        <span className="pct-new-amount">{formatCompactSignedAmount(item!.currentValue!)}</span>
                       </td>
                     );
                   }
@@ -785,11 +804,11 @@ export default function ReportsSummaryTable({
                   if (!tier) {
                     // Hover xem so goc "hien tai/ky truoc" (yeu cau nguoi dung
                     // 2026-07-23: MO RONG ra MOI o chi tieu, khong chi rieng o
-                    // dang highlight nhu truoc - xem formatCompareTooltip o
-                    // tren, da dung san cho MuteableHighlightCell duoi day).
+                    // dang highlight nhu truoc - xem percentCellTooltip,
+                    // da dung san cho MuteableHighlightCell duoi day).
                     return (
-                      <td key={label} className="pct-col" title={formatCompareTooltip(item?.currentValue, item?.priorValue)}>
-                        {formatPercent(item?.percentChange)}
+                      <td key={label} className="pct-col" title={percentCellTooltip(item)}>
+                        {formatPercentCell(item)}
                       </td>
                     );
                   }
@@ -806,8 +825,8 @@ export default function ReportsSummaryTable({
                       label={label}
                       currentState={currentState}
                       onSetState={(state) => setHighlightOverride(key, state)}
-                      displayValue={formatPercent(item?.percentChange)}
-                      compareTooltip={formatCompareTooltip(item?.currentValue, item?.priorValue)}
+                      displayValue={formatPercentCell(item)}
+                      compareTooltip={percentCellTooltip(item)}
                     />
                   );
                 })}

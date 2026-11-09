@@ -1,6 +1,7 @@
 import ExcelJS from 'exceljs';
 import { collectAnalysisLabels, type SummaryRow } from '../summary-row';
 import { BUSINESS_TYPE_LABELS, BUSINESS_TYPE_ORDER } from '../business-type';
+import { formatPercentCell, percentCellKind, percentCellTooltip } from '../percent-cell';
 
 function writeSummarySheet(sheet: ExcelJS.Worksheet, rows: SummaryRow[]): void {
   const labels = collectAnalysisLabels(rows);
@@ -24,9 +25,17 @@ function writeSummarySheet(sheet: ExcelJS.Worksheet, rows: SummaryRow[]): void {
       // retry (xem lib/analysis.ts AnalysisRow.unreliable) - ghi ro CANH BAO
       // dang chu thay vi con so tinh tu du lieu co the da bi OCR gop/bia dong
       // (yeu cau user 2026-07-11: "báo lỗi ra bảng kết quả ở dòng tương ứng").
+      //
+      // O "tang tu 0" (ky truoc = 0, ky nay co so) cung ghi dang CHU
+      // ("Mới +864,4 tỷ") thay vi de trong - xem lib/percent-cell.ts (phan
+      // hoi nguoi dung 2026-11-09, FCN Q3/2026): o trong trong cot % nay von
+      // co nghia "khong co du lieu", de trong se xoa mat han 1 bien dong lon.
       ...labels.map((label) => {
         const item = byLabel.get(label);
-        return item?.unreliable ? 'Cần xem tay' : (item?.percentChange ?? null);
+        const kind = percentCellKind(item);
+        if (kind === 'percent') return item?.percentChange ?? null;
+        if (kind === 'unreliable' || kind === 'newFromZero') return formatPercentCell(item);
+        return null;
       }),
     ]);
 
@@ -43,6 +52,12 @@ function writeSummarySheet(sheet: ExcelJS.Worksheet, rows: SummaryRow[]): void {
         cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFE0E0' } };
         cell.font = { bold: true, color: { argb: 'FFB3261E' } };
         cell.note = 'OCR có thể đã gộp/bịa dòng dữ liệu, đã thử đọc lại (retry) nhưng vẫn sai kiểm tra chéo - cần xem tay trên PDF gốc.';
+      } else if (percentCellKind(item) === 'newFromZero') {
+        // Nen XANH NHAT - dong bo voi .pct-new tren web (app/globals.css),
+        // co y khong dung ho vang danh rieng cho muc do % tang truong.
+        cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFE0ECFF' } };
+        cell.font = { bold: true, color: { argb: 'FF1D4ED8' } };
+        cell.note = percentCellTooltip(item) ?? '';
       } else if (item?.tier === 'level2') {
         cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFD400' } };
         cell.font = { bold: true };

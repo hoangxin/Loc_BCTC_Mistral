@@ -4,6 +4,7 @@ import { findLabelColumnIndex, isMetadataColumnName } from './statement-shared';
 import { classifyRowTier } from './row-style';
 import type { BusinessType } from '../business-type';
 import { balanceSheetPeriodColumns, computePercentChange, incomeStatementPeriodColumns, numericValue } from '../analysis';
+import { NEW_FROM_ZERO_LABEL } from '../percent-cell';
 
 // Ten sheet Excel gioi han 31 ky tu va khong duoc chua [ ] : * ? / \ - cac ten
 // duoi day deu an toan.
@@ -77,6 +78,17 @@ function percentChangeColumns(
   return statementKey === 'incomeStatement' ? incomeStatementPeriodColumns(table) : balanceSheetPeriodColumns(table);
 }
 
+// Gia tri 1 o cot "% thay doi": so khi tinh duoc %, chu "Mới" khi ky truoc
+// bang 0 ma ky nay co so (phan hoi nguoi dung 2026-11-09 - o trong trong cot
+// nay von co nghia "khong co du lieu", de trong se khien 1 khoan muc moi
+// xuat hien nhin y nhu khong co gi; o day KHONG kem gia tri tuyet doi nhu
+// bang tong hop vi 2 cot so lieu cua chinh dong do dung ngay ben canh). null
+// = de trong nhu truoc. Xem lib/percent-cell.ts.
+function percentChangeCell(current: number | null, prior: number | null): number | string | null {
+  if (current !== null && prior === 0) return current === 0 ? null : NEW_FROM_ZERO_LABEL;
+  return computePercentChange(current, prior);
+}
+
 // In dam cac dong "tong nhom" (sub-heading) va dam+HOA cac dong "tong lon"
 // (heading) giong van ban goc (yeu cau user 2026-07-08) - xem
 // lib/export/row-style.ts de biet quy tac phan loai tung bang.
@@ -100,7 +112,7 @@ function writeTable(sheet: ExcelJS.Worksheet, statementKey: keyof FinancialState
         ? row.map((cell, i) => (i === labelIndex && typeof cell === 'string' ? cell.toLocaleUpperCase('vi-VN') : cell))
         : row;
     const rowValues = periods
-      ? [...values, computePercentChange(numericValue(row[periods.currentIndex]), numericValue(row[periods.priorIndex]))]
+      ? [...values, percentChangeCell(numericValue(row[periods.currentIndex]), numericValue(row[periods.priorIndex]))]
       : values;
     writtenRows.push(rowValues);
     const excelRow = sheet.addRow(rowValues);

@@ -1,10 +1,17 @@
 import { collectAnalysisLabels, type SummaryRow } from '../summary-row';
 import { BODY_SIZE, HEADING_SIZE, PdfWriter, computeColumnLayout, drawTableRow, loadPdfDocumentWithFonts } from './pdf-shared';
+import { formatPercentCell, formatPercentValue, percentCellKind } from '../percent-cell';
+import type { AnalysisRow } from '../analysis';
 
-function formatPercent(value: number | null | undefined): string {
-  if (value == null) return '';
-  const sign = value > 0 ? '+' : '';
-  return `${sign}${value.toFixed(1)}%`;
+// Rieng PDF de TRONG o khong co du lieu (khong in "—" nhu web/Excel): o day
+// ky hieu do phai nam trong bo ky tu cua font nhung vao PDF (lib/export/fonts)
+// moi in duoc, de trong la an toan va van doc duoc nhu truoc. Cac dang o
+// khac dung dung 1 ban chu voi web/Excel (xem lib/percent-cell.ts).
+function percentCellTextForPdf(item: AnalysisRow | undefined): string {
+  const kind = percentCellKind(item);
+  if (kind === 'percent') return formatPercentValue(item?.percentChange);
+  if (kind === 'unreliable' || kind === 'newFromZero') return formatPercentCell(item);
+  return '';
 }
 
 // Xuat bang tong hop ra 1 file PDF DUY NHAT (khac lib/export/pdf.ts, xuat chi
@@ -36,10 +43,7 @@ export async function buildSummaryPdfBuffer(rows: SummaryRow[]): Promise<Buffer>
       // retry (xem lib/analysis.ts AnalysisRow.unreliable) - ghi ro CANH BAO
       // dang chu thay vi con so tinh tu du lieu co the da bi OCR gop/bia dong
       // (yeu cau user 2026-07-11: "báo lỗi ra bảng kết quả ở dòng tương ứng").
-      ...labels.map((label) => {
-        const item = byLabel.get(label);
-        return item?.unreliable ? 'Cần xem tay' : formatPercent(item?.percentChange);
-      }),
+      ...labels.map((label) => percentCellTextForPdf(byLabel.get(label))),
     ];
     drawTableRow(writer, cells, layout, { bold: false });
   }

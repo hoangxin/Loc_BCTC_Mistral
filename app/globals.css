@@ -452,6 +452,39 @@ tren man hinh sieu rong (4K) de header/tabs khong bi keo dai qua muc doc duoc. *
   }
 }
 
+/* O "tang tu 0" (ky truoc = 0, ky nay co so - vd FCN Q3/2026 ghi nhan 864,4
+   ty BDS dau tu tu con so khong): KHONG tinh duoc % nen truoc day hien "—"
+   y HET o thieu du lieu, nguoi doc hieu nham thanh "chi tieu bang 0" (phan
+   hoi nguoi dung 2026-11-09). Mau XANH LAM nhat - co y KHONG dung ho vang
+   (#fff3b0/#ffd400 danh rieng cho muc do % tang truong, xem .pct-level1/2 o
+   tren) de phan biet duoc ngay 3 loai o khac nhau: vang = tang truong % vuot
+   nguong, xanh = khoan muc moi xuat hien (khong co % de so), trang = binh
+   thuong/khong co du lieu. Khong nhap nhay: thong tin da nam o CHU trong o
+   ("Mới" + gia tri) nen khong can doi thi giac manh nhu cap 2. */
+.pct-new {
+  background: #e0ecff;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.pct-new-tag {
+  display: block;
+  font-size: 11px;
+  color: #1d4ed8;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+/* Co chu nho hon binh thuong (11px) de "+864,4 tỷ" vua trong be rong 76px
+   cua cot % (xem .pct-col o tren) ma khong phai noi rong cot - noi rong 1
+   cot se day lech ca 22 cot chi tieu con lai. Van cho phep xuong dong
+   (khong nowrap): gia tri dai hon (vd "+1.234,5 tỷ") thi tu wrap thay vi
+   pha layout bang. */
+.pct-new-amount {
+  display: block;
+  font-size: 11px;
+}
+
 /* Tickbox "mute" nho trong o cap 2 (vang dam + nhap nhay) - tick CHI la trang
    thai "dang cho xac nhan" (bam lan 1 tick hien ra cho 5s, bam lan 2 moi that
    su doi trang thai mute va tick tu mat, xem MuteableHighlightCell o
