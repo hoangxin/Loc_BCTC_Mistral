@@ -51,8 +51,22 @@ export interface ReparseSummary {
   excludedAfter: number;
 }
 
-export function reparseAllSavedMarkdown(): ReparseSummary {
-  const files = readdirSync(DIR).filter((f) => f.endsWith('.md'));
+export interface ReparseOptions {
+  // Gioi han o 1 vai MA CK (vd ['DDM']) - de sua DUNG 1 bao cao dang sai ma
+  // khong vo tinh ghi lai ca ~2.000 bao cao con lai trong cung 1 lan (them
+  // 2026-11-09, khi sua DDM Q3/2026: parse lai toan corpus bang parser moi
+  // hon lam doi ket qua cua hang chuc bao cao khac, phai co baseline +
+  // kiem chung tung cai theo CLAUDE.md truoc khi day di - khong gop chung
+  // vao 1 ban sua khong lien quan). Khong truyen = toan bo nhu truoc.
+  onlyStockCodes?: string[];
+}
+
+export function reparseAllSavedMarkdown(options: ReparseOptions = {}): ReparseSummary {
+  const onlyStockCodes = options.onlyStockCodes?.map((code) => code.toUpperCase());
+  const files = readdirSync(DIR).filter(
+    (f) => f.endsWith('.md') && (!onlyStockCodes || onlyStockCodes.includes(f.split('__')[0].toUpperCase()))
+  );
+  if (onlyStockCodes) console.log(`Chi parse lai ${files.length} file cua: ${onlyStockCodes.join(', ')}`);
   // Doc/ghi qua status-store: trang thai nam o data/fetch-status/ (moi ky 1
   // file) tu 2026-10-25, xem lib/status-store.ts.
   const status = readStatus();

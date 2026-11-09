@@ -7,9 +7,15 @@
 // nho. Hien no ~43MB, vuot gioi han blob cua GitHub REST API - may khong cai
 // git thi phai dispatch workflow "Fetch BCTC" voi mode=reparse thay vi chay
 // script nay.
+//
+// Tham so (tuy chon): danh sach ma CK can parse lai, vd
+//   npx tsx scripts/reparse-all-saved-markdown.ts DDM
+// Khong truyen gi = parse lai toan bo nhu truoc (nho chay regression toan
+// corpus truoc khi day - xem CLAUDE.md).
 import { reparseAllSavedMarkdown } from '../lib/reparse-cache';
 
-const summary = reparseAllSavedMarkdown();
+const onlyStockCodes = process.argv.slice(2).filter(Boolean);
+const summary = reparseAllSavedMarkdown(onlyStockCodes.length > 0 ? { onlyStockCodes } : {});
 console.log(`\nDa cap nhat ${summary.updated} bao cao, bo qua ${summary.skipped}.`);
 if (summary.preserved.length > 0) {
   console.log(`Giu nguyen (parse lai ra rong): ${summary.preserved.join(', ')}`);

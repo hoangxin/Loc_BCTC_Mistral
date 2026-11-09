@@ -150,7 +150,33 @@ export function dedupeByIdentityKeepingLast<T extends { stockCode: string; title
 // 3. Neu van con >1 ban CUNG statementScope (nhu VCI - ca 2 deu "Chung",
 //    cung noi dung/canh bao, chi khac gio Vietstock dang lai) - coi la TAI
 //    UPLOAD LAI cung 1 tai lieu, GIU BAN MOI NHAT (lastUpdate lon nhat).
-function dedupeReportsWithinRun(reports: DownloadedReport[]): DownloadedReport[] {
+//
+// BO SUNG BUOC (1b) 2026-11-09 - bug that DDM Q3/2026 (nguoi dung bao "DDM
+// dang thieu toan bo chi tieu"), xac nhan qua log GitHub Actions cua chinh
+// lan chay da sinh ra du lieu: DDM co HAI ho so cung title/cung pham vi "Hợp
+// nhất" tren Vietstock - 1 file .zip (ben trong la BCTC that, 10 trang, parse
+// ra 110 dong BCDKT + 22 dong KQKD) va 1 file .pdf chi DUNG 1 TRANG, dang
+// trang bia/van ban phu, ca 3 bang deu 0 dong. Ban .pdf 1 trang lai co
+// lastUpdate MOI HON (Vietstock dang lai sau), nen buoc (3) "giu ban moi
+// nhat" da chon dung ban KHONG CO SO LIEU NAO va loai han ban BCTC that -
+// bao cao ra rong sach, moi chi tieu "—", ma khong co canh bao nao ro nguyen
+// nhan. (Lop loc "van ban phu" san co - dropShortAncillaryPdfs trong
+// lib/report-source.ts, va `usable`/hasBothPrimaryStatements trong chinh ham
+// chay pipeline o duoi - CHI so sanh cac file BEN TRONG 1 ho so, khong the
+// thay 2 ho so RIENG BIET nhu truong hop nay.)
+//
+// Quy tac moi: TRUOC khi xet pham vi/thoi gian, neu trong nhom co >=1 ban
+// doc duoc CA HAI bang bat buoc (BCDKT + KQKD, xem hasBothPrimaryStatements -
+// dung dung tieu chuan ma pipeline da dung de quyet dinh "file nay da cho du
+// lieu that") thi CHI giu cac ban do. Noi cach khac: khong bao gio de 1 ban
+// rong thang 1 ban co so lieu, bat ke no moi hon hay pham vi khac. Neu KHONG
+// ban nao doc duoc du 2 bang (vd ca ho so that su bi scan hong), giu nguyen
+// toan bo nhom nhu truoc de canh bao "ca 3 bang rong" van noi len binh thuong
+// - khong tu dong ket luan ban nao dung.
+// Export de script kiem chung (scripts/_debug-dedupe-*.ts) goi duoc DUNG ham
+// production nay thay vi dung lai logic rieng - chi co lib/pipeline.ts goi no
+// trong luong that.
+export function dedupeReportsWithinRun(reports: DownloadedReport[]): DownloadedReport[] {
   const groups = new Map<string, DownloadedReport[]>();
   for (const report of reports) {
     const key = reportIdentityKey(report);
@@ -167,7 +193,22 @@ function dedupeReportsWithinRun(reports: DownloadedReport[]): DownloadedReport[]
     }
     const isCorrectionNotice = (r: DownloadedReport) => r.warnings[0]?.startsWith(CORRECTION_NOTICE_WARNING_PREFIX) ?? false;
     const nonCorrectionNotice = group.filter((r) => !isCorrectionNotice(r));
-    const candidates = nonCorrectionNotice.length > 0 ? nonCorrectionNotice : group;
+    const afterCorrectionNotice = nonCorrectionNotice.length > 0 ? nonCorrectionNotice : group;
+
+    // (1b) Uu tien ban DOC DUOC DU BCDKT + KQKD - xem comment dau ham (bug
+    // that DDM Q3/2026: ban .pdf 1 trang rong nhung moi hon da thang ban BCTC
+    // that 10 trang).
+    const withPrimaryStatements = afterCorrectionNotice.filter((r) => hasBothPrimaryStatements(r.statements));
+    const candidates = withPrimaryStatements.length > 0 ? withPrimaryStatements : afterCorrectionNotice;
+    if (withPrimaryStatements.length > 0 && withPrimaryStatements.length < afterCorrectionNotice.length) {
+      for (const dropped of afterCorrectionNotice.filter((r) => !hasBothPrimaryStatements(r.statements))) {
+        console.log(
+          'bo ban trung lap khong doc duoc du BCDKT+KQKD (da co ban khac cung bao cao co so lieu that)',
+          dropped.stockCode,
+          dropped.filePath
+        );
+      }
+    }
 
     const scopes = new Set(candidates.map((r) => r.statementScope));
     if (scopes.size > 1) {
