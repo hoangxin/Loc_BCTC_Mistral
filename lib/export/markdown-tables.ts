@@ -1,5 +1,6 @@
 import {
   findLabelColumnIndex,
+  isMetadataColumnName,
   normalizeGroupLabelForContentMatch,
   normalizeLabelText,
   type FinancialStatements,
@@ -2252,6 +2253,155 @@ function dropDuplicateAdjacentHeaderColumns(rows: string[][]): string[][] {
 // <thead><tr><th>...</th></tr></thead><tr><td>...). Neu khong trich duoc dong
 // nao (khong khop regex/khong co du lieu) - GIU NGUYEN van ban goc, khong lam
 // mat du lieu.
+// ===== Ghep lai 1 bang bi OCR tach doc thanh "khoi nhan" + "khoi so" =====
+// Bug that DPG Q3/2026 (nguoi dung bao "DPG dang loi", 2026-11-09): trong ban
+// PDF goc, KHOI NHAN (STT + ten chi tieu + ban dich tieng Anh) va KHOI SO (Ma
+// so + Thuyet minh + 4 cot gia tri) cua bang KQKD nam cach nhau 1 khoang
+// trang rong, nen Mistral xuat ra HAI bang markdown RIENG: bang 1 chi co nhan
+// (khong 1 con so nao), bang 2 ngay sau chi co so (khong 1 nhan nao). Hau qua:
+// bang so khong khop marker noi dung nao (khong co nhan de cham diem) nen
+// dong tieu de cua no bi nuot lam 1 DONG DU LIEU cua bang nhan, keo ca khoi
+// so vao chung 1 bang 48 dong lon xon - MOI chi tieu KQKD cua DPG doc ra 0 va
+// KHONG co canh bao nao, vi bang incomeStatement van "co dong".
+//
+// Hai khoi do la MOT bang: ghep NGANG lai theo dung thu tu dong (dong thu i
+// cua khoi nhan ung voi dong thu i cua khoi so - day la cach trinh bay cua
+// chinh ban in, KHONG suy doan tu STT/ma so, xem
+// feedback_no_numbering_classification). Lam o muc DONG MARKDOWN (truoc
+// parseAllTablesInRange) chu khong ghep 2 ParsedTable da parse: khoi so khi
+// parse rieng da bi can lech (parser gia dinh co cot nhan trong khi no khong
+// co, day ma so vao cot gia tri va lam roi mat 2 cot cuoi) - ghep tu ban THO
+// cho ra 1 bang binh thuong, roi moi di qua dung duong doc du lieu chung.
+//
+// CHOT CHAN (phai dung HET, de khong bao gio ghep 2 bang that su khac nhau):
+//  - 2 khoi bang DUNG LIEN TIEP, khoi so nam SAU khoi nhan va cach khong qua
+//    MAX_SPLIT_BLOCK_LINE_GAP dong (cung 1 vi tri tren trang, khong phai 2
+//    muc khac nhau cua tai lieu).
+//  - Khoi nhan: KHONG o nao la so tien, VA co 1 cot nhan that (qua nua cac
+//    dong co van ban).
+//  - Khoi so: CO so tien, VA KHONG cot nao la cot chu.
+//  - SO DONG KHOP TUYET DOI (sau khi tru dong tieu de cua khoi so). Lech 1
+//    dong la BO ghep hoan toan: ghep lech se gan nhan SAI cho moi con so, ra
+//    ket qua "nhin hop ly ma sai het" - loai nham lan te nhat co the (xem
+//    feedback_corpus_regression_needs_baseline).
+// Da quet toan bo kho markdown (scripts/_debug-split-label-value-scan-2026-11-09.ts):
+// 11 cap bang co dang "nhan roi so", chi DPG Q3/2026 that su mat du lieu vi
+// no (cac cap khac khong khop so dong nen khong bi ghep).
+const MAX_SPLIT_BLOCK_LINE_GAP = 25;
+const MIN_SPLIT_BLOCK_ROWS = 5;
+const LABEL_TEXT_PATTERN = /[a-zA-ZÀ-ỹ]{3,}/;
+// So tien trong van ban THO: >= 2 nhom phan cach hang nghin (tuc >= 7 chu
+// so). Du rong de khong nham voi STT/ma so/so thuyet minh (toi da 4 chu so),
+// va van dung cho bao cao trinh bay theo trieu dong (ngan hang/CTCK) vi cac
+// o do thuong van >= 7 chu so.
+const RAW_MONEY_CELL_PATTERN = /\d{1,3}([.,]\d{3}){2,}/;
+
+interface RawTableBlock {
+  startLine: number;
+  endLine: number;
+  rows: string[][];
+}
+
+function rawTableBlocks(lines: string[]): RawTableBlock[] {
+  const blocks: RawTableBlock[] = [];
+  let current: RawTableBlock | null = null;
+  for (let i = 0; i < lines.length; i++) {
+    const cells = splitMarkdownRow(lines[i]);
+    if (!cells) {
+      current = null;
+      continue;
+    }
+    if (!current) {
+      current = { startLine: i, endLine: i, rows: [] };
+      blocks.push(current);
+    }
+    current.endLine = i;
+    if (!isSeparatorRow(cells)) current.rows.push(cells);
+  }
+  return blocks;
+}
+
+function rawColumnLooksLikeLabel(rows: string[][], index: number): boolean {
+  let filled = 0;
+  let labelLike = 0;
+  for (const row of rows) {
+    const cell = (row[index] ?? '').trim();
+    if (cell === '') continue;
+    filled++;
+    if (LABEL_TEXT_PATTERN.test(cell)) labelLike++;
+  }
+  return filled > 0 && labelLike * 2 > filled;
+}
+
+function rawLabelColumnIndex(rows: string[][]): number {
+  const width = Math.max(...rows.map((r) => r.length));
+  for (let i = 0; i < width; i++) if (rawColumnLooksLikeLabel(rows, i)) return i; // cot nhan TIENG VIET luon dung truoc ban dich
+  return -1;
+}
+
+const rawBlockHasMoney = (rows: string[][]) => rows.some((row) => row.some((c) => RAW_MONEY_CELL_PATTERN.test(c)));
+
+function mergeLabelAndValueBlock(labelBlock: RawTableBlock, valueBlock: RawTableBlock): string[] | null {
+  if (valueBlock.startLine <= labelBlock.endLine) return null;
+  if (valueBlock.startLine - labelBlock.endLine > MAX_SPLIT_BLOCK_LINE_GAP) return null;
+  if (labelBlock.rows.length < MIN_SPLIT_BLOCK_ROWS || valueBlock.rows.length < MIN_SPLIT_BLOCK_ROWS) return null;
+  if (rawBlockHasMoney(labelBlock.rows)) return null;
+  if (!rawBlockHasMoney(valueBlock.rows)) return null;
+
+  const labelIndex = rawLabelColumnIndex(labelBlock.rows);
+  if (labelIndex === -1) return null;
+  if (rawLabelColumnIndex(valueBlock.rows) !== -1) return null;
+
+  // Dong dau cua khoi so la TIEU DE khi no khong chua so tien nao (vd "| Ma
+  // so | Thuyet minh | Nam nay | Nam truoc |").
+  const valueHeader = valueBlock.rows[0].some((c) => RAW_MONEY_CELL_PATTERN.test(c)) ? null : valueBlock.rows[0];
+  const valueRows = valueHeader ? valueBlock.rows.slice(1) : valueBlock.rows;
+  if (valueRows.length !== labelBlock.rows.length) return null;
+
+  const labels = labelBlock.rows.map((row) => (row[labelIndex] ?? '').trim());
+  if (labels.filter((l) => LABEL_TEXT_PATTERN.test(l)).length * 2 <= labels.length) return null;
+
+  const width = Math.max(...valueRows.map((r) => r.length), valueHeader?.length ?? 0);
+  const pad = (cells: string[]) => Array.from({ length: width }, (_, i) => cells[i] ?? '');
+  // Ten cot nhan tu dat (ban in de ten nay o 1 dong van ban RIENG ben ngoai
+  // bang) - dung dung tu "CHI TIEU" de findLabelColumnIndex khop ngay cot 0.
+  const header = ['CHỈ TIÊU', ...pad(valueHeader ?? [])];
+  return [
+    `| ${header.join(' | ')} |`,
+    `| ${header.map(() => '---').join(' | ')} |`,
+    ...valueRows.map((row, index) => `| ${[labels[index], ...pad(row)].join(' | ')} |`),
+  ];
+}
+
+function mergeSplitLabelValueBlocks(markdown: string): string {
+  const lines = markdown.split(/\r?\n/);
+  const blocks = rawTableBlocks(lines);
+  const replacement = new Map<number, string[]>();
+  const dropped = new Set<number>();
+
+  for (let i = 0; i + 1 < blocks.length; i++) {
+    const merged = mergeLabelAndValueBlock(blocks[i], blocks[i + 1]);
+    if (!merged) continue;
+    replacement.set(blocks[i].startLine, merged);
+    for (let line = blocks[i].startLine + 1; line <= blocks[i].endLine; line++) dropped.add(line);
+    for (let line = blocks[i + 1].startLine; line <= blocks[i + 1].endLine; line++) dropped.add(line);
+    i++; // khoi so da dung xong, khong xet lam "khoi nhan" cho cap sau
+  }
+  if (replacement.size === 0) return markdown;
+
+  const out: string[] = [];
+  for (let line = 0; line < lines.length; line++) {
+    const merged = replacement.get(line);
+    if (merged) {
+      out.push(...merged);
+      continue;
+    }
+    if (dropped.has(line)) continue;
+    out.push(lines[line]);
+  }
+  return out.join('\n');
+}
+
 function convertJsonCaptionTablesToMarkdown(markdown: string): string {
   return markdown.replace(JSON_CAPTION_TABLE_START, (fullMatch, rawCaption: string) => {
     const html = unescapeJsonCaptionString(rawCaption);
@@ -2463,7 +2613,7 @@ export function detectBalanceSheetAfterCashFlowOrderViolation(markdown: string):
 }
 
 export function parseStatementsFromMarkdown(rawMarkdown: string): FinancialStatements {
-  const markdown = convertJsonCaptionTablesToMarkdown(rawMarkdown);
+  const markdown = mergeSplitLabelValueBlocks(convertJsonCaptionTablesToMarkdown(rawMarkdown));
   const lines = markdown.split(/\r?\n/);
   const normalizedLines = lines.map((l) => normalizeLabelText(l));
 
@@ -2587,6 +2737,27 @@ export function parseStatementsFromMarkdown(rawMarkdown: string): FinancialState
   const tables = parseAllTablesInRange(relevantLines).filter(
     (t) => t.rows.length >= 3 || t.continuationKey !== undefined || definiteCashFlowTable(t) || classifyTableByContent(t) !== null
   );
+
+  // DEBUG_PARSE=1 in ra danh sach bang da nhan dien + key duoc gan cho tung
+  // bang (them 2026-11-09 khi truy loi DPG): buoc "gan bang vao 3 bang chinh"
+  // la noi nhieu loi mat du lieu nhat (bang bi loai am tham vi cham 0 diem,
+  // 2 bang bi gop/khong gop...) ma truoc day khong co cach nao nhin thay tu
+  // ngoai ngoai viec doan.
+  if (process.env.DEBUG_PARSE) {
+    for (const t of tables) {
+      console.error(
+        '[debug-table]',
+        JSON.stringify({
+          dong: `${t.startLineIndex}-${t.endLineIndex}`,
+          soDong: t.rows.length,
+          labelIndex: t.labelIndex,
+          maSoIndex: t.maSoIndex,
+          key: t.continuationKey ?? (definiteCashFlowTable(t) ? 'cashFlow' : classifyTableByContent(t)),
+          cot: t.columns,
+        })
+      );
+    }
+  }
 
   const grouped: Record<keyof FinancialStatements, ParsedTable[]> = {
     balanceSheet: [],

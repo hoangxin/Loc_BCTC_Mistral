@@ -51,6 +51,65 @@ export function normalizeLabelText(text: string): string {
 // nao khop ca 3 bien the.
 const LOOKS_LIKE_LABEL_PATTERN = /[a-zA-ZÀ-ỹ]{3,}/;
 
+// 1 cot co phai cot CHU (ten chi tieu/ban dich) hay khong, xet theo NOI DUNG
+// cac dong mau: qua nua so o co van ban dang "cum chu" (>=3 ky tu chu lien
+// tiep - dung lai LOOKS_LIKE_LABEL_PATTERN). Cot STT ("A -", "I.", "1.") va
+// cot ma so/thuyet minh ("100", "V.1") KHONG dat nguong nay (token qua ngan),
+// nen phan biet duoc cot nhan that voi cac cot ma/so thu tu dung canh no.
+function looksLikeLabelContentColumn(sampleRows: (string | number | null)[][], index: number): boolean {
+  let filled = 0;
+  let labelLike = 0;
+  for (const row of sampleRows) {
+    const cell = row[index];
+    if (cell === null || cell === undefined || cell === '') continue;
+    filled++;
+    if (typeof cell === 'string' && LOOKS_LIKE_LABEL_PATTERN.test(cell)) labelLike++;
+  }
+  return filled > 0 && labelLike * 2 > filled;
+}
+
+// SUA 2026-11-09 (bug that DPG Q3/2026, nguoi dung bao "DPG dang loi"): bao
+// cao SONG NGU tach ban dich tieng Anh cua ten chi tieu thanh 1 COT RIENG
+// (vd dong du lieu = ["A -", "TAI SAN NGAN HAN", "CURRENT ASSETS", "100", "",
+// so, so]) VA dong TIEU DE bi OCR day sang phai 1 o (header = ["", "",
+// "TÀI SẢN / ASSETS", "Mã số/ Code", ...] - trong file PDF goc o "TÀI SẢN /
+// ASSETS" la 1 o GOP phu tren ca cot STT + 2 cot nhan). Khi do phep tim theo
+// TEN cot o tren khop vao vi tri cua cot TIENG ANH, lam labelText (ghep tu
+// cot do) toan tieng Anh -> classifyTableByContent khong khop marker tieng
+// Viet nao, cham 0 diem -> CA BANG bi loai AM THAM. Hau qua that: trang dau
+// BCDKT cua DPG (toan bo TAI SAN NGAN HAN: Tien, Phai thu KH, Ton kho...) bi
+// bo, chi con 4 trang sau gop lai -> cac chi tieu tai san ngan han deu ra 0
+// ma khong canh bao gi.
+//
+// Tin hieu CAU TRUC de nhan ra "header bi day sang phai" (khong bam vao tu
+// ngu, theo feedback_prefer_structural_over_wording_fixes): cac cot TRUOC vi
+// tri khop deu KHONG CO TEN (chuoi rong) - neu header canh dung thi o ngay
+// truoc ten cot nhan thuong la "STT"/"Mã số" hoac chinh cot nhan la cot dau -
+// VA cot ngay truoc do lai chua van ban dang nhan o qua nua cac dong. Khi ca
+// 2 dieu kien dung, cot nhan THAT nam ben trai vi tri khop; lui sang trai cho
+// den khi gap cot khong con dang nhan (vd cot STT) hoac cot da co ten.
+//
+// Lui sang BEN TRAI (khong phai ben phai) la co y: bao cao Viet Nam luon in
+// ten chi tieu tieng Viet TRUOC ban dich, va toan bo tang nhan dien
+// dong/chi tieu phia sau (CONTENT_MARKERS, cac finder trong lib/analysis.ts)
+// deu doi chieu theo tieng Viet.
+function shiftLabelIndexLeftWhenHeaderIsOffset(
+  index: number,
+  columns: string[],
+  sampleRows?: (string | number | null)[][]
+): number {
+  if (index === 0 || !sampleRows || sampleRows.length === 0) return index;
+  // Chi xet khi CHINH cot khop cung dang chua van ban nhan (2 cot nhan lien
+  // tiep = dang song ngu); neu cot khop khong phai cot chu (vd header canh
+  // dung va cot do chua so lieu) thi khong dong gi den no.
+  if (!looksLikeLabelContentColumn(sampleRows, index)) return index;
+  let result = index;
+  while (result > 0 && normalizeLabelText(columns[result - 1] ?? '') === '' && looksLikeLabelContentColumn(sampleRows, result - 1)) {
+    result--;
+  }
+  return result;
+}
+
 // `sampleRows` (tuy chon, CHI dung o parseAllTablesInRange - moi caller khac
 // giu nguyen hanh vi cu, fallback ve 0) - can khi CA cot STT lan cot nhan deu
 // KHONG dat ten (2 cot trong lien tiep, khong cot nao khop CHI TIEU/TAI SAN/
@@ -67,7 +126,7 @@ export function findLabelColumnIndex(columns: string[], sampleRows?: (string | n
     const normalized = normalizeLabelText(col);
     return normalized.includes('CHI TIEU') || normalized.includes('TAI SAN') || normalized.includes('NGUON VON');
   });
-  if (index !== -1) return index;
+  if (index !== -1) return shiftLabelIndexLeftWhenHeaderIsOffset(index, columns, sampleRows);
   if (!sampleRows || sampleRows.length === 0) return 0;
 
   let bestIndex = 0;
