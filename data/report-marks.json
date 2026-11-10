@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-10T04:53:00.321Z",
+  "updatedAt": "2026-11-10T09:03:12.848Z",
   "codes": {
     "HPI": {
       "value": true,
@@ -3247,6 +3247,134 @@
     "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/RAL_Baocaotaichinh_Q3_2026.pdf": {
       "value": "done",
       "at": 1794286363936
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/DDM_Baocaotaichinh_Q3_2026_Hopnhat.pdf": {
+      "value": "done",
+      "at": 1794292205589
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/SMC_Baocaotaichinh_Q3_2026_Hopnhat.pdf": {
+      "value": "done",
+      "at": 1794292322363
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/TMT_Baocaotaichinh_Q3_2026_Hopnhat.pdf": {
+      "value": "done",
+      "at": 1794292981948
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/DPG_Baocaotaichinh_Q3_2026_Hopnhat.pdf": {
+      "value": "done",
+      "at": 1794293180130
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/FRT_Baocaotaichinh_Q3_2026_Hopnhat.pdf": {
+      "value": "done",
+      "at": 1794294168348
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/SRF_Baocaotaichinh_Q3_2026_Hopnhat.pdf": {
+      "value": "done",
+      "at": 1794294920874
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/SHI_Baocaotaichinh_Q3_2026_Hopnhat.pdf": {
+      "value": "done",
+      "at": 1794295316627
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/DLG_Baocaotaichinh_Q3_2026_Hopnhat.pdf": {
+      "value": "done",
+      "at": 1794295346647
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/DC4_Baocaotaichinh_Q3_2026_Hopnhat.pdf": {
+      "value": "done",
+      "at": 1794295474346
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/BFC_Baocaotaichinh_Q3_2026_Hopnhat.pdf": {
+      "value": "done",
+      "at": 1794295775178
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/BCM_Baocaotaichinh_Q3_2026_Hopnhat.pdf": {
+      "value": "done",
+      "at": 1794296069695
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/KSB_Baocaotaichinh_Q3_2026_Hopnhat.pdf": {
+      "value": "done",
+      "at": 1794296132308
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/HU1_Baocaotaichinh_Q3_2026_Hopnhat.pdf": {
+      "value": "done",
+      "at": 1794296178688
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/BHN_Baocaotaichinh_Q3_2026_Soatxet_Hopnhat.pdf": {
+      "value": "done",
+      "at": 1794296501080
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/PJT_Baocaotaichinh_Q3_2026_Hopnhat.pdf": {
+      "value": "done",
+      "at": 1794296578357
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/SGN_Baocaotaichinh_Q3_2026_Hopnhat.pdf": {
+      "value": "done",
+      "at": 1794296866565
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/NHH_Baocaotaichinh_Q3_2026_Hopnhat.pdf": {
+      "value": "done",
+      "at": 1794297584893
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/LCG_Baocaotaichinh_Q3_2026_Hopnhat.pdf": {
+      "value": "done",
+      "at": 1794297624774
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/PLC_Baocaotaichinh_Q3_2026_Hopnhat.zip__extracted/1_plc_2026_10_29_2061f18_vi_baocaotaichinh_q3_2026_hop_nhat_signed.pdf": {
+      "value": "done",
+      "at": 1794297816142
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/VTZ_Baocaotaichinh_Q3_2026_Hopnhat.zip__extracted/2_vtz_2026_10_29_8bcf18c_vi_baocaotaichinh_q3_2026_hn_signed.pdf": {
+      "value": "done",
+      "at": 1794297872236
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/NBB_Baocaotaichinh_Q3_2026_Hopnhat.pdf": {
+      "value": "done",
+      "at": 1794297921177
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/TNT_Baocaotaichinh_Q3_2026_Hopnhat.pdf": {
+      "value": "done",
+      "at": 1794297962310
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/PVT_Baocaotaichinh_Q3_2026_Hopnhat.pdf": {
+      "value": "done",
+      "at": 1794298588428
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/GEE_Baocaotaichinh_Q3_2026_Hopnhat.pdf": {
+      "value": "done",
+      "at": 1794299125221
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/GTS_Baocaotaichinh_Q3_2026_Hopnhat.zip__extracted/2_gts_2026_10_29_0fa8f5b_vi_baocaotaichinhhopnhat_q3_2026_1.pdf": {
+      "value": "done",
+      "at": 1794299373393
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/PGC_Baocaotaichinh_Q3_2026_Hopnhat.pdf": {
+      "value": "done",
+      "at": 1794300595342
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/PTM_Baocaotaichinh_Q3_2026_Hopnhat.zip__extracted/4_ptm_2026_10_28_86b0a9a_ptm_bctc_hop_nhat_q3_2026.pdf": {
+      "value": "done",
+      "at": 1794300839850
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/HIO_Baocaotaichinh_Q3_2026_Hopnhat.zip__extracted/1_hio_2026_10_28_08c7179_vi_cbtt_baocaotaichinh_hn_q3_2026.pdf": {
+      "value": "done",
+      "at": 1794301026001
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/ST8_Baocaotaichinh_Q3_2026_Hopnhat.pdf": {
+      "value": "done",
+      "at": 1794301134640
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/GEL_Baocaotaichinh_Q3_2026_Hopnhat.pdf": {
+      "value": "done",
+      "at": 1794301200136
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/TID_Baocaotaichinh_Q3_2026_Hopnhat.zip__extracted/4_tid_2026_10_28_fbbecf5_vi_baocaotaichinhhopnhat_q3_2026.pdf": {
+      "value": "done",
+      "at": 1794301225494
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/CMD_Baocaotaichinh_Q3_2026.zip__extracted/1_cmd_2026_10_15_124f78d_vi_baocaotaichinh_q3_2026.pdf": {
+      "value": "done",
+      "at": 1794301372620
     }
   },
   "notes": {
@@ -12373,8 +12501,8 @@
       "at": 1793260901333
     },
     "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/GTS_Baocaotaichinh_Q3_2026_Hopnhat.zip__extracted/2_gts_2026_10_29_0fa8f5b_vi_baocaotaichinhhopnhat_q3_2026_1.pdf::DT thuần": {
-      "value": "light",
-      "at": 1793260974392
+      "value": "off",
+      "at": 1794299371415
     },
     "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/HAM_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Tồn kho": {
       "value": "off",
@@ -19447,6 +19575,842 @@
     "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/RAL_Baocaotaichinh_Q3_2026.pdf::Vay": {
       "value": "off",
       "at": 1794286361008
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/DDM_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Tồn kho": {
+      "value": "off",
+      "at": 1794292172958
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/DDM_Baocaotaichinh_Q3_2026_Hopnhat.pdf::DT Chưa Thực Hiện": {
+      "value": "off",
+      "at": 1794292182089
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/DDM_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Tiền": {
+      "value": "off",
+      "at": 1794292189624
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/DDM_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Lãi gộp": {
+      "value": "off",
+      "at": 1794292201484
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/DDM_Baocaotaichinh_Q3_2026_Hopnhat.pdf::DT thuần": {
+      "value": "off",
+      "at": 1794292203874
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/SMC_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Lãi gộp": {
+      "value": "off",
+      "at": 1794292287211
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/SMC_Baocaotaichinh_Q3_2026_Hopnhat.pdf::LNST": {
+      "value": "off",
+      "at": 1794292293224
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/SMC_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Trả trước người bán": {
+      "value": "off",
+      "at": 1794292298110
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/SMC_Baocaotaichinh_Q3_2026_Hopnhat.pdf::DT Chưa Thực Hiện": {
+      "value": "off",
+      "at": 1794292308264
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/SMC_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Phải trả khác": {
+      "value": "off",
+      "at": 1794292313457
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/TMT_Baocaotaichinh_Q3_2026_Hopnhat.pdf::DT thuần": {
+      "value": "off",
+      "at": 1794292731700
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/TMT_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Lãi gộp": {
+      "value": "off",
+      "at": 1794292733800
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/TMT_Baocaotaichinh_Q3_2026_Hopnhat.pdf::LNST": {
+      "value": "off",
+      "at": 1794292741853
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/TMT_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Trả trước người bán": {
+      "value": "off",
+      "at": 1794292749693
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/TMT_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Phải thu khác": {
+      "value": "off",
+      "at": 1794292768294
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/TMT_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Tồn kho": {
+      "value": "off",
+      "at": 1794292836112
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/TMT_Baocaotaichinh_Q3_2026_Hopnhat.pdf::TS Dở dang": {
+      "value": "off",
+      "at": 1794292851537
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/TMT_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Phải trả người bán": {
+      "value": "off",
+      "at": 1794292856396
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/TMT_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Chi phí phải trả": {
+      "value": "off",
+      "at": 1794292865898
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/TMT_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Vay": {
+      "value": "off",
+      "at": 1794292877941
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/TMT_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Vốn CSH": {
+      "value": "off",
+      "at": 1794292882813
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/DPG_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Phải thu khách hàng": {
+      "value": "off",
+      "at": 1794293096333
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/DPG_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Trả trước người bán": {
+      "value": "off",
+      "at": 1794293099958
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/DPG_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Chi phí phải trả": {
+      "value": "off",
+      "at": 1794293128270
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/DPG_Baocaotaichinh_Q3_2026_Hopnhat.pdf::DT Chưa Thực Hiện": {
+      "value": "off",
+      "at": 1794293134184
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/DPG_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Phải trả khác": {
+      "value": "off",
+      "at": 1794293142182
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/DPG_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Vay": {
+      "value": "off",
+      "at": 1794293149650
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/DPG_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Vốn CSH": {
+      "value": "off",
+      "at": 1794293157005
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/DPG_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Tiền": {
+      "value": "off",
+      "at": 1794293161929
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/DPG_Baocaotaichinh_Q3_2026_Hopnhat.pdf::DT thuần": {
+      "value": "off",
+      "at": 1794293164467
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/DPG_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Lãi gộp": {
+      "value": "off",
+      "at": 1794293166453
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/DPG_Baocaotaichinh_Q3_2026_Hopnhat.pdf::TS Dở dang": {
+      "value": "off",
+      "at": 1794293172083
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/DPG_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Người mua trả trước": {
+      "value": "off",
+      "at": 1794293174561
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/FRT_Baocaotaichinh_Q3_2026_Hopnhat.pdf::DT thuần": {
+      "value": "light",
+      "at": 1794293742724
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/FRT_Baocaotaichinh_Q3_2026_Hopnhat.pdf::LNST": {
+      "value": "light",
+      "at": 1794293746741
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/FRT_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Tiền": {
+      "value": "off",
+      "at": 1794293753703
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/FRT_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Tồn kho": {
+      "value": "off",
+      "at": 1794293810926
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/FRT_Baocaotaichinh_Q3_2026_Hopnhat.pdf::TS Dở dang": {
+      "value": "off",
+      "at": 1794293843862
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/FRT_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Người mua trả trước": {
+      "value": "off",
+      "at": 1794293847888
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/FRT_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Chi phí phải trả": {
+      "value": "off",
+      "at": 1794293853539
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/FRT_Baocaotaichinh_Q3_2026_Hopnhat.pdf::DT Chưa Thực Hiện": {
+      "value": "off",
+      "at": 1794293859258
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/FRT_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Vay": {
+      "value": "off",
+      "at": 1794293866739
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/FRT_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Vốn CSH": {
+      "value": "off",
+      "at": 1794293872632
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/SRF_Baocaotaichinh_Q3_2026_Hopnhat.pdf::DT thuần": {
+      "value": "off",
+      "at": 1794294429595
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/SRF_Baocaotaichinh_Q3_2026_Hopnhat.pdf::LNST": {
+      "value": "off",
+      "at": 1794294435829
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/SRF_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Tiền": {
+      "value": "off",
+      "at": 1794294440715
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/SRF_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Trả trước người bán": {
+      "value": "off",
+      "at": 1794294865216
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/SRF_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Phải thu khác": {
+      "value": "off",
+      "at": 1794294876538
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/SRF_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Tồn kho": {
+      "value": "off",
+      "at": 1794294884886
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/SRF_Baocaotaichinh_Q3_2026_Hopnhat.pdf::TS Dở dang": {
+      "value": "off",
+      "at": 1794294893914
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/SRF_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Người mua trả trước": {
+      "value": "off",
+      "at": 1794294917261
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/SHI_Baocaotaichinh_Q3_2026_Hopnhat.pdf::LNST": {
+      "value": "off",
+      "at": 1794295082746
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/SHI_Baocaotaichinh_Q3_2026_Hopnhat.pdf::DT thuần": {
+      "value": "off",
+      "at": 1794295084661
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/SHI_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Tiền": {
+      "value": "off",
+      "at": 1794295089509
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/SHI_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Trả trước người bán": {
+      "value": "off",
+      "at": 1794295095898
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/SHI_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Tồn kho": {
+      "value": "off",
+      "at": 1794295100754
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/SHI_Baocaotaichinh_Q3_2026_Hopnhat.pdf::TS Dở dang": {
+      "value": "off",
+      "at": 1794295110770
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/SHI_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Người mua trả trước": {
+      "value": "off",
+      "at": 1794295191442
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/SHI_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Chi phí phải trả": {
+      "value": "off",
+      "at": 1794295197031
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/SHI_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Vay": {
+      "value": "off",
+      "at": 1794295209090
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/SHI_Baocaotaichinh_Q3_2026_Hopnhat.pdf::DT Chưa Thực Hiện": {
+      "value": "off",
+      "at": 1794295314365
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/DLG_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Tiền": {
+      "value": "off",
+      "at": 1794295333732
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/DLG_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Người mua trả trước": {
+      "value": "off",
+      "at": 1794295342916
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/DC4_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Chi phí phải trả": {
+      "value": "off",
+      "at": 1794295389626
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/DC4_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Dự phòng phải trả": {
+      "value": "off",
+      "at": 1794295396740
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/DC4_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Vay": {
+      "value": "off",
+      "at": 1794295405276
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/BFC_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Lãi gộp": {
+      "value": "off",
+      "at": 1794295694577
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/BFC_Baocaotaichinh_Q3_2026_Hopnhat.pdf::DT thuần": {
+      "value": "off",
+      "at": 1794295700494
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/BFC_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Phải thu khách hàng": {
+      "value": "off",
+      "at": 1794295707986
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/BFC_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Trả trước người bán": {
+      "value": "off",
+      "at": 1794295714359
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/BFC_Baocaotaichinh_Q3_2026_Hopnhat.pdf::TS Dở dang": {
+      "value": "off",
+      "at": 1794295726794
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/BFC_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Phải trả người bán": {
+      "value": "off",
+      "at": 1794295731705
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/BFC_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Chi phí phải trả": {
+      "value": "light",
+      "at": 1794295781628
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/BCM_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Phải thu khách hàng": {
+      "value": "off",
+      "at": 1794296009426
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/BCM_Baocaotaichinh_Q3_2026_Hopnhat.pdf::TS Thuế TN Hoãn lại": {
+      "value": "off",
+      "at": 1794296017721
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/BCM_Baocaotaichinh_Q3_2026_Hopnhat.pdf::DT Chưa Thực Hiện": {
+      "value": "off",
+      "at": 1794296024032
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/KSB_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Phải thu khách hàng": {
+      "value": "off",
+      "at": 1794296090189
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/KSB_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Trả trước người bán": {
+      "value": "off",
+      "at": 1794296100214
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/KSB_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Tồn kho": {
+      "value": "off",
+      "at": 1794296105093
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/KSB_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Phải trả người bán": {
+      "value": "off",
+      "at": 1794296123555
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/KSB_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Người mua trả trước": {
+      "value": "off",
+      "at": 1794296128411
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/HU1_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Chi phí phải trả": {
+      "value": "off",
+      "at": 1794296170427
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/HU1_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Vốn CSH": {
+      "value": "off",
+      "at": 1794296176100
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/BHN_Baocaotaichinh_Q3_2026_Soatxet_Hopnhat.pdf::Phải thu khách hàng": {
+      "value": "off",
+      "at": 1794296439061
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/BHN_Baocaotaichinh_Q3_2026_Soatxet_Hopnhat.pdf::Trả trước người bán": {
+      "value": "off",
+      "at": 1794296445487
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/BHN_Baocaotaichinh_Q3_2026_Soatxet_Hopnhat.pdf::TS Dở dang": {
+      "value": "off",
+      "at": 1794296458816
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/BHN_Baocaotaichinh_Q3_2026_Soatxet_Hopnhat.pdf::Chi phí phải trả": {
+      "value": "off",
+      "at": 1794296465154
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/BHN_Baocaotaichinh_Q3_2026_Soatxet_Hopnhat.pdf::DT Chưa Thực Hiện": {
+      "value": "off",
+      "at": 1794296483659
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/BHN_Baocaotaichinh_Q3_2026_Soatxet_Hopnhat.pdf::Phải trả khác": {
+      "value": "off",
+      "at": 1794296492927
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/BHN_Baocaotaichinh_Q3_2026_Soatxet_Hopnhat.pdf::Dự phòng phải trả": {
+      "value": "off",
+      "at": 1794296498703
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/PJT_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Lãi gộp": {
+      "value": "off",
+      "at": 1794296531207
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/PJT_Baocaotaichinh_Q3_2026_Hopnhat.pdf::DT thuần": {
+      "value": "off",
+      "at": 1794296533074
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/PJT_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Phải thu khách hàng": {
+      "value": "off",
+      "at": 1794296539015
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/PJT_Baocaotaichinh_Q3_2026_Hopnhat.pdf::TS Dở dang": {
+      "value": "off",
+      "at": 1794296551946
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/PJT_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Vay": {
+      "value": "off",
+      "at": 1794296566182
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/SGN_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Lãi gộp": {
+      "value": "light",
+      "at": 1794296832309
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/SGN_Baocaotaichinh_Q3_2026_Hopnhat.pdf::LNST": {
+      "value": "light",
+      "at": 1794296835638
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/SGN_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Nguyên giá tscđ hữu hình": {
+      "value": "off",
+      "at": 1794296843966
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/SGN_Baocaotaichinh_Q3_2026_Hopnhat.pdf::TS Dở dang": {
+      "value": "off",
+      "at": 1794296849562
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/SGN_Baocaotaichinh_Q3_2026_Hopnhat.pdf::TS Thuế TN Hoãn lại": {
+      "value": "off",
+      "at": 1794296856336
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/NHH_Baocaotaichinh_Q3_2026_Hopnhat.pdf::DT thuần": {
+      "value": "off",
+      "at": 1794297471403
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/NHH_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Phải thu khách hàng": {
+      "value": "off",
+      "at": 1794297526038
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/NHH_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Phải thu khác": {
+      "value": "off",
+      "at": 1794297536755
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/NHH_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Tồn kho": {
+      "value": "off",
+      "at": 1794297551082
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/NHH_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Nguyên giá tscđ hữu hình": {
+      "value": "off",
+      "at": 1794297556929
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/NHH_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Phải trả người bán": {
+      "value": "off",
+      "at": 1794297560825
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/NHH_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Phải trả khác": {
+      "value": "off",
+      "at": 1794297569137
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/NHH_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Vay": {
+      "value": "off",
+      "at": 1794297575437
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/LCG_Baocaotaichinh_Q3_2026_Hopnhat.pdf::DT thuần": {
+      "value": "off",
+      "at": 1794297596126
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/LCG_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Lãi gộp": {
+      "value": "off",
+      "at": 1794297598159
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/LCG_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Tồn kho": {
+      "value": "off",
+      "at": 1794297607204
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/LCG_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Phải trả người bán": {
+      "value": "off",
+      "at": 1794297612979
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/LCG_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Người mua trả trước": {
+      "value": "off",
+      "at": 1794297618511
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/LCG_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Vay": {
+      "value": "off",
+      "at": 1794297622522
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/PLC_Baocaotaichinh_Q3_2026_Hopnhat.zip__extracted/1_plc_2026_10_29_2061f18_vi_baocaotaichinh_q3_2026_hop_nhat_signed.pdf::Lãi gộp": {
+      "value": "light",
+      "at": 1794297718070
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/PLC_Baocaotaichinh_Q3_2026_Hopnhat.zip__extracted/1_plc_2026_10_29_2061f18_vi_baocaotaichinh_q3_2026_hop_nhat_signed.pdf::LNST": {
+      "value": "light",
+      "at": 1794297720175
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/PLC_Baocaotaichinh_Q3_2026_Hopnhat.zip__extracted/1_plc_2026_10_29_2061f18_vi_baocaotaichinh_q3_2026_hop_nhat_signed.pdf::Tiền": {
+      "value": "off",
+      "at": 1794297735316
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/PLC_Baocaotaichinh_Q3_2026_Hopnhat.zip__extracted/1_plc_2026_10_29_2061f18_vi_baocaotaichinh_q3_2026_hop_nhat_signed.pdf::Trả trước người bán": {
+      "value": "off",
+      "at": 1794297740243
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/PLC_Baocaotaichinh_Q3_2026_Hopnhat.zip__extracted/1_plc_2026_10_29_2061f18_vi_baocaotaichinh_q3_2026_hop_nhat_signed.pdf::Tồn kho": {
+      "value": "off",
+      "at": 1794297760681
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/PLC_Baocaotaichinh_Q3_2026_Hopnhat.zip__extracted/1_plc_2026_10_29_2061f18_vi_baocaotaichinh_q3_2026_hop_nhat_signed.pdf::TS Dở dang": {
+      "value": "off",
+      "at": 1794297768315
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/PLC_Baocaotaichinh_Q3_2026_Hopnhat.zip__extracted/1_plc_2026_10_29_2061f18_vi_baocaotaichinh_q3_2026_hop_nhat_signed.pdf::TS Thuế TN Hoãn lại": {
+      "value": "off",
+      "at": 1794297774275
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/PLC_Baocaotaichinh_Q3_2026_Hopnhat.zip__extracted/1_plc_2026_10_29_2061f18_vi_baocaotaichinh_q3_2026_hop_nhat_signed.pdf::Phải trả người bán": {
+      "value": "off",
+      "at": 1794297780047
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/PLC_Baocaotaichinh_Q3_2026_Hopnhat.zip__extracted/1_plc_2026_10_29_2061f18_vi_baocaotaichinh_q3_2026_hop_nhat_signed.pdf::Người mua trả trước": {
+      "value": "off",
+      "at": 1794297784927
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/PLC_Baocaotaichinh_Q3_2026_Hopnhat.zip__extracted/1_plc_2026_10_29_2061f18_vi_baocaotaichinh_q3_2026_hop_nhat_signed.pdf::Chi phí phải trả": {
+      "value": "light",
+      "at": 1794297811287
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/PLC_Baocaotaichinh_Q3_2026_Hopnhat.zip__extracted/1_plc_2026_10_29_2061f18_vi_baocaotaichinh_q3_2026_hop_nhat_signed.pdf::Phải trả khác": {
+      "value": "off",
+      "at": 1794297794670
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/PLC_Baocaotaichinh_Q3_2026_Hopnhat.zip__extracted/1_plc_2026_10_29_2061f18_vi_baocaotaichinh_q3_2026_hop_nhat_signed.pdf::Vốn CSH": {
+      "value": "off",
+      "at": 1794297800388
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/VTZ_Baocaotaichinh_Q3_2026_Hopnhat.zip__extracted/2_vtz_2026_10_29_8bcf18c_vi_baocaotaichinh_q3_2026_hn_signed.pdf::Lãi gộp": {
+      "value": "off",
+      "at": 1794297847530
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/VTZ_Baocaotaichinh_Q3_2026_Hopnhat.zip__extracted/2_vtz_2026_10_29_8bcf18c_vi_baocaotaichinh_q3_2026_hn_signed.pdf::DT thuần": {
+      "value": "off",
+      "at": 1794297849683
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/VTZ_Baocaotaichinh_Q3_2026_Hopnhat.zip__extracted/2_vtz_2026_10_29_8bcf18c_vi_baocaotaichinh_q3_2026_hn_signed.pdf::Phải thu khách hàng": {
+      "value": "off",
+      "at": 1794297857981
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/VTZ_Baocaotaichinh_Q3_2026_Hopnhat.zip__extracted/2_vtz_2026_10_29_8bcf18c_vi_baocaotaichinh_q3_2026_hn_signed.pdf::Phải thu khác": {
+      "value": "off",
+      "at": 1794297862829
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/VTZ_Baocaotaichinh_Q3_2026_Hopnhat.zip__extracted/2_vtz_2026_10_29_8bcf18c_vi_baocaotaichinh_q3_2026_hn_signed.pdf::Phải trả người bán": {
+      "value": "off",
+      "at": 1794297869097
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/NBB_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Lãi gộp": {
+      "value": "off",
+      "at": 1794297882467
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/NBB_Baocaotaichinh_Q3_2026_Hopnhat.pdf::DT thuần": {
+      "value": "off",
+      "at": 1794297887359
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/NBB_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Phải trả người bán": {
+      "value": "off",
+      "at": 1794297894431
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/NBB_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Người mua trả trước": {
+      "value": "off",
+      "at": 1794297909445
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/NBB_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Chi phí phải trả": {
+      "value": "off",
+      "at": 1794297913180
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/TNT_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Lãi gộp": {
+      "value": "off",
+      "at": 1794297938338
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/TNT_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Trả trước người bán": {
+      "value": "off",
+      "at": 1794297942118
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/TNT_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Phải thu khác": {
+      "value": "off",
+      "at": 1794297946981
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/TNT_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Nguyên giá tscđ hữu hình": {
+      "value": "off",
+      "at": 1794297957450
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/PVT_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Phải thu khách hàng": {
+      "value": "off",
+      "at": 1794298446048
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/PVT_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Trả trước người bán": {
+      "value": "off",
+      "at": 1794298453869
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/PVT_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Tồn kho": {
+      "value": "off",
+      "at": 1794298462838
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/PVT_Baocaotaichinh_Q3_2026_Hopnhat.pdf::TS Dở dang": {
+      "value": "off",
+      "at": 1794298473311
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/PVT_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Người mua trả trước": {
+      "value": "off",
+      "at": 1794298481427
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/PVT_Baocaotaichinh_Q3_2026_Hopnhat.pdf::DT Chưa Thực Hiện": {
+      "value": "off",
+      "at": 1794298491463
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/PVT_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Tiền": {
+      "value": "off",
+      "at": 1794298496367
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/PVT_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Chi phí phải trả": {
+      "value": "off",
+      "at": 1794298583410
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/GEE_Baocaotaichinh_Q3_2026_Hopnhat.pdf::DT thuần": {
+      "value": "off",
+      "at": 1794299012379
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/GEE_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Lãi gộp": {
+      "value": "off",
+      "at": 1794299014305
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/GEE_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Phải thu khách hàng": {
+      "value": "off",
+      "at": 1794299020827
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/GEE_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Trả trước người bán": {
+      "value": "off",
+      "at": 1794299026743
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/GEE_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Phải thu khác": {
+      "value": "off",
+      "at": 1794299039621
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/GEE_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Phải trả người bán": {
+      "value": "off",
+      "at": 1794299091741
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/GEE_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Người mua trả trước": {
+      "value": "off",
+      "at": 1794299096798
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/GEE_Baocaotaichinh_Q3_2026_Hopnhat.pdf::DT Chưa Thực Hiện": {
+      "value": "off",
+      "at": 1794299104304
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/GEE_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Chi phí phải trả": {
+      "value": "off",
+      "at": 1794299106805
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/GEE_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Vay": {
+      "value": "off",
+      "at": 1794299114993
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/GEE_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Tiền": {
+      "value": "off",
+      "at": 1794299123211
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/GTS_Baocaotaichinh_Q3_2026_Hopnhat.zip__extracted/2_gts_2026_10_29_0fa8f5b_vi_baocaotaichinhhopnhat_q3_2026_1.pdf::Tồn kho": {
+      "value": "off",
+      "at": 1794299211207
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/GTS_Baocaotaichinh_Q3_2026_Hopnhat.zip__extracted/2_gts_2026_10_29_0fa8f5b_vi_baocaotaichinhhopnhat_q3_2026_1.pdf::Người mua trả trước": {
+      "value": "off",
+      "at": 1794299228587
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/GTS_Baocaotaichinh_Q3_2026_Hopnhat.zip__extracted/2_gts_2026_10_29_0fa8f5b_vi_baocaotaichinhhopnhat_q3_2026_1.pdf::Tiền": {
+      "value": "off",
+      "at": 1794299249868
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/GTS_Baocaotaichinh_Q3_2026_Hopnhat.zip__extracted/2_gts_2026_10_29_0fa8f5b_vi_baocaotaichinhhopnhat_q3_2026_1.pdf::DT Chưa Thực Hiện": {
+      "value": "off",
+      "at": 1794299368369
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/PGC_Baocaotaichinh_Q3_2026_Hopnhat.pdf::DT thuần": {
+      "value": "light",
+      "at": 1794299415282
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/PGC_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Lãi gộp": {
+      "value": "light",
+      "at": 1794299417126
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/PGC_Baocaotaichinh_Q3_2026_Hopnhat.pdf::LNST": {
+      "value": "light",
+      "at": 1794299419071
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/PGC_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Phải thu khách hàng": {
+      "value": "off",
+      "at": 1794299428074
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/PGC_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Trả trước người bán": {
+      "value": "off",
+      "at": 1794299435170
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/PGC_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Phải thu khác": {
+      "value": "off",
+      "at": 1794299440038
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/PGC_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Tồn kho": {
+      "value": "off",
+      "at": 1794299444886
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/PGC_Baocaotaichinh_Q3_2026_Hopnhat.pdf::TS Thuế TN Hoãn lại": {
+      "value": "light",
+      "at": 1794299835598
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/PGC_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Phải trả người bán": {
+      "value": "off",
+      "at": 1794299485439
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/PGC_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Vay": {
+      "value": "off",
+      "at": 1794299511102
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/PGC_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Tiền": {
+      "value": "off",
+      "at": 1794299518453
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/PGC_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Phải trả khác": {
+      "value": "off",
+      "at": 1794299820433
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/PGC_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Chi phí phải trả": {
+      "value": "light",
+      "at": 1794299832312
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/PTM_Baocaotaichinh_Q3_2026_Hopnhat.zip__extracted/4_ptm_2026_10_28_86b0a9a_ptm_bctc_hop_nhat_q3_2026.pdf::LNST": {
+      "value": "off",
+      "at": 1794300798964
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/PTM_Baocaotaichinh_Q3_2026_Hopnhat.zip__extracted/4_ptm_2026_10_28_86b0a9a_ptm_bctc_hop_nhat_q3_2026.pdf::Tiền": {
+      "value": "off",
+      "at": 1794300805574
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/PTM_Baocaotaichinh_Q3_2026_Hopnhat.zip__extracted/4_ptm_2026_10_28_86b0a9a_ptm_bctc_hop_nhat_q3_2026.pdf::Trả trước người bán": {
+      "value": "off",
+      "at": 1794300811874
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/PTM_Baocaotaichinh_Q3_2026_Hopnhat.zip__extracted/4_ptm_2026_10_28_86b0a9a_ptm_bctc_hop_nhat_q3_2026.pdf::Tồn kho": {
+      "value": "off",
+      "at": 1794300819699
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/PTM_Baocaotaichinh_Q3_2026_Hopnhat.zip__extracted/4_ptm_2026_10_28_86b0a9a_ptm_bctc_hop_nhat_q3_2026.pdf::Phải trả người bán": {
+      "value": "off",
+      "at": 1794300824578
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/PTM_Baocaotaichinh_Q3_2026_Hopnhat.zip__extracted/4_ptm_2026_10_28_86b0a9a_ptm_bctc_hop_nhat_q3_2026.pdf::Chi phí phải trả": {
+      "value": "off",
+      "at": 1794300829428
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/PTM_Baocaotaichinh_Q3_2026_Hopnhat.zip__extracted/4_ptm_2026_10_28_86b0a9a_ptm_bctc_hop_nhat_q3_2026.pdf::Vay": {
+      "value": "off",
+      "at": 1794300834292
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/HIO_Baocaotaichinh_Q3_2026_Hopnhat.zip__extracted/1_hio_2026_10_28_08c7179_vi_cbtt_baocaotaichinh_hn_q3_2026.pdf::DT thuần": {
+      "value": "off",
+      "at": 1794300939629
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/HIO_Baocaotaichinh_Q3_2026_Hopnhat.zip__extracted/1_hio_2026_10_28_08c7179_vi_cbtt_baocaotaichinh_hn_q3_2026.pdf::Lãi gộp": {
+      "value": "off",
+      "at": 1794300942144
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/HIO_Baocaotaichinh_Q3_2026_Hopnhat.zip__extracted/1_hio_2026_10_28_08c7179_vi_cbtt_baocaotaichinh_hn_q3_2026.pdf::LNST": {
+      "value": "off",
+      "at": 1794300948204
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/HIO_Baocaotaichinh_Q3_2026_Hopnhat.zip__extracted/1_hio_2026_10_28_08c7179_vi_cbtt_baocaotaichinh_hn_q3_2026.pdf::Phải thu khách hàng": {
+      "value": "off",
+      "at": 1794300955271
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/HIO_Baocaotaichinh_Q3_2026_Hopnhat.zip__extracted/1_hio_2026_10_28_08c7179_vi_cbtt_baocaotaichinh_hn_q3_2026.pdf::Trả trước người bán": {
+      "value": "off",
+      "at": 1794300960928
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/HIO_Baocaotaichinh_Q3_2026_Hopnhat.zip__extracted/1_hio_2026_10_28_08c7179_vi_cbtt_baocaotaichinh_hn_q3_2026.pdf::Tồn kho": {
+      "value": "off",
+      "at": 1794300971978
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/HIO_Baocaotaichinh_Q3_2026_Hopnhat.zip__extracted/1_hio_2026_10_28_08c7179_vi_cbtt_baocaotaichinh_hn_q3_2026.pdf::Nguyên giá tscđ hữu hình": {
+      "value": "light",
+      "at": 1794300996532
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/HIO_Baocaotaichinh_Q3_2026_Hopnhat.zip__extracted/1_hio_2026_10_28_08c7179_vi_cbtt_baocaotaichinh_hn_q3_2026.pdf::Chi phí phải trả": {
+      "value": "off",
+      "at": 1794301001408
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/HIO_Baocaotaichinh_Q3_2026_Hopnhat.zip__extracted/1_hio_2026_10_28_08c7179_vi_cbtt_baocaotaichinh_hn_q3_2026.pdf::DT Chưa Thực Hiện": {
+      "value": "off",
+      "at": 1794301009435
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/HIO_Baocaotaichinh_Q3_2026_Hopnhat.zip__extracted/1_hio_2026_10_28_08c7179_vi_cbtt_baocaotaichinh_hn_q3_2026.pdf::Vay": {
+      "value": "off",
+      "at": 1794301015139
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/HIO_Baocaotaichinh_Q3_2026_Hopnhat.zip__extracted/1_hio_2026_10_28_08c7179_vi_cbtt_baocaotaichinh_hn_q3_2026.pdf::Vốn CSH": {
+      "value": "off",
+      "at": 1794301021122
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/ST8_Baocaotaichinh_Q3_2026_Hopnhat.pdf::LNST": {
+      "value": "off",
+      "at": 1794301122192
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/ST8_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Tiền": {
+      "value": "off",
+      "at": 1794301128098
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/GEL_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Lãi gộp": {
+      "value": "off",
+      "at": 1794301166304
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/GEL_Baocaotaichinh_Q3_2026_Hopnhat.pdf::LNST": {
+      "value": "off",
+      "at": 1794301169101
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/GEL_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Phải thu khách hàng": {
+      "value": "off",
+      "at": 1794301176075
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/GEL_Baocaotaichinh_Q3_2026_Hopnhat.pdf::TS Dở dang": {
+      "value": "off",
+      "at": 1794301187714
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/GEL_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Phải trả khác": {
+      "value": "off",
+      "at": 1794301191480
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/GEL_Baocaotaichinh_Q3_2026_Hopnhat.pdf::Vay": {
+      "value": "off",
+      "at": 1794301196344
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/TID_Baocaotaichinh_Q3_2026_Hopnhat.zip__extracted/4_tid_2026_10_28_fbbecf5_vi_baocaotaichinhhopnhat_q3_2026.pdf::Trả trước người bán": {
+      "value": "off",
+      "at": 1794301211438
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/TID_Baocaotaichinh_Q3_2026_Hopnhat.zip__extracted/4_tid_2026_10_28_fbbecf5_vi_baocaotaichinhhopnhat_q3_2026.pdf::Người mua trả trước": {
+      "value": "off",
+      "at": 1794301221608
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/CMD_Baocaotaichinh_Q3_2026.zip__extracted/1_cmd_2026_10_15_124f78d_vi_baocaotaichinh_q3_2026.pdf::Lãi gộp": {
+      "value": "off",
+      "at": 1794301353708
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/CMD_Baocaotaichinh_Q3_2026.zip__extracted/1_cmd_2026_10_15_124f78d_vi_baocaotaichinh_q3_2026.pdf::DT thuần": {
+      "value": "off",
+      "at": 1794301355888
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/CMD_Baocaotaichinh_Q3_2026.zip__extracted/1_cmd_2026_10_15_124f78d_vi_baocaotaichinh_q3_2026.pdf::LNST": {
+      "value": "off",
+      "at": 1794301357614
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/CMD_Baocaotaichinh_Q3_2026.zip__extracted/1_cmd_2026_10_15_124f78d_vi_baocaotaichinh_q3_2026.pdf::Tồn kho": {
+      "value": "off",
+      "at": 1794301362554
+    },
+    "/home/runner/work/Loc_BCTC_Mistral/Loc_BCTC_Mistral/data/reports/2026-Q3/CMD_Baocaotaichinh_Q3_2026.zip__extracted/1_cmd_2026_10_15_124f78d_vi_baocaotaichinh_q3_2026.pdf::Chi phí phải trả": {
+      "value": "off",
+      "at": 1794301370393
     }
   }
 }
