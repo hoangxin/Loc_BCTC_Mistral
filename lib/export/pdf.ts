@@ -193,6 +193,17 @@ function drawStatementTable(writer: PdfWriter, heading: string, table: Statement
 
   writer.drawText(heading, { size: SUBHEADING_SIZE, bold: true, gapAfter: 6 });
 
+  // Giong Excel: bang da quy tu nghin/trieu ve dong thi phai noi ro, vi tieu de
+  // cot lay tu ban goc van ghi don vi cu (xem comment o lib/export/excel.ts).
+  if (table.currencyScale && table.currencyScale > 1) {
+    writer.drawText(
+      sanitizeForPdf(
+        `So lieu da quy ve DONG (bao cao goc in bang ${table.currencyUnit ?? 'don vi lon hon'}, da nhan ${table.currencyScale.toLocaleString('vi-VN')}).`
+      ),
+      { size: SUBHEADING_SIZE - 2, bold: false, gapAfter: 4 }
+    );
+  }
+
   const columnCount = Math.max(table.columns.length, ...table.rows.map((row) => row.length), 1);
   const paddedColumnNames = Array.from({ length: columnCount }, (_, i) => table.columns[i] ?? '');
   const labelColumnIndex = findLabelColumnIndex(table.columns, table.rows);

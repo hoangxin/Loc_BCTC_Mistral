@@ -5,6 +5,14 @@
 export interface StatementTable {
   columns: string[];
   rows: (string | number | null)[][];
+  // He so da nhan de quy bang nay ve DONG, chi co khi bao cao in lam tron den
+  // hang nghin/trieu (xem detectTableCurrencyScale o markdown-tables.ts). Bang
+  // in du so dong - tuyet dai da so - KHONG co truong nay, nen hinh dang JSON
+  // cua cache khong doi voi cac bao cao khong bi anh huong.
+  currencyScale?: number;
+  // Ten don vi in tren bao cao goc ("trieu dong"/"nghin dong") - giu lai de doi
+  // chieu nguoc voi ban PDF khi can.
+  currencyUnit?: string;
 }
 
 export interface FinancialStatements {

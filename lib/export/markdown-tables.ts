@@ -3,6 +3,7 @@ import {
   isMetadataColumnName,
   normalizeGroupLabelForContentMatch,
   normalizeLabelText,
+  valueColumnIndexes,
   type FinancialStatements,
   type StatementTable,
 } from './statement-shared';
@@ -2612,6 +2613,192 @@ export function detectBalanceSheetAfterCashFlowOrderViolation(markdown: string):
   return cashFlowFirst < balanceSheetFirst;
 }
 
+// DON VI TIEN cua bang (bug that MSR Q3/2026, nguoi dung bao 2026-11-18): phan
+// lon bao cao in du so dong, nhung 1 so in LAM TRON den hang nghin/trieu va ghi
+// don vi ngay tren tieu de cot ("30/9/2026 Nghin VND", "30.6.2026 Trieu dong").
+// Truoc day parser lay so THO nen cung 1 he thong ton tai 3 thang do khac nhau:
+// MSR hien 14,6 ty thay vi 14.556 ty (lech 1.000 lan), ca nhom ngan hang
+// (ACB/BID/TCB/VCB...) in bang TRIEU dong nen lech 1.000.000 lan va khong the
+// so sanh voi doanh nghiep thuong. Quy het ve DONG ngay tai day (quyet dinh cua
+// nguoi dung 2026-11-18) de tab Ket qua, tang phan tich va Excel dung CUNG 1
+// don vi.
+interface CurrencyDeclaration {
+  scale: number;
+  unit: string;
+}
+
+const CURRENCY_SCALE_MARKERS: ({ pattern: RegExp } & CurrencyDeclaration)[] = [
+  { pattern: /TRIEU (VND|DONG)|MILLION VND|MLN VND/, scale: 1_000_000, unit: 'triệu đồng' },
+  { pattern: /NGHIN (VND|DONG)|THOUSAND VND|VND ?'?000|'000 ?VND/, scale: 1_000, unit: 'nghìn đồng' },
+];
+
+// Khai bao "don vi la DONG" - dung khi bao cao CO dong khai bao don vi nhung
+// don vi do khong phai nghin/trieu. Phai phan biet voi "khong khai bao gi"
+// (null): bang bi ngat trang chi co khai bao o manh DAU, cac manh sau phai duoc
+// KE THUA don vi tu manh dau, con manh da tu khai bao dong thi KHONG duoc ke
+// thua (xem comment o cho goi).
+const DONG_DECLARATION: CurrencyDeclaration = { scale: 1, unit: 'đồng' };
+
+function detectCurrencyScaleInText(text: string): CurrencyDeclaration | null {
+  const normalized = normalizeLabelText(text);
+  for (const marker of CURRENCY_SCALE_MARKERS) if (marker.pattern.test(normalized)) return marker;
+  return null;
+}
+
+// So dong van xuoi (khong tinh dong trong) toi da duoc phep nam giua dong khai
+// bao don vi va dau bang. Mau bieu luon in "Don vi tinh: ..." SAT ngay tren
+// bang (cung lam 1 khoi tieu de voi ten bang va ngay chot so).
+const MAX_CAPTION_LINES_ABOVE_TABLE = 6;
+
+// CHI 1 dong KHAI BAO don vi that moi duoc tinh, KHONG phai moi dong tinh co
+// chua chu "trieu dong". Bug that DL1 Q2+Q3/2026 (phat hien qua regression
+// 2026-11-18): van ban giai trinh cua DL1 co cau "- Chi phi tai chinh quy 2 nam
+// 2026 giam 80 TRIEU DONG so voi cung ky nam 2025" - do la so tien trong 1 cau
+// van, khong phai don vi cua bang, nhung da bi nhan ca bang len 10^6 (LNST
+// 36.038.698.477 -> 3,6 x 10^16). Mau bieu luon in khai bao nay dang 1 nhan
+// NGAN dung dau dong ("Dvt: trieu dong", "Don vi tinh/Unit: Trieu dong/Mln
+// VND"), nen doi hoi dong phai BAT DAU bang nhan do va phai ngan.
+// Cho phep cac dau trang tri OCR hay giu lai quanh nhan: in nghieng/in dam
+// ("*Don vi tinh: trieu dong*" - CTG Q3/2026) va dau ngoac ("(Don vi tinh/
+// Unit: trieu VND/ million VND)" - VHM Q2/2026).
+const UNIT_CAPTION_PREFIX = /^[(\[*_\s]*(DON VI|DVT|UNIT|CURRENCY)\b/;
+const MAX_UNIT_CAPTION_LENGTH = 80;
+
+function isUnitCaptionLine(line: string): boolean {
+  const trimmed = line.trim();
+  return trimmed.length <= MAX_UNIT_CAPTION_LENGTH && UNIT_CAPTION_PREFIX.test(normalizeLabelText(trimmed));
+}
+
+// QUAN TRONG - khong duoc lay don vi theo CA FILE. CLAUDE.md da canh bao va
+// corpus that xac nhan: ANT/SHP/VGC deu co dong "DVT: Trieu dong", nhung do la
+// don vi cua BANG GIAI TRINH bien dong loi nhuan (mau bat buoc theo Thong tu
+// 96/2020) dinh kem o dau tai lieu, con BCDKT/KQKD that cua chinh ho van in du
+// so dong (VGC: tong tai san 27.669.863.374.968). Lay theo file se nhan cac bao
+// cao nay len 10^6 - sai nang hon han bug dang phai sua. Vi vay don vi phai gan
+// vao DUNG bang da duoc chon lam BCDKT/KQKD/LCTT: uu tien o tieu de cot cua
+// chinh bang do, neu khong co thi chi doc nguoc len phan tieu de NGAY TREN bang
+// va DUNG LAI ngay khi gap mot hang bang khac (bang khac = don vi khac, khong
+// duoc lan sang).
+// Mau bieu ngan hang (B02a/B03a-TCTD) thuong in don vi thanh 1 HANG RIENG ngay
+// duoi tieu de cot thay vi gop vao ten cot: "|  |  | trieu dong | trieu dong |"
+// (MBB), "|  |  | Ky nay Trieu dong | Ky truoc Trieu dong |" (NAB), hoac 1 o
+// "Don vi tinh: trieu dong" (KLB). Hang nay KHONG duoc gop vao columns nen ca 2
+// duong nhan dien kia deu truot - bug that MBB/NAB/KLB Q2/2026 (phat hien qua
+// regression 2026-11-18): NAB/KLB con te hon vi BCDKT nhan duoc don vi (gop
+// duoc vao ten cot) ma KQKD thi khong, thanh ra 2 bang cua CUNG 1 bao cao lech
+// nhau 10^6.
+//
+// Tin hieu CAU TRUC de phan biet voi 1 hang du lieu that: hang khai bao don vi
+// KHONG co o nao la so, va o khop don vi phai NGAN (la 1 nhan, khong phai cau
+// van). Chi xet vai hang dau bang.
+const MAX_LEADING_ROWS_FOR_UNIT = 3;
+const MAX_UNIT_CELL_LENGTH = 40;
+
+function detectCurrencyScaleInLeadingRows(table: ParsedTable): CurrencyDeclaration | null {
+  for (const row of table.rows.slice(0, MAX_LEADING_ROWS_FOR_UNIT)) {
+    if (row.some((cell) => typeof cell === 'number')) continue;
+    for (const cell of row) {
+      if (typeof cell !== 'string' || cell.trim().length > MAX_UNIT_CELL_LENGTH) continue;
+      const hit = detectCurrencyScaleInText(cell);
+      if (hit) return hit;
+    }
+  }
+  return null;
+}
+
+function detectTableCurrencyScale(table: ParsedTable, lines: string[]): CurrencyDeclaration | null {
+  const fromColumns = detectCurrencyScaleInText(table.columns.join(' | '));
+  if (fromColumns) return fromColumns;
+  const fromLeadingRows = detectCurrencyScaleInLeadingRows(table);
+  if (fromLeadingRows) return fromLeadingRows;
+  let scanned = 0;
+  for (let i = table.startLineIndex - 1; i >= 0 && scanned < MAX_CAPTION_LINES_ABOVE_TABLE; i--) {
+    const line = lines[i];
+    if (!line.trim()) continue; // dong trong: khong tinh, chua thoat khoi khoi tieu de
+    if (splitMarkdownRow(line) !== null) break; // da cham vao 1 bang khac
+    scanned++;
+    if (!isUnitCaptionLine(line)) continue;
+    // Da gap dong khai bao don vi cua CHINH bang nay - dung lai o day du no
+    // khai bao dong ("Dvt: VND"), KHONG doc tiep len tren nua: khai bao gan
+    // bang nhat la khai bao co hieu luc.
+    return detectCurrencyScaleInText(line) ?? DONG_DECLARATION;
+  }
+  return null;
+}
+
+// Don vi CO HIEU LUC cho tung bang con cua 1 bang chinh.
+//
+// Bang bi NGAT TRANG tach thanh nhieu bang markdown rieng va CHI manh dau mang
+// dong "Don vi tinh: ..." - bug that CTG Q3/2026 (phat hien qua regression
+// 2026-11-18): manh chua dong LNST khong co khai bao nen khong duoc quy doi,
+// trong khi manh dau da quy doi -> 1 bang chinh co 2 thang do khac nhau, con te
+// hon khong sua gi. Manh KHONG khai bao gi phai KE THUA don vi tu cac manh co
+// khai bao.
+//
+// Nhung chi ke thua khi cac khai bao THAT SU co deu GIONG NHAU. Bang chinh co
+// 2 khai bao khac nhau la dau hieu da gom 2 ban in khac don vi cua CUNG 1 bao
+// cao - bug that VAB Q2/2026: KQKD hop nhat in HAI LAN, lan dau "Dvt: VND", lan
+// sau "Dvt: trieu dong". Luc do moi manh dung dung khai bao cua chinh no, manh
+// khong khai bao thi giu nguyen so tho (an toan hon doan).
+// `fallback` la don vi suy ra tu CAC BANG BCTC KHAC cua chinh bao cao nay (xem
+// reportWideCurrencyFallback) - dung khi bang nay khong khai bao gi o dau ca.
+function effectiveCurrencyDeclarations(
+  tables: ParsedTable[],
+  lines: string[],
+  fallback: CurrencyDeclaration
+): CurrencyDeclaration[] {
+  const declared = tables.map((table) => detectTableCurrencyScale(table, lines));
+  const distinctScales = new Set(declared.filter((d): d is CurrencyDeclaration => d !== null).map((d) => d.scale));
+  const inherited = distinctScales.size === 1 ? declared.find((d) => d !== null)! : fallback;
+  return declared.map((d) => d ?? inherited);
+}
+
+// Don vi suy ra o muc CA BAO CAO, dung cho bang khong he co khai bao o dau.
+// Bug that KLB Q2/2026 (phat hien qua regression 2026-11-18): KLB in "Don vi
+// tinh: trieu dong" o dau bo bao cao va tren BCDKT, nhung KQKD cua no thi khong
+// in lai o dau ca - BCDKT duoc quy doi con KQKD thi khong, 2 bang cua cung 1
+// bao cao lech nhau 10^6.
+//
+// Khac HOAN TOAN voi "lay don vi theo file" ma CLAUDE.md cam: nguon o day CHI
+// la khai bao tim thay tren CHINH cac bang da duoc chon lam BCDKT/KQKD/LCTT,
+// KHONG BAO GIO la van ban roi trong file. Nho vay bay ANT/SHP/VGC van bi loai
+// dung nhu cu - dong "DVT: Trieu dong" cua ho thuoc bang giai trinh, khong bang
+// BCTC nao cua ho khai bao gi, nen fallback cua ho van la dong.
+function reportWideCurrencyFallback(
+  grouped: Record<keyof FinancialStatements, ParsedTable[]>,
+  lines: string[]
+): CurrencyDeclaration {
+  const declared = Object.values(grouped)
+    .flat()
+    .map((table) => detectTableCurrencyScale(table, lines))
+    .filter((d): d is CurrencyDeclaration => d !== null && d.scale > 1);
+  if (declared.length === 0) return DONG_DECLARATION;
+  return declared.every((d) => d.scale === declared[0].scale) ? declared[0] : DONG_DECLARATION;
+}
+
+// Chi tieu TREN MOI CO PHIEU luon in bang DONG ke ca khi ca bang in bang
+// trieu/nghin (lai co ban tren co phieu cua TCB in 4 chu so, khong phai
+// 4.000.000) - nhan len se ra so vo nghia. Phan loai theo TEN chi tieu + ban
+// chat ke toan, dung quy tac da chot cua project (xem
+// feedback_no_numbering_classification).
+function isPerShareRowLabel(label: string | number | null): boolean {
+  if (typeof label !== 'string') return false;
+  return /TREN CO PHIEU|\bEPS\b/.test(normalizeLabelText(label));
+}
+
+function scaleTableToDong(table: StatementTable, scale: number): StatementTable {
+  const labelIndex = findLabelColumnIndex(table.columns, table.rows);
+  const valueIndexes = new Set(valueColumnIndexes(table));
+  return {
+    ...table,
+    rows: table.rows.map((row) =>
+      isPerShareRowLabel(row[labelIndex])
+        ? row
+        : row.map((cell, idx) => (valueIndexes.has(idx) && typeof cell === 'number' ? cell * scale : cell))
+    ),
+  };
+}
+
 export function parseStatementsFromMarkdown(rawMarkdown: string): FinancialStatements {
   const markdown = mergeSplitLabelValueBlocks(convertJsonCaptionTablesToMarkdown(rawMarkdown));
   const lines = markdown.split(/\r?\n/);
@@ -2776,6 +2963,7 @@ export function parseStatementsFromMarkdown(rawMarkdown: string): FinancialState
     cashFlow: { columns: [], rows: [] },
     offBalanceSheet: { columns: [], rows: [] },
   };
+  const currencyFallback = reportWideCurrencyFallback(grouped, relevantLines);
   for (const key of ['balanceSheet', 'incomeStatement', 'cashFlow', 'offBalanceSheet'] as const) {
     // KQKD bao hiem: uu tien Phan II (chi tiet theo hoat dong) - loai het bang
     // Phan I (tong hop) khoi ket qua khi Phan II thuc su co mat (yeu cau user
@@ -2788,12 +2976,29 @@ export function parseStatementsFromMarkdown(rawMarkdown: string): FinancialState
     );
     if (matchedTables.length > 0) {
       const { columns, labelIndex, maSoIndex } = mostCommonColumns(matchedTables);
-      result[key] = {
+      // Quy ve DONG neu bao cao in bang nghin/trieu - xem comment day du o
+      // detectTableCurrencyScale. Phai quy TUNG BANG CON RIENG roi moi gop, chu
+      // khong lay 1 don vi chung cho ca bang chinh: bug that VAB Q2/2026 (phat
+      // hien qua regression 2026-11-18) in KQKD hop nhat HAI LAN trong cung 1
+      // file - lan dau "Dvt: VND", lan sau "Dvt: trieu dong" - va parser gop ca
+      // 2 lam 42 dong. Lay don vi chung se nhan ca nua in bang dong len 10^6
+      // (LNST 257.748.422.823 -> 2,6 x 10^17).
+      const currencies = effectiveCurrencyDeclarations(matchedTables, relevantLines, currencyFallback);
+      const merged: StatementTable = {
         columns,
-        rows: matchedTables.flatMap((t) =>
-          t.rows.map((row) => alignRowToColumns(row, t.labelIndex, t.maSoIndex, columns.length, labelIndex, maSoIndex))
-        ),
+        rows: matchedTables.flatMap((t, i) => {
+          const rows = currencies[i].scale > 1 ? scaleTableToDong(t, currencies[i].scale).rows : t.rows;
+          return rows.map((row) => alignRowToColumns(row, t.labelIndex, t.maSoIndex, columns.length, labelIndex, maSoIndex));
+        }),
       };
+      // Ghi lai don vi goc cho ghi chu o Excel/PDF - chi khi MOI bang con deu
+      // cung 1 don vi va don vi do khac dong. Bang chinh lan lon (VAB: 1 nua in
+      // bang dong, 1 nua in bang trieu) thi KHONG co don vi goc nao dung cho ca
+      // bang, ghi chu "da nhan 1.000.000" se sai voi nua con lai - thoi khong
+      // ghi gi.
+      const uniform = currencies.every((c) => c.scale === currencies[0].scale) ? currencies[0] : null;
+      result[key] =
+        uniform && uniform.scale > 1 ? { ...merged, currencyScale: uniform.scale, currencyUnit: uniform.unit } : merged;
     }
   }
 

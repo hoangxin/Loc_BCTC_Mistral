@@ -99,6 +99,18 @@ function writeTable(sheet: ExcelJS.Worksheet, statementKey: keyof FinancialState
   const columns = periods ? [...table.columns, percentHeader] : table.columns;
   const percentColumnIndex = periods ? columns.length - 1 : -1;
 
+  // Bang duoc quy tu nghin/trieu ve dong (xem detectTableCurrencyScale o
+  // markdown-tables.ts): tieu de cot lay tu ban goc VAN con chu "Nghin VND"/
+  // "Trieu dong", neu khong noi gi thi nguoi doc se hieu sai don vi dung 1.000
+  // hoac 1.000.000 lan. Ghi 1 dong chu ngay tren tieu de de doi chieu lai voi
+  // ban PDF goc duoc.
+  if (table.currencyScale && table.currencyScale > 1) {
+    const noteRow = sheet.addRow([
+      `Số liệu đã quy về ĐỒNG (báo cáo gốc in bằng ${table.currencyUnit ?? 'đơn vị lớn hơn'}, đã nhân ${table.currencyScale.toLocaleString('vi-VN')}).`,
+    ]);
+    noteRow.font = { italic: true };
+  }
+
   if (columns.length > 0) {
     const headerRow = sheet.addRow(columns);
     headerRow.font = { bold: true };
